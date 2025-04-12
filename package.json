@@ -1,13 +1,14 @@
 {
   "name": "silentium",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
   "main": "dist/silentium.js",
   "module": "dist/silentium.mjs",
   "typings": "dist/silentium.d.ts",
   "keywords": [
-    "oop", "fp"
+    "oop",
+    "fp"
   ],
   "scripts": {
     "build": "rollup -c",
