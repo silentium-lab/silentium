@@ -15,28 +15,21 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Предназначен для создания новых экземпляров
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      target="_blank"
-      href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L12"
-    >
-      GuestObjectType
-    </a>
-  </span>
+  <link-dynamic
+    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L12"
+  >
+    GuestObjectType
+  </link-dynamic>
   из функции-колбэка
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
   Это поведение полезно в случаях, когда нужно динамически построить
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/terminology/visitor"
-    >
-      посетителя
-    </a>
-  </span>
+  <link-dynamic
+    href="/terminology/visitor"
+  >
+    посетителя
+  </link-dynamic>
   на основе функции, используя какие-то переменные из скоупа, где создана
   функция
 </p>
@@ -44,7 +37,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4 w-full"
-><code class="language-js">import { Guest } from 'patron-oop';
+><code class="language-js">import { Guest } from 'silentium';
 
 class Timestamp {
     seconds(guest) {
@@ -63,7 +56,7 @@ timestamp.seconds(new Guest((timestamp) => {
   <span class="guest-result">Result here</span>
 </div>
 <script type="module">
-  import { Guest } from "patron-oop";
+  import { Guest } from "silentium";
 
   class Timestamp {
     seconds(guest) {
@@ -85,22 +78,18 @@ timestamp.seconds(new Guest((timestamp) => {
   Возможность создавать объект-посетитель из функции была
   единственной в первых версиях библиотеки. На текущий момент вы можете также
   передать функцию-колбэк в качестве посетителя, тк функция соответствует типу
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      target="_blank"
-      href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
-    >
-      GuestType
-    </a>
-  </span>
+  <link-dynamic
+    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
+  >
+    GuestType
+  </link-dynamic>
   Это позволяет не создавать лишних объектных-оберток
 </p>
 
 <p class="text-gray-600 text-lg font-bold mb-0">Пример 2.</p>
 <pre
   class="mt-0 w-full"
-><code class="language-js">import { Guest } from 'patron-oop';
+><code class="language-js">import { Guest } from 'silentium';
 
 class Timestamp {
     seconds(guest) {

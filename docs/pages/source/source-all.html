@@ -15,14 +15,11 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Предназначен для объединения результатов из нескольких
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/terminology/the-source"
-    >
-      источников данных
-    </a>
-  </span>
+  <link-dynamic
+    href="/terminology/the-source"
+  >
+    источников данных
+  </link-dynamic>
   в один источник
 </p>
 
@@ -36,7 +33,7 @@
 <pre class="mb-4"><code class="language-js">import {
     Source,
     SourceAll
-} from 'patron-oop';
+} from 'silentium';
 
 const one = new Source(1);
 const two = new Source(2);
@@ -57,7 +54,7 @@ all.value(({one, two}) => {
   <span class="guest-result">Результат = 0</span>
 </div>
 <script type="module">
-  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "patron-oop";
+  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "silentium";
 
   const one = new SourceWithPool(1);
   const two = new SourceWithPool(2);
@@ -81,7 +78,7 @@ all.value(({one, two}) => {
 <pre class="mb-4"><code class="language-js">import {
   SourceWithPool,
   SourceAll
-} from 'patron-oop';
+} from 'silentium';
 
 const one = new SourceWithPool(1);
 const two = new SourceWithPool(2);
@@ -100,7 +97,7 @@ all.valueArray((numbers) => {
   <span class="guest-result-array">Результат = 0</span>
 </div>
 <script type="module">
-  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "patron-oop";
+  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "silentium";
 
   (() => {
     const one = new SourceWithPool(1);

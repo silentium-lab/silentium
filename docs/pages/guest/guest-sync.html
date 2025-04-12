@@ -32,7 +32,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceWithPool, GuestSync } from 'patron-oop';
+><code class="language-js">import { SourceWithPool, GuestSync } from 'silentium';
 
 const source = new SourceWithPool('Успешно установлено синхронно!');
 const syncGuest = new GuestSync('');
@@ -46,7 +46,7 @@ document.querySelector('.guest-result').textContent = syncGuest.value();
   <span class="guest-result">Значение установится синхронно!</span>
 </div>
 <script type="module">
-  import { SourceWithPool, GuestSync } from "patron-oop";
+  import { SourceWithPool, GuestSync } from "silentium";
 
   const source = new SourceWithPool("Успешно установлено синхронно!");
   const syncGuest = new GuestSync('');

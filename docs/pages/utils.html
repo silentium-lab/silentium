@@ -12,30 +12,30 @@
             <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
             <ul class="text-gray-900">
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/private"> Private </a>
+                <a class="dynamic-navigation" href="/utils/private"> Private </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/give"> give </a>
+                <a class="dynamic-navigation" href="/utils/give"> give </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/value"> value </a>
+                <a class="dynamic-navigation" href="/utils/value"> value </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/is-patron-in-pools"> isPatronInPools </a>
+                <a class="dynamic-navigation" href="/utils/is-patron-in-pools"> isPatronInPools </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/remove-patron-from-pools">
+                <a class="dynamic-navigation" href="/utils/remove-patron-from-pools">
                   removePatronFromPools
                 </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/is-guest"> isGuest </a>
+                <a class="dynamic-navigation" href="/utils/is-guest"> isGuest </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/is-source"> isSource </a>
+                <a class="dynamic-navigation" href="/utils/is-source"> isSource </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a href="/utils/source-of"> sourceOf </a>
+                <a class="dynamic-navigation" href="/utils/source-of"> sourceOf </a>
               </li>
             </ul>
           </div>
@@ -43,19 +43,31 @@
         <div
           class="w-full sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0"
         >
-          <div class="utils-loader">
-            <div class="w-full flex justify-center">
-              <div
-                class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-indigo-500 motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-              >
-                <span
-                  class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                  >Loading...</span
-                >
-              </div>
-            </div>
-          </div>
+          <h1 class="pb-3 text-xl font-semibold text-gray-600">Утилиты</h1>
+
+          <p class="text-gray-600 text-lg mb-4">
+            В этом разделе собрана документация по вспомогательным функциям и классам
+            библиотеки Patron
+          </p>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Основные классы библиотеки вынесены в верхнее меню сайта(этой документации), а
+            все вспомогательные модули будут описаны здесь
+          </p>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Нужно отметить, что основные классы библиотеки:
+            <link-dynamic href="/guest">Guest</link-dynamic>,
+            <link-dynamic href="/patron">Patron</link-dynamic>,
+            <link-dynamic href="/source">Source</link-dynamic> и их производные работают
+            на уровне человеческой логики, А классы из этого раздела(utils) предназначены
+            для работы на уровне компьютера.
+          </p>
+
+          <p class="text-gray-600 text-lg mb-4">
+            В левом меню этого раздела вы найдете все утилиты и их описание
+          </p>
+
           <div class="utils-page-area"></div>
         </div>
       </div>

@@ -40,3 +40,9 @@ body {
 .hljs-ln-code.hljs-ln-code {
     padding-left: 10px;
 }
+
+pre {
+    padding: 16px;
+    background: #282c34;
+    color: #abb2bf;
+}

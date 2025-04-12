@@ -24,14 +24,11 @@
       источника
     </a> </span
   >, который умеет оповещать своих
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/terminology/the-patron"
-    >
-      патронов
-    </a>
-  </span>
+  <link-dynamic
+    href="/terminology/the-patron"
+  >
+    патронов
+  </link-dynamic>
   об изменении данных
 </p>
 
@@ -43,7 +40,7 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron } from "patron-oop";
+<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron } from "silentium";
 
 const source = new SourceWithPool("один");
 source.value((value) => {
@@ -70,7 +67,7 @@ setTimeout(() => {
   <div class="source-result-2">Нет результата!</div>
 </div>
 <script type="module">
-  import { SourceWithPool, Patron } from "patron-oop";
+  import { SourceWithPool, Patron } from "silentium";
 
   const source = new SourceWithPool("один");
   source.value((value) => {

@@ -15,32 +15,23 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Предназначен для динамического создания
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/terminology/the-guest"
-    >
-      гостя
-    </a>
-  </span>
+  <link-dynamic
+    href="/terminology/the-guest"
+  >
+    гостя
+  </link-dynamic>
   с функциональностью его удаления из
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/patron/patron-pool"
-    >
-      пула патронов
-    </a>
-  </span>
+  <link-dynamic
+    href="/patron/patron-pool"
+  >
+    пула патронов
+  </link-dynamic>
   , на случай, если гость станет
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/terminology/the-patron"
-    >
-      патроном
-    </a>
-  </span>
+  <link-dynamic
+    href="/terminology/the-patron"
+  >
+    патроном
+  </link-dynamic>
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -53,28 +44,22 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Вместо класса GuestDisposable можно использовать функцию
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/utils/remove-patron-from-pools"
-    >
-      removePatronFromPools
-    </a>
-  </span>
+  <link-dynamic
+    href="/utils/remove-patron-from-pools"
+  >
+    removePatronFromPools
+  </link-dynamic>
   - для того чтобы удалить патрон из всех пулов. либо функцию
-  <span class="dynamic-navigation">
-    <a
-      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
-      href="/utils/is-patron-in-pools"
-    >
-      isPatronInPools
-    </a>
-  </span>
+  <link-dynamic
+    href="/utils/is-patron-in-pools"
+  >
+    isPatronInPools
+  </link-dynamic>
   - проверяет есть ли патрон в каком-либо пуле
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron, GuestDisposable } from "patron-oop";
+<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron, GuestDisposable } from "silentium";
 
   const source = new SourceWithPool("Один");
 
@@ -105,7 +90,7 @@
   <span class="guest-result">Нет значения</span>
 </div>
 <script type="module">
-  import { SourceWithPool, Patron, GuestDisposable } from "patron-oop";
+  import { SourceWithPool, Patron, GuestDisposable } from "silentium";
 
   const source = new SourceWithPool("Один");
 

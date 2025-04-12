@@ -18,3 +18,5 @@ sed -i "s/TPL_SILENTIUM_WEB_API/http:\/\/127.0.0.1:5501\/dist\/silentium-web-api
 sed -i "s/TPL_SILENTIUM_COMPONENTS/http:\/\/127.0.0.1:5500\/dist\/silentium-components.min.mjs/g" "index-dev.html"
 
 echo "DONE!"
+
+./buildRoutes.sh
