@@ -3,11 +3,11 @@
 echo "BEGIN"
 cd docs
 cp template.html index.html
-sed -i "s/TPL_SILENTIUM_OOP/https:\/\/cdn.jsdelivr.net\/npm\/patron-oop@1.46.0\/dist\/patron.min.mjs/g" "index.html"
+sed -i "s/TPL_SILENTIUM_OOP/https:\/\/cdn.jsdelivr.net\/npm\/silentium@0.0.2\/dist\/patron.min.mjs/g" "index.html"
 
-sed -i "s/TPL_SILENTIUM_WEB_API/https:\/\/cdn.jsdelivr.net\/npm\/patron-web-api@1.14.0\/dist\/patron-web-api.min.mjs/g" "index.html"
+sed -i "s/TPL_SILENTIUM_WEB_API/https:\/\/cdn.jsdelivr.net\/npm\/silentium-web-api@0.0.1\/dist\/patron-web-api.min.mjs/g" "index.html"
 
-sed -i "s/TPL_SILENTIUM_COMPONENTS/https:\/\/cdn.jsdelivr.net\/npm\/patron-oop-components@1.20.0\/dist\/patron-components.min.mjs/g" "index.html"
+sed -i "s/TPL_SILENTIUM_COMPONENTS/https:\/\/cdn.jsdelivr.net\/npm\/silentium-components@0.0.1\/dist\/patron-components.min.mjs/g" "index.html"
 
 
 cp template.html index-dev.html
