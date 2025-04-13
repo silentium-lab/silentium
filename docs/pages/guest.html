@@ -83,17 +83,16 @@
             class="mb-4 w-full"
           ><code class="language-js">import { Guest } from 'silentium';
 
-          class Timestamp {
-              seconds(guest) {
-                  guest.give(Date.now())
-              }
-          }
+class Timestamp {
+    seconds(guest) {
+        guest.give(Date.now())
+    }
+}
 
-          const timestamp = new Timestamp();
-          timestamp.seconds(new Guest((timestamp) => {
-              console.log('timestamp is', timestamp);
-          }));
-          </code></pre>
+const timestamp = new Timestamp();
+timestamp.seconds(new Guest((timestamp) => {
+    console.log('timestamp is', timestamp);
+}));</code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
           <div class="example mb-4">
@@ -135,17 +134,16 @@
             class="mt-0 w-full"
           ><code class="language-js">import { Guest } from 'silentium';
 
-          class Timestamp {
-              seconds(guest) {
-                  give(Date.now(), guest);
-              }
-          }
+class Timestamp {
+    seconds(guest) {
+        give(Date.now(), guest);
+    }
+}
 
-          const timestamp = new Timestamp();
-          timestamp.seconds((timestamp) => {
-              console.log('timestamp is', timestamp);
-          });
-          </code></pre>
+const timestamp = new Timestamp();
+timestamp.seconds((timestamp) => {
+    console.log('timestamp is', timestamp);
+});</code></pre>
 
           <div class="guest-page-area"></div>
         </div>

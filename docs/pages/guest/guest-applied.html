@@ -1,3 +1,8 @@
+<div class="breadcrumbs mb-4">
+  <link-dynamic href="/">Главная</link-dynamic>
+  <link-dynamic href="/guest">Guest</link-dynamic>
+</div>
+
 <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestApplied</h1>
 
 <a href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestApplied.ts" target="_blank"
@@ -29,8 +34,7 @@ const guest = new Guest((value) => {
 
 sourceOf(40).value(
   new GuestApplied(guest, (x) => x * 2)
-);
-</code></pre>
+);</code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">

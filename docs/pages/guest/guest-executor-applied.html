@@ -1,3 +1,8 @@
+<div class="breadcrumbs mb-4">
+  <link-dynamic href="/">Главная</link-dynamic>
+  <link-dynamic href="/guest">Guest</link-dynamic>
+</div>
+
 <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestExecutorApplied</h1>
 
 <a
@@ -23,22 +28,21 @@
   class="mb-4 w-full"
 ><code class="language-js">import { Guest, GuestExecutorApplied, sourceOf } from "silentium";
 
-  const guest = new Guest((value) => {
-    document.querySelector(
-      ".guest-result"
-    ).textContent = `value is ${value}`;
-  });
+const guest = new Guest((value) => {
+  document.querySelector(
+    ".guest-result"
+  ).textContent = `value is ${value}`;
+});
 
-  sourceOf(40).value(
-    new GuestExecutorApplied(guest, (guestFn) => {
-      return v => {
-        setTimeout(() => {
-          guestFn(v);
-        }, 5000)
-      }
-    })
-  );
-</code></pre>
+sourceOf(40).value(
+  new GuestExecutorApplied(guest, (guestFn) => {
+    return v => {
+      setTimeout(() => {
+        guestFn(v);
+      }, 5000)
+    }
+  })
+);</code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">

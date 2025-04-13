@@ -63,46 +63,45 @@
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
           <pre class="mb-4"><code class="language-js">import {
-            Patron,
-            SourceWithPool,
-            Source,
-            GuestDisposable,
-            isPatronInPools,
-          } from "silentium";
+  Patron,
+  SourceWithPool,
+  Source,
+  GuestDisposable,
+  isPatronInPools,
+} from "silentium";
 
-          const source = new SourceWithPool(1);
-          const timer = new Source((guest) => {
-            source.value(guest);
-            const repeat = () => {
-              if (!isPatronInPools(guest)) {
-                return;
-              }
-              source.value((value) => {
-                setTimeout(() => {
-                  source.give(value + 1);
-                  repeat();
-                }, 1000);
-              });
-            };
-            repeat();
-          });
+const source = new SourceWithPool(1);
+const timer = new Source((guest) => {
+  source.value(guest);
+  const repeat = () => {
+    if (!isPatronInPools(guest)) {
+      return;
+    }
+    source.value((value) => {
+      setTimeout(() => {
+        source.give(value + 1);
+        repeat();
+      }, 1000);
+    });
+  };
+  repeat();
+});
 
-          timer.value(
-            new Patron(
-              new GuestDisposable(
-                (value) => {
-                  const el = document.querySelector(".patron-result");
-                  if (el) {
-                    el.textContent = `Секунд прошло ${value}`;
-                  }
-                },
-                () => {
-                  return !document.querySelector(".patron-result");
-                }
-              )
-            )
-          );
-          </code></pre>
+timer.value(
+  new Patron(
+    new GuestDisposable(
+      (value) => {
+        const el = document.querySelector(".patron-result");
+        if (el) {
+          el.textContent = `Секунд прошло ${value}`;
+        }
+      },
+      () => {
+        return !document.querySelector(".patron-result");
+      }
+    )
+  )
+);</code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
           <div class="example mb-4">

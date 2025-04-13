@@ -46,3 +46,12 @@ pre {
     background: #282c34;
     color: #abb2bf;
 }
+
+.link {
+    color: blue;
+    text-decoration: underline;
+}
+
+.text-left {
+    text-align: left;
+}
