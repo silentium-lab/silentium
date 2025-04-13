@@ -5,7 +5,7 @@ import {
 } from "../Guest/GuestDisposable";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-once
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-once
  */
 export class PatronOnce<T> implements GuestDisposableType<T> {
   private received = false;

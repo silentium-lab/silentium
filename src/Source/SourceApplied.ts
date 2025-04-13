@@ -3,7 +3,7 @@ import { GuestCast } from "../Guest/GuestCast";
 import { SourceObjectType, SourceType, value } from "../Source/Source";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source/source-applied
+ * @url https://silentium-lab.github.io/silentium/#/source/source-applied
  */
 export class SourceApplied<T, R> implements SourceObjectType<R> {
   public constructor(

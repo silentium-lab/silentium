@@ -7,7 +7,7 @@ export interface GuestDisposableType<T = any> extends GuestObjectType<T> {
 export type MaybeDisposableType<T = any> = Partial<GuestDisposableType<T>>;
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-disposable
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-disposable
  */
 export class GuestDisposable<T> implements GuestDisposableType<T> {
   public constructor(

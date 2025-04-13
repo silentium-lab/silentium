@@ -4,7 +4,7 @@ import { value } from "./Source";
 import { SourceWithPool, SourceWithPoolType } from "./SourceWithPool";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source/source-once
+ * @url https://silentium-lab.github.io/silentium/#/source/source-once
  */
 export class SourceOnce<T> implements SourceWithPoolType<T> {
   private source: SourceWithPool<T>;

@@ -2,7 +2,7 @@ import { give, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron
+ * @url https://silentium-lab.github.io/silentium/#/patron
  */
 export class Patron<T> implements GuestDisposableType<T> {
   public constructor(private willBePatron: GuestType<T>) {
@@ -27,7 +27,7 @@ export class Patron<T> implements GuestDisposableType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-patron
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-patron
  */
 export const isPatron = (guest: GuestType): guest is Patron<unknown> =>
   typeof guest === "object" &&

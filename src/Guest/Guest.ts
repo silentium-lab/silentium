@@ -10,7 +10,7 @@ export interface GuestObjectType<T = any> {
 export type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/give
+ * @url https://silentium-lab.github.io/silentium/#/utils/give
  */
 export function give<T>(data: T, guest: GuestType<T>) {
   if (data === undefined) {
@@ -27,7 +27,7 @@ export function give<T>(data: T, guest: GuestType<T>) {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-guest
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
  */
 export function isGuest(mbGuest: any): mbGuest is GuestType {
   if (mbGuest === undefined) {
@@ -37,7 +37,7 @@ export function isGuest(mbGuest: any): mbGuest is GuestType {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest
+ * @url https://silentium-lab.github.io/silentium/#/guest
  */
 export class Guest<T> implements GuestObjectType<T> {
   public constructor(private receiver: GuestExecutorType<T>) {

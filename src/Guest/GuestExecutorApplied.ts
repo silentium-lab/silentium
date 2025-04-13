@@ -6,7 +6,7 @@ import {
 } from "../Guest/Guest";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-executor-applied
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-executor-applied
  */
 export class GuestExecutorApplied<T> implements GuestObjectType<T> {
   public give: GuestExecutorType<T, this>;

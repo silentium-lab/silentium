@@ -4,7 +4,7 @@ import { GuestDisposableType } from "../Guest/GuestDisposable";
 const poolSets = new Map<PoolType, Set<GuestObjectType>>();
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/patron-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
  */
 export const patronPools = (patron: GuestObjectType) => {
   const pools: PoolType[] = [];
@@ -17,7 +17,7 @@ export const patronPools = (patron: GuestObjectType) => {
 };
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/remove-patron-from-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/remove-patron-from-pools
  */
 export const removePatronFromPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
@@ -29,7 +29,7 @@ export const removePatronFromPools = (patron: GuestObjectType) => {
 };
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-patron-in-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
  */
 export const isPatronInPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
@@ -52,7 +52,7 @@ export interface PoolType<T = any> extends GuestObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-pool
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
  */
 export class PatronPool<T> implements PoolType<T> {
   private patrons: Set<GuestObjectType<T>>;

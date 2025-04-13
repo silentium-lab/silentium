@@ -2,7 +2,7 @@ import { give, GuestType } from "./Guest";
 import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-cast
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-cast
  */
 export class GuestCast<T> implements GuestDisposableType<T> {
   public constructor(

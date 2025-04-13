@@ -2,7 +2,7 @@ import { PatronPool, PoolType } from "../Patron/PatronPool";
 import { give, GuestObjectType, GuestType } from "./Guest";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-pool
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-pool
  */
 export class GuestPool<T> implements GuestObjectType<T>, PoolType<T> {
   private guests = new Set<GuestType<T>>();

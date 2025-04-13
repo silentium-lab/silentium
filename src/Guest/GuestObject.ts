@@ -2,7 +2,7 @@ import { Guest, GuestType } from "./Guest";
 import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-object
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-object
  */
 export class GuestObject<T> implements GuestDisposableType<T> {
   public constructor(private baseGuest: GuestType<T>) {
