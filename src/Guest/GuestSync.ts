@@ -16,7 +16,7 @@ export class GuestSync<T> implements GuestValueType<T> {
   }
 
   public value() {
-    if (!this.theValue) {
+    if (this.theValue === undefined) {
       throw new Error("no value in GuestSync!");
     }
     return this.theValue;
