@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/silentium-lab/silentium/compare/v0.0.4...v0.0.5) (2025-04-13)
+
+
+### Features
+
+* **main:** the value is realy arbitarry ([4eddbd1](https://github.com/silentium-lab/silentium/commit/4eddbd143af379c1b911fdb67df1966637666c16))
+
 ### [0.0.4](https://github.com/silentium-lab/silentium/compare/v0.0.3...v0.0.4) (2025-04-13)
 
 
