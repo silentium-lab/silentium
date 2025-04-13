@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/silentium-lab/silentium/compare/v0.0.2...v0.0.3) (2025-04-13)
+
+
+### Features
+
+* **1-issue:** active source removed ([8aea405](https://github.com/silentium-lab/silentium/commit/8aea40543208b0c943bcd8beb17f3be55353bd7b))
+* **main:** check before release ([767e2e2](https://github.com/silentium-lab/silentium/commit/767e2e20044b57e3a99a41fd6961ae5a4433b871))
+* **main:** custom css ([0278dc0](https://github.com/silentium-lab/silentium/commit/0278dc03f674da58b8b455aa896de3adcd7b512c))
+* **main:** documentation imroovments ([186f1ff](https://github.com/silentium-lab/silentium/commit/186f1ff88e5c9a88f372619f50e3b4ee2c2de26a))
+* **main:** favicon fixed ([b666fef](https://github.com/silentium-lab/silentium/commit/b666fefc57b8ebd1dfdc70ab155cb0e8ff98ee6f))
+* **main:** fix deps ([4f06a04](https://github.com/silentium-lab/silentium/commit/4f06a04e4fee49851c895fc3d66957f1a8e1a68f))
+* **main:** fix documentation ([1987380](https://github.com/silentium-lab/silentium/commit/1987380b03f5edcb0c2475cb88deb954add29657))
+* **main:** fix index deps ([e4ac657](https://github.com/silentium-lab/silentium/commit/e4ac65701fd1e393fc0eadb1025a181cc27a2a74))
+
+
+### Bug Fixes
+
+* **main:** fix active import ([2127d47](https://github.com/silentium-lab/silentium/commit/2127d475122a054d27ec822108d7d9dd2a9bb57f))
+
 ### [0.0.2](https://github.com/silentium-lab/silentium/compare/v0.0.1...v0.0.2) (2025-04-12)
 
 ### 0.0.1 (2025-04-12)
