@@ -16,7 +16,6 @@ export * from "./Source/Source";
 export * from "./Source/SourceSequence";
 export * from "./Source/SourceMap";
 export * from "./Source/SourceRace";
-export * from "./Source/SourceActive";
 export * from "./Source/SourceWithPool";
 export * from "./Source/SourceDynamic";
 export * from "./Source/SourceApplied";
