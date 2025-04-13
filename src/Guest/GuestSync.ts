@@ -8,7 +8,7 @@ export interface GuestValueType<T = any> extends GuestObjectType<T> {
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
  */
 export class GuestSync<T> implements GuestValueType<T> {
-  public constructor(private theValue: T) {
+  public constructor(private theValue?: T) {
     if (theValue === undefined) {
       throw new Error("GuestSync didnt receive theValue argument");
     }
@@ -20,6 +20,9 @@ export class GuestSync<T> implements GuestValueType<T> {
   }
 
   public value() {
+    if (!this.theValue) {
+      throw new Error("no value in GuestSync!");
+    }
     return this.theValue;
   }
 }

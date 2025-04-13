@@ -105,10 +105,10 @@ interface GuestValueType<T = any> extends GuestObjectType<T> {
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
  */
 declare class GuestSync<T> implements GuestValueType<T> {
-    private theValue;
-    constructor(theValue: T);
+    private theValue?;
+    constructor(theValue?: T | undefined);
     give(value: T): this;
-    value(): T;
+    value(): NonNullable<T>;
 }
 
 /**
@@ -293,25 +293,6 @@ declare class SourceWithPool<T> implements SourceWithPoolType<T> {
 }
 
 /**
- * @url https://silentium-lab.github.io/silentium/#/utils/action-type
- */
-interface ActionType<P = any> {
-    do(config: P): this;
-}
-interface SourceAcitveType<R = unknown, T = unknown> extends SourceObjectType<T>, ActionType<R> {
-}
-/**
- * @url https://silentium-lab.github.io/silentium/#/guest/source-active
- */
-declare class SourceActive<R, T> implements SourceAcitveType<R, T> {
-    private configExecutor;
-    private source;
-    constructor(configExecutor: (config: R, source: SourceWithPoolType<T>) => void);
-    do(config: R): this;
-    value(guest: GuestType<T>): this;
-}
-
-/**
  * @url https://silentium-lab.github.io/silentium/#/source-dynamic
  */
 declare class SourceDynamic<T = unknown> implements SourceWithPoolType<T> {
@@ -362,4 +343,4 @@ declare class PrivateClass<T> implements PrivateType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
 }
 
-export { type ActionType, Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, Source, type SourceAcitveType, SourceActive, SourceAll, type SourceAllType, SourceApplied, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, type SourceType, SourceWithPool, type SourceWithPoolType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
+export { Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, Source, SourceAll, type SourceAllType, SourceApplied, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, type SourceType, SourceWithPool, type SourceWithPoolType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
