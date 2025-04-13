@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/silentium-lab/silentium/compare/v0.0.3...v0.0.4) (2025-04-13)
+
+
+### Features
+
+* **main:** guest sync initial value is arbitary ([5dbda4c](https://github.com/silentium-lab/silentium/commit/5dbda4c51d7eda2eb32a4ee46858bfdc0aaafc6a))
+
 ### [0.0.3](https://github.com/silentium-lab/silentium/compare/v0.0.2...v0.0.3) (2025-04-13)
 
 
