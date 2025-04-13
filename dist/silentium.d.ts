@@ -6,15 +6,15 @@ interface GuestObjectType<T = any> {
 }
 type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/give
+ * @url https://silentium-lab.github.io/silentium/#/utils/give
  */
 declare function give<T>(data: T, guest: GuestType<T>): void;
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-guest
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
  */
 declare function isGuest(mbGuest: any): mbGuest is GuestType;
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest
+ * @url https://silentium-lab.github.io/silentium/#/guest
  */
 declare class Guest<T> implements GuestObjectType<T> {
     private receiver;
@@ -27,7 +27,7 @@ interface GuestDisposableType<T = any> extends GuestObjectType<T> {
 }
 type MaybeDisposableType<T = any> = Partial<GuestDisposableType<T>>;
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-disposable
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-disposable
  */
 declare class GuestDisposable<T> implements GuestDisposableType<T> {
     private guest;
@@ -38,7 +38,7 @@ declare class GuestDisposable<T> implements GuestDisposableType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-cast
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-cast
  */
 declare class GuestCast<T> implements GuestDisposableType<T> {
     private sourceGuest;
@@ -50,15 +50,15 @@ declare class GuestCast<T> implements GuestDisposableType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/patron-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
  */
 declare const patronPools: (patron: GuestObjectType) => PoolType<any>[];
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/remove-patron-from-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/remove-patron-from-pools
  */
 declare const removePatronFromPools: (patron: GuestObjectType) => void;
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-patron-in-pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
  */
 declare const isPatronInPools: (patron: GuestObjectType) => boolean;
 interface PoolType<T = any> extends GuestObjectType<T> {
@@ -68,7 +68,7 @@ interface PoolType<T = any> extends GuestObjectType<T> {
     size(): number;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-pool
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
  */
 declare class PatronPool<T> implements PoolType<T> {
     private initiator;
@@ -84,7 +84,7 @@ declare class PatronPool<T> implements PoolType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-pool
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-pool
  */
 declare class GuestPool<T> implements GuestObjectType<T>, PoolType<T> {
     private guests;
@@ -102,7 +102,7 @@ interface GuestValueType<T = any> extends GuestObjectType<T> {
     value(): T;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-sync
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
  */
 declare class GuestSync<T> implements GuestValueType<T> {
     private theValue;
@@ -112,7 +112,7 @@ declare class GuestSync<T> implements GuestValueType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-object
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-object
  */
 declare class GuestObject<T> implements GuestDisposableType<T> {
     private baseGuest;
@@ -123,7 +123,7 @@ declare class GuestObject<T> implements GuestDisposableType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-applied
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-applied
  */
 declare class GuestApplied<T, R> implements GuestObjectType<T> {
     private baseGuest;
@@ -133,7 +133,7 @@ declare class GuestApplied<T, R> implements GuestObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-executor-applied
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-executor-applied
  */
 declare class GuestExecutorApplied<T> implements GuestObjectType<T> {
     give: GuestExecutorType<T, this>;
@@ -141,7 +141,7 @@ declare class GuestExecutorApplied<T> implements GuestObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron
+ * @url https://silentium-lab.github.io/silentium/#/patron
  */
 declare class Patron<T> implements GuestDisposableType<T> {
     private willBePatron;
@@ -151,12 +151,12 @@ declare class Patron<T> implements GuestDisposableType<T> {
     disposed(value: T | null): boolean;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-patron
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-patron
  */
 declare const isPatron: (guest: GuestType) => guest is Patron<unknown>;
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-once
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-once
  */
 declare class PatronOnce<T> implements GuestDisposableType<T> {
     private baseGuest;
@@ -168,7 +168,7 @@ declare class PatronOnce<T> implements GuestDisposableType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-applied
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-applied
  */
 declare class PatronApplied<T, R> implements GuestObjectType<T> {
     private guestApplied;
@@ -178,7 +178,7 @@ declare class PatronApplied<T, R> implements GuestObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-executor-applied
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-executor-applied
  */
 declare class PatronExecutorApplied<T> implements GuestObjectType<T> {
     private guestApplied;
@@ -193,15 +193,15 @@ interface SourceObjectType<T> {
 }
 type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T>;
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/value
+ * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
 declare function value<T>(source: SourceType<T>, guest: GuestType<T>): unknown;
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-source
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
 declare function isSource(mbSource: any): mbSource is SourceType;
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source
+ * @url https://silentium-lab.github.io/silentium/#/guest/source
  */
 declare class Source<T = any> implements SourceObjectType<T> {
     private source;
@@ -209,7 +209,7 @@ declare class Source<T = any> implements SourceObjectType<T> {
     value(guest: GuestType<T>): GuestType<T>;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/source-of
+ * @url https://silentium-lab.github.io/silentium/#/utils/source-of
  */
 declare const sourceOf: <T>(value: T) => Source<T>;
 
@@ -218,7 +218,7 @@ interface SourceAllType<T = any> extends SourceObjectType<T> {
     guestKey<R>(key: string): GuestObjectType<R>;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-all
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-all
  */
 declare class SourceAll<T> implements SourceAllType<T> {
     private theAll;
@@ -233,7 +233,7 @@ declare class SourceAll<T> implements SourceAllType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/private
+ * @url https://silentium-lab.github.io/silentium/#/utils/private
  */
 interface PrivateType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
@@ -245,7 +245,7 @@ declare class Private<T> implements PrivateType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-sequence
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-sequence
  */
 declare class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
     private baseSource;
@@ -255,7 +255,7 @@ declare class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-map
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-map
  */
 declare class SourceMap<T, TG> implements SourceObjectType<TG[]> {
     private baseSource;
@@ -265,7 +265,7 @@ declare class SourceMap<T, TG> implements SourceObjectType<TG[]> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-race
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-race
  */
 declare class SourceRace<T> implements SourceObjectType<T> {
     private sources;
@@ -277,7 +277,7 @@ interface PoolAwareType<T = any> {
     pool(): PatronPool<T>;
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/source-with-pool
+ * @url https://silentium-lab.github.io/silentium/#/source-with-pool
  */
 type SourceWithPoolType<T = any> = SourceObjectType<T> & GuestObjectType<T> & PoolAwareType<T>;
 declare class SourceWithPool<T> implements SourceWithPoolType<T> {
@@ -293,7 +293,7 @@ declare class SourceWithPool<T> implements SourceWithPoolType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/action-type
+ * @url https://silentium-lab.github.io/silentium/#/utils/action-type
  */
 interface ActionType<P = any> {
     do(config: P): this;
@@ -301,7 +301,7 @@ interface ActionType<P = any> {
 interface SourceAcitveType<R = unknown, T = unknown> extends SourceObjectType<T>, ActionType<R> {
 }
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-active
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-active
  */
 declare class SourceActive<R, T> implements SourceAcitveType<R, T> {
     private configExecutor;
@@ -312,7 +312,7 @@ declare class SourceActive<R, T> implements SourceAcitveType<R, T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source-dynamic
+ * @url https://silentium-lab.github.io/silentium/#/source-dynamic
  */
 declare class SourceDynamic<T = unknown> implements SourceWithPoolType<T> {
     private baseGuest;
@@ -324,7 +324,7 @@ declare class SourceDynamic<T = unknown> implements SourceWithPoolType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source/source-applied
+ * @url https://silentium-lab.github.io/silentium/#/source/source-applied
  */
 declare class SourceApplied<T, R> implements SourceObjectType<R> {
     private baseSource;
@@ -334,7 +334,7 @@ declare class SourceApplied<T, R> implements SourceObjectType<R> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source/source-executor-applied
+ * @url https://silentium-lab.github.io/silentium/#/source/source-executor-applied
  */
 declare class SourceExecutorApplied<T> implements SourceObjectType<T> {
     value: SourceExecutorType<T>;
@@ -342,7 +342,7 @@ declare class SourceExecutorApplied<T> implements SourceObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source/source-once
+ * @url https://silentium-lab.github.io/silentium/#/source/source-once
  */
 declare class SourceOnce<T> implements SourceWithPoolType<T> {
     private source;

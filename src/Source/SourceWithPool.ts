@@ -8,7 +8,7 @@ export interface PoolAwareType<T = any> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/source-with-pool
+ * @url https://silentium-lab.github.io/silentium/#/source-with-pool
  */
 export type SourceWithPoolType<T = any> = SourceObjectType<T> &
   GuestObjectType<T> &

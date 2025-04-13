@@ -11,7 +11,7 @@ export interface SourceAllType<T = any> extends SourceObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-all
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-all
  */
 export class SourceAll<T> implements SourceAllType<T> {
   private theAll: SourceWithPool<Record<string, unknown>>;

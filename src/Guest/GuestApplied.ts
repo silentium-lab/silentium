@@ -1,7 +1,7 @@
 import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/guest-applied
+ * @url https://silentium-lab.github.io/silentium/#/guest/guest-applied
  */
 export class GuestApplied<T, R> implements GuestObjectType<T> {
   public constructor(

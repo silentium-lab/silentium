@@ -1,5 +1,5 @@
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/private
+ * @url https://silentium-lab.github.io/silentium/#/utils/private
  */
 export interface PrivateType<T> {
   get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;

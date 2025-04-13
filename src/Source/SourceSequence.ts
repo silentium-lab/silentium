@@ -7,7 +7,7 @@ import { isSource, SourceObjectType, SourceType, value } from "./Source";
 import { SourceAll } from "./SourceAll";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-sequence
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-sequence
  */
 export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
   public constructor(

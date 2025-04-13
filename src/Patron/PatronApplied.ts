@@ -2,7 +2,7 @@ import { GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestApplied } from "../Guest/GuestApplied";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/patron/patron-applied
+ * @url https://silentium-lab.github.io/silentium/#/patron/patron-applied
  */
 export class PatronApplied<T, R> implements GuestObjectType<T> {
   private guestApplied: GuestApplied<T, R>;

@@ -3,7 +3,7 @@ import { SourceObjectType, SourceType, value } from "./Source";
 import { GuestCast } from "../Guest/GuestCast";
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source-race
+ * @url https://silentium-lab.github.io/silentium/#/guest/source-race
  */
 export class SourceRace<T> implements SourceObjectType<T> {
   public constructor(private sources: SourceType<T>[]) {

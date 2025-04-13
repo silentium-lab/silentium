@@ -9,7 +9,7 @@ export interface SourceObjectType<T> {
 export type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T>;
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/value
+ * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
 export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
   if (source === undefined) {
@@ -26,7 +26,7 @@ export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/is-source
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
 export function isSource(mbSource: any): mbSource is SourceType {
   if (mbSource === undefined) {
@@ -38,7 +38,7 @@ export function isSource(mbSource: any): mbSource is SourceType {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/guest/source
+ * @url https://silentium-lab.github.io/silentium/#/guest/source
  */
 export class Source<T = any> implements SourceObjectType<T> {
   public constructor(private source: SourceType<T>) {
@@ -54,6 +54,6 @@ export class Source<T = any> implements SourceObjectType<T> {
 }
 
 /**
- * @url https://kosukhin.github.io/patron.site/#/utils/source-of
+ * @url https://silentium-lab.github.io/silentium/#/utils/source-of
  */
 export const sourceOf = <T>(value: T) => new Source<T>((g) => give(value, g));
