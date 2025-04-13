@@ -191,9 +191,6 @@ class GuestPool {
 class GuestSync {
   constructor(theValue) {
     this.theValue = theValue;
-    if (theValue === void 0) {
-      throw new Error("GuestSync didnt receive theValue argument");
-    }
   }
   give(value) {
     this.theValue = value;
