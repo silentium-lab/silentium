@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/silentium-lab/silentium/compare/v0.0.6...v0.0.7) (2025-04-15)
+
+
+### Features
+
+* **6-issue:** sourceSync class with documentation ([7def931](https://github.com/silentium-lab/silentium/commit/7def931cc0930c07953c3ff2ffe5473ea2eb86e6))
+
 ### [0.0.6](https://github.com/silentium-lab/silentium/compare/v0.0.5...v0.0.6) (2025-04-13)
 
 
