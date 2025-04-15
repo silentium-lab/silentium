@@ -38,7 +38,7 @@ export function isSource(mbSource: any): mbSource is SourceType {
 }
 
 /**
- * @url https://silentium-lab.github.io/silentium/#/guest/source
+ * @url https://silentium-lab.github.io/silentium/#/source
  */
 export class Source<T = any> implements SourceObjectType<T> {
   public constructor(private source: SourceType<T>) {
