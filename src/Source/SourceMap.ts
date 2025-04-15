@@ -11,7 +11,7 @@ import { SourceAll } from "./SourceAll";
 import { GuestCast } from "../Guest/GuestCast";
 
 /**
- * @url https://silentium-lab.github.io/silentium/#/guest/source-map
+ * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
 export class SourceMap<T, TG> implements SourceObjectType<TG[]> {
   public constructor(

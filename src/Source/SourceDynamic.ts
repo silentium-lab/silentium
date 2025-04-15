@@ -4,7 +4,7 @@ import { PatronPool } from "../Patron/PatronPool";
 import { SourceWithPoolType } from "./SourceWithPool";
 
 /**
- * @url https://silentium-lab.github.io/silentium/#/source-dynamic
+ * @url https://silentium-lab.github.io/silentium/#/source/source-dynamic
  */
 export class SourceDynamic<T = unknown> implements SourceWithPoolType<T> {
   public constructor(
