@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/silentium-lab/silentium/compare/v0.0.7...v0.0.8) (2025-04-18)
+
+
+### Features
+
+* **8-issue:** source can be any value except null and undefined ([cdb3112](https://github.com/silentium-lab/silentium/commit/cdb3112ecc1b3fe21bb2f4c6ae1a59bb43bdddb2))
+
 ### [0.0.7](https://github.com/silentium-lab/silentium/compare/v0.0.6...v0.0.7) (2025-04-15)
 
 
