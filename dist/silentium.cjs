@@ -465,16 +465,18 @@ class SourceAll {
 }
 
 function value(source, guest) {
-  if (source === void 0) {
+  if (source === void 0 || source === null) {
     throw new Error("value didnt receive source argument");
   }
-  if (guest === void 0) {
+  if (guest === void 0 || source === null) {
     throw new Error("value didnt receive guest argument");
   }
   if (typeof source === "function") {
     return source(guest);
-  } else {
+  } else if (typeof source === "object" && "value" in source && typeof source.value === "function") {
     return source.value(guest);
+  } else {
+    return new Source((g) => give(source, g)).value(guest);
   }
 }
 function isSource(mbSource) {
