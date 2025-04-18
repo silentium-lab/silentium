@@ -3,7 +3,7 @@
 echo "BEGIN"
 cd docs
 cp template.html index.html
-sed -i "s/TPL_SILENTIUM_OOP/https:\/\/cdn.jsdelivr.net\/npm\/silentium@0.0.2\/dist\/silentium.min.mjs/g" "index.html"
+sed -i "s/TPL_SILENTIUM_OOP/https:\/\/cdn.jsdelivr.net\/npm\/silentium@0.0.9\/dist\/silentium.min.mjs/g" "index.html"
 
 sed -i "s/TPL_SILENTIUM_WEB_API/https:\/\/cdn.jsdelivr.net\/npm\/silentium-web-api@0.0.1\/dist\/silentium-web-api.min.mjs/g" "index.html"
 
