@@ -659,6 +659,24 @@ class SourceExecutorApplied {
   }
 }
 
+class SourceFiltered {
+  constructor(baseSource, predicate) {
+    this.baseSource = baseSource;
+    this.predicate = predicate;
+  }
+  value(g) {
+    value(
+      this.baseSource,
+      new GuestCast(g, (v) => {
+        if (this.predicate(v) === true) {
+          give(v, g);
+        }
+      })
+    );
+    return this;
+  }
+}
+
 var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value2) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value: value2 }) : obj[key] = value2;
 var __publicField$1 = (obj, key, value2) => __defNormalProp$1(obj, key + "" , value2);
@@ -732,5 +750,5 @@ class Private {
   }
 }
 
-export { Guest, GuestApplied, GuestCast, GuestDisposable, GuestExecutorApplied, GuestObject, GuestPool, GuestSync, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, Private, PrivateClass, Source, SourceAll, SourceApplied, SourceDynamic, SourceExecutorApplied, SourceMap, SourceOnce, SourceRace, SourceSequence, SourceSync, SourceWithPool, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
+export { Guest, GuestApplied, GuestCast, GuestDisposable, GuestExecutorApplied, GuestObject, GuestPool, GuestSync, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, Private, PrivateClass, Source, SourceAll, SourceApplied, SourceDynamic, SourceExecutorApplied, SourceFiltered, SourceMap, SourceOnce, SourceRace, SourceSequence, SourceSync, SourceWithPool, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
 //# sourceMappingURL=silentium.js.map
