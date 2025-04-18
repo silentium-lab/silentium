@@ -661,6 +661,24 @@ class SourceExecutorApplied {
   }
 }
 
+class SourceFiltered {
+  constructor(baseSource, predicate) {
+    this.baseSource = baseSource;
+    this.predicate = predicate;
+  }
+  value(g) {
+    value(
+      this.baseSource,
+      new GuestCast(g, (v) => {
+        if (this.predicate(v) === true) {
+          give(v, g);
+        }
+      })
+    );
+    return this;
+  }
+}
+
 var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value2) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value: value2 }) : obj[key] = value2;
 var __publicField$1 = (obj, key, value2) => __defNormalProp$1(obj, key + "" , value2);
@@ -754,6 +772,7 @@ exports.SourceAll = SourceAll;
 exports.SourceApplied = SourceApplied;
 exports.SourceDynamic = SourceDynamic;
 exports.SourceExecutorApplied = SourceExecutorApplied;
+exports.SourceFiltered = SourceFiltered;
 exports.SourceMap = SourceMap;
 exports.SourceOnce = SourceOnce;
 exports.SourceRace = SourceRace;

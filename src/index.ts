@@ -20,6 +20,7 @@ export * from "./Source/SourceWithPool";
 export * from "./Source/SourceDynamic";
 export * from "./Source/SourceApplied";
 export * from "./Source/SourceExecutorApplied";
+export * from "./Source/SourceFiltered";
 export * from "./Source/SourceOnce";
 export * from "./Source/SourceSync";
 export * from "./Private/PrivateClass";

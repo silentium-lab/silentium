@@ -324,6 +324,16 @@ declare class SourceExecutorApplied<T> implements SourceObjectType<T> {
 }
 
 /**
+ * @url https://silentium-lab.github.io/silentium/#/source/source-filtered
+ */
+declare class SourceFiltered<T> implements SourceObjectType<T> {
+    private baseSource;
+    private predicate;
+    constructor(baseSource: SourceType<T>, predicate: (v: T) => boolean);
+    value(g: GuestType<T>): this;
+}
+
+/**
  * @url https://silentium-lab.github.io/silentium/#/source/source-once
  */
 declare class SourceOnce<T> implements SourceWithPoolType<T> {
@@ -355,4 +365,4 @@ declare class PrivateClass<T> implements PrivateType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
 }
 
-export { Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, Source, SourceAll, type SourceAllType, SourceApplied, type SourceDataType, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, SourceSync, type SourceType, SourceWithPool, type SourceWithPoolType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
+export { Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, Source, SourceAll, type SourceAllType, SourceApplied, type SourceDataType, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceFiltered, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, SourceSync, type SourceType, SourceWithPool, type SourceWithPoolType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
