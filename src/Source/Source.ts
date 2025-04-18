@@ -6,22 +6,40 @@ export interface SourceObjectType<T> {
   value: SourceExecutorType<T>;
 }
 
-export type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T>;
+export type SourceDataType =
+  | string
+  | number
+  | boolean
+  | Date
+  | object
+  | Array<unknown>
+  | symbol;
+
+export type SourceType<T = any> =
+  | SourceExecutorType<T>
+  | SourceObjectType<T>
+  | SourceDataType;
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
 export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
-  if (source === undefined) {
+  if (source === undefined || source === null) {
     throw new Error("value didnt receive source argument");
   }
-  if (guest === undefined) {
+  if (guest === undefined || source === null) {
     throw new Error("value didnt receive guest argument");
   }
   if (typeof source === "function") {
     return source(guest);
-  } else {
+  } else if (
+    typeof source === "object" &&
+    "value" in source &&
+    typeof source.value === "function"
+  ) {
     return source.value(guest);
+  } else {
+    return new Source((g) => give(source as T, g)).value(guest);
   }
 }
 
