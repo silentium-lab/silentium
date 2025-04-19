@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/silentium-lab/silentium/compare/v0.0.9...v0.0.10) (2025-04-19)
+
+
+### Features
+
+* **13-issue:** value return source as is without wrapping ([9126026](https://github.com/silentium-lab/silentium/commit/9126026d25e3c23c24eef692ddb6e54fbf029052))
+* **main:** update silentium version ([ccbdd15](https://github.com/silentium-lab/silentium/commit/ccbdd15e1b9334bd497329da03125a8a7ccebf24))
+
+
+### Bug Fixes
+
+* **main:** index html silentium version ([9cd2508](https://github.com/silentium-lab/silentium/commit/9cd2508819f520058ec5d292fefdfeb8c7c2face))
+
 ### [0.0.9](https://github.com/silentium-lab/silentium/compare/v0.0.8...v0.0.9) (2025-04-18)
 
 
