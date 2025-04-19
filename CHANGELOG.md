@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/silentium-lab/silentium/compare/v0.0.10...v0.0.11) (2025-04-19)
+
+
+### Features
+
+* **12-issue:** renaming SourceWithPool to SourceChangeable ([606a6af](https://github.com/silentium-lab/silentium/commit/606a6afd01c8335e9c5e72d52895916fe5d9eba4))
+
+
+### Bug Fixes
+
+* **12-issue:** fix linting of private class test ([7cd4f61](https://github.com/silentium-lab/silentium/commit/7cd4f616b6fd8c5c5683ead82812984648f28bbf))
+
 ### [0.0.10](https://github.com/silentium-lab/silentium/compare/v0.0.9...v0.0.10) (2025-04-19)
 
 
