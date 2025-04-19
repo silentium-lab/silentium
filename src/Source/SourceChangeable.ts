@@ -1,26 +1,41 @@
 import { Guest, GuestObjectType, GuestType } from "../Guest/Guest";
-import { SourceObjectType } from "./Source";
+import { isSource, SourceObjectType, SourceType, value } from "./Source";
 import { PatronPool } from "../Patron/PatronPool";
 import { isPatron } from "../Patron/Patron";
+import { PatronOnce } from "../Patron/PatronOnce";
 
 export interface PoolAwareType<T = any> {
   pool(): PatronPool<T>;
 }
 
 /**
- * @url https://silentium-lab.github.io/silentium/#/source/source-with-pool
+ * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
  */
-export type SourceWithPoolType<T = any> = SourceObjectType<T> &
+export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T> &
   PoolAwareType<T>;
 
-export class SourceWithPool<T> implements SourceWithPoolType<T> {
+export class SourceChangeable<T> implements SourceChangeableType<T> {
   private thePool = new PatronPool(this);
   private theEmptyPool = new PatronPool(this);
   private isEmpty: boolean;
+  private sourceDocument?: T;
 
-  public constructor(private sourceDocument?: T) {
+  public constructor(sourceDocument?: T | SourceType<T>) {
     this.isEmpty = sourceDocument === undefined;
+
+    if (sourceDocument !== undefined && isSource(sourceDocument)) {
+      value(
+        sourceDocument,
+        new PatronOnce((unwrappedSourceDocument) => {
+          this.isEmpty = unwrappedSourceDocument === undefined;
+          this.sourceDocument = unwrappedSourceDocument;
+        }),
+      );
+    } else {
+      this.isEmpty = sourceDocument === undefined;
+      this.sourceDocument = sourceDocument;
+    }
   }
 
   public pool() {

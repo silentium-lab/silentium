@@ -1,7 +1,7 @@
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceWithPool</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceChangeable</h1>
 
 <a
-  href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceWithPool.ts"
+  href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceChangeable.ts"
   target="_blank"
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4"
 >
@@ -10,7 +10,7 @@
     width="16"
     height="16"
   />
-  SourceWithPool на GitHub
+  SourceChangeable на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -34,15 +34,15 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Полезно в случаях, когда есть какие-то данные, которые могут изменяться со
-  временем. В этом случае данные полезно обернуть в SourceWithPool, чтобы посетители
+  временем. В этом случае данные полезно обернуть в SourceChangeable, чтобы посетители
   данных могли сами решить нужно их уведомлять или не нужно и они сами себя
-  удалят из PatronPool внутри SourceWithPool
+  удалят из PatronPool внутри SourceChangeable
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron } from "silentium";
+<pre class="mb-4"><code class="language-js">import { SourceChangeable, Patron } from "silentium";
 
-const source = new SourceWithPool("один");
+const source = new SourceChangeable("один");
 source.value((value) => {
   document.querySelector(
     ".source-result-1"
@@ -67,9 +67,9 @@ setTimeout(() => {
   <div class="source-result-2">Нет результата!</div>
 </div>
 <script type="module">
-  import { SourceWithPool, Patron } from "silentium";
+  import { SourceChangeable, Patron } from "silentium";
 
-  const source = new SourceWithPool("один");
+  const source = new SourceChangeable("один");
   source.value((value) => {
     document.querySelector(
       ".source-result-1"

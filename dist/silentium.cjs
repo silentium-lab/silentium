@@ -360,23 +360,71 @@ class PatronExecutorApplied {
   }
 }
 
+function value(source, guest) {
+  if (source === void 0 || source === null) {
+    throw new Error("value didnt receive source argument");
+  }
+  if (guest === void 0 || source === null) {
+    throw new Error("value didnt receive guest argument");
+  }
+  if (typeof source === "function") {
+    source(guest);
+  } else if (typeof source === "object" && "value" in source && typeof source.value === "function") {
+    source.value(guest);
+  } else {
+    give(source, guest);
+  }
+  return source;
+}
+function isSource(mbSource) {
+  if (mbSource === void 0) {
+    throw new Error("isSource didnt receive mbSource argument");
+  }
+  return typeof mbSource === "function" || typeof mbSource?.value === "function";
+}
+class Source {
+  constructor(source) {
+    this.source = source;
+    if (source === void 0) {
+      throw new Error("Source constructor didnt receive executor function");
+    }
+  }
+  value(guest) {
+    value(this.source, guest);
+    return guest;
+  }
+}
+const sourceOf = (value2) => new Source((g) => give(value2, g));
+
 var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
-class SourceWithPool {
+var __defNormalProp$4 = (obj, key, value2) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value: value2 }) : obj[key] = value2;
+var __publicField$4 = (obj, key, value2) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value2);
+class SourceChangeable {
   constructor(sourceDocument) {
-    this.sourceDocument = sourceDocument;
     __publicField$4(this, "thePool", new PatronPool(this));
     __publicField$4(this, "theEmptyPool", new PatronPool(this));
     __publicField$4(this, "isEmpty");
+    __publicField$4(this, "sourceDocument");
     this.isEmpty = sourceDocument === void 0;
+    if (sourceDocument !== void 0 && isSource(sourceDocument)) {
+      value(
+        sourceDocument,
+        new PatronOnce((unwrappedSourceDocument) => {
+          this.isEmpty = unwrappedSourceDocument === void 0;
+          this.sourceDocument = unwrappedSourceDocument;
+        })
+      );
+    } else {
+      this.isEmpty = sourceDocument === void 0;
+      this.sourceDocument = sourceDocument;
+    }
   }
   pool() {
     return this.thePool;
   }
-  give(value) {
+  give(value2) {
     this.isEmpty = false;
-    this.sourceDocument = value;
+    this.sourceDocument = value2;
     this.thePool.give(this.sourceDocument);
     this.theEmptyPool.give(this.sourceDocument);
     return this;
@@ -409,7 +457,7 @@ class SourceAll {
     __publicField$3(this, "keysKnown");
     __publicField$3(this, "keysFilled", /* @__PURE__ */ new Set());
     __publicField$3(this, "filledAllPool", new GuestPool(this));
-    this.theAll = new SourceWithPool({});
+    this.theAll = new SourceChangeable({});
     this.keysKnown = new Set(initialKnownKeys);
   }
   valueArray(guest) {
@@ -465,42 +513,6 @@ class SourceAll {
   }
 }
 
-function value(source, guest) {
-  if (source === void 0 || source === null) {
-    throw new Error("value didnt receive source argument");
-  }
-  if (guest === void 0 || source === null) {
-    throw new Error("value didnt receive guest argument");
-  }
-  if (typeof source === "function") {
-    source(guest);
-  } else if (typeof source === "object" && "value" in source && typeof source.value === "function") {
-    source.value(guest);
-  } else {
-    give(source, guest);
-  }
-  return source;
-}
-function isSource(mbSource) {
-  if (mbSource === void 0) {
-    throw new Error("isSource didnt receive mbSource argument");
-  }
-  return typeof mbSource === "function" || typeof mbSource?.value === "function";
-}
-class Source {
-  constructor(source) {
-    this.source = source;
-    if (source === void 0) {
-      throw new Error("Source constructor didnt receive executor function");
-    }
-  }
-  value(guest) {
-    value(this.source, guest);
-    return guest;
-  }
-}
-const sourceOf = (value2) => new Source((g) => give(value2, g));
-
 class SourceSequence {
   constructor(baseSource, targetSource) {
     this.baseSource = baseSource;
@@ -514,7 +526,7 @@ class SourceSequence {
   }
   value(guest) {
     const all = new SourceAll();
-    const sequenceSource = new SourceWithPool();
+    const sequenceSource = new SourceChangeable();
     const targetSource = this.targetSource.get(sequenceSource);
     value(
       this.baseSource,
@@ -687,7 +699,7 @@ var __publicField$1 = (obj, key, value2) => __defNormalProp$1(obj, key + "" , va
 class SourceOnce {
   constructor(initialValue) {
     __publicField$1(this, "source");
-    this.source = new SourceWithPool(initialValue);
+    this.source = new SourceChangeable(initialValue);
   }
   value(guest) {
     value(this.source, guest);
@@ -772,6 +784,7 @@ exports.PrivateClass = PrivateClass;
 exports.Source = Source;
 exports.SourceAll = SourceAll;
 exports.SourceApplied = SourceApplied;
+exports.SourceChangeable = SourceChangeable;
 exports.SourceDynamic = SourceDynamic;
 exports.SourceExecutorApplied = SourceExecutorApplied;
 exports.SourceFiltered = SourceFiltered;
@@ -780,7 +793,6 @@ exports.SourceOnce = SourceOnce;
 exports.SourceRace = SourceRace;
 exports.SourceSequence = SourceSequence;
 exports.SourceSync = SourceSync;
-exports.SourceWithPool = SourceWithPool;
 exports.give = give;
 exports.isGuest = isGuest;
 exports.isPatron = isPatron;

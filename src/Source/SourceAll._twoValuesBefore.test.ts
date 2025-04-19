@@ -1,10 +1,10 @@
 import { expect, test, vitest } from "vitest";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { SourceAll } from "./SourceAll";
 
 test("SourceAll._twoValuesBefore.test", () => {
-  const one = new SourceWithPool(1);
-  const two = new SourceWithPool(2);
+  const one = new SourceChangeable(1);
+  const two = new SourceChangeable(2);
   const all = new SourceAll<{ one: number; two: number }>();
 
   one.value(all.guestKey("one"));

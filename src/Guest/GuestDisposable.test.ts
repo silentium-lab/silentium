@@ -1,10 +1,10 @@
 import { GuestDisposable } from "./GuestDisposable";
 import { Patron } from "../Patron/Patron";
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "../Source/SourceChangeable";
 import { expect, test, vitest } from "vitest";
 
 test("GuestDisposable.test", () => {
-  const source = new SourceWithPool(1);
+  const source = new SourceChangeable(1);
 
   const guest = vitest.fn();
 

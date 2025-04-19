@@ -1,12 +1,12 @@
 import { give, GuestType } from "../Guest/Guest";
 import { SourceType, value } from "./Source";
 import { PatronPool } from "../Patron/PatronPool";
-import { SourceWithPoolType } from "./SourceWithPool";
+import { SourceChangeableType } from "./SourceChangeable";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-dynamic
  */
-export class SourceDynamic<T = unknown> implements SourceWithPoolType<T> {
+export class SourceDynamic<T = unknown> implements SourceChangeableType<T> {
   public constructor(
     private baseGuest: GuestType<T>,
     private baseSource: SourceType<T>,

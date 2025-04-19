@@ -12,7 +12,7 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, SourceFiltered, Patron } from "silentium";
+<pre class="mb-4"><code class="language-js">import { SourceChangeable, SourceFiltered, Patron } from "silentium";
 
 const guest = v => {
   const r = document.querySelector(".guest-result");
@@ -21,7 +21,7 @@ const guest = v => {
   }
 }
 
-const s = new SourceWithPool(false);
+const s = new SourceChangeable(false);
 const authComplete = new SourceFiltered(s, (v) => v === true);
 authComplete.value(new Patron(guest));
 
@@ -36,7 +36,7 @@ setTimeout(() => {
 </div>
 
 <script type="module">
-  import { SourceWithPool, SourceFiltered, Patron } from "silentium";
+  import { SourceChangeable, SourceFiltered, Patron } from "silentium";
 
   const guest = v => {
     const r = document.querySelector(".guest-result");
@@ -45,7 +45,7 @@ setTimeout(() => {
     }
   }
 
-  const s = new SourceWithPool(false);
+  const s = new SourceChangeable(false);
   const authComplete = new SourceFiltered(s, (v) => v === true);
   authComplete.value(new Patron(guest));
 

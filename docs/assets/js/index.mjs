@@ -1,5 +1,5 @@
 import { CurrentPage, Link, Page, Router } from "silentium-components";
-import { Patron, PatronOnce, SourceWithPool, sourceOf } from "silentium";
+import { Patron, PatronOnce, SourceChangeable, sourceOf } from "silentium";
 import { StyleFetched } from "./lib/StyleFetched.mjs";
 import { Fetched, Element, Attribute, StyleInstalled } from "silentium-web-api";
 import "./components.mjs";
@@ -15,7 +15,7 @@ const [basePath] = window.location.href
   .split("#");
 const cleanBasePath = basePath.replace(/[^/]+\.html$/, "");
 const currentPage = new CurrentPage();
-const basePathSource = new SourceWithPool(
+const basePathSource = new SourceChangeable(
   `${basePath}#`.replace("index.html", "").replace("//", "/"),
 );
 
@@ -24,7 +24,7 @@ link.watchClick(".global-body", "a.dynamic-navigation");
 
 const dynamicPage = new Page("Dynamic page");
 
-const errors = new SourceWithPool();
+const errors = new SourceChangeable();
 const routesTransport = new Fetched(errors);
 
 routesTransport.do().give({

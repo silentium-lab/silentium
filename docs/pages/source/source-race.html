@@ -36,7 +36,7 @@
   SourceMap,
   SourceRace,
   Source,
-  SourceWithPool,
+  SourceChangeable,
   give,
   value,
   GuestCast,
@@ -57,7 +57,7 @@ const nTimesSource = (condition, n, baseSource) => (guest) => {
   );
 };
 
-const source = new SourceWithPool([1, 2, 3, 4, 5]);
+const source = new SourceChangeable([1, 2, 3, 4, 5]);
 const guestMapped = new SourceMap(
   source,
   new Private(
@@ -83,7 +83,7 @@ guestMapped.value((v) => {
     SourceMap,
     SourceRace,
     Source,
-    SourceWithPool,
+    SourceChangeable,
     give,
     value,
     GuestCast,
@@ -104,7 +104,7 @@ guestMapped.value((v) => {
     );
   };
 
-  const source = new SourceWithPool([1, 2, 3, 4, 5]);
+  const source = new SourceChangeable([1, 2, 3, 4, 5]);
   const guestMapped = new SourceMap(
     source,
     new Private(

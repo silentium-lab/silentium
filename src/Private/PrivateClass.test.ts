@@ -1,9 +1,9 @@
 import { expect, test, vitest } from "vitest";
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "../Source/SourceChangeable";
 import { PrivateClass } from "./PrivateClass";
 
 test("PrivateClass.test", () => {
-  const sourcePrivate = new PrivateClass(SourceWithPool);
+  const sourcePrivate = new PrivateClass(SourceChangeable);
   const source = sourcePrivate.get(42);
 
   const guest = vitest.fn();

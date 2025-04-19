@@ -1,16 +1,16 @@
 import { GuestType } from "../Guest/Guest";
 import { PatronPool } from "../Patron/PatronPool";
 import { value } from "./Source";
-import { SourceWithPool, SourceWithPoolType } from "./SourceWithPool";
+import { SourceChangeable, SourceChangeableType } from "./SourceChangeable";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-once
  */
-export class SourceOnce<T> implements SourceWithPoolType<T> {
-  private source: SourceWithPool<T>;
+export class SourceOnce<T> implements SourceChangeableType<T> {
+  private source: SourceChangeable<T>;
 
   public constructor(initialValue?: T) {
-    this.source = new SourceWithPool(initialValue);
+    this.source = new SourceChangeable(initialValue);
   }
 
   public value(guest: GuestType<T>) {

@@ -1,4 +1,4 @@
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { SourceRace } from "./SourceRace";
 import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
 
@@ -12,7 +12,7 @@ afterEach(() => {
 
 test("SourceRace.test", async () => {
   const sBuild = (result: number, delay: number) => {
-    const s = new SourceWithPool();
+    const s = new SourceChangeable();
 
     setTimeout(() => {
       s.give(result);

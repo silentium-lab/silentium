@@ -4,7 +4,7 @@ import { Source, SourceObjectType, SourceType, value } from "./Source";
 import { GuestCast } from "../Guest/GuestCast";
 import { GuestType } from "../Guest/Guest";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { PrivateClass } from "../Private/PrivateClass";
 import { wait } from "../../test-utils/wait";
 
@@ -38,7 +38,7 @@ test("SourceSequence.defered.test", async () => {
         give(val, guest);
       }, 10);
     });
-  const source = new SourceWithPool([1, 2, 3, 9].map(sourceOf));
+  const source = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
 
   const sequence = new SourceSequence(source, new PrivateClass(X2));
 

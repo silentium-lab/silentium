@@ -27,9 +27,9 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceWithPool, SourceSync } from "silentium";
+><code class="language-js">import { SourceChangeable, SourceSync } from "silentium";
 
-const syncSource = new SourceSync(new SourceWithPool("Успешно установлено синхронно!"));
+const syncSource = new SourceSync(new SourceChangeable("Успешно установлено синхронно!"));
 document.querySelector(".guest-result").textContent = syncSource.syncValue();
 </code></pre>
 
@@ -38,8 +38,8 @@ document.querySelector(".guest-result").textContent = syncSource.syncValue();
   <span class="guest-result">Значение установится синхронно!</span>
 </div>
 <script type="module">
-  import { SourceWithPool, SourceSync } from "silentium";
+  import { SourceChangeable, SourceSync } from "silentium";
 
-  const syncSource = new SourceSync(new SourceWithPool("Успешно установлено синхронно!"));
+  const syncSource = new SourceSync(new SourceChangeable("Успешно установлено синхронно!"));
   document.querySelector(".guest-result").textContent = syncSource.syncValue();
 </script>

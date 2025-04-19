@@ -3,7 +3,7 @@ import { give, GuestType } from "../Guest/Guest";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { SourceMap } from "./SourceMap";
 import { GuestCast } from "../Guest/GuestCast";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { PrivateClass } from "../Private/PrivateClass";
 import { GuestSync } from "../Guest/GuestSync";
 
@@ -22,7 +22,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
-  const source = new SourceWithPool([1, 2, 3, 9]);
+  const source = new SourceChangeable([1, 2, 3, 9]);
   const guestMapped = new SourceMap(source, new PrivateClass(X2));
   const guest = new GuestSync([]);
 

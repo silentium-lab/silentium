@@ -1,4 +1,4 @@
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { PatronOnce } from "../Patron/PatronOnce";
@@ -24,7 +24,7 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
 
   public value(guest: GuestType<TG[]>) {
     const all = new SourceAll<TG[]>();
-    const sequenceSource = new SourceWithPool();
+    const sequenceSource = new SourceChangeable();
     const targetSource = this.targetSource.get(sequenceSource);
 
     value(

@@ -1,5 +1,5 @@
 import { SourceObjectType } from "./Source";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { Guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { GuestObject } from "../Guest/GuestObject";
@@ -14,7 +14,7 @@ export interface SourceAllType<T = any> extends SourceObjectType<T> {
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
 export class SourceAll<T> implements SourceAllType<T> {
-  private theAll: SourceWithPool<Record<string, unknown>>;
+  private theAll: SourceChangeable<Record<string, unknown>>;
 
   private keysKnown: Set<string>;
 
@@ -23,7 +23,7 @@ export class SourceAll<T> implements SourceAllType<T> {
   private filledAllPool = new GuestPool(this);
 
   public constructor(initialKnownKeys: string[] = []) {
-    this.theAll = new SourceWithPool<Record<string, unknown>>({});
+    this.theAll = new SourceChangeable<Record<string, unknown>>({});
     this.keysKnown = new Set(initialKnownKeys);
   }
 
