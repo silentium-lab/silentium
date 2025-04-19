@@ -54,10 +54,10 @@ all.value(({one, two}) => {
   <span class="guest-result">Результат = 0</span>
 </div>
 <script type="module">
-  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "silentium";
+  import { give, Patron, SourceChangeable, GuestCast, SourceAll } from "silentium";
 
-  const one = new SourceWithPool(1);
-  const two = new SourceWithPool(2);
+  const one = new SourceChangeable(1);
+  const two = new SourceChangeable(2);
 
   const all = new SourceAll();
   one.value(all.guestKey("one"));
@@ -76,12 +76,12 @@ all.value(({one, two}) => {
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-  SourceWithPool,
+  SourceChangeable,
   SourceAll
 } from 'silentium';
 
-const one = new SourceWithPool(1);
-const two = new SourceWithPool(2);
+const one = new SourceChangeable(1);
+const two = new SourceChangeable(2);
 
 const all = new SourceAll();
 one.value(all.guestKey('0'));
@@ -97,11 +97,11 @@ all.valueArray((numbers) => {
   <span class="guest-result-array">Результат = 0</span>
 </div>
 <script type="module">
-  import { give, Patron, SourceWithPool, GuestCast, SourceAll } from "silentium";
+  import { give, Patron, SourceChangeable, GuestCast, SourceAll } from "silentium";
 
   (() => {
-    const one = new SourceWithPool(1);
-    const two = new SourceWithPool(2);
+    const one = new SourceChangeable(1);
+    const two = new SourceChangeable(2);
 
     const all = new SourceAll();
     one.value(all.guestKey("0"));

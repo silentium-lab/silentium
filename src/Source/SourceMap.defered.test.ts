@@ -1,7 +1,7 @@
 import { wait } from "../../test-utils/wait";
 import { Private } from "../Private/Private";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { give, GuestType } from "../Guest/Guest";
 import { Source, SourceType, value } from "./Source";
 import { SourceMap } from "./SourceMap";
@@ -34,7 +34,7 @@ test("SourceMap.defered.test", async () => {
       await wait(5);
       give(val, guest);
     });
-  const source = new SourceWithPool([1, 2, 3, 9].map(sourceOf));
+  const source = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
   const guestMapped = new SourceMap(source, new Private(x2));
   const callFn = vi.fn();
   guestMapped.value((v) => {

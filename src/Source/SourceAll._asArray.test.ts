@@ -1,11 +1,11 @@
 import { expect, test, vitest } from "vitest";
 import { SourceAll } from "./SourceAll";
-import { SourceWithPool } from "./SourceWithPool";
+import { SourceChangeable } from "./SourceChangeable";
 import { Patron } from "../Patron/Patron";
 
 test("SourceAll._asArray.test", () => {
-  const one = new SourceWithPool(1);
-  const two = new SourceWithPool(2);
+  const one = new SourceChangeable(1);
+  const two = new SourceChangeable(2);
   const all = new SourceAll<[number, number]>();
 
   one.value(new Patron(all.guestKey("0")));

@@ -64,9 +64,9 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, Patron, GuestDisposable } from "silentium";
+<pre class="mb-4"><code class="language-js">import { SourceChangeable, Patron, GuestDisposable } from "silentium";
 
-  const source = new SourceWithPool("Один");
+  const source = new SourceChangeable("Один");
 
   source.value(
     new Patron(
@@ -95,9 +95,9 @@
   <span class="guest-result">Нет значения</span>
 </div>
 <script type="module">
-  import { SourceWithPool, Patron, GuestDisposable } from "silentium";
+  import { SourceChangeable, Patron, GuestDisposable } from "silentium";
 
-  const source = new SourceWithPool("Один");
+  const source = new SourceChangeable("Один");
 
   source.value(
     new Patron(

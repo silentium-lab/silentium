@@ -24,11 +24,11 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Guest, PatronExecutorApplied, Patron, SourceWithPool } from "silentium";
+><code class="language-js">import { Guest, PatronExecutorApplied, Patron, SourceChangeable } from "silentium";
 
-window.source = new SourceWithPool(20);
+window.source = new SourceChangeable(20);
 
-const loadingSource = new SourceWithPool('');
+const loadingSource = new SourceChangeable('');
 
 const guest = new Guest((value) => {
   document.querySelector(
@@ -67,11 +67,11 @@ window.source.value(
   Дать источнику значение 25
 </button>
 <script type="module">
-  import { Guest, PatronExecutorApplied, Patron, SourceWithPool } from "silentium";
+  import { Guest, PatronExecutorApplied, Patron, SourceChangeable } from "silentium";
 
-  window.source = new SourceWithPool(20);
+  window.source = new SourceChangeable(20);
 
-  const loadingSource = new SourceWithPool('');
+  const loadingSource = new SourceChangeable('');
 
   const guest = new Guest((value) => {
     document.querySelector(

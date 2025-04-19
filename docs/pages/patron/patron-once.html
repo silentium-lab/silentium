@@ -40,9 +40,9 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceWithPool, PatronOnce } from "silentium";
+<pre class="mb-4"><code class="language-js">import { SourceChangeable, PatronOnce } from "silentium";
 
-const source = new SourceWithPool("один раз");
+const source = new SourceChangeable("один раз");
 source.value(
   new PatronOnce((value) => {
     document.querySelector(
@@ -64,9 +64,9 @@ setTimeout(() => {
   <span class="patron-once-result">Нет результата!</span>
 </div>
 <script type="module">
-  import { SourceWithPool, PatronOnce } from "silentium";
+  import { SourceChangeable, PatronOnce } from "silentium";
 
-  const source = new SourceWithPool("один раз");
+  const source = new SourceChangeable("один раз");
   source.value(
     new PatronOnce((value) => {
       document.querySelector(

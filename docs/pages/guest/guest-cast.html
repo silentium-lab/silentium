@@ -51,7 +51,7 @@
 <pre class="mb-4"><code class="language-js">import {
     give,
     Patron,
-    SourceWithPool,
+    SourceChangeable,
     GuestCast,
     removePatronFromPools,
     isPatronInPools,
@@ -64,7 +64,7 @@
     }
 
     number(guest) {
-      const source = new SourceWithPool(this.theNumber);
+      const source = new SourceChangeable(this.theNumber);
       source.value(guest);
       const repeat = () => {
         if (!isPatronInPools(guest)) {
@@ -87,7 +87,7 @@
 
     sum(guest) {
       let totalSum = 0;
-      const source = new SourceWithPool(totalSum);
+      const source = new SourceChangeable(totalSum);
       source.value(guest);
       const numbersGuests = [];
       this.numbers.forEach((numberSource, index) => {
@@ -128,7 +128,7 @@
   import {
     give,
     Patron,
-    SourceWithPool,
+    SourceChangeable,
     GuestCast,
     removePatronFromPools,
     isPatronInPools,
@@ -141,7 +141,7 @@
     }
 
     number(guest) {
-      const source = new SourceWithPool(this.theNumber);
+      const source = new SourceChangeable(this.theNumber);
       source.value(guest);
       const repeat = () => {
         if (!isPatronInPools(guest)) {
@@ -164,7 +164,7 @@
 
     sum(guest) {
       let totalSum = 0;
-      const source = new SourceWithPool(totalSum);
+      const source = new SourceChangeable(totalSum);
       source.value(guest);
       const numbersGuests = [];
       this.numbers.forEach((numberSource, index) => {

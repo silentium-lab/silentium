@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { Patron } from "./Patron";
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "../Source/SourceChangeable";
 
 test("Patron.test", () => {
-  const one = new SourceWithPool(1);
+  const one = new SourceChangeable(1);
   let patronCalledTimes = 0;
   const patron = new Patron(() => {
     patronCalledTimes += 1;

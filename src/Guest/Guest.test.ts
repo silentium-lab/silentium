@@ -1,9 +1,9 @@
 import { expect, test, vitest } from "vitest";
-import { SourceWithPool } from "../Source/SourceWithPool";
+import { SourceChangeable } from "../Source/SourceChangeable";
 import { Guest } from "../Guest/Guest";
 
 test("Guest.test", () => {
-  const one = new SourceWithPool(1);
+  const one = new SourceChangeable(1);
 
   const guest1 = vitest.fn();
   one.value(guest1);
