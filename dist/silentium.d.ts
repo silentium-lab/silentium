@@ -8,7 +8,7 @@ type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/give
  */
-declare function give<T>(data: T, guest: GuestType<T>): void;
+declare function give<T>(data: T, guest: GuestType<T>): GuestType<T>;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
  */
@@ -196,7 +196,7 @@ type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T> | SourceD
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
-declare function value<T>(source: SourceType<T>, guest: GuestType<T>): any;
+declare function value<T>(source: SourceType<T>, guest: GuestType<T>): string | number | boolean | symbol | object;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */

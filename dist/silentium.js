@@ -10,6 +10,7 @@ function give(data, guest) {
   } else {
     guest.give(data);
   }
+  return guest;
 }
 function isGuest(mbGuest) {
   if (mbGuest === void 0) {
@@ -470,12 +471,13 @@ function value(source, guest) {
     throw new Error("value didnt receive guest argument");
   }
   if (typeof source === "function") {
-    return source(guest);
+    source(guest);
   } else if (typeof source === "object" && "value" in source && typeof source.value === "function") {
-    return source.value(guest);
+    source.value(guest);
   } else {
-    return new Source((g) => give(source, g)).value(guest);
+    give(source, guest);
   }
+  return source;
 }
 function isSource(mbSource) {
   if (mbSource === void 0) {
