@@ -1,6 +1,9 @@
 import { PrivateClass } from "./PrivateClass";
 import { GuestType } from "../Guest/Guest";
-import { SourceChangeable, SourceChangeableType } from "../Source/SourceChangeable";
+import {
+  SourceChangeable,
+  SourceChangeableType,
+} from "../Source/SourceChangeable";
 import { expect, test, vitest } from "vitest";
 import { PrivateType } from "./Private";
 
