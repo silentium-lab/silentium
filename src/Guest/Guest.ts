@@ -24,6 +24,8 @@ export function give<T>(data: T, guest: GuestType<T>) {
   } else {
     guest.give(data);
   }
+
+  return guest;
 }
 
 /**
