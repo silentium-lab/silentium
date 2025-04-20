@@ -40,7 +40,7 @@ const timer = source((g) => {
 tick();
 });
 
-new SourceApplied(timer, x => x * 2).value(new Patron(guest));
+sourceApplied(timer, x => x * 2).value(new Patron(guest));
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
@@ -49,7 +49,7 @@ new SourceApplied(timer, x => x * 2).value(new Patron(guest));
 </div>
 
 <script type="module">
-import { source, SourceApplied, Patron } from "silentium";
+import { source, sourceApplied, Patron } from "silentium";
 
 const guest = v => {
     const r = document.querySelector(".guest-result");
@@ -69,5 +69,5 @@ const timer = source((g) => {
     tick();
 });
 
-new SourceApplied(timer, x => x * 2).value(new Patron(guest));
+sourceApplied(timer, x => x * 2).value(new Patron(guest));
 </script>

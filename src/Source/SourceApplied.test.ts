@@ -1,14 +1,11 @@
-import { GuestSync } from "../Guest/GuestSync";
-import { SourceApplied } from "../Source/SourceApplied";
-import { SourceChangeable } from "./SourceChangeable";
+import { SourceSync } from "../Source/SourceSync";
 import { expect, test } from "vitest";
+import { sourceApplied } from "../Source/SourceApplied";
+import { SourceChangeable } from "./SourceChangeable";
 
 test("SourceApplied.test", () => {
   const source = new SourceChangeable(1);
-  const sourceDouble = new SourceApplied(source, (x) => x * 2);
-  const guest = new GuestSync(0);
+  const sourceDouble = new SourceSync(sourceApplied(source, (x) => x * 2));
 
-  sourceDouble.value(guest);
-
-  expect(guest.value()).toBe(2);
+  expect(sourceDouble.syncValue()).toBe(2);
 });
