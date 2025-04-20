@@ -169,9 +169,11 @@
     }
 
     number(guest) {
-      const all = new SourceAll();
-      this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-      this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+      const all = sourceAll({
+        n1: this.num1.number.bind(this),
+        n2: this.num2.number.bind(this),
+      });
+
       all.value(
         new GuestCast(guest, ({ n1, n2 }) => {
           guest.give(n1 + n2);
@@ -187,9 +189,10 @@
     }
 
     number(guest) {
-      const all = new SourceAll();
-      this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-      this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+      const all = sourceAll({
+        n1: this.num1.number.bind(this),
+        n2: this.num2.number.bind(this),
+      });
       all.value(
         new GuestCast(guest, ({ n1, n2 }) => {
           guest.give(n1 * n2);
@@ -338,9 +341,10 @@ class Addition {
   }
 
   number(guest) {
-    const all = new SourceAll();
-    this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-    this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+    const all = sourceAll({
+      n1: this.num1.number.bind(this),
+      n2: this.num2.number.bind(this),
+    });
     all.value(
       new GuestCast(guest, ({ n1, n2 }) => {
         guest.give(n1 + n2);
@@ -356,9 +360,10 @@ class Multiplication {
   }
 
   number(guest) {
-    const all = new SourceAll();
-    this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-    this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+    const all = sourceAll({
+      n1: this.num1.number.bind(this),
+      n2: this.num2.number.bind(this),
+    });
     all.value(
       new GuestCast(guest, ({ n1, n2 }) => {
         guest.give(n1 * n2);

@@ -123,9 +123,10 @@ value(helloSource, (greeting) => {
   value
 } from "silentium";
 
-const all = new SourceAll();
-value(give.bind(null, 1), all.guestKey("one"));
-value(give.bind(null, 2), all.guestKey("two"));
+const all = sourceAll({
+  one: source(1),
+  two: source(2),
+});
 
 all.value(({ one, two }) => {
   document.querySelector(".guest-result-3").textContent = `one + two = "${
@@ -140,9 +141,10 @@ all.value(({ one, two }) => {
 <script type="module">
   import { SourceAll, give, value } from "silentium";
 
-  const all = new SourceAll();
-  value(give.bind(null, 1), all.guestKey("one"));
-  value(give.bind(null, 2), all.guestKey("two"));
+  const all = sourceAll({
+    one: source(1),
+    two: source(2),
+  });
 
   all.value(({ one, two }) => {
     document.querySelector(".guest-result-3").textContent = `one + two = "${

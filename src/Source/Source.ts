@@ -25,10 +25,10 @@ export type SourceType<T = any> =
  */
 export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
   if (source === undefined || source === null) {
-    throw new Error("value didnt receive source argument");
+    throw new Error("value didn't receive source argument");
   }
   if (guest === undefined || source === null) {
-    throw new Error("value didnt receive guest argument");
+    throw new Error("value didn't receive guest argument");
   }
   if (typeof source === "function") {
     source(guest);

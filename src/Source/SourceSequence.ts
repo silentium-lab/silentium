@@ -1,10 +1,10 @@
-import { SourceChangeable } from "./SourceChangeable";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { PatronOnce } from "../Patron/PatronOnce";
 import { PrivateType } from "../Private/Private";
 import { isSource, SourceObjectType, SourceType, value } from "./Source";
-import { SourceAll } from "./SourceAll";
+import { sourceAll } from "./SourceAll";
+import { SourceChangeable, SourceChangeableType } from "./SourceChangeable";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
@@ -23,7 +23,6 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
   }
 
   public value(guest: GuestType<TG[]>) {
-    const all = new SourceAll<TG[]>();
     const sequenceSource = new SourceChangeable();
     const targetSource = this.targetSource.get(sequenceSource);
 
@@ -32,36 +31,40 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
       new GuestCast(guest, (theValue) => {
         let index = 0;
 
+        const sources: SourceChangeableType[] = [];
+        theValue.forEach(() => {
+          sources.push(new SourceChangeable());
+        });
+
         const nextItemHandle = () => {
           if (theValue[index + 1] !== undefined) {
             index = index + 1;
             handle();
-          } else {
-            all.valueArray(guest);
           }
         };
 
         function handle() {
-          sequenceSource.give(null);
+          const currentSource = sources[index];
           const nextValue = theValue[index];
           if (isSource(nextValue)) {
             value(
               nextValue,
               new PatronOnce((theNextValue) => {
                 sequenceSource.give(theNextValue);
-                value(targetSource, all.guestKey(index.toString()));
+                value(targetSource, currentSource);
                 nextItemHandle();
               }),
             );
           } else {
             sequenceSource.give(nextValue);
-            value(targetSource, all.guestKey(index.toString()));
+            value(targetSource, currentSource);
             nextItemHandle();
           }
         }
 
         if (theValue[index] !== undefined) {
           handle();
+          value(sourceAll(sources), guest);
         } else {
           give([], guest);
         }

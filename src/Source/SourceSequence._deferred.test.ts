@@ -6,6 +6,7 @@ import { PrivateClass } from "../Private/PrivateClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { SourceChangeable } from "./SourceChangeable";
 import { SourceSequence } from "./SourceSequence";
+import { Patron } from "../Patron/Patron";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -42,9 +43,11 @@ test("SourceSequence._deferred.test", async () => {
   const sequence = new SourceSequence(src, new PrivateClass(X2));
 
   const callFn = vi.fn();
-  sequence.value((v) => {
-    callFn(v.join());
-  });
+  sequence.value(
+    new Patron((v) => {
+      callFn(v.join());
+    }),
+  );
 
   await wait(51);
   expect(callFn).toBeCalled();

@@ -6,6 +6,7 @@ import { Private } from "../Private/Private";
 import { source, SourceType, value } from "./Source";
 import { SourceChangeable } from "./SourceChangeable";
 import { SourceMap } from "./SourceMap";
+import { Patron } from "../Patron/Patron";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -37,9 +38,11 @@ test("SourceMap._deferred.test", async () => {
   const src = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
   const guestMapped = new SourceMap(src, new Private(x2));
   const callFn = vi.fn();
-  guestMapped.value((v) => {
-    callFn(v.join());
-  });
+  guestMapped.value(
+    new Patron((v) => {
+      callFn(v.join());
+    }),
+  );
   await wait(50);
   expect(callFn).toBeCalled();
   expect(callFn).toBeCalledWith("2,4,6,18");
