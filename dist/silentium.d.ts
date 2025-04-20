@@ -1,3 +1,22 @@
+type SourceExecutorType<T> = (guest: GuestType<T>) => unknown;
+interface SourceObjectType<T> {
+    value: SourceExecutorType<T>;
+}
+type SourceDataType = string | number | boolean | Date | object | Array<unknown> | symbol;
+type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T> | SourceDataType;
+/**
+ * @url https://silentium-lab.github.io/silentium/#/utils/value
+ */
+declare function value<T>(source: SourceType<T>, guest: GuestType<T>): string | number | boolean | symbol | object;
+/**
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-source
+ */
+declare function isSource(mbSource: any): mbSource is SourceType;
+/**
+ * @url https://silentium-lab.github.io/silentium/#/source
+ */
+declare const source: <T>(source: SourceType<T>) => (guest: GuestType<T>) => void;
+
 type GuestIntroduction = "guest" | "patron";
 type GuestExecutorType<T = any, This = void> = (value: T) => This;
 interface GuestObjectType<T = any> {
@@ -8,7 +27,7 @@ type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/give
  */
-declare function give<T>(data: T, guest: GuestType<T>): GuestType<T>;
+declare function give<T>(data: T, guest?: GuestType<T>): GuestType<T> | SourceExecutorType<T>;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
  */
@@ -187,33 +206,6 @@ declare class PatronExecutorApplied<T> implements GuestObjectType<T> {
     introduction(): "guest" | "patron";
 }
 
-type SourceExecutorType<T> = (guest: GuestType<T>) => unknown;
-interface SourceObjectType<T> {
-    value: SourceExecutorType<T>;
-}
-type SourceDataType = string | number | boolean | Date | object | Array<unknown> | symbol;
-type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T> | SourceDataType;
-/**
- * @url https://silentium-lab.github.io/silentium/#/utils/value
- */
-declare function value<T>(source: SourceType<T>, guest: GuestType<T>): string | number | boolean | symbol | object;
-/**
- * @url https://silentium-lab.github.io/silentium/#/utils/is-source
- */
-declare function isSource(mbSource: any): mbSource is SourceType;
-/**
- * @url https://silentium-lab.github.io/silentium/#/source
- */
-declare class Source<T = any> implements SourceObjectType<T> {
-    private source;
-    constructor(source: SourceType<T>);
-    value(guest: GuestType<T>): GuestType<T>;
-}
-/**
- * @url https://silentium-lab.github.io/silentium/#/utils/source-of
- */
-declare const sourceOf: <T>(value: T) => Source<T>;
-
 interface SourceAllType<T = any> extends SourceObjectType<T> {
     valueArray(guest: GuestObjectType<T>): this;
     guestKey<R>(key: string): GuestObjectType<R>;
@@ -365,4 +357,4 @@ declare class PrivateClass<T> implements PrivateType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
 }
 
-export { Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, Source, SourceAll, type SourceAllType, SourceApplied, SourceChangeable, type SourceChangeableType, type SourceDataType, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceFiltered, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, SourceSync, type SourceType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
+export { Guest, GuestApplied, GuestCast, GuestDisposable, type GuestDisposableType, GuestExecutorApplied, type GuestExecutorType, GuestObject, type GuestObjectType, GuestPool, GuestSync, type GuestType, type GuestValueType, type MaybeDisposableType, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, type PoolAwareType, type PoolType, Private, PrivateClass, type PrivateType, SourceAll, type SourceAllType, SourceApplied, SourceChangeable, type SourceChangeableType, type SourceDataType, SourceDynamic, SourceExecutorApplied, type SourceExecutorType, SourceFiltered, SourceMap, type SourceObjectType, SourceOnce, SourceRace, SourceSequence, SourceSync, type SourceType, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, source, value };

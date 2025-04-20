@@ -49,31 +49,21 @@ export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
 export function isSource(mbSource: any): mbSource is SourceType {
-  if (mbSource === undefined) {
-    throw new Error("isSource didnt receive mbSource argument");
+  if (typeof mbSource === "object" && typeof mbSource.value === "function") {
+    return true;
   }
-  return (
-    typeof mbSource === "function" || typeof mbSource?.value === "function"
-  );
+  return mbSource !== null && mbSource !== undefined;
 }
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source
  */
-export class Source<T = any> implements SourceObjectType<T> {
-  public constructor(private source: SourceType<T>) {
-    if (source === undefined) {
-      throw new Error("Source constructor didnt receive executor function");
-    }
+export const source = <T>(source: SourceType<T>) => {
+  if (source === undefined) {
+    throw new Error("Source constructor didn't receive executor function");
   }
 
-  public value(guest: GuestType<T>): GuestType<T> {
-    value(this.source, guest);
-    return guest;
-  }
-}
-
-/**
- * @url https://silentium-lab.github.io/silentium/#/utils/source-of
- */
-export const sourceOf = <T>(value: T) => new Source<T>((g) => give(value, g));
+  return (guest: GuestType<T>) => {
+    value(source, guest);
+  };
+};

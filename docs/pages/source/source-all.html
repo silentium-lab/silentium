@@ -31,12 +31,12 @@
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-    Source,
+    source,
     SourceAll
 } from 'silentium';
 
-const one = new Source(1);
-const two = new Source(2);
+const one = source(1);
+const two = source(2);
 
 const all = new SourceAll();
 one.value(all.guestKey('one'));

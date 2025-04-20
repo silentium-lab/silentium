@@ -1,7 +1,6 @@
-import { SourceDynamic } from "./SourceDynamic";
 import { expect, test, vitest } from "vitest";
 import { give, Guest } from "../Guest/Guest";
-import { Source } from "./Source";
+import { SourceDynamic } from "./SourceDynamic";
 
 test("SourceDynamic", () => {
   let theValue = 1;
@@ -9,9 +8,7 @@ test("SourceDynamic", () => {
     new Guest((value: number) => {
       theValue = value;
     }),
-    new Source((guest) => {
-      give(theValue, guest);
-    }),
+    (g) => give(theValue, g),
   );
 
   const g1 = vitest.fn();

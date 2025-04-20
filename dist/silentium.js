@@ -1,9 +1,40 @@
+function value(source2, guest) {
+  if (source2 === void 0 || source2 === null) {
+    throw new Error("value didnt receive source argument");
+  }
+  if (guest === void 0 || source2 === null) {
+    throw new Error("value didnt receive guest argument");
+  }
+  if (typeof source2 === "function") {
+    source2(guest);
+  } else if (typeof source2 === "object" && "value" in source2 && typeof source2.value === "function") {
+    source2.value(guest);
+  } else {
+    give(source2, guest);
+  }
+  return source2;
+}
+function isSource(mbSource) {
+  if (typeof mbSource === "object" && typeof mbSource.value === "function") {
+    return true;
+  }
+  return mbSource !== null && mbSource !== void 0;
+}
+const source = (source2) => {
+  if (source2 === void 0) {
+    throw new Error("Source constructor didn't receive executor function");
+  }
+  return (guest) => {
+    value(source2, guest);
+  };
+};
+
 function give(data, guest) {
   if (data === void 0) {
-    throw new Error("give didnt receive data argument");
+    throw new Error("give didn't receive data argument");
   }
   if (guest === void 0) {
-    throw new Error("give didnt receive guest argument");
+    return source(data);
   }
   if (typeof guest === "function") {
     guest(data);
@@ -358,42 +389,6 @@ class PatronExecutorApplied {
   }
 }
 
-function value(source, guest) {
-  if (source === void 0 || source === null) {
-    throw new Error("value didnt receive source argument");
-  }
-  if (guest === void 0 || source === null) {
-    throw new Error("value didnt receive guest argument");
-  }
-  if (typeof source === "function") {
-    source(guest);
-  } else if (typeof source === "object" && "value" in source && typeof source.value === "function") {
-    source.value(guest);
-  } else {
-    give(source, guest);
-  }
-  return source;
-}
-function isSource(mbSource) {
-  if (mbSource === void 0) {
-    throw new Error("isSource didnt receive mbSource argument");
-  }
-  return typeof mbSource === "function" || typeof mbSource?.value === "function";
-}
-class Source {
-  constructor(source) {
-    this.source = source;
-    if (source === void 0) {
-      throw new Error("Source constructor didnt receive executor function");
-    }
-  }
-  value(guest) {
-    value(this.source, guest);
-    return guest;
-  }
-}
-const sourceOf = (value2) => new Source((g) => give(value2, g));
-
 var __defProp$4 = Object.defineProperty;
 var __defNormalProp$4 = (obj, key, value2) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value: value2 }) : obj[key] = value2;
 var __publicField$4 = (obj, key, value2) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value2);
@@ -516,10 +511,10 @@ class SourceSequence {
     this.baseSource = baseSource;
     this.targetSource = targetSource;
     if (baseSource === void 0) {
-      throw new Error("SourceSequence didnt receive baseSource argument");
+      throw new Error("SourceSequence didn't receive baseSource argument");
     }
     if (targetSource === void 0) {
-      throw new Error("SourceSequence didnt receive targetSource argument");
+      throw new Error("SourceSequence didn't receive targetSource argument");
     }
   }
   value(guest) {
@@ -584,10 +579,7 @@ class SourceMap {
       this.baseSource,
       new GuestCast(guest, (theValue) => {
         theValue.forEach((val, index) => {
-          const valueSource = isSource(val) ? val : new Source((innerGuest) => {
-            give(val, innerGuest);
-          });
-          const targetSource = this.targetSource.get(valueSource);
+          const targetSource = this.targetSource.get(val);
           value(targetSource, all.guestKey(index.toString()));
         });
       })
@@ -764,5 +756,5 @@ class Private {
   }
 }
 
-export { Guest, GuestApplied, GuestCast, GuestDisposable, GuestExecutorApplied, GuestObject, GuestPool, GuestSync, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, Private, PrivateClass, Source, SourceAll, SourceApplied, SourceChangeable, SourceDynamic, SourceExecutorApplied, SourceFiltered, SourceMap, SourceOnce, SourceRace, SourceSequence, SourceSync, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, sourceOf, value };
+export { Guest, GuestApplied, GuestCast, GuestDisposable, GuestExecutorApplied, GuestObject, GuestPool, GuestSync, Patron, PatronApplied, PatronExecutorApplied, PatronOnce, PatronPool, Private, PrivateClass, SourceAll, SourceApplied, SourceChangeable, SourceDynamic, SourceExecutorApplied, SourceFiltered, SourceMap, SourceOnce, SourceRace, SourceSequence, SourceSync, give, isGuest, isPatron, isPatronInPools, isSource, patronPools, removePatronFromPools, source, value };
 //# sourceMappingURL=silentium.js.map

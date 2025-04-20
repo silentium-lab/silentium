@@ -2,7 +2,7 @@ import { expect, test, vitest } from "vitest";
 import { SourceChangeable } from "./SourceChangeable";
 import { Patron } from "../Patron/Patron";
 
-test("SourceChangeable.test", () => {
+test("SourceChangeable._empty.test", () => {
   const source = new SourceChangeable();
   const guest = vitest.fn();
 

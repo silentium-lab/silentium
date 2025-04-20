@@ -1,14 +1,8 @@
-import { PrivateType } from "../Private/Private";
-import { give, GuestType } from "../Guest/Guest";
-import {
-  Source,
-  SourceObjectType,
-  SourceType,
-  isSource,
-  value,
-} from "./Source";
-import { SourceAll } from "./SourceAll";
+import { GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
+import { PrivateType } from "../Private/Private";
+import { SourceObjectType, SourceType, value } from "./Source";
+import { SourceAll } from "./SourceAll";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
@@ -32,12 +26,7 @@ export class SourceMap<T, TG> implements SourceObjectType<TG[]> {
       this.baseSource,
       new GuestCast(<GuestType>guest, (theValue) => {
         theValue.forEach((val, index) => {
-          const valueSource = isSource(val)
-            ? val
-            : new Source((innerGuest) => {
-                give(val, innerGuest);
-              });
-          const targetSource = this.targetSource.get(valueSource);
+          const targetSource = this.targetSource.get(val);
           value(targetSource, all.guestKey(index.toString()));
         });
       }),

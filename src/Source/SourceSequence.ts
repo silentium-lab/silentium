@@ -15,10 +15,10 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
     private targetSource: PrivateType<SourceType<TG>>,
   ) {
     if (baseSource === undefined) {
-      throw new Error("SourceSequence didnt receive baseSource argument");
+      throw new Error("SourceSequence didn't receive baseSource argument");
     }
     if (targetSource === undefined) {
-      throw new Error("SourceSequence didnt receive targetSource argument");
+      throw new Error("SourceSequence didn't receive targetSource argument");
     }
   }
 

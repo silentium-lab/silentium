@@ -34,13 +34,13 @@
 <pre class="mb-4"><code class="language-js">import {
   Patron,
   SourceChangeable,
-  Source,
+  source,
   GuestDisposable,
   isPatronInPools,
 } from "silentium";
 
 const source = new SourceChangeable(1);
-const timer = new Source((guest) => {
+const timer = source((guest) => {
   source.value(guest);
   const repeat = () => {
     if (!isPatronInPools(guest)) {
@@ -81,13 +81,13 @@ timer.value(
   import {
     Patron,
     SourceChangeable,
-    Source,
+    source,
     GuestDisposable,
     isPatronInPools,
   } from "silentium";
 
   const source = new SourceChangeable(1);
-  const timer = new Source((guest) => {
+  const timer = source((guest) => {
     source.value(guest);
     const repeat = () => {
       if (!isPatronInPools(guest)) {

@@ -90,7 +90,7 @@ guestMapped.value((v) => {
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 2.</p>
 <pre class="mb-4"><code class="language-js">import {
-  Source,
+  source,
   SourceChangeable,
   GuestCast,
   SourceMap,
@@ -116,7 +116,7 @@ guestMapped.value((v) => {
   }
 
   const numSource = (num) =>
-    new Source((guest) =>
+    source((guest) =>
       setTimeout(() => {
         give(num, guest);
       }, 8000)
@@ -144,7 +144,7 @@ guestMapped.value((v) => {
 
 <script type="module">
   import {
-    Source,
+    source,
     SourceChangeable,
     GuestCast,
     SourceMap,
@@ -170,20 +170,20 @@ guestMapped.value((v) => {
     }
 
     const numSource = (num) =>
-      new Source((guest) =>
+      source((guest) =>
         setTimeout(() => {
           give(num, guest);
         }, 8000)
       );
 
-    const source = new SourceChangeable([
+    const src = new SourceChangeable([
       numSource(1),
       numSource(2),
       numSource(3),
       numSource(4),
       numSource(5),
     ]);
-    const map = new SourceMap(source, new PrivateClass(X3));
+    const map = new SourceMap(src, new PrivateClass(X3));
 
     map.value((v) => {
       document.querySelector(".guest-result-2").textContent = v.join();

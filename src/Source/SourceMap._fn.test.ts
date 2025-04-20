@@ -18,7 +18,7 @@ function x2(baseNumber: SourceType<number>) {
   };
 }
 
-test("SourceMap.test", () => {
+test("SourceMap._fn.test", () => {
   const source = new SourceChangeable([1, 2, 3, 9]);
   const guestMapped = new SourceMap(source, new Private(x2));
   const g = vitest.fn();

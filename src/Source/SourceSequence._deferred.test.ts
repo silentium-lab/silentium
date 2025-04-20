@@ -1,12 +1,11 @@
-import { SourceSequence } from "./SourceSequence";
-import { give } from "../Guest/Guest";
-import { Source, SourceObjectType, SourceType, value } from "./Source";
-import { GuestCast } from "../Guest/GuestCast";
-import { GuestType } from "../Guest/Guest";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
-import { PrivateClass } from "../Private/PrivateClass";
 import { wait } from "../../test-utils/wait";
+import { give, GuestType } from "../Guest/Guest";
+import { GuestCast } from "../Guest/GuestCast";
+import { PrivateClass } from "../Private/PrivateClass";
+import { source, SourceObjectType, SourceType, value } from "./Source";
+import { SourceChangeable } from "./SourceChangeable";
+import { SourceSequence } from "./SourceSequence";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -31,16 +30,16 @@ class X2 implements SourceObjectType<number> {
   }
 }
 
-test("SourceSequence.defered.test", async () => {
+test("SourceSequence._deferred.test", async () => {
   const sourceOf = (val: number) =>
-    new Source((guest) => {
+    source((guest) => {
       setTimeout(() => {
         give(val, guest);
       }, 10);
     });
-  const source = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
+  const src = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
 
-  const sequence = new SourceSequence(source, new PrivateClass(X2));
+  const sequence = new SourceSequence(src, new PrivateClass(X2));
 
   const callFn = vi.fn();
   sequence.value((v) => {

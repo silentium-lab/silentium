@@ -1,3 +1,5 @@
+import { source, SourceExecutorType, SourceType } from "../Source/Source";
+
 type GuestIntroduction = "guest" | "patron";
 
 export type GuestExecutorType<T = any, This = void> = (value: T) => This;
@@ -12,19 +14,21 @@ export type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
 /**
  * @url https://silentium-lab.github.io/silentium/#/utils/give
  */
-export function give<T>(data: T, guest: GuestType<T>) {
+export function give<T>(
+  data: T,
+  guest?: GuestType<T>,
+): GuestType<T> | SourceExecutorType<T> {
   if (data === undefined) {
-    throw new Error("give didnt receive data argument");
+    throw new Error("give didn't receive data argument");
   }
   if (guest === undefined) {
-    throw new Error("give didnt receive guest argument");
+    return source<T>(data as SourceType<T>) as SourceExecutorType<T>;
   }
   if (typeof guest === "function") {
     guest(data);
   } else {
     guest.give(data);
   }
-
   return guest;
 }
 

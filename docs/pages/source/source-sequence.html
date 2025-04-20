@@ -30,7 +30,7 @@
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-  Source,
+  source,
   Patron,
   GuestCast,
   SourceChangeable,
@@ -57,7 +57,7 @@ class X3 {
 
 const tillResult = new SourceChangeable(9);
 const numSource = (num) =>
-  new Source((guest) =>
+  source((guest) =>
     setTimeout(() => {
       tillResult.value((theValue) => {
         tillResult.give(theValue - 1);
@@ -98,7 +98,7 @@ tillResult.value(
 
 <script type="module">
   import {
-    Source,
+    source,
     Patron,
     GuestCast,
     SourceChangeable,
@@ -125,7 +125,7 @@ tillResult.value(
 
   const tillResult = new SourceChangeable(9);
   const numSource = (num) =>
-    new Source((guest) =>
+    source((guest) =>
       setTimeout(() => {
         tillResult.value((theValue) => {
           tillResult.give(theValue - 1);
@@ -134,7 +134,7 @@ tillResult.value(
       }, 1000)
     );
 
-  const source = new SourceChangeable([
+  const src = new SourceChangeable([
     numSource(1),
     numSource(2),
     numSource(3),
@@ -145,7 +145,7 @@ tillResult.value(
     numSource(8),
     numSource(9),
   ]);
-  const sequence = new SourceSequence(source, new PrivateClass(X3));
+  const sequence = new SourceSequence(src, new PrivateClass(X3));
 
   sequence.value((v) => {
     document.querySelector(".guest-result").textContent = v.join();

@@ -18,7 +18,7 @@ const wait = (ms: number) =>
     }, ms);
   });
 
-test("PatronOnce.sourceEmpty.test", async () => {
+test("PatronOnce._sourceEmpty.test", async () => {
   const source = new SourceChangeable();
   let calls = 0;
   const patron = new PatronOnce(() => {
