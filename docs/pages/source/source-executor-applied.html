@@ -30,13 +30,16 @@ const guest = v => {
     }
 }
 
-new SourceExecutorApplied(sourceOf(40), (source) => {
-    return (g) => {
-        setTimeout(() => {
-            value(source, g);
-        }, 5000);
-    };
-}).value(new Patron(guest));
+value(
+    sourceExecutorApplied(sourceOf(40), (source) => {
+        return (g) => {
+            setTimeout(() => {
+                value(source, g);
+            }, 5000);
+        };
+    }),
+    new Patron(guest)
+);
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
@@ -54,11 +57,14 @@ const guest = v => {
     }
 }
 
-new SourceExecutorApplied(sourceOf(40), (source) => {
-    return (g) => {
-        setTimeout(() => {
-            value(source, g);
-        }, 5000);
-    };
-}).value(new Patron(guest));
+value(
+    sourceExecutorApplied(sourceOf(40), (source) => {
+        return (g) => {
+            setTimeout(() => {
+                value(source, g);
+            }, 5000);
+        };
+    }),
+    new Patron(guest)
+);
 </script>

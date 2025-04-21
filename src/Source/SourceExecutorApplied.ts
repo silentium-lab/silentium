@@ -1,22 +1,14 @@
-import {
-  SourceExecutorType,
-  SourceObjectType,
-  SourceType,
-  value,
-} from "../Source/Source";
+import { SourceExecutorType, SourceType, value } from "../Source/Source";
 
 /**
+ * Ability to apply function to source executor, helpful when need to apply throttling or debounce
  * @url https://silentium-lab.github.io/silentium/#/source/source-executor-applied
  */
-export class SourceExecutorApplied<T> implements SourceObjectType<T> {
-  public value: SourceExecutorType<T>;
-
-  public constructor(
-    source: SourceType<T>,
-    applier: (executor: SourceExecutorType<T>) => SourceExecutorType<T>,
-  ) {
-    this.value = applier((g) => {
-      value(source, g);
-    });
-  }
-}
+export const sourceExecutorApplied = <T>(
+  source: SourceType<T>,
+  applier: (executor: SourceExecutorType<T>) => SourceExecutorType<T>,
+) => {
+  return applier((g) => {
+    value(source, g);
+  });
+};
