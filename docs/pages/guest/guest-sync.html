@@ -37,9 +37,9 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceChangeable, GuestSync } from 'silentium';
+><code class="language-js">import { sourceChangeable, GuestSync } from 'silentium';
 
-const source = new SourceChangeable('Успешно установлено синхронно!');
+const source = sourceChangeable('Успешно установлено синхронно!');
 const syncGuest = new GuestSync('');
 source.value(syncGuest);
 
@@ -51,9 +51,9 @@ document.querySelector('.guest-result').textContent = syncGuest.value();
   <span class="guest-result">Значение установится синхронно!</span>
 </div>
 <script type="module">
-  import { SourceChangeable, GuestSync } from "silentium";
+  import { sourceChangeable, GuestSync } from "silentium";
 
-  const source = new SourceChangeable("Успешно установлено синхронно!");
+  const source = sourceChangeable("Успешно установлено синхронно!");
   const syncGuest = new GuestSync('');
   source.value(syncGuest);
 

@@ -1,4 +1,4 @@
-import { SourceChangeable } from "./SourceChangeable";
+import { sourceChangeable } from "./SourceChangeable";
 import { SourceRace } from "./SourceRace";
 import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
 
@@ -12,7 +12,7 @@ afterEach(() => {
 
 test("SourceRace.test", async () => {
   const sBuild = (result: number, delay: number) => {
-    const s = new SourceChangeable();
+    const s = sourceChangeable();
 
     setTimeout(() => {
       s.give(result);

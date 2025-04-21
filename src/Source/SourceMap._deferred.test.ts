@@ -4,7 +4,7 @@ import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { Private } from "../Private/Private";
 import { source, SourceType, value } from "./Source";
-import { SourceChangeable } from "./SourceChangeable";
+import { sourceChangeable } from "./SourceChangeable";
 import { SourceMap } from "./SourceMap";
 import { Patron } from "../Patron/Patron";
 
@@ -35,7 +35,7 @@ test("SourceMap._deferred.test", async () => {
       await wait(5);
       give(val, guest);
     });
-  const src = new SourceChangeable([1, 2, 3, 9].map(sourceOf));
+  const src = sourceChangeable([1, 2, 3, 9].map(sourceOf));
   const guestMapped = new SourceMap(src, new Private(x2));
   const callFn = vi.fn();
   guestMapped.value(

@@ -1,11 +1,9 @@
 import { PrivateClass } from "./PrivateClass";
-import { GuestType } from "../Guest/Guest";
-import {
-  SourceChangeable,
-  SourceChangeableType,
-} from "../Source/SourceChangeable";
+import { give, GuestType } from "../Guest/Guest";
+import { SourceChangeableType } from "../Source/SourceChangeable";
 import { expect, test, vitest } from "vitest";
 import { PrivateType } from "./Private";
+import { SourceObjectType } from "src/Source/Source";
 
 class TestClass {
   private source: SourceChangeableType;
@@ -19,6 +17,15 @@ class TestClass {
 
   public value(guest: GuestType) {
     this.source.value(guest);
+    return this;
+  }
+}
+
+class SourceChangeable implements SourceObjectType<number> {
+  public constructor(private v: number) {}
+
+  public value(g: GuestType<number>) {
+    give(this.v, g);
     return this;
   }
 }

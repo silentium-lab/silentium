@@ -2,10 +2,10 @@ import { expect, test } from "vitest";
 import { Patron } from "../Patron/Patron";
 import { give, Guest } from "./Guest";
 import { GuestCast } from "./GuestCast";
-import { SourceChangeable } from "../Source/SourceChangeable";
+import { sourceChangeable } from "../Source/SourceChangeable";
 
 test("GuestCast.test", () => {
-  const source = new SourceChangeable();
+  const source = sourceChangeable();
   let acc = 0;
   const mainGuest = new Patron(
     new Guest((value: number) => {

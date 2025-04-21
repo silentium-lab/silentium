@@ -91,7 +91,7 @@
 <script type="module">
   import {
     Guest,
-    SourceChangeable,
+    sourceChangeable,
     Patron,
     SourceAll,
     GuestCast,
@@ -103,8 +103,8 @@
     timerHead = null;
 
     constructor() {
-      this.source = new SourceChangeable(1);
-      this.isStoppedSource = new SourceChangeable(false);
+      this.source = sourceChangeable(1);
+      this.isStoppedSource = sourceChangeable(false);
     }
 
     number(guest) {
@@ -149,7 +149,7 @@
 
   class NumberFromInput {
     constructor(selector) {
-      this.source = new SourceChangeable(1);
+      this.source = sourceChangeable(1);
       this.input = new Input(this.source, selector);
     }
 

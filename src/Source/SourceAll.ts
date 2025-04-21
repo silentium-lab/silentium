@@ -1,15 +1,12 @@
-import { give, Guest, GuestObjectType, GuestType } from "../Guest/Guest";
+import { give, Guest, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { Patron } from "../Patron/Patron";
-import { SourceObjectType, SourceType, value } from "./Source";
-import { SourceChangeable } from "./SourceChangeable";
-
-export interface SourceAllType<T = any> extends SourceObjectType<T> {
-  valueArray(guest: GuestObjectType<T>): this;
-  guestKey<R>(key: string): GuestObjectType<R>;
-}
+import { SourceType, value } from "./Source";
+import { sourceChangeable } from "./SourceChangeable";
 
 /**
+ * Represents common value as Record or Array of bunch of sources,
+ * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
 export const sourceAll = <T>(
@@ -21,7 +18,7 @@ export const sourceAll = <T>(
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
   const isSourcesArray = Array.isArray(sources);
-  const theAll = new SourceChangeable<Record<string, unknown>>({});
+  const theAll = sourceChangeable<Record<string, unknown>>({});
 
   Object.entries(sources).forEach(([key, source]) => {
     keysKnown.add(key);

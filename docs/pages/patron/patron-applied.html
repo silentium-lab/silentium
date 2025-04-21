@@ -18,9 +18,9 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Guest, PatronApplied, SourceChangeable } from "silentium";
+><code class="language-js">import { Guest, PatronApplied, sourceChangeable } from "silentium";
 
-window.source = new SourceChangeable(20);
+window.source = sourceChangeable(20);
 
 const guest = new Guest((value) => {
   document.querySelector(
@@ -50,9 +50,9 @@ window.source.value(
   Дать источнику значение 25
 </button>
 <script type="module">
-  import { Guest, PatronApplied, SourceChangeable } from "silentium";
+  import { Guest, PatronApplied, sourceChangeable } from "silentium";
 
-  window.source = new SourceChangeable(20);
+  window.source = sourceChangeable(20);
 
   const guest = new Guest((value) => {
     document.querySelector(

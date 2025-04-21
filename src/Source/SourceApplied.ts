@@ -3,6 +3,7 @@ import { GuestCast } from "../Guest/GuestCast";
 import { SourceType, value } from "../Source/Source";
 
 /**
+ * Gives ability to apply function to source value
  * @url https://silentium-lab.github.io/silentium/#/source/source-applied
  */
 export const sourceApplied = <T, R>(

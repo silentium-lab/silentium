@@ -1,6 +1,6 @@
 import { Private } from "../Private/Private";
 import { expect, test, vitest } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
+import { sourceChangeable } from "./SourceChangeable";
 import { give, GuestType } from "../Guest/Guest";
 import { SourceType, value } from "./Source";
 import { SourceMap } from "./SourceMap";
@@ -19,7 +19,7 @@ function x2(baseNumber: SourceType<number>) {
 }
 
 test("SourceMap._fn.test", () => {
-  const source = new SourceChangeable([1, 2, 3, 9]);
+  const source = sourceChangeable([1, 2, 3, 9]);
   const guestMapped = new SourceMap(source, new Private(x2));
   const g = vitest.fn();
   guestMapped.value(g);

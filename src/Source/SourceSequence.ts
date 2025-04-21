@@ -4,7 +4,7 @@ import { PatronOnce } from "../Patron/PatronOnce";
 import { PrivateType } from "../Private/Private";
 import { isSource, SourceObjectType, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
-import { SourceChangeable, SourceChangeableType } from "./SourceChangeable";
+import { sourceChangeable, SourceChangeableType } from "./SourceChangeable";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
@@ -23,7 +23,7 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
   }
 
   public value(guest: GuestType<TG[]>) {
-    const sequenceSource = new SourceChangeable();
+    const sequenceSource = sourceChangeable();
     const targetSource = this.targetSource.get(sequenceSource);
 
     value(
@@ -33,7 +33,7 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
 
         const sources: SourceChangeableType[] = [];
         theValue.forEach(() => {
-          sources.push(new SourceChangeable());
+          sources.push(sourceChangeable());
         });
 
         const nextItemHandle = () => {

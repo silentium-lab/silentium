@@ -21,6 +21,8 @@ export type SourceType<T = any> =
   | SourceDataType;
 
 /**
+ * Helps to connect source and guest, if you need to get value in guest from source
+ * helpful because we don't know what shape of source do we have, it can be function or object or primitive
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
 export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
@@ -46,6 +48,7 @@ export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
 }
 
 /**
+ * Helps to check what some information is of source shape
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
 export function isSource(mbSource: any): mbSource is SourceType {
@@ -56,6 +59,7 @@ export function isSource(mbSource: any): mbSource is SourceType {
 }
 
 /**
+ * Represents source as function
  * @url https://silentium-lab.github.io/silentium/#/source
  */
 export const source = <T>(source: SourceType<T>) => {

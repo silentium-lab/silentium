@@ -33,13 +33,13 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   Patron,
-  SourceChangeable,
+  sourceChangeable,
   source,
   GuestDisposable,
   isPatronInPools,
 } from "silentium";
 
-const source = new SourceChangeable(1);
+const source = sourceChangeable(1);
 const timer = source((guest) => {
   source.value(guest);
   const repeat = () => {
@@ -80,13 +80,13 @@ timer.value(
 <script type="module">
   import {
     Patron,
-    SourceChangeable,
+    sourceChangeable,
     source,
     GuestDisposable,
     isPatronInPools,
   } from "silentium";
 
-  const source = new SourceChangeable(1);
+  const source = sourceChangeable(1);
   const timer = source((guest) => {
     source.value(guest);
     const repeat = () => {

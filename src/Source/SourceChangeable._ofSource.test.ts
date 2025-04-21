@@ -1,9 +1,9 @@
 import { expect, test, vitest } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
+import { sourceChangeable } from "./SourceChangeable";
 import { Patron } from "../Patron/Patron";
 
 test("SourceChangeable._ofSource.test", () => {
-  const source = new SourceChangeable(52);
+  const source = sourceChangeable(52);
 
   const g = vitest.fn();
   source.value(new Patron(g));

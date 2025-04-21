@@ -1,11 +1,10 @@
-import { SourceSequence } from "./SourceSequence";
-import { give } from "../Guest/Guest";
-import { SourceObjectType, SourceType, value } from "./Source";
-import { GuestCast } from "../Guest/GuestCast";
-import { GuestType } from "../Guest/Guest";
 import { expect, test, vitest } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
+import { give, GuestType } from "../Guest/Guest";
+import { GuestCast } from "../Guest/GuestCast";
 import { PrivateClass } from "../Private/PrivateClass";
+import { SourceObjectType, SourceType, value } from "./Source";
+import { sourceChangeable } from "./SourceChangeable";
+import { SourceSequence } from "./SourceSequence";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}
@@ -22,7 +21,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceSequence.test", () => {
-  const source = new SourceChangeable([1, 2, 3, 9]);
+  const source = sourceChangeable([1, 2, 3, 9]);
   const guestMapped = new SourceSequence(source, new PrivateClass(X2));
   const g = vitest.fn();
   guestMapped.value(g);

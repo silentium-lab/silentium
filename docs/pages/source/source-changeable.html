@@ -40,9 +40,9 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceChangeable, Patron } from "silentium";
+<pre class="mb-4"><code class="language-js">import { sourceChangeable, Patron } from "silentium";
 
-const source = new SourceChangeable("один");
+const source = sourceChangeable("один");
 source.value((value) => {
   document.querySelector(
     ".source-result-1"
@@ -67,9 +67,9 @@ setTimeout(() => {
   <div class="source-result-2">Нет результата!</div>
 </div>
 <script type="module">
-  import { SourceChangeable, Patron } from "silentium";
+  import { sourceChangeable, Patron } from "silentium";
 
-  const source = new SourceChangeable("один");
+  const source = sourceChangeable("один");
   source.value((value) => {
     document.querySelector(
       ".source-result-1"

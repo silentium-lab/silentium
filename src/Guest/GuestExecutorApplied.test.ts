@@ -1,6 +1,6 @@
 import { Patron } from "../Patron/Patron";
 import { expect, test, vi } from "vitest";
-import { SourceChangeable } from "../Source/SourceChangeable";
+import { sourceChangeable } from "../Source/SourceChangeable";
 import { GuestExecutorApplied } from "../Guest/GuestExecutorApplied";
 import { debounce } from "../../test-utils/debounce";
 
@@ -11,7 +11,7 @@ test("GuestExecutorApplied.test", () => {
     counter += v;
   };
 
-  const source = new SourceChangeable();
+  const source = sourceChangeable();
   source.value(
     new Patron(new GuestExecutorApplied(guest, debounce.bind(null, 100))),
   );
