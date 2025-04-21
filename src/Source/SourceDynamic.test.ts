@@ -1,10 +1,10 @@
 import { expect, test, vitest } from "vitest";
 import { give, Guest } from "../Guest/Guest";
-import { SourceDynamic } from "./SourceDynamic";
+import { sourceDynamic } from "./SourceDynamic";
 
 test("SourceDynamic", () => {
   let theValue = 1;
-  const sourceDynamic = new SourceDynamic(
+  const sd = sourceDynamic(
     new Guest((value: number) => {
       theValue = value;
     }),
@@ -12,12 +12,12 @@ test("SourceDynamic", () => {
   );
 
   const g1 = vitest.fn();
-  sourceDynamic.value(g1);
+  sd.value(g1);
   expect(g1).toBeCalledWith(1);
 
-  sourceDynamic.give(2);
+  sd.give(2);
 
   const g2 = vitest.fn();
-  sourceDynamic.value(g2);
+  sd.value(g2);
   expect(g2).toBeCalledWith(2);
 });

@@ -4,12 +4,13 @@ import { PatronPool } from "../Patron/PatronPool";
 import { isPatron } from "../Patron/Patron";
 import { PatronOnce } from "../Patron/PatronOnce";
 
-/**
- * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
- */
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
 
+/**
+ * Ability to create source what can be changed later
+ * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
+ */
 export const sourceChangeable = <T>(source?: SourceType<T> | T) => {
   const createdSource = {} as SourceChangeableType<T>;
   const thePool = new PatronPool(createdSource);
