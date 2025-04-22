@@ -1,25 +1,23 @@
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
-import { SourceObjectType, SourceType, value } from "../Source/Source";
+import { SourceType, value } from "../Source/Source";
 
 /**
+ * Helps not to respond with information what checked by predicate function
  * @url https://silentium-lab.github.io/silentium/#/source/source-filtered
  */
-export class SourceFiltered<T> implements SourceObjectType<T> {
-  public constructor(
-    private baseSource: SourceType<T>,
-    private predicate: (v: T) => boolean,
-  ) {}
-
-  public value(g: GuestType<T>) {
+export const sourceFiltered = <T>(
+  baseSource: SourceType<T>,
+  predicate: (v: T) => boolean,
+) => {
+  return (g: GuestType<T>) => {
     value(
-      this.baseSource,
+      baseSource,
       new GuestCast(g, (v) => {
-        if (this.predicate(v) === true) {
+        if (predicate(v) === true) {
           give(v, g);
         }
       }),
     );
-    return this;
-  }
-}
+  };
+};
