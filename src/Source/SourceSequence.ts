@@ -2,32 +2,31 @@ import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { PatronOnce } from "../Patron/PatronOnce";
 import { PrivateType } from "../Private/Private";
-import { isSource, SourceObjectType, SourceType, value } from "./Source";
+import { isSource, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 import { sourceChangeable, SourceChangeableType } from "./SourceChangeable";
 
 /**
+ * Ability to apply source to source of array values sequentially
  * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
  */
-export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
-  public constructor(
-    private baseSource: SourceType<T[]>,
-    private targetSource: PrivateType<SourceType<TG>>,
-  ) {
-    if (baseSource === undefined) {
-      throw new Error("SourceSequence didn't receive baseSource argument");
-    }
-    if (targetSource === undefined) {
-      throw new Error("SourceSequence didn't receive targetSource argument");
-    }
+export const sourceSequence = <T, TG>(
+  baseSource: SourceType<T[]>,
+  targetSource: PrivateType<SourceType<TG>>,
+) => {
+  if (baseSource === undefined) {
+    throw new Error("SourceSequence didn't receive baseSource argument");
+  }
+  if (targetSource === undefined) {
+    throw new Error("SourceSequence didn't receive targetSource argument");
   }
 
-  public value(guest: GuestType<TG[]>) {
+  return (guest: GuestType<TG[]>) => {
     const sequenceSource = sourceChangeable();
-    const targetSource = this.targetSource.get(sequenceSource);
+    const source = targetSource.get(sequenceSource);
 
     value(
-      this.baseSource,
+      baseSource,
       new GuestCast(guest, (theValue) => {
         let index = 0;
 
@@ -51,13 +50,13 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
               nextValue,
               new PatronOnce((theNextValue) => {
                 sequenceSource.give(theNextValue);
-                value(targetSource, currentSource);
+                value(source, currentSource);
                 nextItemHandle();
               }),
             );
           } else {
             sequenceSource.give(nextValue);
-            value(targetSource, currentSource);
+            value(source, currentSource);
             nextItemHandle();
           }
         }
@@ -70,6 +69,5 @@ export class SourceSequence<T, TG> implements SourceObjectType<TG[]> {
         }
       }),
     );
-    return this;
-  }
-}
+  };
+};

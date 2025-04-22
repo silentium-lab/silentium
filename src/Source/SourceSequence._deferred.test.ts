@@ -5,7 +5,7 @@ import { GuestCast } from "../Guest/GuestCast";
 import { PrivateClass } from "../Private/PrivateClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
-import { SourceSequence } from "./SourceSequence";
+import { sourceSequence } from "./SourceSequence";
 import { Patron } from "../Patron/Patron";
 
 beforeEach(() => {
@@ -40,10 +40,11 @@ test("SourceSequence._deferred.test", async () => {
     });
   const src = sourceChangeable([1, 2, 3, 9].map(sourceOf));
 
-  const sequence = new SourceSequence(src, new PrivateClass(X2));
+  const sequence = sourceSequence(src, new PrivateClass(X2));
 
   const callFn = vi.fn();
-  sequence.value(
+  value(
+    sequence,
     new Patron((v) => {
       callFn(v.join());
     }),
