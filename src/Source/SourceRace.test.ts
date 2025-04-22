@@ -1,6 +1,7 @@
-import { sourceChangeable } from "./SourceChangeable";
-import { SourceRace } from "./SourceRace";
+import { value } from "../Source/Source";
 import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
+import { sourceChangeable } from "./SourceChangeable";
+import { sourceRace } from "./SourceRace";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -24,12 +25,12 @@ test("SourceRace.test", async () => {
   const s2 = sBuild(2, 100);
   const s1 = sBuild(1, 200);
 
-  const sAny = new SourceRace([s1, s2]);
+  const sAny = sourceRace([s1, s2]);
 
   await vi.advanceTimersByTime(201);
 
   const g1 = vitest.fn();
-  sAny.value(g1);
+  value(sAny, g1);
   expect(g1).toBeCalledWith(1);
 
   setTimeout(() => {
@@ -40,7 +41,7 @@ test("SourceRace.test", async () => {
   await vi.advanceTimersByTime(301);
 
   const g2 = vitest.fn();
-  sAny.value(g2);
+  value(sAny, g2);
   // ignores second value
   expect(g2).toBeCalledWith(3);
 });

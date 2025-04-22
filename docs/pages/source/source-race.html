@@ -34,7 +34,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   sourceMap,
-  SourceRace,
+  sourceRace,
   Source,
   sourceChangeable,
   give,
@@ -62,7 +62,7 @@ const guestMapped = sourceMap(
   source,
   new Private(
     (itemSource) =>
-      new SourceRace([
+      sourceRace([
         nTimesSource(isEven, 2, itemSource),
         nTimesSource(isOdd, 3, itemSource),
       ])
@@ -81,7 +81,7 @@ guestMapped.value((v) => {
 <script type="module">
   import {
     sourceMap,
-    SourceRace,
+    sourceRace,
     Source,
     sourceChangeable,
     give,
@@ -109,7 +109,7 @@ guestMapped.value((v) => {
     source,
     new Private(
       (itemSource) =>
-        new SourceRace([
+        sourceRace([
           nTimesSource(isEven, 2, itemSource),
           nTimesSource(isOdd, 3, itemSource),
         ])
