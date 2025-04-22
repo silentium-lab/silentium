@@ -2,11 +2,11 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
+import { Patron } from "../Patron/Patron";
 import { Private } from "../Private/Private";
 import { source, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
-import { SourceMap } from "./SourceMap";
-import { Patron } from "../Patron/Patron";
+import { sourceMap } from "./SourceMap";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -36,9 +36,10 @@ test("SourceMap._deferred.test", async () => {
       give(val, guest);
     });
   const src = sourceChangeable([1, 2, 3, 9].map(sourceOf));
-  const guestMapped = new SourceMap(src, new Private(x2));
+  const guestMapped = sourceMap(src, new Private(x2));
   const callFn = vi.fn();
-  guestMapped.value(
+  value(
+    guestMapped,
     new Patron((v) => {
       callFn(v.join());
     }),
