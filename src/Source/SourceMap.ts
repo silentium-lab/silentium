@@ -5,6 +5,7 @@ import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 
 /**
+ * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
 export const sourceMap = <T, TG>(
