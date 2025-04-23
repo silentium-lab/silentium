@@ -1,17 +1,17 @@
 import { expect, test, vitest } from "vitest";
 import { Patron } from "../Patron/Patron";
 import { sourceChangeable } from "../Source/SourceChangeable";
-import { GuestDisposable } from "./GuestDisposable";
+import { guestDisposable } from "./GuestDisposable";
 
 test("GuestDisposable.test", () => {
-  const source = sourceChangeable(1);
+  const source = sourceChangeable<number>(1);
 
   const guest = vitest.fn();
 
-  // Работает проверка один раз, потом патром себя удаляет
+  // Работает проверка один раз, потом патрон себя удаляет
   source.value(
     new Patron(
-      new GuestDisposable(guest, (value) => {
+      guestDisposable(guest, (value) => {
         return value !== null && value > 1;
       }),
     ),

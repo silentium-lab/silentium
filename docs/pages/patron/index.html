@@ -35,7 +35,7 @@
   Patron,
   sourceChangeable,
   source,
-  GuestDisposable,
+  guestDisposable,
   isPatronInPools,
 } from "silentium";
 
@@ -58,7 +58,7 @@ const timer = source((guest) => {
 
 timer.value(
   new Patron(
-    new GuestDisposable(
+    guestDisposable(
       (value) => {
         const el = document.querySelector(".patron-result");
         if (el) {
@@ -82,7 +82,7 @@ timer.value(
     Patron,
     sourceChangeable,
     source,
-    GuestDisposable,
+    guestDisposable,
     isPatronInPools,
   } from "silentium";
 
@@ -105,7 +105,7 @@ timer.value(
 
   timer.value(
     new Patron(
-      new GuestDisposable(
+      guestDisposable(
         (value) => {
           const el = document.querySelector(".patron-result");
           if (el) {

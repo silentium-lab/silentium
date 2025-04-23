@@ -7,27 +7,30 @@ export interface GuestDisposableType<T = any> extends GuestObjectType<T> {
 export type MaybeDisposableType<T = any> = Partial<GuestDisposableType<T>>;
 
 /**
+ * Connects to guest logic what can tell PatronPool
+ * what guest don't need to receive new values
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-disposable
  */
-export class GuestDisposable<T> implements GuestDisposableType<T> {
-  public constructor(
-    private guest: GuestType,
-    private disposeCheck: (value: T | null) => boolean,
-  ) {
-    if (guest === undefined) {
-      throw new Error("GuestDisposable didnt receive guest argument");
-    }
-    if (disposeCheck === undefined) {
-      throw new Error("GuestDisposable didnt receive disposeCheck argument");
-    }
+export const guestDisposable = <T>(
+  guest: GuestType,
+  disposeCheck: (value: T | null) => boolean,
+): GuestDisposableType<T> => {
+  if (guest === undefined) {
+    throw new Error("GuestDisposable didn't receive guest argument");
+  }
+  if (disposeCheck === undefined) {
+    throw new Error("GuestDisposable didn't receive disposeCheck argument");
   }
 
-  public disposed(value: T | null): boolean {
-    return this.disposeCheck(value);
-  }
+  const result = {
+    disposed(value: T | null): boolean {
+      return disposeCheck(value);
+    },
+    give(value: T) {
+      give(value, guest);
+      return result;
+    },
+  };
 
-  public give(value: T): this {
-    give(value, this.guest);
-    return this;
-  }
-}
+  return result;
+};

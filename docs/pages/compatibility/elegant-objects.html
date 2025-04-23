@@ -95,7 +95,7 @@
     Patron,
     SourceAll,
     guestCast,
-    GuestDisposable,
+    guestDisposable,
   } from "silentium";
   import { Text, Input } from "silentium-components";
 
@@ -214,7 +214,7 @@
   numberTimer.start();
   numberTimer.number(
     new Patron(
-      new GuestDisposable(
+      guestDisposable(
         new Text(".eo-counter"),
         disposeIfNoSelector(".eo-counter")
       )
@@ -232,7 +232,7 @@
   );
   result.number(
     new Patron(
-      new GuestDisposable(
+      guestDisposable(
         new Text(".eo-result"),
         disposeIfNoSelector(".eo-result")
       )
@@ -247,7 +247,7 @@
   Patron,
   SourceAll,
   guestCast,
-  GuestDisposable,
+  guestDisposable,
 } from "silentium";
 import { Text, Input } from "silentium-components";
 
@@ -263,7 +263,7 @@ const result = new Multiplication(
 numberTimer.start();
 numberTimer.number(
   new Patron(
-    new GuestDisposable(
+    guestDisposable(
       new Text(".eo-counter"),
       disposeIfNoSelector(".eo-counter")
     )
@@ -271,7 +271,7 @@ numberTimer.number(
 );
 result.number(
   new Patron(
-    new GuestDisposable(
+    guestDisposable(
       new Text(".eo-result"),
       disposeIfNoSelector(".eo-result")
     )

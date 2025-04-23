@@ -64,13 +64,13 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, Patron, GuestDisposable } from "silentium";
+<pre class="mb-4"><code class="language-js">import { sourceChangeable, Patron, guestDisposable } from "silentium";
 
   const source = sourceChangeable("Один");
 
   source.value(
     new Patron(
-      new GuestDisposable(
+      guestDisposable(
         (value) => {
           document.querySelector(".guest-result").textContent = value;
         },
@@ -95,13 +95,13 @@
   <span class="guest-result">Нет значения</span>
 </div>
 <script type="module">
-  import { sourceChangeable, Patron, GuestDisposable } from "silentium";
+  import { sourceChangeable, Patron, guestDisposable } from "silentium";
 
   const source = sourceChangeable("Один");
 
   source.value(
     new Patron(
-      new GuestDisposable(
+      guestDisposable(
         (value) => {
           document.querySelector(".guest-result").textContent = value;
         },
