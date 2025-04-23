@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { sourceChangeable } from "../Source/SourceChangeable";
-import { patron } from "src/Patron/Patron";
+import { patron } from "../Patron/Patron";
 
 test("Patron.test", () => {
   const one = sourceChangeable(1);

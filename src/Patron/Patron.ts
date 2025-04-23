@@ -14,6 +14,8 @@ export const isPatron = (guest: GuestType): guest is PatronType<unknown> =>
   guest !== null &&
   guest?.introduction?.() === "patron";
 
+export const introduction = () => "patron" as const;
+
 /**
  * Help to turn existed guest intro patron
  * @url https://silentium-lab.github.io/silentium/#/patron
@@ -34,9 +36,7 @@ export const patron = <T>(
       const maybeDisposable = willBePatron as GuestDisposableType;
       return maybeDisposable?.disposed?.(value) || false;
     },
-    introduction() {
-      return "patron" as const;
-    },
+    introduction,
   };
 
   return result;
