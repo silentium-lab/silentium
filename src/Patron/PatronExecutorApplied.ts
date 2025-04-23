@@ -1,14 +1,11 @@
 import { GuestExecutorType, GuestObjectType, GuestType } from "../Guest/Guest";
-import {
-  guestExecutorApplied,
-  GuestExecutorApplied,
-} from "../Guest/GuestExecutorApplied";
+import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-executor-applied
  */
 export class PatronExecutorApplied<T> implements GuestObjectType<T> {
-  private guestApplied: GuestExecutorApplied<T>;
+  private guestApplied: GuestObjectType<T>;
 
   public constructor(
     baseGuest: GuestType<T>,
