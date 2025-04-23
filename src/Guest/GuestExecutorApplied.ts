@@ -6,6 +6,7 @@ import {
 } from "../Guest/Guest";
 
 /**
+ * Apply function to guest function of receiving value, useful for debouncing or throttling
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-executor-applied
  */
 export const guestExecutorApplied = <T>(
