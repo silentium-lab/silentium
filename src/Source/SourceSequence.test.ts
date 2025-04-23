@@ -1,7 +1,7 @@
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
-import { PrivateClass } from "../Private/PrivateClass";
+import { PrivateClass } from "../Personal/PrivateClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";

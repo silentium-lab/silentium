@@ -2,7 +2,7 @@ import { PrivateClass } from "./PrivateClass";
 import { give, GuestType } from "../Guest/Guest";
 import { SourceChangeableType } from "../Source/SourceChangeable";
 import { expect, test, vitest } from "vitest";
-import { PrivateType } from "./Private";
+import { PersonalType } from "./Personal";
 import { SourceObjectType } from "src/Source/Source";
 
 class TestClass {
@@ -10,7 +10,7 @@ class TestClass {
 
   public constructor(
     baseNum: number,
-    modules: { main: PrivateType<SourceChangeableType> },
+    modules: { main: PersonalType<SourceChangeableType> },
   ) {
     this.source = modules.main.get(baseNum + 55);
   }

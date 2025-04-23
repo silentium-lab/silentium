@@ -1,7 +1,7 @@
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { PatronOnce } from "../Patron/PatronOnce";
-import { PrivateType } from "../Private/Private";
+import { PersonalType } from "../Personal/Personal";
 import { isSource, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 import { sourceChangeable, SourceChangeableType } from "./SourceChangeable";
@@ -12,7 +12,7 @@ import { sourceChangeable, SourceChangeableType } from "./SourceChangeable";
  */
 export const sourceSequence = <T, TG>(
   baseSource: SourceType<T[]>,
-  targetSource: PrivateType<SourceType<TG>>,
+  targetSource: PersonalType<SourceType<TG>>,
 ) => {
   if (baseSource === undefined) {
     throw new Error("SourceSequence didn't receive baseSource argument");

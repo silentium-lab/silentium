@@ -1,8 +1,8 @@
-import { Private } from "./Private";
 import { expect, test } from "vitest";
+import { personal } from "./Personal";
 
 test("Private.test", () => {
-  const privateNum = new Private((val) => {
+  const privateNum = personal((val) => {
     return {
       num: val,
     };

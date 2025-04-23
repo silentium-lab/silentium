@@ -4,7 +4,7 @@ import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
 import { GuestCast } from "../Guest/GuestCast";
 import { sourceChangeable } from "./SourceChangeable";
-import { PrivateClass } from "../Private/PrivateClass";
+import { PrivateClass } from "../Personal/PrivateClass";
 import { GuestSync } from "../Guest/GuestSync";
 
 class X2 implements SourceObjectType<number> {

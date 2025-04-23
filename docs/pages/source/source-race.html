@@ -40,7 +40,7 @@
   give,
   value,
   GuestCast,
-  Private,
+  personal,
 } from "silentium";
 
 const isEven = (v) => v % 2 === 0;
@@ -60,7 +60,7 @@ const nTimesSource = (condition, n, baseSource) => (guest) => {
 const source = sourceChangeable([1, 2, 3, 4, 5]);
 const guestMapped = sourceMap(
   source,
-  new Private(
+  personal(
     (itemSource) =>
       sourceRace([
         nTimesSource(isEven, 2, itemSource),
@@ -87,7 +87,7 @@ guestMapped.value((v) => {
     give,
     value,
     GuestCast,
-    Private,
+    personal,
   } from "silentium";
 
   const isEven = (v) => v % 2 === 0;
@@ -107,7 +107,7 @@ guestMapped.value((v) => {
   const source = sourceChangeable([1, 2, 3, 4, 5]);
   const guestMapped = sourceMap(
     source,
-    new Private(
+    personal(
       (itemSource) =>
         sourceRace([
           nTimesSource(isEven, 2, itemSource),

@@ -1,6 +1,6 @@
 import { GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
-import { PrivateType } from "../Private/Private";
+import { PersonalType } from "../Personal/Personal";
 import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 
@@ -10,7 +10,7 @@ import { sourceAll } from "./SourceAll";
  */
 export const sourceMap = <T, TG>(
   baseSource: SourceType<T[]>,
-  targetSource: PrivateType<SourceType<TG>>,
+  targetSource: PersonalType<SourceType<TG>>,
 ) => {
   if (baseSource === undefined) {
     throw new Error("SourceMap didn't receive baseSource argument");

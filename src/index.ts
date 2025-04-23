@@ -23,5 +23,5 @@ export * from "./Source/SourceExecutorApplied";
 export * from "./Source/SourceFiltered";
 export * from "./Source/SourceOnce";
 export * from "./Source/SourceSync";
-export * from "./Private/PrivateClass";
-export * from "./Private/Private";
+export * from "./Personal/PrivateClass";
+export * from "./Personal/Personal";
