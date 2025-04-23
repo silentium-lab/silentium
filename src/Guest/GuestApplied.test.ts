@@ -1,12 +1,15 @@
-import { GuestApplied } from "../Guest/GuestApplied";
 import { expect, test, vitest } from "vitest";
-import { sourceChangeable } from "../Source/SourceChangeable";
+import { guestApplied } from "../Guest/GuestApplied";
+import { source, value } from "../Source/Source";
 
 test("GuestApplied.test", () => {
-  const one = sourceChangeable(1);
+  const one = source(1);
   const guest = vitest.fn();
 
-  one.value(new GuestApplied(guest, (v) => v * 2));
+  value(
+    one,
+    guestApplied(guest, (v) => v * 2),
+  );
 
   expect(guest).toBeCalled();
   expect(guest).toBeCalledWith(2);

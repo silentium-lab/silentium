@@ -2,7 +2,13 @@ import { guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
 import { PatronOnce } from "../Patron/PatronOnce";
 import { PatronPool } from "../Patron/PatronPool";
-import { isSource, SourceObjectType, SourceType, value } from "./Source";
+import {
+  isSource,
+  SourceDataType,
+  SourceObjectType,
+  SourceType,
+  value,
+} from "./Source";
 
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
@@ -11,7 +17,7 @@ export type SourceChangeableType<T = any> = SourceObjectType<T> &
  * Ability to create source what can be changed later
  * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
  */
-export const sourceChangeable = <T>(source?: SourceType<T> | T) => {
+export const sourceChangeable = <T>(source?: SourceType<T>) => {
   const createdSource = {} as SourceChangeableType<T>;
   const thePool = new PatronPool(createdSource);
   const theEmptyPool = new PatronPool(createdSource);
@@ -22,7 +28,7 @@ export const sourceChangeable = <T>(source?: SourceType<T> | T) => {
       source,
       new PatronOnce((unwrappedSourceDocument) => {
         isEmpty = unwrappedSourceDocument === undefined;
-        source = unwrappedSourceDocument;
+        source = unwrappedSourceDocument as SourceDataType<T>;
       }),
     );
   } else {
@@ -48,7 +54,7 @@ export const sourceChangeable = <T>(source?: SourceType<T> | T) => {
 
   createdSource.give = (value: T) => {
     isEmpty = false;
-    source = value;
+    source = value as SourceDataType<T>;
     thePool.give(source);
     theEmptyPool.give(source);
     return createdSource;

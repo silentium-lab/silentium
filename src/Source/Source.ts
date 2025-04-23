@@ -6,19 +6,15 @@ export interface SourceObjectType<T> {
   value: SourceExecutorType<T>;
 }
 
-export type SourceDataType =
-  | string
-  | number
-  | boolean
-  | Date
-  | object
-  | Array<unknown>
-  | symbol;
+export type SourceDataType<T> = Extract<
+  T,
+  string | number | boolean | Date | object | Array<unknown> | symbol
+>;
 
 export type SourceType<T = any> =
   | SourceExecutorType<T>
   | SourceObjectType<T>
-  | SourceDataType;
+  | SourceDataType<T>;
 
 /**
  * Helps to connect source and guest, if you need to get value in guest from source
@@ -62,7 +58,7 @@ export const isSource = (mbSource: any): mbSource is SourceType => {
  * Represents source as function
  * @url https://silentium-lab.github.io/silentium/#/source
  */
-export const source = <T>(source: SourceType<T>) => {
+export const source = <T>(source: SourceType<T>): SourceExecutorType<T> => {
   if (source === undefined) {
     throw new Error("Source constructor didn't receive executor function");
   }

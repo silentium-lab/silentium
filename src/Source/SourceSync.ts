@@ -11,7 +11,7 @@ import { SourceObjectType, SourceType, value } from "../Source/Source";
 export const sourceSync = <T>(
   baseSource: SourceType<T>,
 ): SourceObjectType<T> & { syncValue(): T } => {
-  const syncGuest = new GuestSync();
+  const syncGuest = new GuestSync<T>();
   value(baseSource, new Patron(syncGuest));
 
   return {
