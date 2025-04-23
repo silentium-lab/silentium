@@ -1,8 +1,8 @@
-import { Patron } from "../Patron/Patron";
 import { expect, test, vi } from "vitest";
-import { sourceChangeable } from "../Source/SourceChangeable";
-import { GuestExecutorApplied } from "../Guest/GuestExecutorApplied";
 import { debounce } from "../../test-utils/debounce";
+import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
+import { Patron } from "../Patron/Patron";
+import { sourceChangeable } from "../Source/SourceChangeable";
 
 test("GuestExecutorApplied.test", () => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -13,7 +13,7 @@ test("GuestExecutorApplied.test", () => {
 
   const source = sourceChangeable();
   source.value(
-    new Patron(new GuestExecutorApplied(guest, debounce.bind(null, 100))),
+    new Patron(guestExecutorApplied(guest, debounce.bind(null, 100))),
   );
 
   source.give(1);
