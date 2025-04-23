@@ -1,5 +1,5 @@
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { SourceType, value } from "../Source/Source";
 
 /**
@@ -13,7 +13,7 @@ export const sourceApplied = <T, R>(
   return (guest: GuestType<R>) => {
     value(
       baseSource,
-      new GuestCast(guest, (v) => {
+      guestCast(guest, (v) => {
         give(applier(v), guest);
       }),
     );

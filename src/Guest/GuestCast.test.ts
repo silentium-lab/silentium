@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { Patron } from "../Patron/Patron";
 import { sourceChangeable } from "../Source/SourceChangeable";
 import { give, guest } from "./Guest";
-import { GuestCast } from "./GuestCast";
+import { guestCast } from "./GuestCast";
 
 test("GuestCast.test", () => {
   const source = sourceChangeable();
@@ -14,7 +14,7 @@ test("GuestCast.test", () => {
   );
 
   // Становится патроном тоже, тк наследует это сойство от mainGuest
-  const secondGuest = new GuestCast(
+  const secondGuest = guestCast(
     mainGuest,
     guest((value: number) => {
       acc += value;

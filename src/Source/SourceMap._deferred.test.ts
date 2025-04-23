@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { Patron } from "../Patron/Patron";
 import { personal } from "../Personal/Personal";
 import { source, SourceType, value } from "./Source";
@@ -21,7 +21,7 @@ function x2(baseNumber: SourceType<number>) {
   return (guest: GuestType<number>) => {
     value(
       baseNumber,
-      new GuestCast(guest, (v) => {
+      guestCast(guest, (v) => {
         give(v * 2, guest);
       }),
     );

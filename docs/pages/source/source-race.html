@@ -39,7 +39,7 @@
   sourceChangeable,
   give,
   value,
-  GuestCast,
+  guestCast,
   personal,
 } from "silentium";
 
@@ -49,7 +49,7 @@ const isOdd = (v) => v % 2 !== 0;
 const nTimesSource = (condition, n, baseSource) => (guest) => {
   value(
     baseSource,
-    new GuestCast(guest, (value) => {
+    guestCast(guest, (value) => {
       if (condition(value)) {
         give(value * n, guest);
       }
@@ -86,7 +86,7 @@ guestMapped.value((v) => {
     sourceChangeable,
     give,
     value,
-    GuestCast,
+    guestCast,
     personal,
   } from "silentium";
 
@@ -96,7 +96,7 @@ guestMapped.value((v) => {
   const nTimesSource = (condition, n, baseSource) => (guest) => {
     value(
       baseSource,
-      new GuestCast(guest, (value) => {
+      guestCast(guest, (value) => {
         if (condition(value)) {
           give(value * n, guest);
         }

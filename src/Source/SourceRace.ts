@@ -1,5 +1,5 @@
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { SourceType, value } from "./Source";
 
 /**
@@ -16,7 +16,7 @@ export const sourceRace = <T>(sources: SourceType<T>[]) => {
     sources.forEach((source) => {
       value(
         source,
-        new GuestCast(<GuestType>guest, (value) => {
+        guestCast(<GuestType>guest, (value) => {
           if (!connectedWithSource || connectedWithSource === source) {
             give(value as T, guest);
             connectedWithSource = source;

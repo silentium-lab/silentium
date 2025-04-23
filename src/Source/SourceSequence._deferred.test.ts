@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { Patron } from "../Patron/Patron";
 import { personalClass } from "../Personal/PersonalClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
@@ -23,7 +23,7 @@ class X2 implements SourceObjectType<number> {
   public value(guest: GuestType<number>) {
     value(
       this.baseNumber,
-      new GuestCast(<GuestType>guest, (v) => {
+      guestCast(<GuestType>guest, (v) => {
         give(v * 2, guest);
       }),
     );

@@ -1,10 +1,9 @@
 import { expect, test } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { GuestSync } from "../Guest/GuestSync";
 import { personalClass } from "../Personal/PersonalClass";
 import { SourceObjectType, SourceType, value } from "./Source";
-import { sourceChangeable } from "./SourceChangeable";
 import { sourceMap } from "./SourceMap";
 
 class X2 implements SourceObjectType<number> {
@@ -13,7 +12,7 @@ class X2 implements SourceObjectType<number> {
   public value(guest: GuestType<number>) {
     value(
       this.baseNumber,
-      new GuestCast(<GuestType>guest, (v) => {
+      guestCast(<GuestType>guest, (v) => {
         give(v * 2, guest);
       }),
     );
@@ -22,8 +21,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
-  const source = sourceChangeable([1, 2, 3, 9]);
-  const guestMapped = sourceMap(source, personalClass(X2));
+  const guestMapped = sourceMap([1, 2, 3, 9], personalClass(X2));
   const guest = new GuestSync([]);
 
   value(guestMapped, guest);

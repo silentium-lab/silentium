@@ -1,5 +1,5 @@
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { SourceType, value } from "../Source/Source";
 
 /**
@@ -13,7 +13,7 @@ export const sourceFiltered = <T>(
   return (g: GuestType<T>) => {
     value(
       baseSource,
-      new GuestCast(g, (v) => {
+      guestCast(g, (v) => {
         if (predicate(v) === true) {
           give(v, g);
         }

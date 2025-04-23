@@ -34,7 +34,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceActive, SourceEmpty, GuestCast, Patron } from "silentium";
+><code class="language-js">import { SourceActive, SourceEmpty, guestCast, Patron } from "silentium";
 
   class Random {
     constructor(till) {
@@ -64,7 +64,7 @@
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (value) => {
+        guestCast(guest, (value) => {
           if (value % 2 === 0) {
             guest.give(`${value} - четное!`);
           } else {
@@ -97,7 +97,7 @@
 </code></pre>
 
 <script type="module">
-  import { SourceActive, SourceEmpty, GuestCast, Patron } from "silentium";
+  import { SourceActive, SourceEmpty, guestCast, Patron } from "silentium";
 
   class Random {
     constructor(till) {
@@ -127,7 +127,7 @@
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (value) => {
+        guestCast(guest, (value) => {
           if (value % 2 === 0) {
             guest.give(`${value} - четное!`);
           } else {

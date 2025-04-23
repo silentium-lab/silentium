@@ -1,5 +1,5 @@
 import { GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { PersonalType } from "../Personal/Personal";
 import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
@@ -22,7 +22,7 @@ export const sourceMap = <T, TG>(
   return (guest: GuestType<TG[]>) => {
     value(
       baseSource,
-      new GuestCast(<GuestType>guest, (theValue) => {
+      guestCast(<GuestType>guest, (theValue) => {
         const sources: SourceType[] = [];
         theValue.forEach((val) => {
           const source = targetSource.get(val);

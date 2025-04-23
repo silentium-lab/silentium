@@ -52,7 +52,7 @@
     give,
     Patron,
     sourceChangeable,
-    GuestCast,
+    guestCast,
     removePatronFromPools,
     isPatronInPools,
   } from "silentium";
@@ -91,7 +91,7 @@
       source.value(guest);
       const numbersGuests = [];
       this.numbers.forEach((numberSource, index) => {
-        const numberGuest = new GuestCast(guest, (value) => {
+        const numberGuest = guestCast(guest, (value) => {
           totalSum += value;
           source.give(totalSum);
         });
@@ -129,7 +129,7 @@
     give,
     Patron,
     SourceChangeable,
-    GuestCast,
+    guestCast,
     removePatronFromPools,
     isPatronInPools,
   } from "silentium";
@@ -168,7 +168,7 @@
       source.value(guest);
       const numbersGuests = [];
       this.numbers.forEach((numberSource, index) => {
-        const numberGuest = new GuestCast(guest, (value) => {
+        const numberGuest = guestCast(guest, (value) => {
           totalSum += value;
           source.give(totalSum);
         });

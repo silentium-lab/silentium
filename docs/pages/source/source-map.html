@@ -26,7 +26,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Source, sourceChangeable, GuestCast, sourceMap, personalClass, give } from "silentium";
+><code class="language-js">import { Source, sourceChangeable, guestCast, sourceMap, personalClass, give } from "silentium";
 
 class X2 {
   constructor(baseNumber) {
@@ -35,7 +35,7 @@ class X2 {
 
   value(guest) {
     this.baseNumber.value(
-      new GuestCast(guest, (v) => {
+      guestCast(guest, (v) => {
         give(v * 2, guest);
       })
     );
@@ -57,7 +57,7 @@ guestMapped.value((v) => {
 </div>
 
 <script type="module">
-  import { Source, sourceChangeable, GuestCast, sourceMap, personalClass, give } from "silentium";
+  import { Source, sourceChangeable, guestCast, sourceMap, personalClass, give } from "silentium";
 
   class X2 {
     constructor(baseNumber) {
@@ -66,7 +66,7 @@ guestMapped.value((v) => {
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (v) => {
+        guestCast(guest, (v) => {
           give(v * 2, guest);
         })
       );
@@ -92,7 +92,7 @@ guestMapped.value((v) => {
 <pre class="mb-4"><code class="language-js">import {
   source,
   sourceChangeable,
-  GuestCast,
+  guestCast,
   SourceMap,
   personalClass,
   give,
@@ -107,7 +107,7 @@ guestMapped.value((v) => {
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (v) => {
+        guestCast(guest, (v) => {
           give(v * 3, guest);
         })
       );
@@ -146,7 +146,7 @@ guestMapped.value((v) => {
   import {
     source,
     sourceChangeable,
-    GuestCast,
+    guestCast,
     sourceMap,
     personalClass,
     give,
@@ -161,7 +161,7 @@ guestMapped.value((v) => {
 
       value(guest) {
         this.baseNumber.value(
-          new GuestCast(guest, (v) => {
+          guestCast(guest, (v) => {
             give(v * 3, guest);
           })
         );

@@ -1,6 +1,6 @@
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { personal } from "../Personal/Personal";
 import { source, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
@@ -9,7 +9,7 @@ function x2(baseNumber: SourceType<number>) {
   return (guest: GuestType<number>) => {
     value(
       baseNumber,
-      new GuestCast(<GuestType>guest, (v) => {
+      guestCast(<GuestType>guest, (v) => {
         give(v * 2, guest);
       }),
     );

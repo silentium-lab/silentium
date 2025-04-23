@@ -47,8 +47,15 @@ export const value = <T>(source: SourceType<T>, guest: GuestType<T>) => {
  * Helps to check what some information is of source shape
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
-export const isSource = (mbSource: any): mbSource is SourceType => {
-  if (typeof mbSource === "object" && typeof mbSource.value === "function") {
+export const isSource = <T>(
+  mbSource: T | SourceType<T>,
+): mbSource is SourceType<T> => {
+  if (
+    mbSource !== null &&
+    typeof mbSource === "object" &&
+    "value" in mbSource &&
+    typeof mbSource.value === "function"
+  ) {
     return true;
   }
   return mbSource !== null && mbSource !== undefined;

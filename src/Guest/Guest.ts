@@ -53,13 +53,11 @@ export const guest = <T>(receiver: GuestExecutorType<T>) => {
   if (!receiver) {
     throw new Error("receiver function was not passed to Guest constructor");
   }
-
   const result = {
     give(value: T) {
       receiver(value);
       return result;
     },
   };
-
   return result;
 };

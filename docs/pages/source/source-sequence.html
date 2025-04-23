@@ -32,7 +32,7 @@
 <pre class="mb-4"><code class="language-js">import {
   source,
   Patron,
-  GuestCast,
+  guestCast,
   sourceChangeable,
   sourceSequence,
   personalClass,
@@ -47,7 +47,7 @@ class X3 {
 
   value(guest) {
     this.baseNumber.value(
-      new GuestCast(guest, (v) => {
+      guestCast(guest, (v) => {
         give(v * 3, guest);
       })
     );
@@ -100,7 +100,7 @@ tillResult.value(
   import {
     source,
     Patron,
-    GuestCast,
+    guestCast,
     sourceChangeable,
     sourceSequence,
     personalClass,
@@ -115,7 +115,7 @@ tillResult.value(
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (v) => {
+        guestCast(guest, (v) => {
           give(v * 3, guest);
         })
       );

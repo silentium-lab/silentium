@@ -1,5 +1,5 @@
 import { give, guest, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { Patron } from "../Patron/Patron";
 import { SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
@@ -42,7 +42,7 @@ export const sourceAll = <T>(
   return (guest: GuestType<T>) => {
     value((g) => {
       theAll.value(
-        new GuestCast(g, (value) => {
+        guestCast(g, (value) => {
           if (isAllFilled()) {
             give((isSourcesArray ? Object.values(value) : value) as T, g);
           }

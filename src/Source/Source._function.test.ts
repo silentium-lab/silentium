@@ -1,4 +1,4 @@
-import { source } from "src/Source/Source";
+import { source } from "../Source/Source";
 import { expect, test } from "vitest";
 import { sourceSync } from "./SourceSync";
 

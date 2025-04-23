@@ -14,6 +14,5 @@ export const guestApplied = <T, R>(
       return result;
     },
   };
-
   return result;
 };

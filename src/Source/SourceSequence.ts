@@ -1,5 +1,5 @@
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
 import { PatronOnce } from "../Patron/PatronOnce";
 import { PersonalType } from "../Personal/Personal";
 import { isSource, SourceType, value } from "./Source";
@@ -27,7 +27,7 @@ export const sourceSequence = <T, TG>(
 
     value(
       baseSource,
-      new GuestCast(guest, (theValue) => {
+      guestCast(guest, (theValue) => {
         let index = 0;
 
         const sources: SourceChangeableType[] = [];
