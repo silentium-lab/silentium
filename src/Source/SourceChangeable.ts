@@ -1,8 +1,8 @@
-import { Guest, GuestObjectType, GuestType } from "../Guest/Guest";
-import { isSource, SourceObjectType, SourceType, value } from "./Source";
-import { PatronPool } from "../Patron/PatronPool";
+import { guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
 import { PatronOnce } from "../Patron/PatronOnce";
+import { PatronPool } from "../Patron/PatronPool";
+import { isSource, SourceObjectType, SourceType, value } from "./Source";
 
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
@@ -29,18 +29,18 @@ export const sourceChangeable = <T>(source?: SourceType<T> | T) => {
     isEmpty = source === undefined;
   }
 
-  createdSource.value = (guest: GuestType<T>) => {
+  createdSource.value = (g: GuestType<T>) => {
     if (isEmpty) {
-      if (isPatron(guest)) {
-        theEmptyPool.add(guest);
+      if (isPatron(g)) {
+        theEmptyPool.add(g);
       }
       return createdSource;
     }
 
-    if (typeof guest === "function") {
-      thePool.distribute(source, new Guest(guest));
+    if (typeof g === "function") {
+      thePool.distribute(source, guest(g));
     } else {
-      thePool.distribute(source, guest);
+      thePool.distribute(source, g);
     }
 
     return createdSource;

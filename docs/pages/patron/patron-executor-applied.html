@@ -24,13 +24,13 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
+><code class="language-js">import { guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
 
 window.source = sourceChangeable(20);
 
 const loadingSource = sourceChangeable('');
 
-const guest = new Guest((value) => {
+const guest = guest((value) => {
   document.querySelector(
     ".guest-result"
   ).textContent = `value is ${value}`;
@@ -67,13 +67,13 @@ window.source.value(
   Дать источнику значение 25
 </button>
 <script type="module">
-  import { Guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
+  import { guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
 
   window.source = sourceChangeable(20);
 
   const loadingSource = sourceChangeable('');
 
-  const guest = new Guest((value) => {
+  const guest = guest((value) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `value is ${value}`;

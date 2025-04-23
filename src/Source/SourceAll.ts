@@ -1,4 +1,4 @@
-import { give, Guest, GuestType } from "../Guest/Guest";
+import { give, guest, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
 import { Patron } from "../Patron/Patron";
 import { SourceType, value } from "./Source";
@@ -26,7 +26,7 @@ export const sourceAll = <T>(
       source,
       new Patron((v) => {
         theAll.value(
-          new Guest((all: Record<string, unknown>) => {
+          guest((all: Record<string, unknown>) => {
             keysFilled.add(key);
             const lastAll = {
               ...all,

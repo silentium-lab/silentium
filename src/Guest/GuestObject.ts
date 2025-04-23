@@ -1,4 +1,4 @@
-import { Guest, GuestType } from "./Guest";
+import { guest, GuestType } from "./Guest";
 import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 
 /**
@@ -12,11 +12,11 @@ export class GuestObject<T> implements GuestDisposableType<T> {
   }
 
   public give(value: T): this {
-    let guest = this.baseGuest;
-    if (typeof guest === "function") {
-      guest = new Guest(guest);
+    let g = this.baseGuest;
+    if (typeof g === "function") {
+      g = guest(g);
     }
-    guest.give(value);
+    g.give(value);
     return this;
   }
 

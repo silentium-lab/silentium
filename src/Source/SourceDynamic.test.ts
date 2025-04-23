@@ -1,11 +1,11 @@
 import { expect, test, vitest } from "vitest";
-import { give, Guest } from "../Guest/Guest";
+import { give, guest } from "../Guest/Guest";
 import { sourceDynamic } from "./SourceDynamic";
 
 test("SourceDynamic", () => {
   let theValue = 1;
   const sd = sourceDynamic(
-    new Guest((value: number) => {
+    guest((value: number) => {
       theValue = value;
     }),
     (g) => give(theValue, g),

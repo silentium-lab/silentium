@@ -60,7 +60,7 @@
 &lt;/template&gt;
 
 &lt;script lang=&quot;ts&quot;&gt;
-import { Source, Guest, Patron } from &#39;patron-oop&#39;;
+import { Source, guest, Patron } from &#39;patron-oop&#39;;
 import { defineComponent, ref } from &#39;vue&#39;;
 import { PropType } from &#39;vue/types/v3-component-props&#39;;
 
@@ -77,7 +77,7 @@ export default defineComponent({
     const data = ref(null);
     props.source.value(
       new Patron(
-        new Guest(value =&gt; {
+        guest(value =&gt; {
           data.value = value;
           emit(&#39;input&#39;, value);
         })

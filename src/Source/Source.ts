@@ -25,7 +25,7 @@ export type SourceType<T = any> =
  * helpful because we don't know what shape of source do we have, it can be function or object or primitive
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
-export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
+export const value = <T>(source: SourceType<T>, guest: GuestType<T>) => {
   if (source === undefined || source === null) {
     throw new Error("value didn't receive source argument");
   }
@@ -45,18 +45,18 @@ export function value<T>(source: SourceType<T>, guest: GuestType<T>) {
   }
 
   return source;
-}
+};
 
 /**
  * Helps to check what some information is of source shape
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
-export function isSource(mbSource: any): mbSource is SourceType {
+export const isSource = (mbSource: any): mbSource is SourceType => {
   if (typeof mbSource === "object" && typeof mbSource.value === "function") {
     return true;
   }
   return mbSource !== null && mbSource !== undefined;
-}
+};
 
 /**
  * Represents source as function
