@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/silentium-lab/silentium/compare/v0.0.11...v0.0.12) (2025-04-23)
+
+
+### Features
+
+* **16-issue:** guest as procedure from class ([65418bd](https://github.com/silentium-lab/silentium/commit/65418bd1760eda6f5e536db40030d85621c2df67))
+* **16-issue:** guestApplied to procedure from class ([33efeef](https://github.com/silentium-lab/silentium/commit/33efeefc9b59356931c1a1310d5cd54e57bc7a88))
+* **16-issue:** guestCast to procedure from class ([1a4c051](https://github.com/silentium-lab/silentium/commit/1a4c051841e75b0eb6549e1336b4c290edbbe7fe))
+* **16-issue:** guestDisposable to procedure from class ([3c4062e](https://github.com/silentium-lab/silentium/commit/3c4062eede3aa249568144b3d3a09c2459b0395e))
+* **16-issue:** guestExecutorApplied procedure from class ([889a83e](https://github.com/silentium-lab/silentium/commit/889a83e1f69e3ab9edbcd82800d378f044bd1628))
+* **16-issue:** guestObject is unneeded ([3b2c8ba](https://github.com/silentium-lab/silentium/commit/3b2c8ba25ed65ea994b218b06ac4bc577eb733e2))
+* **16-issue:** patron applied procedure and test ([74e1296](https://github.com/silentium-lab/silentium/commit/74e1296b09f2c1bc5002b27180658dfeb4f1ce41))
+* **16-issue:** patron once to procedure ([e24c1ee](https://github.com/silentium-lab/silentium/commit/e24c1eefd403f7d8d668975e0f20769b1f6b4530))
+* **16-issue:** patron to procedures ([33eb341](https://github.com/silentium-lab/silentium/commit/33eb3411d9b4bb76bb3828458c0da366a94f8937))
+* **16-issue:** patronexcecutor applied as procedure ([4637390](https://github.com/silentium-lab/silentium/commit/4637390bd2e035425fdaeac801c2fcd6b3149e8e))
+* **16-issue:** personal procedure from Private class ([6087ee2](https://github.com/silentium-lab/silentium/commit/6087ee2b04907f424bd1eff475bccd384e2b60cf))
+* **16-issue:** personalClass as procedure ([8189f3a](https://github.com/silentium-lab/silentium/commit/8189f3a0311cf398e60e37cacbf24f440eef24f8))
+* **16-issue:** remove guestPool and guestObject from everywhere ([909ddf2](https://github.com/silentium-lab/silentium/commit/909ddf2e41c9122c61aec81f46508768d7e18cb4))
+* **16-issue:** remove unneeded patron class ([d08f732](https://github.com/silentium-lab/silentium/commit/d08f732339d75e4774709f0cd6717f43231c6c99))
+* **16-issue:** source procedure created from Source class ([9e8c0ff](https://github.com/silentium-lab/silentium/commit/9e8c0ffebbbd723e3d8e11d26c7f8501c38ba047))
+* **16-issue:** sourceAll as procedure instead SourceAll class ([2e75f7d](https://github.com/silentium-lab/silentium/commit/2e75f7dcc057939259f48927995ae145050c6676))
+* **16-issue:** sourceApplied procedure from SourceAPplied class ([7654d4a](https://github.com/silentium-lab/silentium/commit/7654d4a0dec70dacdd66f60381f5eb83e4946e75))
+* **16-issue:** sourceChangeable to procedure from class ([2a8d853](https://github.com/silentium-lab/silentium/commit/2a8d853323ec1d3070e523f8b0aef11fde40d65d))
+* **16-issue:** sourceDynamic to procedure from class ([e0578ac](https://github.com/silentium-lab/silentium/commit/e0578acce0722a4a840719f976cbb6cc1f15e70d))
+* **16-issue:** sourceExecutorApplied to procedure from class ([49c1043](https://github.com/silentium-lab/silentium/commit/49c1043875570bb91792cc95ece1f106bbf1b2e4))
+* **16-issue:** sourceFiltered to procedure to class ([0679ee7](https://github.com/silentium-lab/silentium/commit/0679ee774660b3e4993c7e2f89a75d772b79a014))
+* **16-issue:** sourceMap to procedure ([245af2a](https://github.com/silentium-lab/silentium/commit/245af2afc9c8c1799f5a70e0ec759af5294b4581))
+* **16-issue:** sourceOnce to procedure ([8e5736f](https://github.com/silentium-lab/silentium/commit/8e5736fddf60f9e3373d9d7c23a23e97b8b254ff))
+* **16-issue:** sourceRace to procedures ([82cd787](https://github.com/silentium-lab/silentium/commit/82cd7877ed80d2269a76d27deb1dd60d22236a9c))
+* **16-issue:** sourceSequence to procedure ([9a50c7a](https://github.com/silentium-lab/silentium/commit/9a50c7a7abcc9edfbafdf2eb3ae19399ec33d78f))
+* **16-issue:** sourceSync to procedures ([dcd6e7b](https://github.com/silentium-lab/silentium/commit/dcd6e7b2d71a5e4965d6680c3ea3bda758abd815))
+
+
+### Bug Fixes
+
+* **main:** deps updated ([8c620b2](https://github.com/silentium-lab/silentium/commit/8c620b2c8e30d8087276e8c691b62ee77e30a34e))
+* **main:** deps updated ([5dc75ad](https://github.com/silentium-lab/silentium/commit/5dc75ad16fcaf657f3175a45b187555991edec61))
+
 ### [0.0.11](https://github.com/silentium-lab/silentium/compare/v0.0.10...v0.0.11) (2025-04-19)
 
 
