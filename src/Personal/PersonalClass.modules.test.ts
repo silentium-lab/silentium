@@ -1,9 +1,9 @@
-import { PrivateClass } from "./PrivateClass";
+import { SourceObjectType } from "src/Source/Source";
+import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { SourceChangeableType } from "../Source/SourceChangeable";
-import { expect, test, vitest } from "vitest";
 import { PersonalType } from "./Personal";
-import { SourceObjectType } from "src/Source/Source";
+import { personalClass } from "./PersonalClass";
 
 class TestClass {
   private source: SourceChangeableType;
@@ -30,9 +30,9 @@ class SourceChangeable implements SourceObjectType<number> {
   }
 }
 
-test("PrivateClass.modules.test", () => {
-  const main = new PrivateClass(SourceChangeable);
-  const testSource = new PrivateClass(TestClass, {
+test("PersonalClass.modules.test", () => {
+  const main = personalClass(SourceChangeable);
+  const testSource = personalClass(TestClass, {
     main,
   });
 

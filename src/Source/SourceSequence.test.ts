@@ -1,7 +1,7 @@
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
-import { PrivateClass } from "../Personal/PrivateClass";
+import { personalClass } from "../Personal/PersonalClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
@@ -22,8 +22,8 @@ class X2 implements SourceObjectType<number> {
 
 test("SourceSequence.test", () => {
   const source = sourceChangeable([1, 2, 3, 9]);
-  const guestMapped = sourceSequence(source, new PrivateClass(X2));
+  const srcMapped = sourceSequence(source, personalClass(X2));
   const g = vitest.fn();
-  value(guestMapped, g);
+  value(srcMapped, g);
   expect(g).toBeCalledWith([2, 4, 6, 18]);
 });

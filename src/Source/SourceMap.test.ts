@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
-import { SourceObjectType, SourceType, value } from "./Source";
-import { sourceMap } from "./SourceMap";
 import { GuestCast } from "../Guest/GuestCast";
-import { sourceChangeable } from "./SourceChangeable";
-import { PrivateClass } from "../Personal/PrivateClass";
 import { GuestSync } from "../Guest/GuestSync";
+import { personalClass } from "../Personal/PersonalClass";
+import { SourceObjectType, SourceType, value } from "./Source";
+import { sourceChangeable } from "./SourceChangeable";
+import { sourceMap } from "./SourceMap";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}
@@ -23,7 +23,7 @@ class X2 implements SourceObjectType<number> {
 
 test("SourceMap.test", () => {
   const source = sourceChangeable([1, 2, 3, 9]);
-  const guestMapped = sourceMap(source, new PrivateClass(X2));
+  const guestMapped = sourceMap(source, personalClass(X2));
   const guest = new GuestSync([]);
 
   value(guestMapped, guest);

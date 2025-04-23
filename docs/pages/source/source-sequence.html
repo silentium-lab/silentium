@@ -35,7 +35,7 @@
   GuestCast,
   sourceChangeable,
   sourceSequence,
-  PrivateClass,
+  personalClass,
   give,
   isSource,
 } from "silentium";
@@ -77,7 +77,7 @@ const source = sourceChangeable([
   numSource(8),
   numSource(9),
 ]);
-const sequence = sourceSequence(source, new PrivateClass(X3));
+const sequence = sourceSequence(source, personalClass(X3));
 
 sequence.value((v) => {
   document.querySelector(".guest-result").textContent = v.join();
@@ -103,7 +103,7 @@ tillResult.value(
     GuestCast,
     sourceChangeable,
     sourceSequence,
-    PrivateClass,
+    personalClass,
     give,
     isSource,
   } from "silentium";
@@ -145,7 +145,7 @@ tillResult.value(
     numSource(8),
     numSource(9),
   ]);
-  const sequence = sourceSequence(src, new PrivateClass(X3));
+  const sequence = sourceSequence(src, personalClass(X3));
 
   sequence.value((v) => {
     document.querySelector(".guest-result").textContent = v.join();

@@ -1,7 +1,7 @@
 import { give, GuestType } from "../Guest/Guest";
 import { SourceObjectType } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
-import { PrivateClass } from "./PrivateClass";
+import { personalClass } from "./PersonalClass";
 
 class SourceChangeable implements SourceObjectType<number> {
   public constructor(private v: number) {}
@@ -12,8 +12,8 @@ class SourceChangeable implements SourceObjectType<number> {
   }
 }
 
-test("PrivateClass.test", () => {
-  const sourcePrivate = new PrivateClass(SourceChangeable);
+test("PersonalClass.test", () => {
+  const sourcePrivate = personalClass(SourceChangeable);
   const source = sourcePrivate.get(42);
 
   const guest = vitest.fn();

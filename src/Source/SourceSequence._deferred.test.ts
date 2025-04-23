@@ -2,11 +2,11 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
 import { GuestCast } from "../Guest/GuestCast";
-import { PrivateClass } from "../Personal/PrivateClass";
+import { Patron } from "../Patron/Patron";
+import { personalClass } from "../Personal/PersonalClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
-import { Patron } from "../Patron/Patron";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -40,7 +40,7 @@ test("SourceSequence._deferred.test", async () => {
     });
   const src = sourceChangeable([1, 2, 3, 9].map(sourceOf));
 
-  const sequence = sourceSequence(src, new PrivateClass(X2));
+  const sequence = sourceSequence(src, personalClass(X2));
 
   const callFn = vi.fn();
   value(
