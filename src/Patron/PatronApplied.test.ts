@@ -4,7 +4,7 @@ import { expect, test, vi } from "vitest";
 import { sourceChangeable } from "../Source/SourceChangeable";
 
 test("PatronApplied.test", () => {
-  const src = sourceChangeable(1);
+  const src = sourceChangeable<number>(1);
   const g = vi.fn();
 
   const patron = patronApplied(g, (v: number) => v * 2);

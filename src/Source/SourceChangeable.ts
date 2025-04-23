@@ -13,14 +13,6 @@ import {
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
 
-type ExpandLiteralTypes<T> = T extends number
-  ? number
-  : T extends string
-    ? string
-    : T extends boolean
-      ? boolean
-      : T;
-
 /**
  * Ability to create source what can be changed later
  * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
@@ -68,5 +60,5 @@ export const sourceChangeable = <T>(source?: SourceType<T>) => {
     return createdSource;
   };
 
-  return createdSource as SourceChangeableType<ExpandLiteralTypes<T>>;
+  return createdSource as SourceChangeableType<T>;
 };

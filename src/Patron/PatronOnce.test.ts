@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 test("PatronOnce.test", async () => {
-  const source = sourceChangeable(12);
+  const source = sourceChangeable<number>(12);
   let calls = 0;
   const patron = patronOnce(() => {
     calls += 1;

@@ -3,7 +3,7 @@ import { sourceChangeable } from "../Source/SourceChangeable";
 import { patron } from "../Patron/Patron";
 
 test("Patron.test", () => {
-  const one = sourceChangeable(1);
+  const one = sourceChangeable<number>(1);
   let patronCalledTimes = 0;
   const p = patron(() => {
     patronCalledTimes += 1;
