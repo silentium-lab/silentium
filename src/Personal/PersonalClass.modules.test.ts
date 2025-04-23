@@ -1,4 +1,4 @@
-import { SourceObjectType } from "src/Source/Source";
+import { SourceObjectType } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { SourceChangeableType } from "../Source/SourceChangeable";

@@ -1,3 +1,4 @@
+import { introduction } from "../Patron/Patron";
 import { give, GuestType } from "../Guest/Guest";
 import {
   GuestDisposableType,
@@ -5,34 +6,36 @@ import {
 } from "../Guest/GuestDisposable";
 
 /**
+ * Helps to call patron only once, this will be helpful when you
+ * need value but you know what value can not be existed at a time of requesting
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-once
  */
-export class PatronOnce<T> implements GuestDisposableType<T> {
-  private received = false;
-
-  public constructor(private baseGuest: GuestType<T>) {
-    if (baseGuest === undefined) {
-      throw new Error("PatronOnce didnt receive baseGuest argument");
-    }
+export const patronOnce = <T>(
+  baseGuest: GuestType<T>,
+): GuestDisposableType<T> => {
+  if (baseGuest === undefined) {
+    throw new Error("PatronOnce didn't receive baseGuest argument");
   }
 
-  public introduction() {
-    return "patron" as const;
-  }
+  let received = false;
 
-  public give(value: T): this {
-    if (!this.received) {
-      this.received = true;
-      give(value, this.baseGuest);
-    }
-    return this;
-  }
+  const result = {
+    give(value: T) {
+      if (!received) {
+        received = true;
+        give(value, baseGuest);
+      }
+      return result;
+    },
+    disposed(value: T | null): boolean {
+      if (received) {
+        return true;
+      }
+      const maybeDisposable = baseGuest as MaybeDisposableType;
+      return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
+    },
+    introduction,
+  };
 
-  public disposed(value: T | null): boolean {
-    if (this.received) {
-      return true;
-    }
-    const maybeDisposable = this.baseGuest as MaybeDisposableType;
-    return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
-  }
-}
+  return result;
+};

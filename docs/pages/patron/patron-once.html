@@ -40,11 +40,11 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, PatronOnce } from "silentium";
+<pre class="mb-4"><code class="language-js">import { sourceChangeable, patronOnce } from "silentium";
 
 const source = sourceChangeable("один раз");
 source.value(
-  new PatronOnce((value) => {
+  patronOnce((value) => {
     document.querySelector(
       ".patron-once-result"
     ).textContent = `Результат ${value}`;
@@ -64,11 +64,11 @@ setTimeout(() => {
   <span class="patron-once-result">Нет результата!</span>
 </div>
 <script type="module">
-  import { sourceChangeable, PatronOnce } from "silentium";
+  import { sourceChangeable, patronOnce } from "silentium";
 
   const source = sourceChangeable("один раз");
   source.value(
-    new PatronOnce((value) => {
+    patronOnce((value) => {
       document.querySelector(
         ".patron-once-result"
       ).textContent = `Результат ${value}`;

@@ -1,6 +1,6 @@
 import { guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
-import { PatronOnce } from "../Patron/PatronOnce";
+import { patronOnce } from "../Patron/PatronOnce";
 import { PatronPool } from "../Patron/PatronPool";
 import {
   isSource,
@@ -34,7 +34,7 @@ export const sourceChangeable = <T>(source?: SourceType<T>) => {
   if (source !== undefined && isSource(source)) {
     value(
       source,
-      new PatronOnce((unwrappedSourceDocument) => {
+      patronOnce((unwrappedSourceDocument) => {
         isEmpty = unwrappedSourceDocument === undefined;
         source = unwrappedSourceDocument as SourceDataType<T>;
       }),

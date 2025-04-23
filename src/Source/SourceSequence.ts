@@ -1,6 +1,6 @@
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { PatronOnce } from "../Patron/PatronOnce";
+import { patronOnce } from "../Patron/PatronOnce";
 import { PersonalType } from "../Personal/Personal";
 import { isSource, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
@@ -48,7 +48,7 @@ export const sourceSequence = <T, TG>(
           if (isSource(nextValue)) {
             value(
               nextValue,
-              new PatronOnce((theNextValue) => {
+              patronOnce((theNextValue) => {
                 sequenceSource.give(theNextValue);
                 value(source, currentSource);
                 nextItemHandle();

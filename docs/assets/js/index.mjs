@@ -1,5 +1,5 @@
 import { CurrentPage, Link, Page, Router } from "silentium-components";
-import { patron, PatronOnce, sourceChangeable, sourceOf } from "silentium";
+import { patron, patronOnce, sourceChangeable, sourceOf } from "silentium";
 import { StyleFetched } from "./lib/StyleFetched.mjs";
 import { Fetched, Element, Attribute, StyleInstalled } from "silentium-web-api";
 import "./components.mjs";
@@ -41,7 +41,7 @@ styleLink.value((url) => {
   styleTransport.do().give({ url });
 });
 
-styleTransport.result().value(new PatronOnce(new StyleInstalled()));
+styleTransport.result().value(patronOnce(new StyleInstalled()));
 
 routesTransport.result().value(
   patron((routes) => {
