@@ -1,12 +1,12 @@
-import { value } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
-import { Patron } from "../Patron/Patron";
+import { patron } from "../Patron/Patron";
+import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
 import { sourceChangeable } from "./SourceChangeable";
 
 test("SourceAll._withPatron.test", () => {
-  const one = sourceChangeable(1);
-  const two = sourceChangeable(2);
+  const one = sourceChangeable<number>(1);
+  const two = sourceChangeable<number>(2);
   const all = sourceAll<{ one: number; two: number }>({
     one,
     two,
@@ -18,7 +18,7 @@ test("SourceAll._withPatron.test", () => {
   const g = vitest.fn();
   value(
     all,
-    new Patron((value: Record<string, unknown>) => {
+    patron((value) => {
       g(Object.values(value).length);
     }),
   );

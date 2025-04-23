@@ -52,7 +52,7 @@
 
           <p class="text-gray-600 text-lg mb-4">
             Это поведение полезно в случаях, когда нужно из просто посетителя(гостя)
-            сделать постоянного посетиеля(патрона). Это будет означать что если у
+            сделать постоянного посетителя(патрона). Это будет означать что если у
             <link-dynamic
               href="/terminology/source">
               источника данных
@@ -63,7 +63,7 @@
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
           <pre class="mb-4"><code class="language-js">import {
-  Patron,
+  patron,
   sourceChangeable,
   source,
   guestDisposable,
@@ -88,7 +88,7 @@ const timer = source((guest) => {
 });
 
 timer.value(
-  new Patron(
+  patron(
     guestDisposable(
       (value) => {
         const el = document.querySelector(".patron-result");
@@ -109,7 +109,7 @@ timer.value(
           </div>
           <script type="module">
             import {
-              Patron,
+              patron,
               sourceChangeable,
               source,
               guestDisposable,
@@ -134,7 +134,7 @@ timer.value(
             });
 
             timer.value(
-              new Patron(
+              patron(
                 guestDisposable(
                   (value) => {
                     const el = document.querySelector(".patron-result");

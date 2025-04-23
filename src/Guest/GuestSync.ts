@@ -7,18 +7,19 @@ export interface GuestValueType<T = any> extends GuestObjectType<T> {
 /**
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
  */
-export class GuestSync<T> implements GuestValueType<T> {
-  public constructor(private theValue?: T) {}
+export const guestSync = <T>(theValue?: T): GuestValueType<T> => {
+  const result = {
+    give(value: T) {
+      theValue = value;
+      return result;
+    },
+    value() {
+      if (theValue === undefined) {
+        throw new Error("no value in GuestSync!");
+      }
+      return theValue;
+    },
+  };
 
-  public give(value: T): this {
-    this.theValue = value;
-    return this;
-  }
-
-  public value() {
-    if (this.theValue === undefined) {
-      throw new Error("no value in GuestSync!");
-    }
-    return this.theValue;
-  }
-}
+  return result;
+};

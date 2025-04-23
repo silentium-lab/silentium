@@ -50,7 +50,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
     give,
-    Patron,
+    patron,
     sourceChangeable,
     guestCast,
     removePatronFromPools,
@@ -104,7 +104,7 @@
   }
 
   let totalSumGuests = [];
-  const renderResult = new Patron((value) => {
+  const renderResult = patron((value) => {
     const resultEl = document.querySelector(".guest-cast-result");
     if (resultEl) {
       resultEl.textContent = `Результат = ${value}`;
@@ -127,7 +127,7 @@
 <script type="module">
   import {
     give,
-    Patron,
+    patron,
     SourceChangeable,
     guestCast,
     removePatronFromPools,
@@ -181,7 +181,7 @@
   }
 
   let totalSumGuests = [];
-  const renderResult = new Patron((value) => {
+  const renderResult = patron((value) => {
     const resultEl = document.querySelector(".guest-cast-result");
     if (resultEl) {
       resultEl.textContent = `Результат = ${value}`;

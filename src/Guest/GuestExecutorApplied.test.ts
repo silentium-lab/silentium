@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { debounce } from "../../test-utils/debounce";
 import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
-import { Patron } from "../Patron/Patron";
+import { patron } from "../Patron/Patron";
 import { sourceChangeable } from "../Source/SourceChangeable";
 
 test("GuestExecutorApplied.test", () => {
@@ -12,9 +12,7 @@ test("GuestExecutorApplied.test", () => {
   };
 
   const source = sourceChangeable();
-  source.value(
-    new Patron(guestExecutorApplied(guest, debounce.bind(null, 100))),
-  );
+  source.value(patron(guestExecutorApplied(guest, debounce.bind(null, 100))));
 
   source.give(1);
   source.give(1);

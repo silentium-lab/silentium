@@ -24,7 +24,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
+><code class="language-js">import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
 
 window.source = sourceChangeable(20);
 
@@ -36,7 +36,7 @@ const guest = guest((value) => {
   ).textContent = `value is ${value}`;
 });
 
-loadingSource.value(new Patron(guest));
+loadingSource.value(patron(guest));
 
 window.source.value(
   new PatronExecutorApplied(guest, (guestFn) => {
@@ -67,7 +67,7 @@ window.source.value(
   Дать источнику значение 25
 </button>
 <script type="module">
-  import { guest, PatronExecutorApplied, Patron, sourceChangeable } from "silentium";
+  import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
 
   window.source = sourceChangeable(20);
 
@@ -79,7 +79,7 @@ window.source.value(
     ).textContent = `value is ${value}`;
   });
 
-  loadingSource.value(new Patron(guest));
+  loadingSource.value(patron(guest));
 
   window.source.value(
     new PatronExecutorApplied(guest, (guestFn) => {

@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { GuestSync } from "../Guest/GuestSync";
+import { guestSync } from "../Guest/GuestSync";
 import { personalClass } from "../Personal/PersonalClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
@@ -21,10 +21,10 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
-  const guestMapped = sourceMap([1, 2, 3, 9], personalClass(X2));
-  const guest = new GuestSync([]);
+  const srcMapped = sourceMap([1, 2, 3, 9], personalClass(X2));
+  const guest = guestSync([]);
 
-  value(guestMapped, guest);
+  value(srcMapped, guest);
 
   expect(guest.value().join()).toBe("2,4,6,18");
 });

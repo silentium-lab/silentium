@@ -1,8 +1,8 @@
+import { expect, test, vi } from "vitest";
+import { debounce } from "../../test-utils/debounce";
+import { patron } from "../Patron/Patron";
 import { sourceExecutorApplied } from "../Source/SourceExecutorApplied";
 import { sourceChangeable } from "./SourceChangeable";
-import { debounce } from "../../test-utils/debounce";
-import { expect, test, vi } from "vitest";
-import { Patron } from "../Patron/Patron";
 
 test("SourceExecutorApplied.test", () => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -15,7 +15,7 @@ test("SourceExecutorApplied.test", () => {
 
   let counter = 0;
   sourceDebounced(
-    new Patron((v) => {
+    patron((v) => {
       counter += v;
     }),
   );

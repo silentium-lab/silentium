@@ -3,7 +3,7 @@
 <p class="text-gray-600 text-lg mb-4">
   При разработке приложений мы можем сделать общие точки перехвата ошибок,
   например, с помощью window.onerror или window.onunhandledrejection(Для
-  промисов). Также можно использовать обработку ошибок через try-catch если
+  Promise). Также можно использовать обработку ошибок через try-catch если
   нужно детализировать ошибку.
 </p>
 
@@ -34,7 +34,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceActive, SourceEmpty, guestCast, Patron } from "silentium";
+><code class="language-js">import { SourceActive, SourceEmpty, guestCast, patron } from "silentium";
 
   class Random {
     constructor(till) {
@@ -80,24 +80,24 @@
   const randomMessage = new EvenNumberMessage(random, randomErrors);
 
   random.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-result").textContent = val;
     })
   );
   randomMessage.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-message").textContent = val;
     })
   );
   randomErrors.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-error").textContent = val;
     })
   );
 </code></pre>
 
 <script type="module">
-  import { SourceActive, SourceEmpty, guestCast, Patron } from "silentium";
+  import { SourceActive, SourceEmpty, guestCast, patron } from "silentium";
 
   class Random {
     constructor(till) {
@@ -143,17 +143,17 @@
   const randomMessage = new EvenNumberMessage(random, randomErrors);
 
   random.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-result").textContent = val;
     })
   );
   randomMessage.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-message").textContent = val;
     })
   );
   randomErrors.value(
-    new Patron((val) => {
+    patron((val) => {
       document.querySelector(".guest-error").textContent = val;
     })
   );

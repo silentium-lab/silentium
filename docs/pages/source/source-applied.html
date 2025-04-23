@@ -14,13 +14,13 @@
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    Иногда к занчению источника нужно применить какую-нибудь существующую функцию, для этого можно использовать класс SourceApplied
+    Иногда к значению источника нужно применить какую-нибудь существующую функцию, для этого можно использовать класс SourceApplied
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { source, SourceApplied, Patron } from "silentium";
+><code class="language-js">import { source, SourceApplied, patron } from "silentium";
 
 const guest = v => {
   const r = document.querySelector(".guest-result");
@@ -40,7 +40,7 @@ const timer = source((g) => {
 tick();
 });
 
-sourceApplied(timer, x => x * 2).value(new Patron(guest));
+sourceApplied(timer, x => x * 2).value(patron(guest));
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
@@ -49,7 +49,7 @@ sourceApplied(timer, x => x * 2).value(new Patron(guest));
 </div>
 
 <script type="module">
-import { source, sourceApplied, Patron } from "silentium";
+import { source, sourceApplied, patron } from "silentium";
 
 const guest = v => {
     const r = document.querySelector(".guest-result");
@@ -69,5 +69,5 @@ const timer = source((g) => {
     tick();
 });
 
-sourceApplied(timer, x => x * 2).value(new Patron(guest));
+sourceApplied(timer, x => x * 2).value(patron(guest));
 </script>

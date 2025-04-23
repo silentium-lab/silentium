@@ -32,21 +32,21 @@
   </link-dynamic>
   . Сам по себе класс PatronPool - достаточно низкоуровневый и желательно
   использовать класс Source, который именно является источником значений (у
-  Source под капотом работает PatornPool)
+  Source под капотом работает PatronPool)
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
     PatronPool,
-    Patron
+    patron
 } from 'silentium';
 
 const pool = new PatronPool();
 
-pool.add(new Patron((value) => {
+pool.add(patron((value) => {
     document.querySelector('.patron-pool-result1').textContent = value + ' 1';
 }));
-pool.add(new Patron((value) => {
+pool.add(patron((value) => {
     document.querySelector('.patron-pool-result2').textContent = value + ' 2';
 }));
 
@@ -59,17 +59,17 @@ pool.give('Значение из пула');
   <div class="patron-pool-result2">Нет результата 2!</div>
 </div>
 <script type="module">
-  import { PatronPool, Patron } from "silentium";
+  import { PatronPool, patron } from "silentium";
 
   const pool = new PatronPool();
 
   pool.add(
-    new Patron((value) => {
+    patron((value) => {
       document.querySelector(".patron-pool-result1").textContent = value + " 1";
     })
   );
   pool.add(
-    new Patron((value) => {
+    patron((value) => {
       document.querySelector(".patron-pool-result2").textContent = value + " 2";
     })
   );

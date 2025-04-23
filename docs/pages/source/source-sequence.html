@@ -18,7 +18,7 @@
 <p class="text-gray-600 text-lg mb-4">
   Класс <b>SourceSequence</b> работает так же как и
   <link-dynamic href="/source/source-map">SourceMap</link-dynamic>
-  , но перебирает источнники данных последовательно а не параллельно
+  , но перебирает источники данных последовательно а не параллельно
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -31,7 +31,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   source,
-  Patron,
+  patron,
   guestCast,
   sourceChangeable,
   sourceSequence,
@@ -83,7 +83,7 @@ sequence.value((v) => {
   document.querySelector(".guest-result").textContent = v.join();
 });
 tillResult.value(
-  new Patron((v) => {
+  patron((v) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `Результат через ${v} сек.`;
@@ -99,7 +99,7 @@ tillResult.value(
 <script type="module">
   import {
     source,
-    Patron,
+    patron,
     guestCast,
     sourceChangeable,
     sourceSequence,
@@ -151,7 +151,7 @@ tillResult.value(
     document.querySelector(".guest-result").textContent = v.join();
   });
   tillResult.value(
-    new Patron((v) => {
+    patron((v) => {
       document.querySelector(
         ".guest-result"
       ).textContent = `Результат через ${v} сек.`;

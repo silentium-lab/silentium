@@ -1,6 +1,6 @@
 import { give, guest, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { Patron } from "../Patron/Patron";
+import { patron } from "../Patron/Patron";
 import { SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
 
@@ -10,7 +10,7 @@ import { sourceChangeable } from "./SourceChangeable";
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
 export const sourceAll = <T>(
-  sources: SourceType<T>[] | Record<string, SourceType<T>>,
+  sources: SourceType<any>[] | Record<string, SourceType<any>>,
 ) => {
   const keysKnown = new Set<string>(Object.keys(sources));
   const keysFilled = new Set();
@@ -24,7 +24,7 @@ export const sourceAll = <T>(
     keysKnown.add(key);
     value(
       source,
-      new Patron((v) => {
+      patron((v) => {
         theAll.value(
           guest((all: Record<string, unknown>) => {
             keysFilled.add(key);

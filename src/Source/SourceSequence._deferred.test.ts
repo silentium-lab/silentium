@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { Patron } from "../Patron/Patron";
+import { patron } from "../Patron/Patron";
 import { personalClass } from "../Personal/PersonalClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
@@ -45,7 +45,7 @@ test("SourceSequence._deferred.test", async () => {
   const callFn = vi.fn();
   value(
     sequence,
-    new Patron((v) => {
+    patron((v) => {
       callFn(v.join());
     }),
   );

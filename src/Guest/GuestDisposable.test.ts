@@ -1,5 +1,5 @@
 import { expect, test, vitest } from "vitest";
-import { Patron } from "../Patron/Patron";
+import { patron } from "../Patron/Patron";
 import { sourceChangeable } from "../Source/SourceChangeable";
 import { guestDisposable } from "./GuestDisposable";
 
@@ -10,14 +10,14 @@ test("GuestDisposable.test", () => {
 
   // Работает проверка один раз, потом патрон себя удаляет
   source.value(
-    new Patron(
+    patron(
       guestDisposable(guest, (value) => {
         return value !== null && value > 1;
       }),
     ),
   );
 
-  // Эти выражения не вызывает expect
+  // Эти выражения не вызывают expect
   source.give(2);
   source.give(3);
 

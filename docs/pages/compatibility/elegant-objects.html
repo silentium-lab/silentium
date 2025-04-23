@@ -92,7 +92,7 @@
   import {
     Guest,
     sourceChangeable,
-    Patron,
+    patron,
     SourceAll,
     guestCast,
     guestDisposable,
@@ -213,7 +213,7 @@
   );
   numberTimer.start();
   numberTimer.number(
-    new Patron(
+    patron(
       guestDisposable(
         new Text(".eo-counter"),
         disposeIfNoSelector(".eo-counter")
@@ -221,7 +221,7 @@
     )
   );
   numberTimer.isStopped(
-    new Patron((isStopped) => {
+    patron((isStopped) => {
       document
         .querySelector(".stop")
         .classList[isStopped ? "add" : "remove"]("opacity-20");
@@ -231,7 +231,7 @@
     })
   );
   result.number(
-    new Patron(
+    patron(
       guestDisposable(
         new Text(".eo-result"),
         disposeIfNoSelector(".eo-result")
@@ -262,7 +262,7 @@ const result = new Multiplication(
 );
 numberTimer.start();
 numberTimer.number(
-  new Patron(
+  patron(
     guestDisposable(
       new Text(".eo-counter"),
       disposeIfNoSelector(".eo-counter")
@@ -270,7 +270,7 @@ numberTimer.number(
   )
 );
 result.number(
-  new Patron(
+  patron(
     guestDisposable(
       new Text(".eo-result"),
       disposeIfNoSelector(".eo-result")

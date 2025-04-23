@@ -1,10 +1,10 @@
 import { expect, test } from "vitest";
-import { GuestSync } from "./GuestSync";
 import { sourceChangeable } from "../Source/SourceChangeable";
+import { guestSync } from "./GuestSync";
 
 test("GuestSync.test", () => {
   const source = sourceChangeable(123);
-  const syncGuest = new GuestSync(111);
+  const syncGuest = guestSync(111);
   syncGuest.give(222);
   expect(syncGuest.value()).toBe(222);
   source.value(syncGuest);
