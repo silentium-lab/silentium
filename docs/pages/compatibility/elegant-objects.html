@@ -91,11 +91,11 @@
 <script type="module">
   import {
     Guest,
-    SourceChangeable,
-    Patron,
+    sourceChangeable,
+    patron,
     SourceAll,
-    GuestCast,
-    GuestDisposable,
+    guestCast,
+    guestDisposable,
   } from "silentium";
   import { Text, Input } from "silentium-components";
 
@@ -103,8 +103,8 @@
     timerHead = null;
 
     constructor() {
-      this.source = new SourceChangeable(1);
-      this.isStoppedSource = new SourceChangeable(false);
+      this.source = sourceChangeable(1);
+      this.isStoppedSource = sourceChangeable(false);
     }
 
     number(guest) {
@@ -149,13 +149,13 @@
 
   class NumberFromInput {
     constructor(selector) {
-      this.source = new SourceChangeable(1);
+      this.source = sourceChangeable(1);
       this.input = new Input(this.source, selector);
     }
 
     number(guest) {
       this.source.value(
-        new GuestCast(guest, (value) => {
+        guestCast(guest, (value) => {
           guest.give(+value);
         })
       );
@@ -169,11 +169,13 @@
     }
 
     number(guest) {
-      const all = new SourceAll();
-      this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-      this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+      const all = sourceAll({
+        n1: this.num1.number.bind(this),
+        n2: this.num2.number.bind(this),
+      });
+
       all.value(
-        new GuestCast(guest, ({ n1, n2 }) => {
+        guestCast(guest, ({ n1, n2 }) => {
           guest.give(n1 + n2);
         })
       );
@@ -187,11 +189,12 @@
     }
 
     number(guest) {
-      const all = new SourceAll();
-      this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-      this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+      const all = sourceAll({
+        n1: this.num1.number.bind(this),
+        n2: this.num2.number.bind(this),
+      });
       all.value(
-        new GuestCast(guest, ({ n1, n2 }) => {
+        guestCast(guest, ({ n1, n2 }) => {
           guest.give(n1 * n2);
         })
       );
@@ -210,15 +213,15 @@
   );
   numberTimer.start();
   numberTimer.number(
-    new Patron(
-      new GuestDisposable(
+    patron(
+      guestDisposable(
         new Text(".eo-counter"),
         disposeIfNoSelector(".eo-counter")
       )
     )
   );
   numberTimer.isStopped(
-    new Patron((isStopped) => {
+    patron((isStopped) => {
       document
         .querySelector(".stop")
         .classList[isStopped ? "add" : "remove"]("opacity-20");
@@ -228,8 +231,8 @@
     })
   );
   result.number(
-    new Patron(
-      new GuestDisposable(
+    patron(
+      guestDisposable(
         new Text(".eo-result"),
         disposeIfNoSelector(".eo-result")
       )
@@ -240,11 +243,11 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Листинг 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   Guest,
-  Source,
+  source,
   Patron,
   SourceAll,
-  GuestCast,
-  GuestDisposable,
+  guestCast,
+  guestDisposable,
 } from "silentium";
 import { Text, Input } from "silentium-components";
 
@@ -259,16 +262,16 @@ const result = new Multiplication(
 );
 numberTimer.start();
 numberTimer.number(
-  new Patron(
-    new GuestDisposable(
+  patron(
+    guestDisposable(
       new Text(".eo-counter"),
       disposeIfNoSelector(".eo-counter")
     )
   )
 );
 result.number(
-  new Patron(
-    new GuestDisposable(
+  patron(
+    guestDisposable(
       new Text(".eo-result"),
       disposeIfNoSelector(".eo-result")
     )
@@ -279,7 +282,7 @@ class NumberFromTimer {
   timerHead = null;
 
   constructor() {
-    this.source = new Source(1);
+    this.source = source(1);
   }
 
   number(guest) {
@@ -318,13 +321,13 @@ class NumberFromTimer {
 
 class NumberFromInput {
   constructor(selector) {
-    this.source = new Source(1);
+    this.source = source(1);
     this.input = new Input(this.source, selector);
   }
 
   number(guest) {
     this.source.value(
-      new GuestCast(guest, (value) => {
+      guestCast(guest, (value) => {
         guest.give(+value);
       })
     );
@@ -338,11 +341,12 @@ class Addition {
   }
 
   number(guest) {
-    const all = new SourceAll();
-    this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-    this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+    const all = sourceAll({
+      n1: this.num1.number.bind(this),
+      n2: this.num2.number.bind(this),
+    });
     all.value(
-      new GuestCast(guest, ({ n1, n2 }) => {
+      guestCast(guest, ({ n1, n2 }) => {
         guest.give(n1 + n2);
       })
     );
@@ -356,11 +360,12 @@ class Multiplication {
   }
 
   number(guest) {
-    const all = new SourceAll();
-    this.num1.number(new GuestCast(guest, all.guestKey("n1")));
-    this.num2.number(new GuestCast(guest, all.guestKey("n2")));
+    const all = sourceAll({
+      n1: this.num1.number.bind(this),
+      n2: this.num2.number.bind(this),
+    });
     all.value(
-      new GuestCast(guest, ({ n1, n2 }) => {
+      guestCast(guest, ({ n1, n2 }) => {
         guest.give(n1 * n2);
       })
     );

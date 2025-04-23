@@ -1,18 +1,18 @@
 import { expect, test } from "vitest";
+import { patron } from "./Patron";
 import { PatronPool } from "./PatronPool";
-import { Patron } from "./Patron";
 
 test("PatronPool.test", () => {
   const pool = new PatronPool<number>(null);
   let receivedCount = 0;
 
   pool.add(
-    new Patron((value) => {
+    patron((value) => {
       receivedCount += value;
     }),
   );
   pool.add(
-    new Patron((value) => {
+    patron((value) => {
       receivedCount += value;
     }),
   );

@@ -1,48 +1,36 @@
-import { PrivateType } from "../Private/Private";
-import { give, GuestType } from "../Guest/Guest";
-import {
-  Source,
-  SourceObjectType,
-  SourceType,
-  isSource,
-  value,
-} from "./Source";
-import { SourceAll } from "./SourceAll";
-import { GuestCast } from "../Guest/GuestCast";
+import { GuestType } from "../Guest/Guest";
+import { guestCast } from "../Guest/GuestCast";
+import { PersonalType } from "../Personal/Personal";
+import { SourceType, value } from "./Source";
+import { sourceAll } from "./SourceAll";
 
 /**
+ * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
-export class SourceMap<T, TG> implements SourceObjectType<TG[]> {
-  public constructor(
-    private baseSource: SourceType<T[]>,
-    private targetSource: PrivateType<SourceType<TG>>,
-  ) {
-    if (baseSource === undefined) {
-      throw new Error("SourceMap didnt receive baseSource argument");
-    }
-    if (targetSource === undefined) {
-      throw new Error("SourceMap didnt receive targetSource argument");
-    }
+export const sourceMap = <T, TG>(
+  baseSource: SourceType<T[]>,
+  targetSource: PersonalType<SourceType<TG>>,
+) => {
+  if (baseSource === undefined) {
+    throw new Error("SourceMap didn't receive baseSource argument");
+  }
+  if (targetSource === undefined) {
+    throw new Error("SourceMap didn't receive targetSource argument");
   }
 
-  public value(guest: GuestType<TG[]>) {
-    const all = new SourceAll();
+  return (guest: GuestType<TG[]>) => {
     value(
-      this.baseSource,
-      new GuestCast(<GuestType>guest, (theValue) => {
-        theValue.forEach((val, index) => {
-          const valueSource = isSource(val)
-            ? val
-            : new Source((innerGuest) => {
-                give(val, innerGuest);
-              });
-          const targetSource = this.targetSource.get(valueSource);
-          value(targetSource, all.guestKey(index.toString()));
+      baseSource,
+      guestCast(<GuestType>guest, (theValue) => {
+        const sources: SourceType[] = [];
+        theValue.forEach((val) => {
+          const source = targetSource.get(val);
+          sources.push(source);
         });
+        value(sourceAll(sources), guest);
       }),
     );
-    all.valueArray(<GuestType>guest);
     return this;
-  }
-}
+  };
+};

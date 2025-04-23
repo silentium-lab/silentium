@@ -70,11 +70,11 @@
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
           <pre class="mb-4"><code class="language-js">import {
-          Source,
+            source,
             give
         } from 'silentium';
 
-        const timestamp = new Source((guest) => {
+        const timestamp = source((guest) => {
             give(Date.now(), guest);
         });
         timestamp.value((timestamp) => {
@@ -87,9 +87,9 @@
             <span class="guest-result">Result here</span>
           </div>
           <script type="module">
-            import { Source, give } from "silentium";
+            import { source, give } from "silentium";
 
-            const timestamp = new Source((guest) => {
+            const timestamp = source((guest) => {
               give(Date.now(), guest);
             });
             timestamp.value((timestamp) => {
@@ -154,32 +154,29 @@
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 3.</p>
-          <pre class="mb-4"><code class="language-js">import {
-          SourceAll,
-          give,
-          value
-        } from "silentium";
+          <pre class="mb-4"><code class="language-js">import { sourceAll, source, give, value } from "silentium";
 
-        const all = new SourceAll();
-        value(give.bind(null, 1), all.guestKey("one"));
-        value(give.bind(null, 2), all.guestKey("two"));
+            const all = sourceAll({
+              one: source('one'),
+              two: source('two'),
+            });
 
-        all.value(({ one, two }) => {
-          document.querySelector(".guest-result-3").textContent = `one + two = "${
-            one + two
-          }"`;
-        });
+            all.value(({ one, two }) => {
+              document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
+                }"`;
+            });
         </code></pre>
           <p class="text-gray-600 text-lg mb-0 font-bold">Результат 3.</p>
           <div class="example mb-4">
             <span class="guest-result-3">Result here</span>
           </div>
           <script type="module">
-            import { SourceAll, give, value } from "silentium";
+            import { sourceAll, source, give, value } from "silentium";
 
-            const all = new SourceAll();
-            value(give.bind(null, 1), all.guestKey("one"));
-            value(give.bind(null, 2), all.guestKey("two"));
+            const all = sourceAll({
+              one: source('one'),
+              two: source('two'),
+            });
 
             all.value(({ one, two }) => {
               document.querySelector(".guest-result-3").textContent = `one + two = "${one + two

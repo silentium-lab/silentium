@@ -1,8 +1,8 @@
 import { expect, test, vitest } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
+import { sourceChangeable } from "./SourceChangeable";
 
 test("SourceChangeable.test", () => {
-  const source = new SourceChangeable(42);
+  const source = sourceChangeable(42);
 
   const g = vitest.fn();
   source.value(g);

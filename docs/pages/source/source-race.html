@@ -33,14 +33,14 @@
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-  SourceMap,
-  SourceRace,
+  sourceMap,
+  sourceRace,
   Source,
-  SourceChangeable,
+  sourceChangeable,
   give,
   value,
-  GuestCast,
-  Private,
+  guestCast,
+  personal,
 } from "silentium";
 
 const isEven = (v) => v % 2 === 0;
@@ -49,7 +49,7 @@ const isOdd = (v) => v % 2 !== 0;
 const nTimesSource = (condition, n, baseSource) => (guest) => {
   value(
     baseSource,
-    new GuestCast(guest, (value) => {
+    guestCast(guest, (value) => {
       if (condition(value)) {
         give(value * n, guest);
       }
@@ -57,12 +57,12 @@ const nTimesSource = (condition, n, baseSource) => (guest) => {
   );
 };
 
-const source = new SourceChangeable([1, 2, 3, 4, 5]);
-const guestMapped = new SourceMap(
+const source = sourceChangeable([1, 2, 3, 4, 5]);
+const guestMapped = sourceMap(
   source,
-  new Private(
+  personal(
     (itemSource) =>
-      new SourceRace([
+      sourceRace([
         nTimesSource(isEven, 2, itemSource),
         nTimesSource(isOdd, 3, itemSource),
       ])
@@ -80,14 +80,14 @@ guestMapped.value((v) => {
 </div>
 <script type="module">
   import {
-    SourceMap,
-    SourceRace,
+    sourceMap,
+    sourceRace,
     Source,
-    SourceChangeable,
+    sourceChangeable,
     give,
     value,
-    GuestCast,
-    Private,
+    guestCast,
+    personal,
   } from "silentium";
 
   const isEven = (v) => v % 2 === 0;
@@ -96,7 +96,7 @@ guestMapped.value((v) => {
   const nTimesSource = (condition, n, baseSource) => (guest) => {
     value(
       baseSource,
-      new GuestCast(guest, (value) => {
+      guestCast(guest, (value) => {
         if (condition(value)) {
           give(value * n, guest);
         }
@@ -104,12 +104,12 @@ guestMapped.value((v) => {
     );
   };
 
-  const source = new SourceChangeable([1, 2, 3, 4, 5]);
-  const guestMapped = new SourceMap(
+  const source = sourceChangeable([1, 2, 3, 4, 5]);
+  const guestMapped = sourceMap(
     source,
-    new Private(
+    personal(
       (itemSource) =>
-        new SourceRace([
+        sourceRace([
           nTimesSource(isEven, 2, itemSource),
           nTimesSource(isOdd, 3, itemSource),
         ])

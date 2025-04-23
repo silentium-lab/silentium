@@ -1,22 +1,25 @@
 import { expect, test, vitest } from "vitest";
-import { SourceAll } from "./SourceAll";
-import { SourceChangeable } from "./SourceChangeable";
-import { Patron } from "../Patron/Patron";
+import { guestSync } from "../Guest/GuestSync";
+import { patron } from "../Patron/Patron";
+import { value } from "../Source/Source";
+import { sourceAll } from "./SourceAll";
+import { sourceChangeable } from "./SourceChangeable";
 
 test("SourceAll._asArray.test", () => {
-  const one = new SourceChangeable(1);
-  const two = new SourceChangeable(2);
-  const all = new SourceAll<[number, number]>();
-
-  one.value(new Patron(all.guestKey("0")));
-  two.value(new Patron(all.guestKey("1")));
+  const one = sourceChangeable<number>(1);
+  const two = sourceChangeable<number>(2);
+  const all = sourceAll<[number, number]>([one, two]);
 
   const guest = vitest.fn();
-  all.valueArray(
-    new Patron((value) => {
+  value(
+    all,
+    patron((value) => {
       guest(JSON.stringify(value));
     }),
   );
+
+  const gs = guestSync();
+  value(all, gs);
 
   expect(guest).toBeCalledWith("[1,2]");
 });

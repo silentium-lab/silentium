@@ -47,20 +47,20 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceDynamic, Guest, Source } from "silentium";
+><code class="language-js">import { sourceDynamic, guest, source } from "silentium";
 
 let theValue = 1;
-const sourceDynamic = new SourceDynamic(
-    new Guest((value) => {
+const sd = sourceDynamic(
+    guest((value) => {
         theValue = value;
     }),
-    new Source((guest) => {
+    source((guest) => {
         give(theValue, guest);
     })
 );
 
-sourceDynamic.give(42);
-sourceDynamic.value((value) => {
+sd.give(42);
+sd.value((value) => {
     document.querySelector(
     ".source-dynamic-result"
     ).textContent = `Результат = ${value}`;
@@ -72,20 +72,20 @@ sourceDynamic.value((value) => {
 </div>
 
 <script type="module">
-  import { SourceDynamic, Guest, Source, give } from "silentium";
+  import { sourceDynamic, guest, source, give } from "silentium";
 
   let theValue = 1;
-  const sourceDynamic = new SourceDynamic(
-    new Guest((value) => {
+  const sd = sourceDynamic(
+    guest((value) => {
       theValue = value;
     }),
-    new Source((guest) => {
+    source((guest) => {
       give(theValue, guest);
     })
   );
 
-  sourceDynamic.give(42);
-  sourceDynamic.value((value) => {
+  sd.give(42);
+  sd.value((value) => {
     document.querySelector(
       ".source-dynamic-result"
     ).textContent = `Результат = ${value}`;

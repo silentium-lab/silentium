@@ -2,38 +2,39 @@ import { give, GuestType } from "./Guest";
 import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 
 /**
+ * Helps to inherit guest behavior, its introduction and dispose settings
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-cast
  */
-export class GuestCast<T> implements GuestDisposableType<T> {
-  public constructor(
-    private sourceGuest: GuestType<any>,
-    private targetGuest: GuestType<T>,
-  ) {
-    if (sourceGuest === undefined) {
-      throw new Error("GuestCast didnt receive sourceGuest argument");
-    }
-    if (targetGuest === undefined) {
-      throw new Error("GuestCast didnt receive targetGuest argument");
-    }
+export const guestCast = <T>(
+  sourceGuest: GuestType<any>,
+  targetGuest: GuestType<T>,
+): GuestDisposableType<T> => {
+  if (sourceGuest === undefined) {
+    throw new Error("GuestCast didn't receive sourceGuest argument");
+  }
+  if (targetGuest === undefined) {
+    throw new Error("GuestCast didn't receive targetGuest argument");
   }
 
-  public introduction() {
-    if (typeof this.sourceGuest === "function") {
-      return "guest";
-    }
-    if (!this.sourceGuest.introduction) {
-      return "guest";
-    }
-    return this.sourceGuest.introduction();
-  }
+  const result = {
+    disposed(value: T | null): boolean {
+      const maybeDisposable = sourceGuest as MaybeDisposableType;
+      return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
+    },
+    give(value: T) {
+      give(value, targetGuest);
+      return result;
+    },
+    introduction() {
+      if (typeof sourceGuest === "function") {
+        return "guest";
+      }
+      if (!sourceGuest.introduction) {
+        return "guest";
+      }
+      return sourceGuest.introduction();
+    },
+  };
 
-  public give(value: T): this {
-    give(value, this.targetGuest);
-    return this;
-  }
-
-  public disposed(value: T | null): boolean {
-    const maybeDisposable = this.sourceGuest as MaybeDisposableType;
-    return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
-  }
-}
+  return result;
+};

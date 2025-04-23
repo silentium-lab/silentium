@@ -1,5 +1,5 @@
 import { CurrentPage, Link, Page, Router } from "silentium-components";
-import { Patron, PatronOnce, SourceChangeable, sourceOf } from "silentium";
+import { patron, patronOnce, sourceChangeable, sourceOf } from "silentium";
 import { StyleFetched } from "./lib/StyleFetched.mjs";
 import { Fetched, Element, Attribute, StyleInstalled } from "silentium-web-api";
 import "./components.mjs";
@@ -15,7 +15,7 @@ const [basePath] = window.location.href
   .split("#");
 const cleanBasePath = basePath.replace(/[^/]+\.html$/, "");
 const currentPage = new CurrentPage();
-const basePathSource = new SourceChangeable(
+const basePathSource = sourceChangeable(
   `${basePath}#`.replace("index.html", "").replace("//", "/"),
 );
 
@@ -24,7 +24,7 @@ link.watchClick(".global-body", "a.dynamic-navigation");
 
 const dynamicPage = new Page("Dynamic page");
 
-const errors = new SourceChangeable();
+const errors = sourceChangeable();
 const routesTransport = new Fetched(errors);
 
 routesTransport.do().give({
@@ -41,10 +41,10 @@ styleLink.value((url) => {
   styleTransport.do().give({ url });
 });
 
-styleTransport.result().value(new PatronOnce(new StyleInstalled()));
+styleTransport.result().value(patronOnce(new StyleInstalled()));
 
 routesTransport.result().value(
-  new Patron((routes) => {
+  patron((routes) => {
     const dynamicRoutes = routes.map((route) => ({
       url: "/" + route.replace("pages/", "").replace(".html", "").trim(),
       template: route,

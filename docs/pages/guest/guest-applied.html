@@ -24,16 +24,16 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4 w-full"
-><code class="language-js">import { Guest, GuestApplied, sourceOf } from "silentium";
+><code class="language-js">import { guest, guestApplied, sourceOf } from "silentium";
 
-const guest = new Guest((value) => {
+const guest = guest((value) => {
   document.querySelector(
     ".guest-result"
   ).textContent = `Double value is ${value}`;
 });
 
 sourceOf(40).value(
-  new GuestApplied(guest, (x) => x * 2)
+  guestApplied(guest, (x) => x * 2)
 );</code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
@@ -41,15 +41,15 @@ sourceOf(40).value(
   <span class="guest-result">Result here</span>
 </div>
 <script type="module">
-  import { Guest, GuestApplied, sourceOf } from "silentium";
+  import { guest, guestApplied, sourceOf } from "silentium";
 
-  const guest = new Guest((value) => {
+  const guest = guest((value) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `Double value is ${value}`;
   });
 
   sourceOf(40).value(
-    new GuestApplied(guest, (x) => x * 2)
+    guestApplied(guest, (x) => x * 2)
   );
 </script>

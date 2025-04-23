@@ -1,73 +1,72 @@
-import { Guest, GuestObjectType, GuestType } from "../Guest/Guest";
-import { isSource, SourceObjectType, SourceType, value } from "./Source";
-import { PatronPool } from "../Patron/PatronPool";
+import { guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
-import { PatronOnce } from "../Patron/PatronOnce";
+import { patronOnce } from "../Patron/PatronOnce";
+import { PatronPool } from "../Patron/PatronPool";
+import {
+  isSource,
+  SourceDataType,
+  SourceObjectType,
+  SourceType,
+  value,
+} from "./Source";
 
-export interface PoolAwareType<T = any> {
-  pool(): PatronPool<T>;
-}
+export type SourceChangeableType<T = any> = SourceObjectType<T> &
+  GuestObjectType<T>;
+
+type ExpandLiteralTypes<T> = T extends number
+  ? number
+  : T extends string
+    ? string
+    : T extends boolean
+      ? boolean
+      : T;
 
 /**
+ * Ability to create source what can be changed later
  * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
  */
-export type SourceChangeableType<T = any> = SourceObjectType<T> &
-  GuestObjectType<T> &
-  PoolAwareType<T>;
+export const sourceChangeable = <T>(source?: SourceType<T>) => {
+  const createdSource = {} as SourceChangeableType<T>;
+  const thePool = new PatronPool(createdSource);
+  const theEmptyPool = new PatronPool(createdSource);
+  let isEmpty = source === undefined;
 
-export class SourceChangeable<T> implements SourceChangeableType<T> {
-  private thePool = new PatronPool(this);
-  private theEmptyPool = new PatronPool(this);
-  private isEmpty: boolean;
-  private sourceDocument?: T;
-
-  public constructor(sourceDocument?: T | SourceType<T>) {
-    this.isEmpty = sourceDocument === undefined;
-
-    if (sourceDocument !== undefined && isSource(sourceDocument)) {
-      value(
-        sourceDocument,
-        new PatronOnce((unwrappedSourceDocument) => {
-          this.isEmpty = unwrappedSourceDocument === undefined;
-          this.sourceDocument = unwrappedSourceDocument;
-        }),
-      );
-    } else {
-      this.isEmpty = sourceDocument === undefined;
-      this.sourceDocument = sourceDocument;
-    }
+  if (source !== undefined && isSource(source)) {
+    value(
+      source,
+      patronOnce((unwrappedSourceDocument) => {
+        isEmpty = unwrappedSourceDocument === undefined;
+        source = unwrappedSourceDocument as SourceDataType<T>;
+      }),
+    );
+  } else {
+    isEmpty = source === undefined;
   }
 
-  public pool() {
-    return this.thePool;
-  }
-
-  public give(value: T): this {
-    this.isEmpty = false;
-    this.sourceDocument = value;
-    this.thePool.give(this.sourceDocument);
-    this.theEmptyPool.give(this.sourceDocument);
-    return this;
-  }
-
-  public value(guest: GuestType<T>): this {
-    if (this.isEmpty) {
-      if (isPatron(guest)) {
-        this.theEmptyPool.add(guest);
+  createdSource.value = (g: GuestType<T>) => {
+    if (isEmpty) {
+      if (isPatron(g)) {
+        theEmptyPool.add(g);
       }
-      return this;
+      return createdSource;
     }
 
-    if (typeof guest === "function") {
-      this.thePool.distribute(this.sourceDocument, new Guest(guest));
+    if (typeof g === "function") {
+      thePool.distribute(source, guest(g));
     } else {
-      this.thePool.distribute(this.sourceDocument, guest);
+      thePool.distribute(source, g);
     }
 
-    return this;
-  }
+    return createdSource;
+  };
 
-  public filled() {
-    return !this.isEmpty;
-  }
-}
+  createdSource.give = (value: T) => {
+    isEmpty = false;
+    source = value as SourceDataType<T>;
+    thePool.give(source);
+    theEmptyPool.give(source);
+    return createdSource;
+  };
+
+  return createdSource as SourceChangeableType<ExpandLiteralTypes<T>>;
+};

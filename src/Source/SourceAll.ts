@@ -1,86 +1,53 @@
-import { SourceObjectType } from "./Source";
-import { SourceChangeable } from "./SourceChangeable";
-import { Guest, GuestObjectType, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
-import { GuestObject } from "../Guest/GuestObject";
-import { GuestPool } from "../Guest/GuestPool";
-
-export interface SourceAllType<T = any> extends SourceObjectType<T> {
-  valueArray(guest: GuestObjectType<T>): this;
-  guestKey<R>(key: string): GuestObjectType<R>;
-}
+import { give, guest, GuestType } from "../Guest/Guest";
+import { guestCast } from "../Guest/GuestCast";
+import { patron } from "../Patron/Patron";
+import { SourceType, value } from "./Source";
+import { sourceChangeable } from "./SourceChangeable";
 
 /**
+ * Represents common value as Record or Array of bunch of sources,
+ * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-export class SourceAll<T> implements SourceAllType<T> {
-  private theAll: SourceChangeable<Record<string, unknown>>;
+export const sourceAll = <T>(
+  sources: SourceType<any>[] | Record<string, SourceType<any>>,
+) => {
+  const keysKnown = new Set<string>(Object.keys(sources));
+  const keysFilled = new Set();
+  const isAllFilled = () => {
+    return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
+  };
+  const isSourcesArray = Array.isArray(sources);
+  const theAll = sourceChangeable<Record<string, unknown>>({});
 
-  private keysKnown: Set<string>;
-
-  private keysFilled = new Set();
-
-  private filledAllPool = new GuestPool(this);
-
-  public constructor(initialKnownKeys: string[] = []) {
-    this.theAll = new SourceChangeable<Record<string, unknown>>({});
-    this.keysKnown = new Set(initialKnownKeys);
-  }
-
-  public valueArray(guest: GuestType<T>) {
-    const guestObject = new GuestObject(guest);
-    this.filledAllPool.add(
-      new GuestCast(guestObject, (value: Record<string, unknown>) => {
-        guestObject.give(Object.values(value) as T);
+  Object.entries(sources).forEach(([key, source]) => {
+    keysKnown.add(key);
+    value(
+      source,
+      patron((v) => {
+        theAll.value(
+          guest((all: Record<string, unknown>) => {
+            keysFilled.add(key);
+            const lastAll = {
+              ...all,
+              [key]: v,
+            };
+            theAll.give(lastAll);
+          }),
+        );
       }),
     );
-    if (this.isAllFilled()) {
-      this.theAll.value(
-        new Guest((all: Record<string, unknown>) => {
-          this.filledAllPool.give(Object.values(all));
-        }),
-      );
-    }
-    return this;
-  }
+  });
 
-  public value(guest: GuestType<T>) {
-    const guestObject = new GuestObject(guest);
-    if (this.isAllFilled()) {
-      this.filledAllPool.add(guestObject);
-      this.theAll.value(
-        new Guest((all) => {
-          this.filledAllPool.give(all);
-        }),
-      );
-    } else {
-      this.filledAllPool.add(guestObject);
-    }
-    return this;
-  }
-
-  public guestKey<R>(key: string): GuestObjectType<R> {
-    this.keysKnown.add(key);
-    return new Guest((value) => {
-      this.theAll.value(
-        new Guest((all: Record<string, unknown>) => {
-          this.keysFilled.add(key);
-          const lastAll = {
-            ...all,
-            [key]: value,
-          };
-          this.theAll.give(lastAll);
-          if (this.isAllFilled()) {
-            this.filledAllPool.give(lastAll);
+  return (guest: GuestType<T>) => {
+    value((g) => {
+      theAll.value(
+        guestCast(g, (value) => {
+          if (isAllFilled()) {
+            give((isSourcesArray ? Object.values(value) : value) as T, g);
           }
         }),
       );
-    });
-  }
-
-  private isAllFilled() {
-    return (
-      this.keysFilled.size > 0 && this.keysFilled.size === this.keysKnown.size
-    );
-  }
-}
+    }, guest);
+  };
+};

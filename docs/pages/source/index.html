@@ -30,11 +30,11 @@
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-  Source,
+  source,
     give
 } from 'silentium';
 
-const timestamp = new Source((guest) => {
+const timestamp = source((guest) => {
     give(Date.now(), guest);
 });
 timestamp.value((timestamp) => {
@@ -47,9 +47,9 @@ timestamp.value((timestamp) => {
   <span class="guest-result">Result here</span>
 </div>
 <script type="module">
-  import { Source, give } from "silentium";
+  import { source, give } from "silentium";
 
-  const timestamp = new Source((guest) => {
+  const timestamp = source((guest) => {
     give(Date.now(), guest);
   });
   timestamp.value((timestamp) => {
@@ -123,9 +123,10 @@ value(helloSource, (greeting) => {
   value
 } from "silentium";
 
-const all = new SourceAll();
-value(give.bind(null, 1), all.guestKey("one"));
-value(give.bind(null, 2), all.guestKey("two"));
+const all = sourceAll({
+  one: source(1),
+  two: source(2),
+});
 
 all.value(({ one, two }) => {
   document.querySelector(".guest-result-3").textContent = `one + two = "${
@@ -140,9 +141,10 @@ all.value(({ one, two }) => {
 <script type="module">
   import { SourceAll, give, value } from "silentium";
 
-  const all = new SourceAll();
-  value(give.bind(null, 1), all.guestKey("one"));
-  value(give.bind(null, 2), all.guestKey("two"));
+  const all = sourceAll({
+    one: source(1),
+    two: source(2),
+  });
 
   all.value(({ one, two }) => {
     document.querySelector(".guest-result-3").textContent = `one + two = "${

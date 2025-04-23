@@ -1,23 +1,23 @@
-import { GuestDisposable } from "./GuestDisposable";
-import { Patron } from "../Patron/Patron";
-import { SourceChangeable } from "../Source/SourceChangeable";
 import { expect, test, vitest } from "vitest";
+import { patron } from "../Patron/Patron";
+import { sourceChangeable } from "../Source/SourceChangeable";
+import { guestDisposable } from "./GuestDisposable";
 
 test("GuestDisposable.test", () => {
-  const source = new SourceChangeable(1);
+  const source = sourceChangeable<number>(1);
 
   const guest = vitest.fn();
 
-  // Работает проверка один раз, потом патром себя удаляет
+  // Работает проверка один раз, потом патрон себя удаляет
   source.value(
-    new Patron(
-      new GuestDisposable(guest, (value) => {
+    patron(
+      guestDisposable(guest, (value) => {
         return value !== null && value > 1;
       }),
     ),
   );
 
-  // Эти выражения не вызывает expect
+  // Эти выражения не вызывают expect
   source.give(2);
   source.give(3);
 

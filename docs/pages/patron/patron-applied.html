@@ -18,18 +18,18 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Guest, PatronApplied, SourceChangeable } from "silentium";
+><code class="language-js">import { guest, PatronApplied, sourceChangeable } from "silentium";
 
-window.source = new SourceChangeable(20);
+window.source = sourceChangeable(20);
 
-const guest = new Guest((value) => {
+const g = guest((value) => {
   document.querySelector(
     ".guest-result"
   ).textContent = `Double value is ${value}`;
 });
 
 window.source.value(
-  new PatronApplied(guest, (x) => x * 2)
+  new PatronApplied(g, (x) => x * 2)
 );
 </code></pre>
 
@@ -50,17 +50,17 @@ window.source.value(
   Дать источнику значение 25
 </button>
 <script type="module">
-  import { Guest, PatronApplied, SourceChangeable } from "silentium";
+  import { guest, PatronApplied, sourceChangeable } from "silentium";
 
-  window.source = new SourceChangeable(20);
+  window.source = sourceChangeable(20);
 
-  const guest = new Guest((value) => {
+  const g = guest((value) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `Double value is ${value}`;
   });
 
   window.source.value(
-    new PatronApplied(guest, (x) => x * 2)
+    new PatronApplied(g, (x) => x * 2)
   );
 </script>

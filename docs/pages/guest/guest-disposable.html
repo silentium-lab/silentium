@@ -41,7 +41,7 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Полезно в случаях, когда гость сделал свою работу и должен быть удален из пула
-  патронов, но в случае если гость стал патрном. У класса Patron есть метод
+  патронов, но в случае если гость стал патроном. У класса Patron есть метод
   disposed, который берется от гостя. В логике PatronPool после каждой передачи
   значения патрону идет проверка не нужно ли удалить этот патрон из пула вызовом
   метода disposed
@@ -64,13 +64,13 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { SourceChangeable, Patron, GuestDisposable } from "silentium";
+<pre class="mb-4"><code class="language-js">import { sourceChangeable, patron, guestDisposable } from "silentium";
 
-  const source = new SourceChangeable("Один");
+  const source = sourceChangeable("Один");
 
   source.value(
-    new Patron(
-      new GuestDisposable(
+    patron(
+      guestDisposable(
         (value) => {
           document.querySelector(".guest-result").textContent = value;
         },
@@ -95,13 +95,13 @@
   <span class="guest-result">Нет значения</span>
 </div>
 <script type="module">
-  import { SourceChangeable, Patron, GuestDisposable } from "silentium";
+  import { sourceChangeable, patron, guestDisposable } from "silentium";
 
-  const source = new SourceChangeable("Один");
+  const source = sourceChangeable("Один");
 
   source.value(
-    new Patron(
-      new GuestDisposable(
+    patron(
+      guestDisposable(
         (value) => {
           document.querySelector(".guest-result").textContent = value;
         },

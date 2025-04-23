@@ -1,7 +1,7 @@
-import { wait } from "./../../test-utils/wait";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { SourceChangeable } from "../Source/SourceChangeable";
-import { PatronOnce } from "./PatronOnce";
+import { sourceChangeable } from "../Source/SourceChangeable";
+import { wait } from "./../../test-utils/wait";
+import { patronOnce } from "./PatronOnce";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -13,9 +13,9 @@ afterEach(() => {
 });
 
 test("PatronOnce.test", async () => {
-  const source = new SourceChangeable(12);
+  const source = sourceChangeable(12);
   let calls = 0;
-  const patron = new PatronOnce(() => {
+  const patron = patronOnce(() => {
     calls += 1;
   });
   source.value(patron);

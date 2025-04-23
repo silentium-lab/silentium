@@ -1,19 +1,17 @@
+import { value } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
-import { SourceChangeable } from "./SourceChangeable";
-import { SourceAll } from "./SourceAll";
+import { sourceAll } from "./SourceAll";
+import { sourceChangeable } from "./SourceChangeable";
 
 test("SourceAll._twoValuesAfter.test", () => {
-  const one = new SourceChangeable(1);
-  const two = new SourceChangeable(2);
-  const all = new SourceAll<{ one: number; two: number }>(["one", "two"]);
+  const one = sourceChangeable(1);
+  const two = sourceChangeable(2);
+  const all = sourceAll<{ one: number; two: number }>([one, two]);
 
   const g = vitest.fn();
-  all.value((value) => {
+  value(all, (value) => {
     g(Object.values(value).join());
   });
-
-  one.value(all.guestKey("one"));
-  two.value(all.guestKey("two"));
 
   expect(g).toBeCalledWith("1,2");
 });

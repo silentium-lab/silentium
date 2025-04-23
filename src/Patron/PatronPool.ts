@@ -2,8 +2,21 @@ import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
 
 const poolSets = new Map<PoolType, Set<GuestObjectType>>();
+const poolsOfInitiators = new Map<unknown, PoolType>();
 
 /**
+ * Helps to remove all pools of related initiators
+ * @url https://silentium-lab.github.io/silentium/#/utils/destroy
+ */
+export const destroy = (initiators: unknown[]) => {
+  initiators.forEach((initiator) => {
+    const pool = poolsOfInitiators.get(initiator);
+    pool?.destroy();
+  });
+};
+
+/**
+ * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
  */
 export const patronPools = (patron: GuestObjectType) => {
@@ -17,6 +30,7 @@ export const patronPools = (patron: GuestObjectType) => {
 };
 
 /**
+ * Removes patron from all existed pools
  * @url https://silentium-lab.github.io/silentium/#/utils/remove-patron-from-pools
  */
 export const removePatronFromPools = (patron: GuestObjectType) => {
@@ -29,6 +43,7 @@ export const removePatronFromPools = (patron: GuestObjectType) => {
 };
 
 /**
+ * Checks what patron is connected with any pool
  * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
  */
 export const isPatronInPools = (patron: GuestObjectType) => {
@@ -49,9 +64,12 @@ export interface PoolType<T = any> extends GuestObjectType<T> {
   distribute(receiving: T, possiblePatron: GuestObjectType<T>): this;
   remove(patron: GuestObjectType<T>): this;
   size(): number;
+  destroy(): void;
 }
 
 /**
+ * Pool class helps to implement dispatching for patron about new values
+ * what may appear in sources
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
  */
 export class PatronPool<T> implements PoolType<T> {
@@ -62,6 +80,7 @@ export class PatronPool<T> implements PoolType<T> {
   public constructor(private initiator: unknown) {
     this.patrons = new Set<GuestObjectType<T>>();
     poolSets.set(this, this.patrons);
+    poolsOfInitiators.set(this.initiator, this);
     const doReceive = (value: T) => {
       this.patrons.forEach((target) => {
         this.sendValueToGuest(value, target);
@@ -102,9 +121,16 @@ export class PatronPool<T> implements PoolType<T> {
     return this;
   }
 
+  public destroy() {
+    this.patrons.forEach((patron) => {
+      this.remove(patron);
+    });
+    poolSets.delete(this);
+    poolsOfInitiators.delete(this.initiator);
+  }
+
   private sendValueToGuest(value: T, guest: GuestType<T>) {
     const isDisposed = this.guestDisposed(value, guest);
-
     if (!isDisposed) {
       give(value, guest);
     }
@@ -115,7 +141,6 @@ export class PatronPool<T> implements PoolType<T> {
       this.remove(guest as GuestObjectType);
       return true;
     }
-
     return false;
   }
 }

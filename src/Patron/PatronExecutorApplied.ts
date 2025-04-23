@@ -1,25 +1,24 @@
-import { GuestExecutorType, GuestObjectType, GuestType } from "../Guest/Guest";
-import { GuestExecutorApplied } from "../Guest/GuestExecutorApplied";
+import { introduction } from "../Patron/Patron";
+import { GuestExecutorType, GuestType } from "../Guest/Guest";
+import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
 
 /**
+ * Helps to apply function to patrons executor
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-executor-applied
  */
-export class PatronExecutorApplied<T> implements GuestObjectType<T> {
-  private guestApplied: GuestExecutorApplied<T>;
+export const patronExecutorApplied = <T>(
+  baseGuest: GuestType<T>,
+  applier: (executor: GuestExecutorType) => GuestExecutorType,
+) => {
+  const guestApplied = guestExecutorApplied(baseGuest, applier);
 
-  public constructor(
-    baseGuest: GuestType<T>,
-    applier: (executor: GuestExecutorType) => GuestExecutorType,
-  ) {
-    this.guestApplied = new GuestExecutorApplied(baseGuest, applier);
-  }
+  const result = {
+    give(value: T) {
+      guestApplied.give(value);
+      return result;
+    },
+    introduction,
+  };
 
-  public give(value: T): this {
-    this.guestApplied.give(value);
-    return this;
-  }
-
-  public introduction(): "guest" | "patron" {
-    return "patron";
-  }
-}
+  return result;
+};

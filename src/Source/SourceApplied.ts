@@ -1,23 +1,21 @@
 import { give, GuestType } from "../Guest/Guest";
-import { GuestCast } from "../Guest/GuestCast";
-import { SourceObjectType, SourceType, value } from "../Source/Source";
+import { guestCast } from "../Guest/GuestCast";
+import { SourceType, value } from "../Source/Source";
 
 /**
+ * Gives ability to apply function to source value
  * @url https://silentium-lab.github.io/silentium/#/source/source-applied
  */
-export class SourceApplied<T, R> implements SourceObjectType<R> {
-  public constructor(
-    private baseSource: SourceType<T>,
-    private applier: (v: T) => R,
-  ) {}
-
-  public value(g: GuestType<R>) {
+export const sourceApplied = <T, R>(
+  baseSource: SourceType<T>,
+  applier: (v: T) => R,
+) => {
+  return (guest: GuestType<R>) => {
     value(
-      this.baseSource,
-      new GuestCast(g, (v) => {
-        give(this.applier(v), g);
+      baseSource,
+      guestCast(guest, (v) => {
+        give(applier(v), guest);
       }),
     );
-    return this;
-  }
-}
+  };
+};

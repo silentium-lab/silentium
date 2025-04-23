@@ -1,16 +1,17 @@
-import { SourceFiltered } from "../Source/SourceFiltered";
 import { expect, test, vitest } from "vitest";
+import { value } from "../Source/Source";
+import { sourceFiltered } from "../Source/SourceFiltered";
 
 test("SourceFiltered.test", () => {
-  const source = new SourceFiltered(11, (v) => v === 11);
+  const source = sourceFiltered(11, (v) => v === 11);
 
   const g1 = vitest.fn();
-  source.value(g1);
+  value(source, g1);
   expect(g1).toBeCalledWith(11);
 
-  const source2 = new SourceFiltered(11, (v) => v === 22);
+  const source2 = sourceFiltered(11, (v) => v === 22);
 
   const g2 = vitest.fn();
-  source2.value(g2);
+  value(source2, g2);
   expect(g2).not.toHaveBeenCalled();
 });

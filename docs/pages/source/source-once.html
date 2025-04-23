@@ -22,11 +22,11 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { SourceOnce, Patron } from "silentium";
+><code class="language-js">import { sourceOnce, patron } from "silentium";
 
-const source = new SourceOnce();
+const source = sourceOnce();
 
-source.value(new Patron((v) => {
+source.value(patron((v) => {
     document.querySelector(".guest-result").textContent = v;
 }));
 
@@ -50,11 +50,11 @@ setTimeout(() => {
 </div>
 
 <script type="module">
-import { SourceOnce, Patron } from "silentium";
+import { sourceOnce, patron } from "silentium";
 
-const source = new SourceOnce();
+const source = sourceOnce();
 
-source.value(new Patron((v) => {
+source.value(patron((v) => {
     document.querySelector(".guest-result").textContent = v;
 }));
 

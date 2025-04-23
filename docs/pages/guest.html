@@ -12,9 +12,6 @@
             <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
             <ul class="text-gray-900">
               <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a class="dynamic-navigation" href="/guest/guest-object"> GuestObject </a>
-              </li>
-              <li class="w-full border-b-2 border-neutral-100 py-4">
                 <a class="dynamic-navigation" href="/guest/guest-sync"> GuestSync </a>
               </li>
               <li class="w-full py-4">
@@ -22,9 +19,6 @@
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
                 <a class="dynamic-navigation" href="/guest/guest-cast"> GuestCast </a>
-              </li>
-              <li class="w-full border-b-2 border-neutral-100 py-4">
-                <a class="dynamic-navigation" href="/guest/guest-pool"> GuestPool </a>
               </li>
               <li class="w-full border-b-2 border-neutral-100 py-4">
                 <a class="dynamic-navigation" href="/guest/guest-applied"> GuestApplied </a>
@@ -81,7 +75,7 @@
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
           <pre
             class="mb-4 w-full"
-          ><code class="language-js">import { Guest } from 'silentium';
+          ><code class="language-js">import { guest } from 'silentium';
 
 class Timestamp {
     seconds(guest) {
@@ -90,7 +84,7 @@ class Timestamp {
 }
 
 const timestamp = new Timestamp();
-timestamp.seconds(new Guest((timestamp) => {
+timestamp.seconds(guest((timestamp) => {
     console.log('timestamp is', timestamp);
 }));</code></pre>
 
@@ -99,7 +93,7 @@ timestamp.seconds(new Guest((timestamp) => {
             <span class="guest-result">Result here</span>
           </div>
           <script type="module">
-            import { Guest } from "silentium";
+            import { guest } from "silentium";
 
             class Timestamp {
               seconds(guest) {
@@ -109,7 +103,7 @@ timestamp.seconds(new Guest((timestamp) => {
 
             const timestamp = new Timestamp();
             timestamp.seconds(
-              new Guest((timestamp) => {
+              guest((timestamp) => {
                 document.querySelector(
                   ".guest-result"
                 ).textContent = `timestamp is ${timestamp}`;

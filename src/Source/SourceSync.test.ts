@@ -1,10 +1,9 @@
-import { SourceSync } from "../Source/SourceSync";
-import { SourceChangeable } from "./SourceChangeable";
 import { expect, test } from "vitest";
+import { sourceSync } from "../Source/SourceSync";
+import { sourceChangeable } from "./SourceChangeable";
 
 test("SourceSync.test", () => {
-  const source = new SourceChangeable("hello");
-  const syncSource = new SourceSync(source);
-
+  const source = sourceChangeable("hello");
+  const syncSource = sourceSync(source);
   expect(syncSource.syncValue()).toBe("hello");
 });

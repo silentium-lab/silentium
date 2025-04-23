@@ -18,7 +18,7 @@
 <p class="text-gray-600 text-lg mb-4">
   Класс <b>SourceSequence</b> работает так же как и
   <link-dynamic href="/source/source-map">SourceMap</link-dynamic>
-  , но перебирает источнники данных последовательно а не параллельно
+  , но перебирает источники данных последовательно а не параллельно
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -30,12 +30,12 @@
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre class="mb-4"><code class="language-js">import {
-  Source,
-  Patron,
-  GuestCast,
-  SourceChangeable,
-  SourceSequence,
-  PrivateClass,
+  source,
+  patron,
+  guestCast,
+  sourceChangeable,
+  sourceSequence,
+  personalClass,
   give,
   isSource,
 } from "silentium";
@@ -47,7 +47,7 @@ class X3 {
 
   value(guest) {
     this.baseNumber.value(
-      new GuestCast(guest, (v) => {
+      guestCast(guest, (v) => {
         give(v * 3, guest);
       })
     );
@@ -55,9 +55,9 @@ class X3 {
   }
 }
 
-const tillResult = new SourceChangeable(9);
+const tillResult = sourceChangeable(9);
 const numSource = (num) =>
-  new Source((guest) =>
+  source((guest) =>
     setTimeout(() => {
       tillResult.value((theValue) => {
         tillResult.give(theValue - 1);
@@ -66,7 +66,7 @@ const numSource = (num) =>
     }, 1000)
   );
 
-const source = new SourceChangeable([
+const source = sourceChangeable([
   numSource(1),
   numSource(2),
   numSource(3),
@@ -77,13 +77,13 @@ const source = new SourceChangeable([
   numSource(8),
   numSource(9),
 ]);
-const sequence = new SourceSequence(source, new PrivateClass(X3));
+const sequence = sourceSequence(source, personalClass(X3));
 
 sequence.value((v) => {
   document.querySelector(".guest-result").textContent = v.join();
 });
 tillResult.value(
-  new Patron((v) => {
+  patron((v) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `Результат через ${v} сек.`;
@@ -98,12 +98,12 @@ tillResult.value(
 
 <script type="module">
   import {
-    Source,
-    Patron,
-    GuestCast,
-    SourceChangeable,
-    SourceSequence,
-    PrivateClass,
+    source,
+    patron,
+    guestCast,
+    sourceChangeable,
+    sourceSequence,
+    personalClass,
     give,
     isSource,
   } from "silentium";
@@ -115,7 +115,7 @@ tillResult.value(
 
     value(guest) {
       this.baseNumber.value(
-        new GuestCast(guest, (v) => {
+        guestCast(guest, (v) => {
           give(v * 3, guest);
         })
       );
@@ -123,9 +123,9 @@ tillResult.value(
     }
   }
 
-  const tillResult = new SourceChangeable(9);
+  const tillResult = sourceChangeable(9);
   const numSource = (num) =>
-    new Source((guest) =>
+    source((guest) =>
       setTimeout(() => {
         tillResult.value((theValue) => {
           tillResult.give(theValue - 1);
@@ -134,7 +134,7 @@ tillResult.value(
       }, 1000)
     );
 
-  const source = new SourceChangeable([
+  const src = sourceChangeable([
     numSource(1),
     numSource(2),
     numSource(3),
@@ -145,13 +145,13 @@ tillResult.value(
     numSource(8),
     numSource(9),
   ]);
-  const sequence = new SourceSequence(source, new PrivateClass(X3));
+  const sequence = sourceSequence(src, personalClass(X3));
 
   sequence.value((v) => {
     document.querySelector(".guest-result").textContent = v.join();
   });
   tillResult.value(
-    new Patron((v) => {
+    patron((v) => {
       document.querySelector(
         ".guest-result"
       ).textContent = `Результат через ${v} сек.`;

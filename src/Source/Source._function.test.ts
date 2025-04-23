@@ -1,10 +1,8 @@
-import { SourceSync } from "./SourceSync";
-import { give, GuestType } from "../Guest/Guest";
+import { source } from "../Source/Source";
 import { expect, test } from "vitest";
+import { sourceSync } from "./SourceSync";
 
 test("Source._function.test", () => {
-  const sncsrc = new SourceSync((g: GuestType<number>) => {
-    give(111, g);
-  });
-  expect(sncsrc.syncValue()).toBe(111);
+  const src = sourceSync(source(111));
+  expect(src.syncValue()).toBe(111);
 });

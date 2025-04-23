@@ -1,8 +1,6 @@
 export * from "./Guest/Guest";
 export * from "./Guest/GuestCast";
-export * from "./Guest/GuestPool";
 export * from "./Guest/GuestSync";
-export * from "./Guest/GuestObject";
 export * from "./Guest/GuestDisposable";
 export * from "./Guest/GuestApplied";
 export * from "./Guest/GuestExecutorApplied";
@@ -23,5 +21,5 @@ export * from "./Source/SourceExecutorApplied";
 export * from "./Source/SourceFiltered";
 export * from "./Source/SourceOnce";
 export * from "./Source/SourceSync";
-export * from "./Private/PrivateClass";
-export * from "./Private/Private";
+export * from "./Personal/PersonalClass";
+export * from "./Personal/Personal";

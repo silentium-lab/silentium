@@ -1,23 +1,22 @@
 import { give, GuestType } from "../Guest/Guest";
-import { SourceObjectType, SourceType, value } from "./Source";
-import { GuestCast } from "../Guest/GuestCast";
+import { guestCast } from "../Guest/GuestCast";
+import { SourceType, value } from "./Source";
 
 /**
+ * Connects guest with source what give response faster than others
  * @url https://silentium-lab.github.io/silentium/#/source/source-race
  */
-export class SourceRace<T> implements SourceObjectType<T> {
-  public constructor(private sources: SourceType<T>[]) {
-    if (sources === undefined) {
-      throw new Error("SourceRace didnt receive sources argument");
-    }
+export const sourceRace = <T>(sources: SourceType<T>[]) => {
+  if (sources === undefined) {
+    throw new Error("SourceRace didnt receive sources argument");
   }
 
-  public value(guest: GuestType<T>): this {
+  return (guest: GuestType<T>) => {
     let connectedWithSource: SourceType | null = null;
-    this.sources.forEach((source) => {
+    sources.forEach((source) => {
       value(
         source,
-        new GuestCast(<GuestType>guest, (value) => {
+        guestCast(<GuestType>guest, (value) => {
           if (!connectedWithSource || connectedWithSource === source) {
             give(value as T, guest);
             connectedWithSource = source;
@@ -25,6 +24,5 @@ export class SourceRace<T> implements SourceObjectType<T> {
         }),
       );
     });
-    return this;
-  }
-}
+  };
+};
