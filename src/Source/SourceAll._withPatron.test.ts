@@ -7,10 +7,7 @@ import { sourceChangeable } from "./SourceChangeable";
 test("SourceAll._withPatron.test", () => {
   const one = sourceChangeable<number>(1);
   const two = sourceChangeable<number>(2);
-  const all = sourceAll<{ one: number; two: number }>({
-    one,
-    two,
-  });
+  const all = sourceAll([one.value, two.value]);
 
   one.give(3);
   one.give(4);

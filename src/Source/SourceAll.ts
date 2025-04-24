@@ -5,21 +5,26 @@ import { patron } from "../Patron/Patron";
 import { SourceType, value } from "./Source";
 import { sourceChangeable } from "./SourceChangeable";
 
+type ExtractType<T> = T extends SourceType<infer U> ? U : never;
+
+type ExtractTypesFromArray<T extends SourceType<any>[]> = {
+  [K in keyof T]: ExtractType<T[K]>;
+};
+
 /**
  * Represents common value as Record or Array of bunch of sources,
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-export const sourceAll = <T>(
-  sources: SourceType<any>[] | Record<string, SourceType<any>>,
-) => {
+export const sourceAll = <const T extends SourceType[]>(
+  sources: T,
+): SourceType<ExtractTypesFromArray<T>> => {
   const keysKnown = new Set<string>(Object.keys(sources));
   const keysFilled = new Set();
   const isAllFilled = () => {
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
-  const isSourcesArray = Array.isArray(sources);
-  const theAll = sourceChangeable<Record<string, unknown>>({});
+  const theAll = sourceChangeable({});
 
   Object.entries(sources).forEach(([key, source]) => {
     subSource(source, theAll);
@@ -41,12 +46,12 @@ export const sourceAll = <T>(
     );
   });
 
-  return (guest: GuestType<T>) => {
+  return (guest: GuestType<ExtractTypesFromArray<T>>) => {
     value((g) => {
       theAll.value(
         guestCast(g, (value) => {
           if (isAllFilled()) {
-            give((isSourcesArray ? Object.values(value) : value) as T, g);
+            give(Object.values(value) as ExtractTypesFromArray<T>, g);
           }
         }),
       );

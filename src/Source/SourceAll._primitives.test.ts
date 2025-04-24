@@ -5,16 +5,10 @@ import { expect, test, vi } from "vitest";
 test("SourceAll._primitives.test", () => {
   const one = 1;
   const two = 2;
-  const all = sourceAll<{ one: number; two: number }>({
-    one,
-    two,
-  });
+  const all = sourceAll([one, two]);
 
   const g = vi.fn();
   value(all, g);
 
-  expect(g).toBeCalledWith({
-    one: 1,
-    two: 2,
-  });
+  expect(g).toBeCalledWith([1, 2]);
 });

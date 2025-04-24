@@ -8,7 +8,7 @@ import { sourceChangeable } from "./SourceChangeable";
 test("SourceAll._asArray.test", () => {
   const one = sourceChangeable<number>(1);
   const two = sourceChangeable<number>(2);
-  const all = sourceAll<[number, number]>([one, two]);
+  const all = sourceAll([one.value, two.value]);
 
   const guest = vitest.fn();
   value(
@@ -18,7 +18,7 @@ test("SourceAll._asArray.test", () => {
     }),
   );
 
-  const gs = guestSync();
+  const gs = guestSync<[number, number]>();
   value(all, gs);
 
   expect(guest).toBeCalledWith("[1,2]");

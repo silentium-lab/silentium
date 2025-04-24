@@ -6,10 +6,7 @@ import { sourceChangeable } from "./SourceChangeable";
 test("SourceAll._twoValuesBefore.test", () => {
   const one = sourceChangeable(1);
   const two = sourceChangeable(2);
-  const all = sourceAll<{ one: number; two: number }>({
-    one,
-    two,
-  });
+  const all = sourceAll([one.value, two.value]);
 
   const g = vitest.fn();
   value(all, (value) => {
