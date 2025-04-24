@@ -40,11 +40,25 @@ export const patronPoolsStatistic = source<{
  * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
  */
 export const subSource = (source: SourceType, subSource: SourceType) => {
+  // sub sources can appear only on SourceObjectType
+  if (source !== null && typeof source !== "object") {
+    return;
+  }
+
   if (!subSources.has(source)) {
     subSources.set(source, []);
   }
 
   subSources.get(source)?.push(subSource);
+};
+
+/**
+ * Helps to define many sources of one sub source
+ */
+export const subSourceMany = (subSource: SourceType, sources: SourceType[]) => {
+  sources.forEach((source) => {
+    subSource(source, subSource);
+  });
 };
 
 /**
