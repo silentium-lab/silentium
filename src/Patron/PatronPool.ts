@@ -55,9 +55,12 @@ export const subSource = (source: SourceType, subSource: SourceType) => {
 /**
  * Helps to define many sources of one sub source
  */
-export const subSourceMany = (subSource: SourceType, sources: SourceType[]) => {
-  sources.forEach((source) => {
-    subSource(source, subSource);
+export const subSourceMany = (
+  subSourceSrc: SourceType,
+  sourcesSrc: SourceType[],
+) => {
+  sourcesSrc.forEach((source) => {
+    subSource(source, subSourceSrc);
   });
 };
 
