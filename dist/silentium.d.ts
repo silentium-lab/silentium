@@ -107,10 +107,24 @@ declare const patron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T>;
 declare const patronOnce: <T>(baseGuest: GuestType<T>) => GuestDisposableType<T>;
 
 /**
+ * Helps to debug application and see is it have problems with frozen pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
+ */
+declare const patronPoolsStatistic: SourceExecutorType<{
+    poolsCount: number;
+    patronsCount: number;
+}>;
+/**
+ * Helps to connect source and subsource, needed to destroy all sub sources
+ * when base source will be destroyed
+ * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
+ */
+declare const subSource: (source: SourceType, subSource: SourceType) => void;
+/**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
-declare const destroy: (initiators: unknown[]) => void;
+declare const destroy: (initiators: SourceType[]) => void;
 /**
  * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
@@ -142,12 +156,12 @@ declare class PatronPool<T> implements PoolType<T> {
     private initiator;
     private patrons;
     give: (value: T) => this;
-    constructor(initiator: unknown);
+    constructor(initiator: SourceType);
     size(): number;
     add(shouldBePatron: GuestType<T>): this;
     remove(patron: GuestObjectType<T>): this;
     distribute(receiving: T, possiblePatron: GuestType<T>): this;
-    destroy(): void;
+    destroy(): this;
     private sendValueToGuest;
     private guestDisposed;
 }
@@ -255,4 +269,4 @@ interface Prototyped<T> {
 }
 declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
 
-export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, value };
+export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, value };

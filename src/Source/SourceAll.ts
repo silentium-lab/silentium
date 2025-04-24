@@ -1,3 +1,4 @@
+import { subSource } from "../Patron/PatronPool";
 import { give, guest, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
@@ -21,6 +22,7 @@ export const sourceAll = <T>(
   const theAll = sourceChangeable<Record<string, unknown>>({});
 
   Object.entries(sources).forEach(([key, source]) => {
+    subSource(source, theAll);
     keysKnown.add(key);
     value(
       source,

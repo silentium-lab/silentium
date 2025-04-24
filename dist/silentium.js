@@ -193,10 +193,41 @@ var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { en
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 const poolSets = /* @__PURE__ */ new Map();
 const poolsOfInitiators = /* @__PURE__ */ new Map();
+const subSources = /* @__PURE__ */ new Map();
+const poolsChangeFns = [];
+const notifyPoolsChange = () => {
+  poolsChangeFns.forEach((fn) => fn());
+};
+const lastPatronPoolsStatistic = {
+  poolsCount: 0,
+  patronsCount: 0
+};
+const patronPoolsStatistic = source((g) => {
+  give(lastPatronPoolsStatistic, g);
+  poolsChangeFns.push(() => {
+    let patronsCount = 0;
+    poolSets.forEach((set) => {
+      patronsCount += set.size;
+    });
+    lastPatronPoolsStatistic.poolsCount = poolSets.size;
+    lastPatronPoolsStatistic.patronsCount = patronsCount;
+    give(lastPatronPoolsStatistic, g);
+  });
+});
+const subSource = (source2, subSource2) => {
+  if (!subSources.has(source2)) {
+    subSources.set(source2, []);
+  }
+  subSources.get(source2)?.push(subSource2);
+};
 const destroy = (initiators) => {
   initiators.forEach((initiator) => {
     const pool = poolsOfInitiators.get(initiator);
     pool?.destroy();
+    const relatedInitiators = subSources.get(initiator);
+    if (relatedInitiators) {
+      destroy(relatedInitiators);
+    }
   });
 };
 const patronPools = (patron) => {
@@ -210,7 +241,7 @@ const patronPools = (patron) => {
 };
 const removePatronFromPools = (patron) => {
   if (patron === void 0) {
-    throw new Error("removePatronFromPools didnt receive patron argument");
+    throw new Error("removePatronFromPools didn't receive patron argument");
   }
   poolSets.forEach((pool) => {
     pool.delete(patron);
@@ -218,7 +249,7 @@ const removePatronFromPools = (patron) => {
 };
 const isPatronInPools = (patron) => {
   if (patron === void 0) {
-    throw new Error("isPatronInPools didnt receive patron argument");
+    throw new Error("isPatronInPools didn't receive patron argument");
   }
   let inPool = false;
   poolSets.forEach((pool) => {
@@ -245,6 +276,7 @@ class PatronPool {
       doReceive(value);
       return this;
     };
+    notifyPoolsChange();
   }
   size() {
     return this.patrons.size;
@@ -256,10 +288,12 @@ class PatronPool {
     if (typeof shouldBePatron !== "function" && shouldBePatron.introduction && shouldBePatron.introduction() === "patron") {
       this.patrons.add(shouldBePatron);
     }
+    notifyPoolsChange();
     return this;
   }
   remove(patron) {
     this.patrons.delete(patron);
+    notifyPoolsChange();
     return this;
   }
   distribute(receiving, possiblePatron) {
@@ -273,12 +307,15 @@ class PatronPool {
     });
     poolSets.delete(this);
     poolsOfInitiators.delete(this.initiator);
+    notifyPoolsChange();
+    return this;
   }
   sendValueToGuest(value, guest) {
     const isDisposed = this.guestDisposed(value, guest);
     if (!isDisposed) {
       give(value, guest);
     }
+    return this;
   }
   guestDisposed(value, guest) {
     if (guest.disposed?.(value)) {
@@ -316,7 +353,6 @@ const patronExecutorApplied = (baseGuest, applier) => {
 const sourceChangeable = (source) => {
   const createdSource = {};
   const thePool = new PatronPool(createdSource);
-  const theEmptyPool = new PatronPool(createdSource);
   let isEmpty = source === void 0;
   if (source !== void 0 && isSource(source)) {
     value(
@@ -332,7 +368,7 @@ const sourceChangeable = (source) => {
   createdSource.value = (g) => {
     if (isEmpty) {
       if (isPatron(g)) {
-        theEmptyPool.add(g);
+        thePool.add(g);
       }
       return createdSource;
     }
@@ -347,7 +383,6 @@ const sourceChangeable = (source) => {
     isEmpty = false;
     source = value2;
     thePool.give(source);
-    theEmptyPool.give(source);
     return createdSource;
   };
   return createdSource;
@@ -599,5 +634,5 @@ const personal = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, value };
 //# sourceMappingURL=silentium.js.map
