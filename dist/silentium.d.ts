@@ -185,12 +185,16 @@ declare const patronExecutorApplied: <T>(baseGuest: GuestType<T>, applier: (exec
     introduction: () => "patron";
 };
 
+type ExtractType<T> = T extends SourceType<infer U> ? U : never;
+type ExtractTypesFromArray<T extends SourceType<any>[]> = {
+    [K in keyof T]: ExtractType<T[K]>;
+};
 /**
  * Represents common value as Record or Array of bunch of sources,
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-declare const sourceAll: <T>(sources: SourceType<any>[] | Record<string, SourceType<any>>) => (guest: GuestType<T>) => void;
+declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceType<ExtractTypesFromArray<T>>;
 
 interface PersonalType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;

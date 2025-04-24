@@ -404,7 +404,6 @@ const sourceAll = (sources) => {
   const isAllFilled = () => {
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
-  const isSourcesArray = Array.isArray(sources);
   const theAll = sourceChangeable({});
   Object.entries(sources).forEach(([key, source]) => {
     subSource(source, theAll);
@@ -430,7 +429,7 @@ const sourceAll = (sources) => {
       theAll.value(
         guestCast(g, (value2) => {
           if (isAllFilled()) {
-            give(isSourcesArray ? Object.values(value2) : value2, g);
+            give(Object.values(value2), g);
           }
         })
       );
