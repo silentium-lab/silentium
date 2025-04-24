@@ -223,9 +223,9 @@ const subSource = (source2, subSource2) => {
   }
   subSources.get(source2)?.push(subSource2);
 };
-const subSourceMany = (subSource2, sources) => {
-  sources.forEach((source2) => {
-    subSource2(source2, subSource2);
+const subSourceMany = (subSourceSrc, sourcesSrc) => {
+  sourcesSrc.forEach((source2) => {
+    subSource(source2, subSourceSrc);
   });
 };
 const destroy = (initiators) => {

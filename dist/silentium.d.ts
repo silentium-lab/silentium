@@ -123,7 +123,7 @@ declare const subSource: (source: SourceType, subSource: SourceType) => void;
 /**
  * Helps to define many sources of one sub source
  */
-declare const subSourceMany: (subSource: SourceType, sources: SourceType[]) => void;
+declare const subSourceMany: (subSourceSrc: SourceType, sourcesSrc: SourceType[]) => void;
 /**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
