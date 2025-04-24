@@ -217,10 +217,18 @@ const patronPoolsStatistic = source((g) => {
   });
 });
 const subSource = (source2, subSource2) => {
+  if (source2 !== null && typeof source2 !== "object") {
+    return;
+  }
   if (!subSources.has(source2)) {
     subSources.set(source2, []);
   }
   subSources.get(source2)?.push(subSource2);
+};
+const subSourceMany = (subSource2, sources) => {
+  sources.forEach((source2) => {
+    subSource2(source2, subSource2);
+  });
 };
 const destroy = (initiators) => {
   initiators.forEach((initiator) => {
@@ -399,6 +407,7 @@ const sourceAll = (sources) => {
   const isSourcesArray = Array.isArray(sources);
   const theAll = sourceChangeable({});
   Object.entries(sources).forEach(([key, source]) => {
+    subSource(source, theAll);
     keysKnown.add(key);
     value(
       source,
@@ -672,5 +681,6 @@ exports.sourceRace = sourceRace;
 exports.sourceSequence = sourceSequence;
 exports.sourceSync = sourceSync;
 exports.subSource = subSource;
+exports.subSourceMany = subSourceMany;
 exports.value = value;
 //# sourceMappingURL=silentium.cjs.map

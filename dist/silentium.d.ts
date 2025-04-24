@@ -121,6 +121,10 @@ declare const patronPoolsStatistic: SourceExecutorType<{
  */
 declare const subSource: (source: SourceType, subSource: SourceType) => void;
 /**
+ * Helps to define many sources of one sub source
+ */
+declare const subSourceMany: (subSource: SourceType, sources: SourceType[]) => void;
+/**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
@@ -269,4 +273,4 @@ interface Prototyped<T> {
 }
 declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
 
-export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, value };
+export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
