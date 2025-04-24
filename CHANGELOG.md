@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/silentium-lab/silentium/compare/v0.0.15...v0.0.16) (2025-04-24)
+
+
+### Features
+
+* **main:** release ([a49aa04](https://github.com/silentium-lab/silentium/commit/a49aa045c4026f66a31dc74941646a9c84ce3d89))
+
+
+### Bug Fixes
+
+* **main:** source all typings fixed ([6a016b1](https://github.com/silentium-lab/silentium/commit/6a016b15316055153b8b53ecfede1543333ed500))
+
 ### [0.0.15](https://github.com/silentium-lab/silentium/compare/v0.0.14...v0.0.15) (2025-04-24)
 
 
