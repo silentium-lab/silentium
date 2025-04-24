@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/silentium-lab/silentium/compare/v0.0.13...v0.0.14) (2025-04-24)
+
+
+### Features
+
+* **main:** added subSourceMany procedure ([c7f3148](https://github.com/silentium-lab/silentium/commit/c7f3148413fafb8d1d0286738f4d1a13db3018df))
+
+
+### Bug Fixes
+
+* **main:** fix source all sub source ([1053974](https://github.com/silentium-lab/silentium/commit/1053974eabfa1b3601e70699113c638c93078120))
+
 ### [0.0.13](https://github.com/silentium-lab/silentium/compare/v0.0.12...v0.0.13) (2025-04-24)
 
 
