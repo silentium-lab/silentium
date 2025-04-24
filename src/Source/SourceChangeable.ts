@@ -20,7 +20,6 @@ export type SourceChangeableType<T = any> = SourceObjectType<T> &
 export const sourceChangeable = <T>(source?: SourceType<T>) => {
   const createdSource = {} as SourceChangeableType<T>;
   const thePool = new PatronPool(createdSource);
-  const theEmptyPool = new PatronPool(createdSource);
   let isEmpty = source === undefined;
 
   if (source !== undefined && isSource(source)) {
@@ -38,7 +37,7 @@ export const sourceChangeable = <T>(source?: SourceType<T>) => {
   createdSource.value = (g: GuestType<T>) => {
     if (isEmpty) {
       if (isPatron(g)) {
-        theEmptyPool.add(g);
+        thePool.add(g);
       }
       return createdSource;
     }
@@ -56,7 +55,6 @@ export const sourceChangeable = <T>(source?: SourceType<T>) => {
     isEmpty = false;
     source = value as SourceDataType<T>;
     thePool.give(source);
-    theEmptyPool.give(source);
     return createdSource;
   };
 

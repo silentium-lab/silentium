@@ -1,17 +1,64 @@
+import { source, SourceType } from "../Source/Source";
 import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
 
 const poolSets = new Map<PoolType, Set<GuestObjectType>>();
-const poolsOfInitiators = new Map<unknown, PoolType>();
+const poolsOfInitiators = new Map<SourceType, PoolType>();
+const subSources = new Map<SourceType, SourceType[]>();
+
+const poolsChangeFns: (() => void)[] = [];
+const notifyPoolsChange = () => {
+  poolsChangeFns.forEach((fn) => fn());
+};
+const lastPatronPoolsStatistic = {
+  poolsCount: 0,
+  patronsCount: 0,
+};
+/**
+ * Helps to debug application and see is it have problems with frozen pools
+ * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
+ */
+export const patronPoolsStatistic = source<{
+  poolsCount: number;
+  patronsCount: number;
+}>((g) => {
+  give(lastPatronPoolsStatistic, g);
+  poolsChangeFns.push(() => {
+    let patronsCount = 0;
+    poolSets.forEach((set) => {
+      patronsCount += set.size;
+    });
+    lastPatronPoolsStatistic.poolsCount = poolSets.size;
+    lastPatronPoolsStatistic.patronsCount = patronsCount;
+    give(lastPatronPoolsStatistic, g);
+  });
+});
+
+/**
+ * Helps to connect source and subsource, needed to destroy all sub sources
+ * when base source will be destroyed
+ * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
+ */
+export const subSource = (source: SourceType, subSource: SourceType) => {
+  if (!subSources.has(source)) {
+    subSources.set(source, []);
+  }
+
+  subSources.get(source)?.push(subSource);
+};
 
 /**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
-export const destroy = (initiators: unknown[]) => {
+export const destroy = (initiators: SourceType[]) => {
   initiators.forEach((initiator) => {
     const pool = poolsOfInitiators.get(initiator);
     pool?.destroy();
+    const relatedInitiators = subSources.get(initiator);
+    if (relatedInitiators) {
+      destroy(relatedInitiators);
+    }
   });
 };
 
@@ -35,7 +82,7 @@ export const patronPools = (patron: GuestObjectType) => {
  */
 export const removePatronFromPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
-    throw new Error("removePatronFromPools didnt receive patron argument");
+    throw new Error("removePatronFromPools didn't receive patron argument");
   }
   poolSets.forEach((pool) => {
     pool.delete(patron);
@@ -48,7 +95,7 @@ export const removePatronFromPools = (patron: GuestObjectType) => {
  */
 export const isPatronInPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
-    throw new Error("isPatronInPools didnt receive patron argument");
+    throw new Error("isPatronInPools didn't receive patron argument");
   }
   let inPool = false;
   poolSets.forEach((pool) => {
@@ -77,7 +124,7 @@ export class PatronPool<T> implements PoolType<T> {
 
   public give: (value: T) => this;
 
-  public constructor(private initiator: unknown) {
+  public constructor(private initiator: SourceType) {
     this.patrons = new Set<GuestObjectType<T>>();
     poolSets.set(this, this.patrons);
     poolsOfInitiators.set(this.initiator, this);
@@ -90,6 +137,7 @@ export class PatronPool<T> implements PoolType<T> {
       doReceive(value);
       return this;
     };
+    notifyPoolsChange();
   }
 
   public size(): number {
@@ -107,11 +155,13 @@ export class PatronPool<T> implements PoolType<T> {
     ) {
       this.patrons.add(shouldBePatron);
     }
+    notifyPoolsChange();
     return this;
   }
 
   public remove(patron: GuestObjectType<T>) {
     this.patrons.delete(patron);
+    notifyPoolsChange();
     return this;
   }
 
@@ -127,6 +177,8 @@ export class PatronPool<T> implements PoolType<T> {
     });
     poolSets.delete(this);
     poolsOfInitiators.delete(this.initiator);
+    notifyPoolsChange();
+    return this;
   }
 
   private sendValueToGuest(value: T, guest: GuestType<T>) {
@@ -134,6 +186,7 @@ export class PatronPool<T> implements PoolType<T> {
     if (!isDisposed) {
       give(value, guest);
     }
+    return this;
   }
 
   private guestDisposed(value: T, guest: GuestType<T>) {
