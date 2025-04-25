@@ -1,4 +1,4 @@
-import { sourceChangeable } from "../Source/SourceChangeable";
+import { sourceOf } from "../Source/SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
 import { expect, test } from "vitest";
 import { patron } from "./Patron";
@@ -10,7 +10,7 @@ test("PatronPool.statistic.test", () => {
   expect(statistic.syncValue().patronsCount).toBe(0);
   expect(statistic.syncValue().poolsCount).toBe(0);
 
-  const src = sourceChangeable(1);
+  const src = sourceOf(1);
   src.value(patron(() => {}));
 
   expect(statistic.syncValue().patronsCount).toBe(1);
@@ -21,7 +21,7 @@ test("PatronPool.statistic.test", () => {
   expect(statistic.syncValue().patronsCount).toBe(2);
   expect(statistic.syncValue().poolsCount).toBe(1);
 
-  sourceChangeable(2);
+  sourceOf(2);
 
   expect(statistic.syncValue().patronsCount).toBe(2);
   expect(statistic.syncValue().poolsCount).toBe(2);

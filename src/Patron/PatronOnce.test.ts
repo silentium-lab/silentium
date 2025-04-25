@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { sourceChangeable } from "../Source/SourceChangeable";
+import { sourceOf } from "../Source/SourceChangeable";
 import { wait } from "./../../test-utils/wait";
 import { patronOnce } from "./PatronOnce";
 
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 test("PatronOnce.test", async () => {
-  const source = sourceChangeable<number>(12);
+  const source = sourceOf<number>(12);
   let calls = 0;
   const patron = patronOnce(() => {
     calls += 1;

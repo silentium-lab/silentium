@@ -1,6 +1,6 @@
 import { value } from "../Source/Source";
 import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 import { sourceRace } from "./SourceRace";
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ afterEach(() => {
 
 test("SourceRace.test", async () => {
   const sBuild = (result: number, delay: number) => {
-    const s = sourceChangeable();
+    const s = sourceOf();
 
     setTimeout(() => {
       s.give(result);

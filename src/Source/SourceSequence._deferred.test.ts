@@ -5,7 +5,7 @@ import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
 import { personalClass } from "../Personal/PersonalClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
 
 beforeEach(() => {
@@ -38,7 +38,7 @@ test("SourceSequence._deferred.test", async () => {
         give(val, guest);
       }, 10);
     });
-  const src = sourceChangeable([1, 2, 3, 9].map(sourceOf));
+  const src = sourceOf([1, 2, 3, 9].map(sourceOf));
 
   const sequence = sourceSequence(src, personalClass(X2));
 

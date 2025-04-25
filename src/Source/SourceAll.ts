@@ -3,7 +3,7 @@ import { give, guest, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
 import { SourceType, value } from "./Source";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 
@@ -24,10 +24,10 @@ export const sourceAll = <const T extends SourceType[]>(
   const isAllFilled = () => {
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
-  const theAll = sourceChangeable({});
+  const theAll = sourceOf({});
 
   Object.entries(sources).forEach(([key, source]) => {
-    subSource(source, theAll);
+    subSource(theAll, source);
     keysKnown.add(key);
     value(
       source,

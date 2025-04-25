@@ -1,10 +1,10 @@
 import { patronApplied } from "../Patron/PatronApplied";
 import { value } from "../Source/Source";
 import { expect, test, vi } from "vitest";
-import { sourceChangeable } from "../Source/SourceChangeable";
+import { sourceOf } from "../Source/SourceChangeable";
 
 test("PatronApplied.test", () => {
-  const src = sourceChangeable<number>(1);
+  const src = sourceOf<number>(1);
   const g = vi.fn();
 
   const patron = patronApplied(g, (v: number) => v * 2);

@@ -2,12 +2,12 @@ import { expect, test, vi } from "vitest";
 import { debounce } from "../../test-utils/debounce";
 import { patron } from "../Patron/Patron";
 import { sourceExecutorApplied } from "../Source/SourceExecutorApplied";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 
 test("SourceExecutorApplied.test", () => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
 
-  const source = sourceChangeable<number>();
+  const source = sourceOf<number>();
   const sourceDebounced = sourceExecutorApplied(
     source,
     debounce.bind(null, 100),

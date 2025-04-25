@@ -15,9 +15,9 @@ export type SourceChangeableType<T = any> = SourceObjectType<T> &
 
 /**
  * Ability to create source what can be changed later
- * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
+ * @url https://silentium-lab.github.io/silentium/#/source/source-of
  */
-export const sourceChangeable = <T>(source?: SourceType<T>) => {
+export const sourceOf = <T>(source?: SourceType<T>) => {
   const createdSource = {} as SourceChangeableType<T>;
   const thePool = new PatronPool(createdSource);
   let isEmpty = source === undefined;

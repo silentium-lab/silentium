@@ -2,11 +2,11 @@ import { expect, test, vitest } from "vitest";
 import { patron } from "../Patron/Patron";
 import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 
 test("SourceAll._withPatron.test", () => {
-  const one = sourceChangeable<number>(1);
-  const two = sourceChangeable<number>(2);
+  const one = sourceOf<number>(1);
+  const two = sourceOf<number>(2);
   const all = sourceAll([one.value, two.value]);
 
   one.give(3);

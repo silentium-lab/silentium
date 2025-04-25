@@ -3,11 +3,11 @@ import { guestSync } from "../Guest/GuestSync";
 import { patron } from "../Patron/Patron";
 import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 
 test("SourceAll._asArray.test", () => {
-  const one = sourceChangeable<number>(1);
-  const two = sourceChangeable<number>(2);
+  const one = sourceOf<number>(1);
+  const two = sourceOf<number>(2);
   const all = sourceAll([one.value, two.value]);
 
   const guest = vitest.fn();

@@ -1,9 +1,9 @@
 import { sourceDynamic } from "./SourceDynamic";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 import { expect, test, vitest } from "vitest";
 
 test("SourceDynamic._ofSource.test", () => {
-  const source = sourceChangeable(1);
+  const source = sourceOf(1);
   const sd = sourceDynamic(source, source);
 
   const g1 = vitest.fn();

@@ -4,7 +4,7 @@ import { patronOnce } from "../Patron/PatronOnce";
 import { PersonalType } from "../Personal/Personal";
 import { isSource, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
-import { sourceChangeable, SourceChangeableType } from "./SourceChangeable";
+import { sourceOf, SourceChangeableType } from "./SourceChangeable";
 
 /**
  * Ability to apply source to source of array values sequentially
@@ -22,7 +22,7 @@ export const sourceSequence = <T, TG>(
   }
 
   return (guest: GuestType<TG[]>) => {
-    const sequenceSource = sourceChangeable();
+    const sequenceSource = sourceOf();
     const source = targetSource.get(sequenceSource);
 
     value(
@@ -32,7 +32,7 @@ export const sourceSequence = <T, TG>(
 
         const sources: SourceChangeableType[] = [];
         theValue.forEach(() => {
-          sources.push(sourceChangeable());
+          sources.push(sourceOf());
         });
 
         const nextItemHandle = () => {

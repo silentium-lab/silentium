@@ -1,6 +1,6 @@
 import { GuestType } from "../Guest/Guest";
 import { SourceType, value } from "./Source";
-import { sourceChangeable } from "./SourceChangeable";
+import { sourceOf } from "./SourceChangeable";
 
 /**
  * Ability set the value only once
@@ -8,7 +8,7 @@ import { sourceChangeable } from "./SourceChangeable";
  */
 export const sourceOnce = <T>(initialValue?: SourceType<T>) => {
   let isFilled = initialValue !== undefined;
-  const source = sourceChangeable(initialValue);
+  const source = sourceOf(initialValue);
 
   return {
     value(guest: GuestType<T>) {
