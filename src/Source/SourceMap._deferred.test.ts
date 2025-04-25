@@ -30,12 +30,12 @@ function x2(baseNumber: SourceType<number>) {
 }
 
 test("SourceMap._deferred.test", async () => {
-  const sourceOf = (val: number) =>
+  const srcDeferred = (val: number) =>
     source(async (guest) => {
       await wait(5);
       give(val, guest);
     });
-  const src = sourceOf([1, 2, 3, 9].map(sourceOf));
+  const src = sourceOf([1, 2, 3, 9].map(srcDeferred));
   const srcMapped = sourceMap(src, personal(x2));
   const callFn = vi.fn();
   value(

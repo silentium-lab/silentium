@@ -32,13 +32,13 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceSequence._deferred.test", async () => {
-  const sourceOf = (val: number) =>
+  const srcDeferred = (val: number) =>
     source((guest) => {
       setTimeout(() => {
         give(val, guest);
       }, 10);
     });
-  const src = sourceOf([1, 2, 3, 9].map(sourceOf));
+  const src = sourceOf([1, 2, 3, 9].map(srcDeferred));
 
   const sequence = sourceSequence(src, personalClass(X2));
 
