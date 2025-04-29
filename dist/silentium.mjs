@@ -214,19 +214,21 @@ const patronPoolsStatistic = source((g) => {
     give(lastPatronPoolsStatistic, g);
   });
 });
-const subSource = (source2, subSource2) => {
+const subSource = (subSource2, source2) => {
   if (source2 !== null && typeof source2 !== "object") {
-    return;
+    return source2;
   }
   if (!subSources.has(source2)) {
     subSources.set(source2, []);
   }
   subSources.get(source2)?.push(subSource2);
+  return subSource2;
 };
 const subSourceMany = (subSourceSrc, sourcesSrc) => {
   sourcesSrc.forEach((source2) => {
-    subSource(source2, subSourceSrc);
+    subSource(subSourceSrc, source2);
   });
+  return subSourceSrc;
 };
 const destroy = (initiators) => {
   initiators.forEach((initiator) => {
@@ -358,7 +360,7 @@ const patronExecutorApplied = (baseGuest, applier) => {
   return result;
 };
 
-const sourceChangeable = (source) => {
+const sourceOf = (source) => {
   const createdSource = {};
   const thePool = new PatronPool(createdSource);
   let isEmpty = source === void 0;
@@ -402,9 +404,9 @@ const sourceAll = (sources) => {
   const isAllFilled = () => {
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
-  const theAll = sourceChangeable({});
+  const theAll = sourceOf({});
   Object.entries(sources).forEach(([key, source]) => {
-    subSource(source, theAll);
+    subSource(theAll, source);
     keysKnown.add(key);
     value(
       source,
@@ -443,7 +445,7 @@ const sourceSequence = (baseSource, targetSource) => {
     throw new Error("SourceSequence didn't receive targetSource argument");
   }
   return (guest) => {
-    const sequenceSource = sourceChangeable();
+    const sequenceSource = sourceOf();
     const source = targetSource.get(sequenceSource);
     value(
       baseSource,
@@ -451,7 +453,7 @@ const sourceSequence = (baseSource, targetSource) => {
         let index = 0;
         const sources = [];
         theValue.forEach(() => {
-          sources.push(sourceChangeable());
+          sources.push(sourceOf());
         });
         const nextItemHandle = () => {
           if (theValue[index + 1] !== void 0) {
@@ -583,7 +585,7 @@ const sourceFiltered = (baseSource, predicate) => {
 
 const sourceOnce = (initialValue) => {
   let isFilled = initialValue !== void 0;
-  const source = sourceChangeable(initialValue);
+  const source = sourceOf(initialValue);
   return {
     value(guest) {
       value(source, guest);
@@ -642,5 +644,5 @@ const personal = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.mjs.map

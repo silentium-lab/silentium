@@ -119,11 +119,11 @@ declare const patronPoolsStatistic: SourceExecutorType<{
  * when base source will be destroyed
  * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
  */
-declare const subSource: (source: SourceType, subSource: SourceType) => void;
+declare const subSource: <T>(subSource: SourceType, source: SourceType<T>) => SourceType<T>;
 /**
  * Helps to define many sources of one sub source
  */
-declare const subSourceMany: (subSourceSrc: SourceType, sourcesSrc: SourceType[]) => void;
+declare const subSourceMany: <T>(subSourceSrc: SourceType<T>, sourcesSrc: SourceType[]) => SourceType<T>;
 /**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
@@ -190,7 +190,7 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
     [K in keyof T]: ExtractType<T[K]>;
 };
 /**
- * Represents common value as Record or Array of bunch of sources,
+ * Represents common value as Array of bunch of sources,
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
@@ -226,9 +226,9 @@ declare const sourceRace: <T>(sources: SourceType<T>[]) => (guest: GuestType<T>)
 type SourceChangeableType<T = any> = SourceObjectType<T> & GuestObjectType<T>;
 /**
  * Ability to create source what can be changed later
- * @url https://silentium-lab.github.io/silentium/#/source/source-changeable
+ * @url https://silentium-lab.github.io/silentium/#/source/source-of
  */
-declare const sourceChangeable: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
+declare const sourceOf: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
 
 /**
  * Ability to build common changeable source from different guest and source
@@ -277,4 +277,4 @@ interface Prototyped<T> {
 }
 declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
 
-export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceChangeable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
