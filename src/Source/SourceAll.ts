@@ -12,7 +12,7 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
 };
 
 /**
- * Represents common value as Record or Array of bunch of sources,
+ * Represents common value as Array of bunch of sources,
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
