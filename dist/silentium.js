@@ -533,6 +533,27 @@ const sourceRace = (sources) => {
   };
 };
 
+const sourceChain = (...sources) => {
+  const resultSrc = sourceOf();
+  const respondedSources = /* @__PURE__ */ new Set();
+  let lastSourceValue = null;
+  sources.forEach((source, index) => {
+    value(
+      source,
+      patron((value2) => {
+        respondedSources.add(index);
+        if (index === sources.length - 1) {
+          lastSourceValue = value2;
+        }
+        if (respondedSources.size === sources.length && lastSourceValue !== null) {
+          resultSrc.give(lastSourceValue);
+        }
+      })
+    );
+  });
+  return resultSrc.value;
+};
+
 const sourceDynamic = (baseGuest, baseSource) => {
   if (baseGuest === void 0) {
     throw new Error("SourceDynamic didn't receive baseGuest argument");
@@ -664,5 +685,5 @@ const personal = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.js.map

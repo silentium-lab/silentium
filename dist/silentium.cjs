@@ -535,6 +535,27 @@ const sourceRace = (sources) => {
   };
 };
 
+const sourceChain = (...sources) => {
+  const resultSrc = sourceOf();
+  const respondedSources = /* @__PURE__ */ new Set();
+  let lastSourceValue = null;
+  sources.forEach((source, index) => {
+    value(
+      source,
+      patron((value2) => {
+        respondedSources.add(index);
+        if (index === sources.length - 1) {
+          lastSourceValue = value2;
+        }
+        if (respondedSources.size === sources.length && lastSourceValue !== null) {
+          resultSrc.give(lastSourceValue);
+        }
+      })
+    );
+  });
+  return resultSrc.value;
+};
+
 const sourceDynamic = (baseGuest, baseSource) => {
   if (baseGuest === void 0) {
     throw new Error("SourceDynamic didn't receive baseGuest argument");
@@ -693,6 +714,7 @@ exports.source = source;
 exports.sourceAll = sourceAll;
 exports.sourceAny = sourceAny;
 exports.sourceApplied = sourceApplied;
+exports.sourceChain = sourceChain;
 exports.sourceCombined = sourceCombined;
 exports.sourceDynamic = sourceDynamic;
 exports.sourceExecutorApplied = sourceExecutorApplied;
