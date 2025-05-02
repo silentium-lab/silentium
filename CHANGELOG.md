@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://github.com/silentium-lab/silentium/compare/v0.0.26...v0.0.27) (2025-05-02)
+
+
+### Features
+
+* **main:** source chain export ([77fba2a](https://github.com/silentium-lab/silentium/commit/77fba2a1a81da7319d180a107d61237021106ab0))
+
 ### [0.0.26](https://github.com/silentium-lab/silentium/compare/v0.0.25...v0.0.26) (2025-05-02)
 
 
