@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/silentium-lab/silentium/compare/v0.0.23...v0.0.24) (2025-05-02)
+
+
+### Features
+
+* **18-issue:** source chain done ([8493583](https://github.com/silentium-lab/silentium/commit/849358357c7c6ee0254604fb0fbec0ee97d1c671))
+
 ### [0.0.23](https://github.com/silentium-lab/silentium/compare/v0.0.22...v0.0.23) (2025-05-02)
 
 ### [0.0.22](https://github.com/silentium-lab/silentium/compare/v0.0.21...v0.0.22) (2025-05-02)
