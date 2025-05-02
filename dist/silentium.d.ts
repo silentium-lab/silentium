@@ -272,9 +272,15 @@ declare const sourceSync: <T>(baseSource: SourceType<T>, defaultValue?: unknown)
     syncValue(): T;
 };
 
+/**
+ * Simplifies sources combination, when we need to create value depending on many sources
+ * @url https://silentium-lab.github.io/silentium/#/source/source-combined
+ */
+declare const sourceCombined: <const T extends SourceType[]>(...sources: T) => <R>(source: (guest: GuestType<R>, ...sourcesValues: ExtractTypesFromArray<T>) => void) => SourceType<R>;
+
 interface Prototyped<T> {
     prototype: T;
 }
 declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
 
-export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };

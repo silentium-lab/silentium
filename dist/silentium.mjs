@@ -619,6 +619,18 @@ const sourceSync = (baseSource, defaultValue) => {
   };
 };
 
+const sourceCombined = (...sources) => (source) => {
+  const result = sourceOf();
+  subSourceMany(result, sources);
+  value(
+    sourceAll(sources),
+    patron((actualValues) => {
+      source(result.give, ...actualValues);
+    })
+  );
+  return result.value;
+};
+
 const personalClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
@@ -644,5 +656,5 @@ const personal = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceApplied, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.mjs.map

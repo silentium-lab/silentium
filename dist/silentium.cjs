@@ -621,6 +621,18 @@ const sourceSync = (baseSource, defaultValue) => {
   };
 };
 
+const sourceCombined = (...sources) => (source) => {
+  const result = sourceOf();
+  subSourceMany(result, sources);
+  value(
+    sourceAll(sources),
+    patron((actualValues) => {
+      source(result.give, ...actualValues);
+    })
+  );
+  return result.value;
+};
+
 const personalClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
@@ -672,6 +684,7 @@ exports.removePatronFromPools = removePatronFromPools;
 exports.source = source;
 exports.sourceAll = sourceAll;
 exports.sourceApplied = sourceApplied;
+exports.sourceCombined = sourceCombined;
 exports.sourceDynamic = sourceDynamic;
 exports.sourceExecutorApplied = sourceExecutorApplied;
 exports.sourceFiltered = sourceFiltered;
