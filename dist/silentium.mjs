@@ -601,8 +601,8 @@ const sourceOnce = (initialValue) => {
   };
 };
 
-const sourceSync = (baseSource) => {
-  const syncGuest = guestSync();
+const sourceSync = (baseSource, defaultValue) => {
+  const syncGuest = guestSync(defaultValue);
   value(baseSource, patron(syncGuest));
   return {
     value(guest) {

@@ -268,7 +268,7 @@ declare const sourceOnce: <T>(initialValue?: SourceType<T>) => {
  * useful for example in tests
  * @url https://silentium-lab.github.io/silentium/#/source/source-sync
  */
-declare const sourceSync: <T>(baseSource: SourceType<T>) => SourceObjectType<T> & {
+declare const sourceSync: <T>(baseSource: SourceType<T>, defaultValue?: unknown) => SourceObjectType<T> & {
     syncValue(): T;
 };
 
