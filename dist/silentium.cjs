@@ -633,6 +633,14 @@ const sourceCombined = (...sources) => (source) => {
   return result.value;
 };
 
+const sourceAny = (sources) => {
+  const lastSrc = sourceOf();
+  sources.forEach((source) => {
+    value(source, patron(lastSrc));
+  });
+  return lastSrc;
+};
+
 const personalClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
@@ -683,6 +691,7 @@ exports.personalClass = personalClass;
 exports.removePatronFromPools = removePatronFromPools;
 exports.source = source;
 exports.sourceAll = sourceAll;
+exports.sourceAny = sourceAny;
 exports.sourceApplied = sourceApplied;
 exports.sourceCombined = sourceCombined;
 exports.sourceDynamic = sourceDynamic;
