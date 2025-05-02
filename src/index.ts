@@ -15,6 +15,7 @@ export * from "./Source/SourceSequence";
 export * from "./Source/SourceMap";
 export * from "./Source/SourceRace";
 export * from "./Source/SourceChangeable";
+export * from "./Source/SourceChain";
 export * from "./Source/SourceDynamic";
 export * from "./Source/SourceApplied";
 export * from "./Source/SourceExecutorApplied";
