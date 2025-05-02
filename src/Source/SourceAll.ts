@@ -7,7 +7,7 @@ import { sourceOf } from "./SourceChangeable";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 
-type ExtractTypesFromArray<T extends SourceType<any>[]> = {
+export type ExtractTypesFromArray<T extends SourceType<any>[]> = {
   [K in keyof T]: ExtractType<T[K]>;
 };
 
