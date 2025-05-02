@@ -1,6 +1,6 @@
 {
   "name": "silentium",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "",
   "type": "module",
   "main": "dist/silentium.js",
@@ -21,6 +21,7 @@
     "push-head": "git push origin HEAD",
     "test-debug": "env DEBUG=app:* vitest",
     "release": "./beforeRelease.sh && npm run build && git add . && git commit -m 'build: before release' && standard-version --no-verify && git push --follow-tags && npm publish",
+    "poor-release": "standard-version --no-verify",
     "prepare": "husky"
   },
   "repository": {
