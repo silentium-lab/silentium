@@ -1,74 +1,99 @@
-import { CurrentPage, Link, Page, Router } from "silentium-components";
-import { patron, patronOnce, sourceChangeable, sourceOf } from "silentium";
-import { StyleFetched } from "./lib/StyleFetched.mjs";
-import { Fetched, Element, Attribute, StyleInstalled } from "silentium-web-api";
+import {
+  sourceOf,
+  sourceMap,
+  personal,
+  sourceApplied,
+  sourceChain,
+} from "silentium";
+import {
+  log,
+  fetched,
+  styleInstalled,
+  classToggled,
+  element,
+  html,
+} from "silentium-web-api";
+import {
+  concatenated,
+  record,
+  regexpReplaced,
+  router,
+} from "silentium-components";
 import "./components.mjs";
 
-new StyleFetched(
-  "https://raw.githubusercontent.com/kosukhin/patorn-design-system/refs/heads/main/dist/assets/index.css",
-).install();
-
-const routing = new Router(".loader", ".page-area", ".menu");
-
-const [basePath] = window.location.href
-  .replace(window.location.origin, "")
-  .split("#");
-const cleanBasePath = basePath.replace(/[^/]+\.html$/, "");
-const currentPage = new CurrentPage();
-const basePathSource = sourceChangeable(
-  `${basePath}#`.replace("index.html", "").replace("//", "/"),
+const nativeElement = element.bind(
+  null,
+  personal((...args) => new window.MutationObserver(...args)),
+  window.document,
 );
-
-const link = new Link(currentPage, basePathSource);
-link.watchClick(".global-body", "a.dynamic-navigation");
-
-const dynamicPage = new Page("Dynamic page");
-
-const errors = sourceChangeable();
-const routesTransport = new Fetched(errors);
-
-routesTransport.do().give({
-  url: `${cleanBasePath}routes.json`,
-  asJson: true,
+const nativeLog = log.bind(null, window.console);
+const nativeFetched = fetched.bind(null, {
+  fetch: window.fetch.bind(window),
 });
 
-const styleLink = new Attribute(
-  new Element(sourceOf(".style-link")),
-  "data-style",
+const basePath = concatenated([window.location.origin, "/docs/"]);
+const urlSrc = nativeLog("url: ", window.location.href);
+
+const bodyStylesReady = sourceChain(
+  nativeLog(
+    "style installed: ",
+    styleInstalled(
+      window.document,
+      nativeFetched(
+        record({
+          method: "get",
+          url: "https://raw.githubusercontent.com/kosukhin/patorn-design-system/refs/heads/main/dist/assets/index.css",
+        }),
+      ),
+    ),
+  ),
+  window.document.body,
 );
-const styleTransport = new Fetched(errors);
-styleLink.value((url) => {
-  styleTransport.do().give({ url });
+classToggled(bodyStylesReady, "body-loading");
+
+const errors = sourceOf();
+nativeLog("ERROR: ", errors);
+
+const routesRequestSrc = record({
+  method: "get",
+  url: concatenated([basePath, "routes.json"]),
 });
 
-styleTransport.result().value(patronOnce(new StyleInstalled()));
-
-routesTransport.result().value(
-  patron((routes) => {
-    const dynamicRoutes = routes.map((route) => ({
-      url: "/" + route.replace("pages/", "").replace(".html", "").trim(),
-      template: route,
-      page: dynamicPage,
-    }));
-
-    routing.routes(
-      [
-        {
-          url: "/",
-          template: "pages/index.html",
-          aliases: [basePath, `${basePath}index.html`, ""],
-          page: new Page("Silentium"),
-        },
-        ...dynamicRoutes,
-        {
-          url: "",
-          template: "pages/404.html",
-          page: new Page("Страница не найдена"),
-          default: true,
-        },
-      ],
-      currentPage,
-      basePathSource,
-    );
-  }),
+const routesSrc = nativeLog(
+  "routes: ",
+  sourceApplied(
+    sourceMap(
+      sourceApplied(nativeFetched(routesRequestSrc, errors), JSON.parse),
+      personal((route) =>
+        record({
+          pattern: regexpReplaced(route, "pages/(.+).html", "#/$1/?$"),
+          template: route,
+        }),
+      ),
+    ),
+    Array.prototype.concat.bind([
+      {
+        pattern: "#/$",
+        template: "pages/index.html",
+      },
+    ]),
+  ),
 );
+
+const templateSrc = nativeLog(
+  "template: ",
+  router(urlSrc, routesSrc, "pages/404.html"),
+);
+
+const templateRequestSrc = record({
+  method: "get",
+  url: concatenated([basePath, templateSrc]),
+});
+
+const templateContentSrc = nativeLog(
+  "content: ",
+  nativeFetched(templateRequestSrc, errors),
+);
+
+const contentSrc = nativeLog("el: ", nativeElement("article.container"));
+html(contentSrc, templateContentSrc);

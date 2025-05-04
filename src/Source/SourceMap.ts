@@ -1,3 +1,4 @@
+import { subSource } from "src/Patron/PatronPool";
 import { GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { PersonalType } from "../Personal/Personal";
@@ -26,6 +27,7 @@ export const sourceMap = <T, TG>(
         const sources: SourceType[] = [];
         theValue.forEach((val) => {
           const source = targetSource.get(val);
+          subSource(source, baseSource);
           sources.push(source);
         });
         value(sourceAll(sources), guest);
