@@ -1,9 +1,11 @@
 import {
   sourceOf,
   sourceMap,
+  personalClass,
   personal,
   sourceApplied,
   sourceChain,
+  sourceAny,
 } from "silentium";
 import {
   log,
@@ -12,6 +14,9 @@ import {
   classToggled,
   element,
   html,
+  link,
+  historyNewPate,
+  historyPoppedPage,
 } from "silentium-web-api";
 import {
   concatenated,
@@ -21,9 +26,10 @@ import {
 } from "silentium-components";
 import "./components.mjs";
 
+const nativeHistoryUrl = historyNewPate.bind(null, window.history);
 const nativeElement = element.bind(
   null,
-  personal((...args) => new window.MutationObserver(...args)),
+  personalClass(window.MutationObserver),
   window.document,
 );
 const nativeLog = log.bind(null, window.console);
@@ -32,7 +38,20 @@ const nativeFetched = fetched.bind(null, {
 });
 
 const basePath = concatenated([window.location.origin, "/docs/"]);
-const urlSrc = nativeLog("url: ", window.location.href);
+const urlSrc = nativeHistoryUrl(
+  sourceAny([
+    historyPoppedPage(window, sourceOf()),
+    nativeLog("url: ", window.location.href),
+    nativeLog(
+      "link: ",
+      concatenated([
+        window.location.origin,
+        window.location.pathname,
+        link(nativeElement("body"), ".dynamic-navigation"),
+      ]),
+    ),
+  ]),
+);
 
 const bodyStylesReady = sourceChain(
   nativeLog(
@@ -74,6 +93,10 @@ const routesSrc = nativeLog(
     Array.prototype.concat.bind([
       {
         pattern: "#/$",
+        template: "pages/index.html",
+      },
+      {
+        pattern: "\\.html$",
         template: "pages/index.html",
       },
     ]),
