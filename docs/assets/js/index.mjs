@@ -41,29 +41,23 @@ const basePath = concatenated([window.location.origin, "/docs/"]);
 const urlSrc = nativeHistoryUrl(
   sourceAny([
     historyPoppedPage(window, sourceOf()),
-    nativeLog("url: ", window.location.href),
-    nativeLog(
-      "link: ",
-      concatenated([
-        window.location.origin,
-        window.location.pathname,
-        link(nativeElement("body"), ".dynamic-navigation"),
-      ]),
-    ),
+    window.location.href,
+    concatenated([
+      window.location.origin,
+      window.location.pathname,
+      link(nativeElement("body"), ".dynamic-navigation"),
+    ]),
   ]),
 );
 
 const bodyStylesReady = sourceChain(
-  nativeLog(
-    "style installed: ",
-    styleInstalled(
-      window.document,
-      nativeFetched(
-        record({
-          method: "get",
-          url: "https://raw.githubusercontent.com/kosukhin/patorn-design-system/refs/heads/main/dist/assets/index.css",
-        }),
-      ),
+  styleInstalled(
+    window.document,
+    nativeFetched(
+      record({
+        method: "get",
+        url: "https://raw.githubusercontent.com/kosukhin/patorn-design-system/refs/heads/main/dist/assets/index.css",
+      }),
     ),
   ),
   window.document.body,
@@ -78,45 +72,35 @@ const routesRequestSrc = record({
   url: concatenated([basePath, "routes.json"]),
 });
 
-const routesSrc = nativeLog(
-  "routes: ",
-  sourceApplied(
-    sourceMap(
-      sourceApplied(nativeFetched(routesRequestSrc, errors), JSON.parse),
-      personal((route) =>
-        record({
-          pattern: regexpReplaced(route, "pages/(.+).html", "#/$1/?$"),
-          template: route,
-        }),
-      ),
+const routesSrc = sourceApplied(
+  sourceMap(
+    sourceApplied(nativeFetched(routesRequestSrc, errors), JSON.parse),
+    personal((route) =>
+      record({
+        pattern: regexpReplaced(route, "pages/(.+).html", "#/$1/?$"),
+        template: route,
+      }),
     ),
-    Array.prototype.concat.bind([
-      {
-        pattern: "#/$",
-        template: "pages/index.html",
-      },
-      {
-        pattern: "\\.html$",
-        template: "pages/index.html",
-      },
-    ]),
   ),
+  Array.prototype.concat.bind([
+    {
+      pattern: "#/$",
+      template: "pages/index.html",
+    },
+    {
+      pattern: "\\.html$",
+      template: "pages/index.html",
+    },
+  ]),
 );
 
-const templateSrc = nativeLog(
-  "template: ",
-  router(urlSrc, routesSrc, "pages/404.html"),
-);
+const templateSrc = router(urlSrc, routesSrc, "pages/404.html");
 
 const templateRequestSrc = record({
   method: "get",
   url: concatenated([basePath, templateSrc]),
 });
 
-const templateContentSrc = nativeLog(
-  "content: ",
-  nativeFetched(templateRequestSrc, errors),
-);
+const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
-const contentSrc = nativeLog("el: ", nativeElement("article.container"));
-html(contentSrc, templateContentSrc);
+html(nativeElement("article.container"), templateContentSrc);
