@@ -9,6 +9,7 @@ import { SourceType, value } from "../Source/Source";
 export const sourceFiltered = <T>(
   baseSource: SourceType<T>,
   predicate: (v: T) => boolean,
+  defaultValue?: SourceType<T>,
 ) => {
   return (g: GuestType<T>) => {
     value(
@@ -16,6 +17,8 @@ export const sourceFiltered = <T>(
       guestCast(g, (v) => {
         if (predicate(v) === true) {
           give(v, g);
+        } else if (defaultValue) {
+          value(defaultValue, g);
         }
       }),
     );

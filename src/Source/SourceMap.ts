@@ -1,4 +1,4 @@
-import { subSource } from "src/Patron/PatronPool";
+import { subSource } from "../Patron/PatronPool";
 import { GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { PersonalType } from "../Personal/Personal";
