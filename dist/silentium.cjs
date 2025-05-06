@@ -506,6 +506,7 @@ const sourceMap = (baseSource, targetSource) => {
         const sources = [];
         theValue.forEach((val) => {
           const source = targetSource.get(val);
+          subSource(source, baseSource);
           sources.push(source);
         });
         value(sourceAll(sources), guest);
@@ -593,13 +594,15 @@ const sourceExecutorApplied = (source, applier) => {
   });
 };
 
-const sourceFiltered = (baseSource, predicate) => {
+const sourceFiltered = (baseSource, predicate, defaultValue) => {
   return (g) => {
     value(
       baseSource,
       guestCast(g, (v) => {
         if (predicate(v) === true) {
           give(v, g);
+        } else if (defaultValue) {
+          value(defaultValue, g);
         }
       })
     );
