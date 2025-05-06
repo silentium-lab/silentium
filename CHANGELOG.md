@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.28](https://github.com/silentium-lab/silentium/compare/v0.0.27...v0.0.28) (2025-05-06)
+
+
+### Features
+
+* **32-issue:** sourceFiltered now have defaultValue ([eea1f52](https://github.com/silentium-lab/silentium/commit/eea1f52957bd89e291e2cd379df47991e94e2504))
+* **main:** base logic for rendering pages ([c7c94f6](https://github.com/silentium-lab/silentium/commit/c7c94f6c591e8051894a351f83304042705b05c7))
+* **main:** fixes for documentation ([8c4ce67](https://github.com/silentium-lab/silentium/commit/8c4ce676ab1db9b3d408f7da216a04c4cbad0fba))
+* **main:** no logs in code ([bf8ffe9](https://github.com/silentium-lab/silentium/commit/bf8ffe9187e5135d87b64d78a478b344d4dd6542))
+
 ### [0.0.27](https://github.com/silentium-lab/silentium/compare/v0.0.26...v0.0.27) (2025-05-02)
 
 
