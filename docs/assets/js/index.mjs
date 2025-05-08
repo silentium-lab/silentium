@@ -23,6 +23,7 @@ import {
   record,
   regexpReplaced,
   router,
+  tick,
 } from "silentium-components";
 import "./components.mjs";
 
@@ -94,7 +95,7 @@ const routesSrc = sourceApplied(
   ]),
 );
 
-const templateSrc = router(urlSrc, routesSrc, "pages/404.html");
+const templateSrc = tick(router(urlSrc, routesSrc, "pages/404.html"));
 
 const templateRequestSrc = record({
   method: "get",

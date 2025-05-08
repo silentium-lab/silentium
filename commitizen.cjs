@@ -46,5 +46,5 @@ module.exports = {
 
   allowBreakingChanges: false,
 
-  subjectLimit: 72,
+  subjectLimit: 255,
 };
