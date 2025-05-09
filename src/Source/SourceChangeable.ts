@@ -13,6 +13,9 @@ import {
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
 
+const sourceIsEmpty = (source: unknown) =>
+  source === undefined || source === null;
+
 /**
  * Ability to create source what can be changed later
  * @url https://silentium-lab.github.io/silentium/#/source/source-of
@@ -20,18 +23,16 @@ export type SourceChangeableType<T = any> = SourceObjectType<T> &
 export const sourceOf = <T>(source?: SourceType<T>) => {
   const createdSource = {} as SourceChangeableType<T>;
   const thePool = new PatronPool(createdSource);
-  let isEmpty = source === undefined;
+  let isEmpty = sourceIsEmpty(source);
 
-  if (source !== undefined && isSource(source)) {
+  if (!isEmpty && isSource(source)) {
     value(
       source,
       patronOnce((unwrappedSourceDocument) => {
-        isEmpty = unwrappedSourceDocument === undefined;
+        isEmpty = sourceIsEmpty(unwrappedSourceDocument);
         source = unwrappedSourceDocument as SourceDataType<T>;
       }),
     );
-  } else {
-    isEmpty = source === undefined;
   }
 
   createdSource.value = (g: GuestType<T>) => {
@@ -52,9 +53,13 @@ export const sourceOf = <T>(source?: SourceType<T>) => {
   };
 
   createdSource.give = (value: T) => {
-    isEmpty = false;
+    isEmpty = sourceIsEmpty(value);
     source = value as SourceDataType<T>;
-    thePool.give(source);
+
+    if (!isEmpty) {
+      thePool.give(source);
+    }
+
     return createdSource;
   };
 
