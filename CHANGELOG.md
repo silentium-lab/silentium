@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://github.com/silentium-lab/silentium/compare/v0.0.29...v0.0.30) (2025-05-09)
+
+
+### Bug Fixes
+
+* **main:** fix release script ([59126a1](https://github.com/silentium-lab/silentium/commit/59126a15aa053d73848d8066df2a6b37144cf6b5))
+* **main:** forget to export sourceResettable ([b037f0f](https://github.com/silentium-lab/silentium/commit/b037f0f7af22d53096979be9907f48392f788bdf))
+
 ### [0.0.29](https://github.com/silentium-lab/silentium/compare/v0.0.28...v0.0.29) (2025-05-09)
 
 
