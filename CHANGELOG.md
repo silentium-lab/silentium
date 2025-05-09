@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.29](https://github.com/silentium-lab/silentium/compare/v0.0.28...v0.0.29) (2025-05-09)
+
+
+### Features
+
+* **37-issue:** sourceResettable implemented ([eaeb91a](https://github.com/silentium-lab/silentium/commit/eaeb91a0960517c41959cb51b7f0c43fb74d054c))
+* **37-issue:** work on source resettable ([1682968](https://github.com/silentium-lab/silentium/commit/16829680d7d4547456b8a1c60b0f676643645958))
+* **37-issue:** work on sourceResettable ([720ae9b](https://github.com/silentium-lab/silentium/commit/720ae9b1f8af723a4e9f383bccabbc68160ba401))
+* **main:** improovements for documentation logic ([d8d95ad](https://github.com/silentium-lab/silentium/commit/d8d95ad1b8572b3927ab5e541936e7c25d60d4bd))
+* **main:** new routes for documentation ([7d4e8ab](https://github.com/silentium-lab/silentium/commit/7d4e8abebd1d12eac153e438bb51f6904aab5053))
+* **main:** test for sourceFiltered and sourceAll together ([b7fc7a8](https://github.com/silentium-lab/silentium/commit/b7fc7a875254fcda93d9979d99cda0c0d1fa8c00))
+* **main:** work on loading ([741ac80](https://github.com/silentium-lab/silentium/commit/741ac807fe27cb03af62ac84699569c1aa50dba7))
+
 ### [0.0.28](https://github.com/silentium-lab/silentium/compare/v0.0.27...v0.0.28) (2025-05-06)
 
 
