@@ -5,6 +5,7 @@ import {
   personal,
   sourceApplied,
   sourceChain,
+  sourceFiltered,
   sourceAny,
 } from "silentium";
 import {
@@ -12,6 +13,8 @@ import {
   fetched,
   styleInstalled,
   classToggled,
+  classAdded,
+  classRemoved,
   element,
   html,
   link,
@@ -22,6 +25,7 @@ import {
   concatenated,
   record,
   regexpReplaced,
+  loading,
   router,
   tick,
 } from "silentium-components";
@@ -103,5 +107,13 @@ const templateRequestSrc = record({
 });
 
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
+
+const templateContentLoadingSrc = nativeLog(
+  "loading",
+  loading(urlSrc, templateContentSrc),
+);
+
+// classAdded(sourceFiltered(), "body-loading");
+// classRemoved(bodyStylesReady, "body-loading");
 
 html(nativeElement("article.container"), templateContentSrc);
