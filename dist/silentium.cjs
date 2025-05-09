@@ -658,6 +658,19 @@ const sourceCombined = (...sources) => (source) => {
   return result.value;
 };
 
+const sourceResettable = (baseSrc, resettableSrc) => {
+  const result = sourceOf();
+  value(
+    resettableSrc,
+    patron(() => {
+      give(null, result);
+    })
+  );
+  value(baseSrc, patron(result));
+  subSource(result, baseSrc);
+  return result;
+};
+
 const sourceAny = (sources) => {
   const lastSrc = sourceOf();
   sources.forEach((source) => {
@@ -727,6 +740,7 @@ exports.sourceMap = sourceMap;
 exports.sourceOf = sourceOf;
 exports.sourceOnce = sourceOnce;
 exports.sourceRace = sourceRace;
+exports.sourceResettable = sourceResettable;
 exports.sourceSequence = sourceSequence;
 exports.sourceSync = sourceSync;
 exports.subSource = subSource;

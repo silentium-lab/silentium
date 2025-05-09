@@ -656,6 +656,19 @@ const sourceCombined = (...sources) => (source) => {
   return result.value;
 };
 
+const sourceResettable = (baseSrc, resettableSrc) => {
+  const result = sourceOf();
+  value(
+    resettableSrc,
+    patron(() => {
+      give(null, result);
+    })
+  );
+  value(baseSrc, patron(result));
+  subSource(result, baseSrc);
+  return result;
+};
+
 const sourceAny = (sources) => {
   const lastSrc = sourceOf();
   sources.forEach((source) => {
@@ -689,5 +702,5 @@ const personal = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.js.map

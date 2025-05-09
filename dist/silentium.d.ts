@@ -286,6 +286,11 @@ declare const sourceSync: <T>(baseSource: SourceType<T>, defaultValue?: unknown)
 declare const sourceCombined: <const T extends SourceType[]>(...sources: T) => <R>(source: (guest: GuestType<R>, ...sourcesValues: ExtractTypesFromArray<T>) => void) => SourceType<R>;
 
 /**
+ * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
+ */
+declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => SourceChangeableType<T>;
+
+/**
  * Present source of value what was last appeared in any
  * of given sources, can be used as default value, when some source
  * don't respond
@@ -298,4 +303,4 @@ interface Prototyped<T> {
 }
 declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
 
-export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
