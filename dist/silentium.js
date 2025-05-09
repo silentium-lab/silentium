@@ -360,20 +360,19 @@ const patronExecutorApplied = (baseGuest, applier) => {
   return result;
 };
 
+const sourceIsEmpty = (source) => source === void 0 || source === null;
 const sourceOf = (source) => {
   const createdSource = {};
   const thePool = new PatronPool(createdSource);
-  let isEmpty = source === void 0;
-  if (source !== void 0 && isSource(source)) {
+  let isEmpty = sourceIsEmpty(source);
+  if (!isEmpty && isSource(source)) {
     value(
       source,
       patronOnce((unwrappedSourceDocument) => {
-        isEmpty = unwrappedSourceDocument === void 0;
+        isEmpty = sourceIsEmpty(unwrappedSourceDocument);
         source = unwrappedSourceDocument;
       })
     );
-  } else {
-    isEmpty = source === void 0;
   }
   createdSource.value = (g) => {
     if (isEmpty) {
@@ -390,9 +389,11 @@ const sourceOf = (source) => {
     return createdSource;
   };
   createdSource.give = (value2) => {
-    isEmpty = false;
+    isEmpty = sourceIsEmpty(value2);
     source = value2;
-    thePool.give(source);
+    if (!isEmpty) {
+      thePool.give(source);
+    }
     return createdSource;
   };
   return createdSource;
@@ -599,8 +600,8 @@ const sourceFiltered = (baseSource, predicate, defaultValue) => {
       guestCast(g, (v) => {
         if (predicate(v) === true) {
           give(v, g);
-        } else if (defaultValue) {
-          value(defaultValue, g);
+        } else if (defaultValue !== void 0) {
+          give(defaultValue, g);
         }
       })
     );

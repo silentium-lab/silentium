@@ -259,7 +259,7 @@ declare const sourceExecutorApplied: <T>(source: SourceType<T>, applier: (execut
  * Helps not to respond with information what checked by predicate function
  * @url https://silentium-lab.github.io/silentium/#/source/source-filtered
  */
-declare const sourceFiltered: <T>(baseSource: SourceType<T>, predicate: (v: T) => boolean, defaultValue?: SourceType<T>) => (g: GuestType<T>) => void;
+declare const sourceFiltered: <T>(baseSource: SourceType<T>, predicate: (v: T) => boolean, defaultValue?: T) => (g: GuestType<T>) => void;
 
 /**
  * Ability set the value only once
