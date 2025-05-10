@@ -9,31 +9,31 @@ module.exports = {
   types: [
     {
       value: "feat",
-      name: "feat: Добавление нового функционала",
+      name: "feat: Adding new functionality",
     },
     {
       value: "refactor",
-      name: "refactor: Правки кода без исправления ошибок или добавления новых функций",
+      name: "refactor: Code edits without fixing bugs or adding new features",
     },
     {
       value: "fix",
-      name: "fix: Исправление ошибок",
+      name: "fix: Bug fixes",
     },
     {
       value: "build",
-      name: "build: Сборка проекта или изменения внешних зависимостей",
+      name: "build: Building a project or changing external dependencies",
     },
     {
       value: "docs",
-      name: "docs: Обновление документации",
+      name: "docs: Documentation Update",
     },
     {
       value: "docs",
-      name: "docs: Правки по документации проекта или отдельных частей проекта",
+      name: "docs: Edits to the project documentation or individual parts of the project",
     },
     {
       value: "test",
-      name: "test: Добавление тестов",
+      name: "test: Adding tests",
     },
   ],
   scopes: [
