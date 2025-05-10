@@ -1,36 +1,39 @@
 import {
-  sourceOf,
-  sourceMap,
-  personalClass,
   personal,
+  personalClass,
+  sourceAny,
   sourceApplied,
   sourceChain,
-  sourceFiltered,
-  sourceAny,
+  sourceMap,
+  sourceOf,
+  value,
+  patron,
 } from "silentium";
 import {
-  log,
-  fetched,
-  styleInstalled,
-  classToggled,
-  classAdded,
-  classRemoved,
-  element,
-  html,
-  link,
-  historyNewPate,
-  historyPoppedPage,
-} from "silentium-web-api";
-import {
   concatenated,
+  loading,
   record,
   regexpReplaced,
-  loading,
   router,
   tick,
+  not,
+  path,
 } from "silentium-components";
+import {
+  classRemoved,
+  element,
+  fetched,
+  historyNewPate,
+  historyPoppedPage,
+  html,
+  link,
+  log,
+  styleInstalled,
+  visible,
+} from "silentium-web-api";
 import "./components.mjs";
 
+// Initializing components with predefined values
 const nativeHistoryUrl = historyNewPate.bind(null, window.history);
 const nativeElement = element.bind(
   null,
@@ -42,6 +45,7 @@ const nativeFetched = fetched.bind(null, {
   fetch: window.fetch.bind(window),
 });
 
+// Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
 const urlSrc = nativeHistoryUrl(
   sourceAny([
@@ -55,6 +59,7 @@ const urlSrc = nativeHistoryUrl(
   ]),
 );
 
+// Loading main styles and remove loading class on body after styles loaded
 const bodyStylesReady = sourceChain(
   styleInstalled(
     window.document,
@@ -67,16 +72,17 @@ const bodyStylesReady = sourceChain(
   ),
   window.document.body,
 );
-classToggled(bodyStylesReady, "body-loading");
+classRemoved(bodyStylesReady, "body-loading");
 
+// All errors collected here
 const errors = sourceOf();
 nativeLog("ERROR: ", errors);
 
+// Building routes of SPA
 const routesRequestSrc = record({
   method: "get",
   url: concatenated([basePath, "routes.json"]),
 });
-
 const routesSrc = sourceApplied(
   sourceMap(
     sourceApplied(nativeFetched(routesRequestSrc, errors), JSON.parse),
@@ -99,21 +105,28 @@ const routesSrc = sourceApplied(
   ]),
 );
 
+// Template content fetching
 const templateSrc = tick(router(urlSrc, routesSrc, "pages/404.html"));
-
 const templateRequestSrc = record({
   method: "get",
   url: concatenated([basePath, templateSrc]),
 });
-
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
-const templateContentLoadingSrc = nativeLog(
-  "loading",
-  loading(urlSrc, templateContentSrc),
+// Template loading visualization
+const templateContentLoadingSrc = loading(urlSrc, templateContentSrc);
+visible(templateContentLoadingSrc, nativeElement("article.container .loader"));
+visible(
+  not(templateContentLoadingSrc),
+  nativeElement("article.container .page-area"),
 );
+html(nativeElement("article.container .page-area"), templateContentSrc);
 
-// classAdded(sourceFiltered(), "body-loading");
-// classRemoved(bodyStylesReady, "body-loading");
-
-html(nativeElement("article.container"), templateContentSrc);
+// Template title
+value(
+  path(
+    nativeElement(sourceChain(templateContentSrc, ".page-title")),
+    "textContent",
+  ),
+  patron((v) => (window.document.title = v)),
+);
