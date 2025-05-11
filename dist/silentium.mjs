@@ -360,6 +360,24 @@ const patronExecutorApplied = (baseGuest, applier) => {
   return result;
 };
 
+const sourceSync = (baseSource, defaultValue) => {
+  const syncGuest = guestSync(defaultValue);
+  value(baseSource, patron(syncGuest));
+  return {
+    value(guest) {
+      value(baseSource, guest);
+      return this;
+    },
+    syncValue() {
+      try {
+        return syncGuest.value();
+      } catch {
+        throw new Error("No value in SourceSync");
+      }
+    }
+  };
+};
+
 const sourceIsEmpty = (source) => source === void 0 || source === null;
 const sourceOf = (source) => {
   const createdSource = {};
@@ -397,6 +415,20 @@ const sourceOf = (source) => {
     return createdSource;
   };
   return createdSource;
+};
+const sourceMemoOf = (source) => {
+  const result = sourceOf(source);
+  const baseSrcSync = sourceSync(result, null);
+  const resultMemo = {
+    value: result.value,
+    give(value2) {
+      if (baseSrcSync.syncValue() !== value2) {
+        give(value2, result.give);
+      }
+      return resultMemo;
+    }
+  };
+  return resultMemo;
 };
 
 const sourceAll = (sources) => {
@@ -626,24 +658,6 @@ const sourceOnce = (initialValue) => {
   };
 };
 
-const sourceSync = (baseSource, defaultValue) => {
-  const syncGuest = guestSync(defaultValue);
-  value(baseSource, patron(syncGuest));
-  return {
-    value(guest) {
-      value(baseSource, guest);
-      return this;
-    },
-    syncValue() {
-      try {
-        return syncGuest.value();
-      } catch {
-        throw new Error("No value in SourceSync");
-      }
-    }
-  };
-};
-
 const sourceCombined = (...sources) => (source) => {
   const result = sourceOf();
   subSourceMany(result, sources);
@@ -727,5 +741,5 @@ const lazy = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.mjs.map

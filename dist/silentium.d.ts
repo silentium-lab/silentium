@@ -229,6 +229,11 @@ type SourceChangeableType<T = any> = SourceObjectType<T> & GuestObjectType<T>;
  * @url https://silentium-lab.github.io/silentium/#/source/source-of
  */
 declare const sourceOf: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
+/**
+ * Changeable source what can be changed only once with specified value
+ * @url https://silentium-lab.github.io/silentium/#/source/source-memo-of
+ */
+declare const sourceMemoOf: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
 
 type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
 /**
@@ -309,4 +314,4 @@ interface Prototyped<T> {
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
