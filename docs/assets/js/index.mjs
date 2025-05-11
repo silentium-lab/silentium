@@ -1,6 +1,6 @@
 import {
-  personal,
-  personalClass,
+  lazy,
+  lazyClass,
   sourceAny,
   sourceApplied,
   sourceChain,
@@ -37,7 +37,7 @@ import "./components.mjs";
 const nativeHistoryUrl = historyNewPate.bind(null, window.history);
 const nativeElement = element.bind(
   null,
-  personalClass(window.MutationObserver),
+  lazyClass(window.MutationObserver),
   window.document,
 );
 const nativeLog = log.bind(null, window.console);
@@ -86,7 +86,7 @@ const routesRequestSrc = record({
 const routesSrc = sourceApplied(
   sourceMap(
     sourceApplied(nativeFetched(routesRequestSrc, errors), JSON.parse),
-    personal((route) =>
+    lazy((route) =>
       record({
         pattern: regexpReplaced(route, "pages/(.+).html", "#/$1/?$"),
         template: route,
