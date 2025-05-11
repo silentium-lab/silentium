@@ -679,6 +679,31 @@ const sourceAny = (sources) => {
   return lastSrc;
 };
 
+const sourceLazy = (lazySrc, args, resetSrc) => {
+  let instance = null;
+  const result = sourceOf();
+  const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
+  value(
+    sourceAll(args),
+    patron(() => {
+      if (!instance) {
+        instance = lazySrc.get(...args);
+        value(instance, patron(result));
+      }
+    })
+  );
+  if (resetSrc) {
+    value(
+      resetSrc,
+      patron(() => {
+        destroy([instance]);
+        instance = null;
+      })
+    );
+  }
+  return resultResettable;
+};
+
 const lazyClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
@@ -736,6 +761,7 @@ exports.sourceCombined = sourceCombined;
 exports.sourceDynamic = sourceDynamic;
 exports.sourceExecutorApplied = sourceExecutorApplied;
 exports.sourceFiltered = sourceFiltered;
+exports.sourceLazy = sourceLazy;
 exports.sourceMap = sourceMap;
 exports.sourceOf = sourceOf;
 exports.sourceOnce = sourceOnce;

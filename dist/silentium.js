@@ -677,6 +677,31 @@ const sourceAny = (sources) => {
   return lastSrc;
 };
 
+const sourceLazy = (lazySrc, args, resetSrc) => {
+  let instance = null;
+  const result = sourceOf();
+  const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
+  value(
+    sourceAll(args),
+    patron(() => {
+      if (!instance) {
+        instance = lazySrc.get(...args);
+        value(instance, patron(result));
+      }
+    })
+  );
+  if (resetSrc) {
+    value(
+      resetSrc,
+      patron(() => {
+        destroy([instance]);
+        instance = null;
+      })
+    );
+  }
+  return resultResettable;
+};
+
 const lazyClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
@@ -702,5 +727,5 @@ const lazy = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.js.map
