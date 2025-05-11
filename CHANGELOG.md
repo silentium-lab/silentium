@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.32](https://github.com/silentium-lab/silentium/compare/v0.0.31...v0.0.32) (2025-05-11)
+
+
+### Features
+
+* **36-issue:** source lazy created and exported ([25ab943](https://github.com/silentium-lab/silentium/commit/25ab943987f7c5ac40672816fd5c54f2c31dec6d))
+
+
+### Bug Fixes
+
+* **main:** fix lazy dependency ([35bbf73](https://github.com/silentium-lab/silentium/commit/35bbf7305aac7ef341068ae74a247f0dbb86f878))
+
 ### [0.0.31](https://github.com/silentium-lab/silentium/compare/v0.0.30...v0.0.31) (2025-05-11)
 
 
