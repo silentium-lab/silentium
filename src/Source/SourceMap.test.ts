@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { guestSync } from "../Guest/GuestSync";
-import { personalClass } from "../Personal/PersonalClass";
+import { lazyClass } from "../Lazy/LazyClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
 
@@ -21,7 +21,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
-  const srcMapped = sourceMap([1, 2, 3, 9], personalClass(X2));
+  const srcMapped = sourceMap([1, 2, 3, 9], lazyClass(X2));
   const guest = guestSync([]);
 
   value(srcMapped, guest);

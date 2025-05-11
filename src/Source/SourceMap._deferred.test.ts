@@ -3,7 +3,7 @@ import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
-import { personal } from "../Personal/Personal";
+import { lazy } from "../Lazy/Lazy";
 import { source, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceMap } from "./SourceMap";
@@ -36,7 +36,7 @@ test("SourceMap._deferred.test", async () => {
       give(val, guest);
     });
   const src = sourceOf([1, 2, 3, 9].map(srcDeferred));
-  const srcMapped = sourceMap(src, personal(x2));
+  const srcMapped = sourceMap(src, lazy(x2));
   const callFn = vi.fn();
   value(
     srcMapped,

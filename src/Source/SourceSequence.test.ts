@@ -1,7 +1,7 @@
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { personalClass } from "../Personal/PersonalClass";
+import { lazyClass } from "../Lazy/LazyClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceSequence } from "./SourceSequence";
 
@@ -21,7 +21,7 @@ class X2 implements SourceObjectType<number> {
 
 test("SourceSequence.test", () => {
   const src = source([1, 2, 3, 9]);
-  const srcMapped = sourceSequence(src, personalClass(X2));
+  const srcMapped = sourceSequence(src, lazyClass(X2));
   const g = vitest.fn();
   value(srcMapped, g);
   expect(g).toBeCalledWith([2, 4, 6, 18]);

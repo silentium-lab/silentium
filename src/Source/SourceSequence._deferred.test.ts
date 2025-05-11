@@ -3,7 +3,7 @@ import { wait } from "../../test-utils/wait";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
-import { personalClass } from "../Personal/PersonalClass";
+import { lazyClass } from "../Lazy/LazyClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
@@ -40,7 +40,7 @@ test("SourceSequence._deferred.test", async () => {
     });
   const src = sourceOf([1, 2, 3, 9].map(srcDeferred));
 
-  const sequence = sourceSequence(src, personalClass(X2));
+  const sequence = sourceSequence(src, lazyClass(X2));
 
   const callFn = vi.fn();
   value(

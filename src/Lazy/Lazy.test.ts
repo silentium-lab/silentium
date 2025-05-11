@@ -1,8 +1,8 @@
 import { expect, test } from "vitest";
-import { personal } from "./Personal";
+import { lazy } from "./Lazy";
 
-test("Personal.test", () => {
-  const privateNum = personal((val) => {
+test("Lazy.test", () => {
+  const privateNum = lazy((val) => {
     return {
       num: val,
     };
