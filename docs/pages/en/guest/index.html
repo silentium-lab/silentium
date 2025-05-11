@@ -1,0 +1,104 @@
+<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс Guest</h1>
+
+<a
+  href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L27"
+  target="_blank"
+  class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4"
+>
+  <img
+    src="./assets/img/github_16.jpg"
+    width="16"
+    height="16"
+  />
+  Guest на GitHub
+</a>
+
+<p class="text-gray-600 text-lg mb-4">
+  Предназначен для создания новых экземпляров
+  <link-dynamic
+    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L12"
+  >
+    GuestObjectType
+  </link-dynamic>
+  из функции-колбэка
+</p>
+
+<p class="text-gray-600 text-lg mb-4">
+  Это поведение полезно в случаях, когда нужно динамически построить
+  <link-dynamic
+    href="/terminology/visitor"
+  >
+    посетителя
+  </link-dynamic>
+  на основе функции, используя какие-то переменные из скоупа, где создана
+  функция
+</p>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<pre
+  class="mb-4 w-full"
+><code class="language-js">import { guest } from 'silentium';
+
+class Timestamp {
+    seconds(guest) {
+        guest.give(Date.now())
+    }
+}
+
+const timestamp = new Timestamp();
+timestamp.seconds(guest((timestamp) => {
+    console.log('timestamp is', timestamp);
+}));
+</code></pre>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<div class="example mb-4">
+  <span class="guest-result">Result here</span>
+</div>
+<script type="module">
+  import { guest } from "silentium";
+
+  class Timestamp {
+    seconds(guest) {
+      guest.give(Date.now());
+    }
+  }
+
+  const timestamp = new Timestamp();
+  timestamp.seconds(
+    guest((timestamp) => {
+      document.querySelector(
+        ".guest-result"
+      ).textContent = `timestamp is ${timestamp}`;
+    })
+  );
+</script>
+
+<p class="text-gray-600 text-lg mb-4">
+  Возможность создавать объект-посетитель из функции была
+  единственной в первых версиях библиотеки. На текущий момент вы можете также
+  передать функцию-колбэк в качестве посетителя, тк функция соответствует типу
+  <link-dynamic
+    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
+  >
+    GuestType
+  </link-dynamic>
+  Это позволяет не создавать лишних объектных-оберток
+</p>
+
+<p class="text-gray-600 text-lg font-bold mb-0">Пример 2.</p>
+<pre
+  class="mt-0 w-full"
+><code class="language-js">import { Guest } from 'silentium';
+
+class Timestamp {
+    seconds(guest) {
+        give(Date.now(), guest);
+    }
+}
+
+const timestamp = new Timestamp();
+timestamp.seconds((timestamp) => {
+    console.log('timestamp is', timestamp);
+});
+</code></pre>

@@ -1,0 +1,206 @@
+<script class="page-title" type="text/template">
+  Source
+</script>
+
+<section class="text-gray-600 body-font">
+  <div class="py-1 mx-auto flex flex-col">
+    <div class="lg:w-4/6 mx-auto w-full">
+      <div class="flex flex-col sm:flex-row w-full">
+        <div class="sm:w-1/3 text-center w-full">
+          <div class="flex flex-col items-center text-center justify-center source-menu">
+            <h2 class="font-medium title-font text-gray-900 text-lg">
+              <a href="#/source"> Source </a>
+            </h2>
+            <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
+            <ul class="text-gray-900">
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-all"> SourceAll </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-applied"> SourceApplied </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-dynamic"> SourceDynamic </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-executor-applied"> SourceExecutorApplied </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-filtered"> SourceFiltered </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-map"> SourceMap </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-once"> SourceOnce </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-race"> SourceRace </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-sequence"> SourceSequence </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-changeable"> SourceChangeable </a>
+              </li>
+              <li class="w-full border-b-2 border-neutral-100 py-4">
+                <a class="dynamic-navigation" href="#/source/source-sync"> SourceSync </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0">
+          <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс Source</h1>
+
+          <a href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts" target="_blank"
+            class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
+            <img src="./assets/img/github_16.jpg" width="16" height="16" />
+            Source на GitHub
+          </a>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Предназначен для создания объектов, которые будут
+            <link-dynamic
+              href="/terminology/source">
+              источниками данных
+            </link-dynamic>
+            , логика этих объектов основана на переданной функции-колбэке
+          </p>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Полезно в случаях, когда нужно создать новый объект с уникальным поведением по
+            генерации данных без создания для этого отдельного класса
+          </p>
+
+          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+          <pre class="mb-4"><code class="language-js">import {
+            source,
+            give
+        } from 'silentium';
+
+        const timestamp = source((guest) => {
+            give(Date.now(), guest);
+        });
+        timestamp.value((timestamp) => {
+            console.log('timestamp is', timestamp);
+        });
+        </code></pre>
+
+          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+          <div class="example mb-4">
+            <span class="guest-result">Result here</span>
+          </div>
+          <script type="module">
+            import { source, give } from "silentium";
+
+            const timestamp = source((guest) => {
+              give(Date.now(), guest);
+            });
+            timestamp.value((timestamp) => {
+              document.querySelector(
+                ".guest-result"
+              ).textContent = `timestamp is ${timestamp}`;
+            });
+          </script>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Источником данных может быть не только объект, но и функция вида
+            <em>(guest) => guest('value')</em>. Напрямую можно обратиться к такому
+            источнику через функцию
+            <link-reloadable target-blank href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts#L11">
+              value
+            </link-reloadable>
+          </p>
+
+          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 2.</p>
+          <pre class="mb-4"><code class="language-js">import {
+          give,
+          value
+        } from "silentium";
+
+        const helloSource = (guest) => {
+          setTimeout(() => {
+            give("Hello world", guest);
+          }, 1000);
+        };
+
+        value(helloSource, (greeting) => {
+          document.querySelector(
+            ".guest-result-2"
+          ).textContent = `greeting is "${greeting}"`;
+        });
+        </code></pre>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 2.</p>
+          <div class="example mb-4">
+            <span class="guest-result-2">Result here</span>
+          </div>
+          <script type="module">
+            import { give, value } from "silentium";
+
+            const helloSource = (guest) => {
+              setTimeout(() => {
+                give("Hello world", guest);
+              }, 1000);
+            };
+
+            value(helloSource, (greeting) => {
+              document.querySelector(
+                ".guest-result-2"
+              ).textContent = `greeting is "${greeting}"`;
+            });
+          </script>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Или можно передать источник-функцию в виде зависимости объектам, которые
+            ожидают интерфейс SourceType, в примере ниже используется комбинация
+            <link-dynamic href="/source/source-all">SourceAll</link-dynamic>
+            и источников-фукнций
+          </p>
+
+          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 3.</p>
+          <pre class="mb-4"><code class="language-js">import { sourceAll, source, give, value } from "silentium";
+
+            const all = sourceAll({
+              one: source('one'),
+              two: source('two'),
+            });
+
+            all.value(({ one, two }) => {
+              document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
+                }"`;
+            });
+        </code></pre>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 3.</p>
+          <div class="example mb-4">
+            <span class="guest-result-3">Result here</span>
+          </div>
+          <script type="module">
+            import { sourceAll, source, give, value } from "silentium";
+
+            const all = sourceAll({
+              one: source('one'),
+              two: source('two'),
+            });
+
+            all.value(({ one, two }) => {
+              document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
+                }"`;
+            });
+          </script>
+
+          <p class="text-gray-600 text-lg mb-4">
+            Интересный факт, что с помощью частичного применения(bind) можно превратить
+            функцию <b>give</b> в <b>источник данных</b>, передав только первый аргумент
+          </p>
+
+          <div class="font-bold mt-8">Смотрите также</div>
+
+          <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
+            <link-dynamic href="/utils/give">give</link-dynamic>
+            <link-dynamic href="/utils/value">value</link-dynamic>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

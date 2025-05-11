@@ -6,6 +6,7 @@ import {
   sourceChain,
   sourceMap,
   sourceOf,
+  sourceMemoOf,
   value,
   patron,
 } from "silentium";
@@ -14,7 +15,9 @@ import {
   loading,
   record,
   regexpReplaced,
+  regexpMatch,
   router,
+  fork,
   tick,
   not,
   path,
@@ -89,27 +92,44 @@ const routesSrc = sourceApplied(
     lazy((route) =>
       record({
         pattern: regexpReplaced(route, "pages/(.+).html", "#/$1/?$"),
-        template: route,
+        template: regexpReplaced(route, "pages/", ""),
       }),
     ),
   ),
   Array.prototype.concat.bind([
     {
       pattern: "#/$",
-      template: "pages/index.html",
+      template: "index.html",
     },
     {
       pattern: "\\.html$",
-      template: "pages/index.html",
+      template: "index.html",
     },
   ]),
 );
 
+// Internationalization
+const landFromUrlSrc = nativeLog(
+  "lang from url: ",
+  sourceAny(["ru", path(regexpMatch("#/(\\w+)/", window.location.href), "1")]),
+);
+window.langSrc = sourceMemoOf(landFromUrlSrc);
+nativeLog("lang: ", window.langSrc);
+
 // Template content fetching
-const templateSrc = tick(router(urlSrc, routesSrc, "pages/404.html"));
+const templateSrc = tick(router(urlSrc, routesSrc, "404.html"));
 const templateRequestSrc = record({
   method: "get",
-  url: concatenated([basePath, templateSrc]),
+  url: concatenated([
+    basePath,
+    fork(
+      window.langSrc,
+      (l) => l === "ru",
+      "pages/",
+      concatenated(["pages/", window.langSrc, "/"]),
+    ),
+    templateSrc,
+  ]),
 });
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
