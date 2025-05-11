@@ -30,7 +30,7 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">import { Source, sourceChangeable, guestCast, sourceMap, personalClass, give } from "silentium";
+><code class="language-js">import { Source, sourceChangeable, guestCast, sourceMap, lazyClass, give } from "silentium";
 
 class X2 {
   constructor(baseNumber) {
@@ -48,7 +48,7 @@ class X2 {
 }
 
 const source = sourceChangeable([1, 2, 3, 9]);
-const guestMapped = sourceMap(source, personalClass(X2));
+const guestMapped = sourceMap(source, lazyClass(X2));
 
 guestMapped.value((v) => {
   document.querySelector(".guest-result").textContent = v.join();
@@ -61,7 +61,7 @@ guestMapped.value((v) => {
 </div>
 
 <script type="module">
-  import { Source, sourceChangeable, guestCast, sourceMap, personalClass, give } from "silentium";
+  import { Source, sourceChangeable, guestCast, sourceMap, lazyClass, give } from "silentium";
 
   class X2 {
     constructor(baseNumber) {
@@ -79,7 +79,7 @@ guestMapped.value((v) => {
   }
 
   const source = sourceChangeable([1, 2, 3, 9]);
-  const guestMapped = sourceMap(source, personalClass(X2));
+  const guestMapped = sourceMap(source, lazyClass(X2));
 
   guestMapped.value((v) => {
     document.querySelector(".guest-result").textContent = v.join();
@@ -98,7 +98,7 @@ guestMapped.value((v) => {
   sourceChangeable,
   guestCast,
   SourceMap,
-  personalClass,
+  lazyClass,
   give,
   isSource,
 } from "silentium";
@@ -133,7 +133,7 @@ guestMapped.value((v) => {
     numSource(4),
     numSource(5),
   ]);
-  const map = sourceMap(source, personalClass(X3));
+  const map = sourceMap(source, lazyClass(X3));
 
   map.value((v) => {
     document.querySelector(".guest-result-2").textContent = v.join();
@@ -152,7 +152,7 @@ guestMapped.value((v) => {
     sourceChangeable,
     guestCast,
     sourceMap,
-    personalClass,
+    lazyClass,
     give,
     isSource,
   } from "silentium";
@@ -187,7 +187,7 @@ guestMapped.value((v) => {
       numSource(4),
       numSource(5),
     ]);
-    const map = sourceMap(src, personalClass(X3));
+    const map = sourceMap(src, lazyClass(X3));
 
     map.value((v) => {
       document.querySelector(".guest-result-2").textContent = v.join();

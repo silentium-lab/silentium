@@ -1,7 +1,7 @@
 import { subSource } from "../Patron/PatronPool";
 import { GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { PersonalType } from "../Personal/Personal";
+import { LazyType } from "../Lazy/Lazy";
 import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 
@@ -11,7 +11,7 @@ import { sourceAll } from "./SourceAll";
  */
 export const sourceMap = <T, TG>(
   baseSource: SourceType<T[]>,
-  targetSource: PersonalType<SourceType<TG>>,
+  targetSource: LazyType<SourceType<TG>>,
 ) => {
   if (baseSource === undefined) {
     throw new Error("SourceMap didn't receive baseSource argument");

@@ -2,15 +2,15 @@ import { SourceObjectType } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
 import { give, GuestType } from "../Guest/Guest";
 import { SourceChangeableType } from "../Source/SourceChangeable";
-import { PersonalType } from "./Personal";
-import { personalClass } from "./PersonalClass";
+import { LazyType } from "./Lazy";
+import { lazyClass } from "./LazyClass";
 
 class TestClass {
   private source: SourceChangeableType;
 
   public constructor(
     baseNum: number,
-    modules: { main: PersonalType<SourceChangeableType> },
+    modules: { main: LazyType<SourceChangeableType> },
   ) {
     this.source = modules.main.get(baseNum + 55);
   }
@@ -30,9 +30,9 @@ class SourceChangeable implements SourceObjectType<number> {
   }
 }
 
-test("PersonalClass.modules.test", () => {
-  const main = personalClass(SourceChangeable);
-  const testSource = personalClass(TestClass, {
+test("LazyClass.modules.test", () => {
+  const main = lazyClass(SourceChangeable);
+  const testSource = lazyClass(TestClass, {
     main,
   });
 

@@ -679,7 +679,7 @@ const sourceAny = (sources) => {
   return lastSrc;
 };
 
-const personalClass = (constructorFn, modules = {}) => {
+const lazyClass = (constructorFn, modules = {}) => {
   if (constructorFn === void 0) {
     throw new Error("PrivateClass didn't receive constructorFn argument");
   }
@@ -693,9 +693,9 @@ const personalClass = (constructorFn, modules = {}) => {
   };
 };
 
-const personal = (buildingFn) => {
+const lazy = (buildingFn) => {
   if (buildingFn === void 0) {
-    throw new Error("personal didn't receive buildingFn argument");
+    throw new Error("lazy didn't receive buildingFn argument");
   }
   return {
     get(...args) {
@@ -718,14 +718,14 @@ exports.isGuest = isGuest;
 exports.isPatron = isPatron;
 exports.isPatronInPools = isPatronInPools;
 exports.isSource = isSource;
+exports.lazy = lazy;
+exports.lazyClass = lazyClass;
 exports.patron = patron;
 exports.patronApplied = patronApplied;
 exports.patronExecutorApplied = patronExecutorApplied;
 exports.patronOnce = patronOnce;
 exports.patronPools = patronPools;
 exports.patronPoolsStatistic = patronPoolsStatistic;
-exports.personal = personal;
-exports.personalClass = personalClass;
 exports.removePatronFromPools = removePatronFromPools;
 exports.source = source;
 exports.sourceAll = sourceAll;

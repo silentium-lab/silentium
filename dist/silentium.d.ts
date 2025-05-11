@@ -196,26 +196,26 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
  */
 declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceType<ExtractTypesFromArray<T>>;
 
-interface PersonalType<T> {
+interface LazyType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
 }
 /**
- * Helps to get personal instance of dependency
- * @url https://silentium-lab.github.io/silentium/#/utils/private
+ * Helps to get lazy instance of dependency
+ * @url https://silentium-lab.github.io/silentium/#/utils/lazy
  */
-declare const personal: <T>(buildingFn: (...args: any[]) => T) => PersonalType<T>;
+declare const lazy: <T>(buildingFn: (...args: any[]) => T) => LazyType<T>;
 
 /**
  * Ability to apply source to source of array values sequentially
  * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
  */
-declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource: PersonalType<SourceType<TG>>) => (guest: GuestType<TG[]>) => void;
+declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (guest: GuestType<TG[]>) => void;
 
 /**
  * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
-declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: PersonalType<SourceType<TG>>) => (guest: GuestType<TG[]>) => undefined;
+declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (guest: GuestType<TG[]>) => undefined;
 
 /**
  * Connects guest with source what give response faster than others
@@ -301,6 +301,6 @@ declare const sourceAny: <T>(sources: SourceType<T>[]) => SourceChangeableType<T
 interface Prototyped<T> {
     prototype: T;
 }
-declare const personalClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => PersonalType<T>;
+declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type MaybeDisposableType, PatronPool, type PatronType, type PersonalType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, personal, personalClass, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceMap, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
