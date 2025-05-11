@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.31](https://github.com/silentium-lab/silentium/compare/v0.0.30...v0.0.31) (2025-05-11)
+
+
+### Features
+
+* **35-issue:** lazyType now instead of PersonalType ([c153352](https://github.com/silentium-lab/silentium/commit/c15335264e37964f8dd319f013df4a5db736add8))
+* **main:** commitizen translation to english ([9a59930](https://github.com/silentium-lab/silentium/commit/9a59930159865585e41eba13d804ef60b3cc09e0))
+* **main:** work on documentation loading ([fdc956d](https://github.com/silentium-lab/silentium/commit/fdc956d0408b1dde71f6b3648ad94c68ab2a2142))
+
 ### [0.0.30](https://github.com/silentium-lab/silentium/compare/v0.0.29...v0.0.30) (2025-05-09)
 
 
