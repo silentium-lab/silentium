@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.33](https://github.com/silentium-lab/silentium/compare/v0.0.32...v0.0.33) (2025-05-11)
+
+
+### Features
+
+* **main:** sourceMemoOf done ([c16c4e4](https://github.com/silentium-lab/silentium/commit/c16c4e451e1ed3fb4fe32313fa63d94b387ad09d))
+
 ### [0.0.32](https://github.com/silentium-lab/silentium/compare/v0.0.31...v0.0.32) (2025-05-11)
 
 
