@@ -1,4 +1,5 @@
-import { guest, GuestObjectType, GuestType } from "../Guest/Guest";
+import { sourceSync } from "../Source/SourceSync";
+import { give, guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
 import { patronOnce } from "../Patron/PatronOnce";
 import { PatronPool } from "../Patron/PatronPool";
@@ -64,4 +65,27 @@ export const sourceOf = <T>(source?: SourceType<T>) => {
   };
 
   return createdSource as SourceChangeableType<T>;
+};
+
+/**
+ * Changeable source what can be changed only once with specified value
+ * @url https://silentium-lab.github.io/silentium/#/source/source-memo-of
+ */
+export const sourceMemoOf = <T>(
+  source?: SourceType<T>,
+): SourceChangeableType<T> => {
+  const result = sourceOf(source);
+  const baseSrcSync = sourceSync(result, null);
+
+  const resultMemo = {
+    value: result.value,
+    give(value: T) {
+      if (baseSrcSync.syncValue() !== value) {
+        give(value, result.give);
+      }
+      return resultMemo;
+    },
+  };
+
+  return resultMemo;
 };
