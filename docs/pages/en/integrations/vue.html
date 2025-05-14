@@ -5,16 +5,16 @@
 <h1 class="pb-3 text-xl font-semibold text-gray-600">Vue</h1>
 
 <p class="text-gray-600 text-lg mb-4">
-  Библиотека Patron интегрируется в Vue без каких-либо проблем. Например, чтобы
+  The Patron library integrates into Vue without any problems. For example, to
   <link-dynamic
     href="/terminology/source"
-  >
-    источник данных
-  </link-dynamic>
-  привязать к ref можно использовать такой класс (Листинг 1).
+>
+data source
+</link-dynamic>
+  you can use this class to bind to ref (Listing 1).
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Листинг 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Listing 1.</p>
 <pre
   class="mb-4"
 ><code class="language-js">class VueRefPatron&lt;T&gt; implements GuestType&lt;T&gt; {
@@ -40,21 +40,21 @@
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс VueRefPatron можно использовать как посетителя для разных источников
-  данных, связывая таким образом источники данных с системой реактивности Vue.
+  The VueRefPatron class can be used as a visitor for different sources
+  data sources, thus linking data sources to the Vue reactivity system.
 </p>
 
 <h3 class="pb-3 text-xl font-semibold text-gray-600">
-  Источники в шаблоне Vue
+  Sources in the Vue template
 </h3>
 
 <p class="text-gray-600 text-lg mb-4">
-  Также в шаблонах можно использовать заготовку из листинга 2, для того, чтобы
-  концентрироваться на разработке чистых компонентов, ожидающих простые данные,
-  вместо того, чтобы смешивать логику получения данных и логику компонентов.
+  You can also use the blank from Listing 2 in the templates in order to
+  focus on developing clean components that expect simple data,
+instead of mixing data acquisition logic and component logic.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Листинг 2.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Listing 2.</p>
 <pre class="mb-4"><code class="language-html">
 &lt;template&gt;
   &lt;div&gt;
@@ -97,7 +97,7 @@ export default defineComponent({
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-4">
-  В результате компонент Source можно использовать, чтобы оборачивать другие
-  компоненты, требующие данные, передать в компонент источник данных, результат
-  работы которого будет в пропсе data в слоте default.
+As a result, the Source component can be used to wrap others
+  components that require data should be passed to the data source component, the result
+  which will work in the data prop in the default slot.
 </p>

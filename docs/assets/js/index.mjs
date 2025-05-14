@@ -21,6 +21,7 @@ import {
   tick,
   not,
   path,
+  set,
 } from "silentium-components";
 import {
   classRemoved,
@@ -48,9 +49,18 @@ const nativeFetched = fetched.bind(null, {
   fetch: window.fetch.bind(window),
 });
 
+// Internationalization
+const defaultLang = "ru";
+const landFromUrlSrc = sourceAny([
+  "ru",
+  path(regexpMatch("#/(\\w+)/", window.location.href), "1"),
+]);
+window.langSrc = sourceMemoOf(landFromUrlSrc);
+set(nativeElement(".lang-select"), "value", window.langSrc);
+
 // Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
-const urlSrc = nativeHistoryUrl(
+const urlSrc = regexpReplaced(
   sourceAny([
     historyPoppedPage(window, sourceOf()),
     window.location.href,
@@ -60,6 +70,16 @@ const urlSrc = nativeHistoryUrl(
       link(nativeElement("body"), ".dynamic-navigation"),
     ]),
   ]),
+  concatenated(["/", window.langSrc, "/"]),
+  "/",
+);
+nativeHistoryUrl(
+  fork(
+    window.langSrc,
+    (l) => l === defaultLang,
+    urlSrc,
+    regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
+  ),
 );
 
 // Loading main styles and remove loading class on body after styles loaded
@@ -108,14 +128,6 @@ const routesSrc = sourceApplied(
   ]),
 );
 
-// Internationalization
-const landFromUrlSrc = nativeLog(
-  "lang from url: ",
-  sourceAny(["ru", path(regexpMatch("#/(\\w+)/", window.location.href), "1")]),
-);
-window.langSrc = sourceMemoOf(landFromUrlSrc);
-nativeLog("lang: ", window.langSrc);
-
 // Template content fetching
 const templateSrc = tick(router(urlSrc, routesSrc, "404.html"));
 const templateRequestSrc = record({
@@ -124,7 +136,7 @@ const templateRequestSrc = record({
     basePath,
     fork(
       window.langSrc,
-      (l) => l === "ru",
+      (l) => l === defaultLang,
       "pages/",
       concatenated(["pages/", window.langSrc, "/"]),
     ),

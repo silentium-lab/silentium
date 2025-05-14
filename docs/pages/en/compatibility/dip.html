@@ -7,45 +7,45 @@
 </h1>
 
 <p class="text-gray-600 text-lg mb-4">
-  <b>DIP</b> - принцип инверсии зависимостей, описанный Робертом Мартином.
-  Принцип говорит о том, что архитектор системы может изменить направление
-  зависимости от процедурного - когда большее зависит от меньшего на
-  противополложное когда меньшее зависит от большего. Большее - это higher
-  policy (бизнес логика) и от потребностей бизнес логики зависят плагины
-  конкретных систем, например плагин работы с БД, обеспечивающий нашу бизнес
-  логику данными из БД.
+<b>DIP</b> is the dependency inversion principle described by Robert Martin.
+  The principle says that the architect of the system can change the direction.
+  procedural dependencies - when more depends on less on
+  the opposite is true when less depends on more. More is higher
+  policy (business logic) and plugins depend on the needs of business logic
+  specific systems, for example, a database plugin that provides our business
+  logic with data from the database.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Библиотека Patron - это реализация DIP принципа. Ваша бизнес логика может
-  зависеть от интерфейсов
+  The Patron library is an implementation of the DIP principle. Your business logic can
+  depend on interfaces
   <link-reloadable
     target-blank
-    href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts#L9"
-  >
-    SourceType
-  </link-reloadable>
-  или
+    href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts#L9 "
+>
+sourceType
+</link-reloadable>
+or
   <link-reloadable
     target-blank
-    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
-  >
-    GuestType
-  </link-reloadable>
-  или
+    href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17 "
+>
+GuestType
+</link-reloadable>
+or
   <link-reloadable
     target-blank
     href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceActive.ts#L9"
   >
     ActionType
   </link-reloadable>
-  . Эти общие интерфейсы позволяют либо получить данные(SourceType) либо
-  принять того кому данные нужно передать(GuestType) либо принять объект который
-  умеет делать действия(ActionType)
+  . These common interfaces allow you to either get the data(sourceType) or
+  accept the one to whom the data needs to be transferred (GuestType) or accept an object that
+  can perform actions(ActionType)
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">
-  Схема 1. Пример приложения с DIP + Patron
+Scheme 1. Application example with DIP + Patron
 </p>
 
 <iframe
@@ -57,18 +57,18 @@
 
 <p>&nbsp;</p>
 <p class="text-gray-600 text-lg mb-4">
-  Как видно из схемы 1 все классы зависят только от интерфейсов из библиотеки
-  Patron, только дополняя параметры дженериков нужными типами.
+  As can be seen from diagram 1, all classes depend only on interfaces from the library.
+  Patron, only supplementing the parameters of generics with the necessary types.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Прикладной код может выглядеть следующим образом, как показано в примере 1.
+  The application code may look like this, as shown in Example 1.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4"
-><code class="language-js">// Условный код, для демонстрации композиции классов схемы 1
+><code class="language-js">// Conditional code to demonstrate the composition of classes in scheme 1
 const credentials = new CredentialsFromPostRequest(request);
 
 const user = new UserStatus(
@@ -80,7 +80,7 @@ user.value(card);
 </code></pre>
 
 <p class="text-gray-600 text-lg mb-4">
-  Выгода использования Patron - хорошо видна, каждый класс не зависит ни от чего
-  кроме библиотеки Patron и тех библиотек плагином которых является, а в случае
-  класса бизнес - логики зависимость будет только от Patron.
+The benefits of using Patron are clearly visible, each class does not depend on anything
+  in addition to the Patron library and those libraries of which it is a plug-in, and in the case of
+  The business logic class will depend only on Patron.
 </p>

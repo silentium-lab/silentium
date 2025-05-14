@@ -33,39 +33,39 @@
         <div
           class="sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0"
         >
-          <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс Patron</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">Patron class</h1>
 
           <a href="https://github.com/kosukhin/patron/blob/main/src/Patron/Patron.ts" target="_blank"
             class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
-            <img src="./assets/img/github_16.jpg" width="16" height="16" />
-            Patron на GitHub
+<img src="./assets/img/github_16.jpg " width="16" height="16" />
+Patron on GitHub
           </a>
 
           <p class="text-gray-600 text-lg mb-4">
-            Предназначен для динамического превращения
+Designed for dynamic transformation
             <link-dynamic
               href="/terminology/guest">
-              гостя
+guest
             </link-dynamic>
-            в
-            <link-dynamic
+            in
+<link-dynamic
               href="/terminology/patron">
-              патрона
+              The patron
             </link-dynamic>
           </p>
 
           <p class="text-gray-600 text-lg mb-4">
-            Это поведение полезно в случаях, когда нужно из просто посетителя(гостя)
-            сделать постоянного посетителя(патрона). Это будет означать что если у
+This behavior is useful in cases where you need to turn from just a visitor (guest)
+            make a regular visitor (patron). This will mean that if y
             <link-dynamic
               href="/terminology/source">
-              источника данных
+              the data source
             </link-dynamic>
-            есть новые данные, то источник отдаст эту новую порцию данных всем своим
-            постоянным посетителям(патронам)
-          </p>
+            If there is new data, the source will give this new piece of data to all of its users.
+            regular visitors (patrons)
+</p>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
           <pre class="mb-4"><code class="language-js">import {
   patron,
   sourceChangeable,
@@ -97,7 +97,7 @@ timer.value(
       (value) => {
         const el = document.querySelector(".patron-result");
         if (el) {
-          el.textContent = `Секунд прошло ${value}`;
+          el.textContent = `Seconds have passed ${value}`;
         }
       },
       () => {
@@ -107,7 +107,7 @@ timer.value(
   )
 );</code></pre>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
           <div class="example mb-4">
             <span class="patron-result">Result here</span>
           </div>
@@ -143,7 +143,7 @@ timer.value(
                   (value) => {
                     const el = document.querySelector(".patron-result");
                     if (el) {
-                      el.textContent = `Секунд прошло ${value}`;
+                      el.textContent = `Seconds have passed ${value}`;
                     }
                   },
                   () => {
@@ -154,7 +154,7 @@ timer.value(
             );
           </script>
 
-          <div class="font-bold mt-8">Смотрите также</div>
+          <div class="font-bold mt-8">See also</div>
 
           <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
             <a class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"

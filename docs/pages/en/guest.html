@@ -36,7 +36,7 @@
         <div
           class="w-full sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0"
         >
-          <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс Guest</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">Guest class</h1>
 
           <a
             href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L27"
@@ -47,12 +47,12 @@
               src="./assets/img/github_16.jpg"
               width="16"
               height="16"
-            />
-            Guest на GitHub
+/>
+Guest on GitHub
           </a>
 
           <p class="text-gray-600 text-lg mb-4">
-            Предназначен для создания новых экземпляров
+Designed to create new instances
             <span class="">
               <a
                 class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900 dynamic-navigation"
@@ -62,21 +62,21 @@
                 GuestObjectType
               </a>
             </span>
-            из функции-колбэка
+            from the callback function
           </p>
 
           <p class="text-gray-600 text-lg mb-4">
-            Это поведение полезно в случаях, когда нужно динамически построить
+This behavior is useful in cases where you need to dynamically build
             <link-dynamic
               href="/terminology/visitor"
             >
-              посетителя
+user
             </link-dynamic>
-            на основе функции, используя какие-то переменные из скоупа, где создана
-            функция
+            based on the function, using some variables from the scope where it was created
+            function
           </p>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
           <pre
             class="mb-4 w-full"
           ><code class="language-js">import { guest } from 'silentium';
@@ -92,7 +92,7 @@ timestamp.seconds(guest((timestamp) => {
     console.log('timestamp is', timestamp);
 }));</code></pre>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
           <div class="example mb-4">
             <span class="guest-result">Result here</span>
           </div>
@@ -116,18 +116,18 @@ timestamp.seconds(guest((timestamp) => {
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
-            Возможность создавать объект-посетитель из функции была
-            единственной в первых версиях библиотеки. На текущий момент вы можете также
-            передать функцию-колбэк в качестве посетителя, тк функция соответствует типу
+The ability to create a visitor object from the function was
+            the only one in the first versions of the library. Currently, you can also
+            pass the callback function as a visitor, since the function corresponds to the type
             <link-dynamic
               href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
             >
               GuestType
             </link-dynamic>
-            Это позволяет не создавать лишних объектных-оберток
+            This allows you not to create unnecessary object wrappers.
           </p>
 
-          <p class="text-gray-600 text-lg font-bold mb-0">Пример 2.</p>
+          <p class="text-gray-600 text-lg font-bold mb-0">Example 2.</p>
           <pre
             class="mt-0 w-full"
           ><code class="language-js">import { Guest } from 'silentium';

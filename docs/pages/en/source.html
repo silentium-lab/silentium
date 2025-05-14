@@ -50,29 +50,29 @@
           </div>
         </div>
         <div class="sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0">
-          <h1 class="pb-3 text-xl font-semibold text-gray-600">Класс Source</h1>
+          <h1 class="pb-3 text-xl font-semibold text-gray-600">Source class</h1>
 
           <a href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts" target="_blank"
             class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
-            <img src="./assets/img/github_16.jpg" width="16" height="16" />
-            Source на GitHub
+<img src="./assets/img/github_16.jpg " width="16" height="16" />
+Source on GitHub
           </a>
 
           <p class="text-gray-600 text-lg mb-4">
-            Предназначен для создания объектов, которые будут
+Is designed to create objects that will
             <link-dynamic
               href="/terminology/source">
-              источниками данных
+              data sources
             </link-dynamic>
-            , логика этих объектов основана на переданной функции-колбэке
+             the logic of these objects is based on a passed callback function
           </p>
 
           <p class="text-gray-600 text-lg mb-4">
-            Полезно в случаях, когда нужно создать новый объект с уникальным поведением по
-            генерации данных без создания для этого отдельного класса
+Useful in cases where you need to create a new object with unique software behavior
+            generating data without creating a separate class for it
           </p>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
           <pre class="mb-4"><code class="language-js">import {
             source,
             give
@@ -86,7 +86,7 @@
         });
         </code></pre>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
           <div class="example mb-4">
             <span class="guest-result">Result here</span>
           </div>
@@ -104,15 +104,15 @@
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
-            Источником данных может быть не только объект, но и функция вида
-            <em>(guest) => guest('value')</em>. Напрямую можно обратиться к такому
-            источнику через функцию
+The data source can be not only an object, but also a function of the form
+            <em>(guest) => guest('value')</em>. You can directly contact this
+            to the source via the function
             <link-reloadable target-blank href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts#L11">
               value
             </link-reloadable>
           </p>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 2.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Example 2.</p>
           <pre class="mb-4"><code class="language-js">import {
           give,
           value
@@ -130,7 +130,7 @@
           ).textContent = `greeting is "${greeting}"`;
         });
         </code></pre>
-          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 2.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 2.</p>
           <div class="example mb-4">
             <span class="guest-result-2">Result here</span>
           </div>
@@ -151,13 +151,13 @@
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
-            Или можно передать источник-функцию в виде зависимости объектам, которые
-            ожидают интерфейс SourceType, в примере ниже используется комбинация
+Or you can transfer the source function as a dependency to objects that
+            the sourceType interface is expected. In the example below, the combination is used
             <link-dynamic href="/source/source-all">SourceAll</link-dynamic>
-            и источников-фукнций
+            and sources-functions
           </p>
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Пример 3.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Example 3.</p>
           <pre class="mb-4"><code class="language-js">import { sourceAll, source, give, value } from "silentium";
 
             const all = sourceAll({
@@ -170,7 +170,7 @@
                 }"`;
             });
         </code></pre>
-          <p class="text-gray-600 text-lg mb-0 font-bold">Результат 3.</p>
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 3.</p>
           <div class="example mb-4">
             <span class="guest-result-3">Result here</span>
           </div>
@@ -189,11 +189,11 @@
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
-            Интересный факт, что с помощью частичного применения(bind) можно превратить
-            функцию <b>give</b> в <b>источник данных</b>, передав только первый аргумент
+            An interesting fact is that with the help of partial application (bind), you can turn
+            the <b>give</b> function to the <b>data source</b>, passing only the first argument
           </p>
 
-          <div class="font-bold mt-8">Смотрите также</div>
+          <div class="font-bold mt-8">See also</div>
 
           <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
             <link-dynamic href="/utils/give">give</link-dynamic>
