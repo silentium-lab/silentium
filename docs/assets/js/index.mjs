@@ -17,12 +17,15 @@ import {
   record,
   regexpReplaced,
   regexpMatch,
+  regexpMatched,
   router,
   fork,
   tick,
   not,
   path,
   set,
+  deferred,
+  branch,
 } from "silentium-components";
 import {
   classRemoved,
@@ -64,7 +67,6 @@ const landFromUrlSrc = sourceAny([
   path(regexpMatch("#/(\\w+)/", window.location.href), "1"),
 ]);
 window.langSrc = sourceMemoOf(landFromUrlSrc);
-const langSyncSrc = sourceSync(window.langSrc);
 set(nativeElement(".lang-select"), "value", window.langSrc);
 
 // Url source
@@ -137,8 +139,46 @@ const routesSrc = sourceApplied(
   ]),
 );
 
+const layoutContentSrc = nativeFetched(
+  record({
+    method: "get",
+    url: tick(
+      sourceAny([
+        concatenated([basePath, sourceChain(urlSrc, "layouts/default.html")]),
+        branch(
+          regexpMatched("/source/", urlSrc),
+          concatenated([basePath, "layouts/source.html"]),
+        ),
+        branch(
+          regexpMatched("/patron/", urlSrc),
+          concatenated([basePath, "layouts/patron.html"]),
+        ),
+        branch(
+          regexpMatched("/guest/", urlSrc),
+          concatenated([basePath, "layouts/guest.html"]),
+        ),
+        branch(
+          regexpMatched("/utils/", urlSrc),
+          concatenated([basePath, "layouts/utils.html"]),
+        ),
+        branch(
+          regexpMatched("/terminology/", urlSrc),
+          concatenated([basePath, "layouts/terminology.html"]),
+        ),
+        branch(
+          regexpMatched("/examples/", urlSrc),
+          concatenated([basePath, "layouts/examples.html"]),
+        ),
+      ]),
+    ),
+  }),
+);
+html(nativeElement("article.container .page-area"), layoutContentSrc);
+
+const templateUrlSrc = deferred(urlSrc, layoutContentSrc);
+
 // Template content fetching
-const templateSrc = tick(router(urlSrc, routesSrc, "404.html"));
+const templateSrc = tick(router(templateUrlSrc, routesSrc, "404.html"));
 const templateRequestSrc = record({
   method: "get",
   url: concatenated([
@@ -155,13 +195,16 @@ const templateRequestSrc = record({
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
 // Template loading visualization
-const templateContentLoadingSrc = loading(urlSrc, templateContentSrc);
+const templateContentLoadingSrc = loading(urlSrc, layoutContentSrc);
 visible(templateContentLoadingSrc, nativeElement("article.container .loader"));
 visible(
   not(templateContentLoadingSrc),
   nativeElement("article.container .page-area"),
 );
-html(nativeElement("article.container .page-area"), templateContentSrc);
+html(
+  nativeElement(sourceChain(layoutContentSrc, ".layout-content")),
+  templateContentSrc,
+);
 
 // Template title
 value(
@@ -181,25 +224,27 @@ sourceSync(
     lazy((el) =>
       html(
         el,
-        sourceAny([
-          sourceChain(chunkError, "ChunkError!"),
-          nativeFetched(
-            record({
-              method: "get",
-              url: concatenated([
-                basePath,
-                fork(
-                  window.langSrc,
-                  (l) => l === defaultLang,
-                  "chunks/",
-                  concatenated(["chunks/", window.langSrc, "/"]),
-                ),
-                attribute("data-url", el),
-              ]),
-            }),
-            chunkError,
-          ),
-        ]),
+        tick(
+          sourceAny([
+            sourceChain(chunkError, "ChunkError!"),
+            nativeFetched(
+              record({
+                method: "get",
+                url: concatenated([
+                  basePath,
+                  fork(
+                    window.langSrc,
+                    (l) => l === defaultLang,
+                    "chunks/",
+                    concatenated(["chunks/", window.langSrc, "/"]),
+                  ),
+                  attribute("data-url", el),
+                ]),
+              }),
+              chunkError,
+            ),
+          ]),
+        ),
       ),
     ),
   ),
