@@ -540,7 +540,13 @@ const sourceMap = (baseSource, targetSource) => {
           subSource(source, baseSource);
           sources.push(source);
         });
-        value(sourceAll(sources), guest);
+        value(
+          sourceAll(sources),
+          guestCast(guest, (v) => {
+            destroy(sources);
+            give(v, guest);
+          })
+        );
       })
     );
     return void 0;

@@ -1,5 +1,5 @@
-import { subSource } from "../Patron/PatronPool";
-import { GuestType } from "../Guest/Guest";
+import { destroy, subSource } from "../Patron/PatronPool";
+import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { LazyType } from "../Lazy/Lazy";
 import { SourceType, value } from "./Source";
@@ -30,7 +30,13 @@ export const sourceMap = <T, TG>(
           subSource(source, baseSource);
           sources.push(source);
         });
-        value(sourceAll(sources), guest);
+        value(
+          sourceAll(sources),
+          guestCast(guest, (v) => {
+            destroy(sources);
+            give(v, guest);
+          }),
+        );
       }),
     );
     return this;

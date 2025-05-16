@@ -4,6 +4,7 @@ import {
   sourceAny,
   sourceApplied,
   sourceChain,
+  sourceSync,
   sourceMap,
   sourceOf,
   sourceMemoOf,
@@ -26,6 +27,7 @@ import {
 import {
   classRemoved,
   element,
+  elements,
   fetched,
   historyNewPate,
   historyPoppedPage,
@@ -34,12 +36,18 @@ import {
   log,
   styleInstalled,
   visible,
+  attribute,
 } from "silentium-web-api";
 import "./components.mjs";
 
 // Initializing components with predefined values
 const nativeHistoryUrl = historyNewPate.bind(null, window.history);
 const nativeElement = element.bind(
+  null,
+  lazyClass(window.MutationObserver),
+  window.document,
+);
+const nativeElements = elements.bind(
   null,
   lazyClass(window.MutationObserver),
   window.document,
@@ -56,6 +64,7 @@ const landFromUrlSrc = sourceAny([
   path(regexpMatch("#/(\\w+)/", window.location.href), "1"),
 ]);
 window.langSrc = sourceMemoOf(landFromUrlSrc);
+const langSyncSrc = sourceSync(window.langSrc);
 set(nativeElement(".lang-select"), "value", window.langSrc);
 
 // Url source
@@ -161,4 +170,37 @@ value(
     "textContent",
   ),
   patron((v) => (window.document.title = v)),
+);
+
+// chunks rendering
+const chunkError = sourceOf();
+value(chunkError, patron(errors));
+sourceSync(
+  sourceMap(
+    nativeElements(sourceChain(templateContentSrc, ".chunk")),
+    lazy((el) =>
+      html(
+        el,
+        sourceAny([
+          sourceChain(chunkError, "ChunkError!"),
+          nativeFetched(
+            record({
+              method: "get",
+              url: concatenated([
+                basePath,
+                fork(
+                  window.langSrc,
+                  (l) => l === defaultLang,
+                  "chunks/",
+                  concatenated(["chunks/", window.langSrc, "/"]),
+                ),
+                attribute("data-url", el),
+              ]),
+            }),
+            chunkError,
+          ),
+        ]),
+      ),
+    ),
+  ),
 );
