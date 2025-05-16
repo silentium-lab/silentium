@@ -62,15 +62,22 @@ const nativeFetched = fetched.bind(null, {
 
 // Internationalization
 const defaultLang = "ru";
-const landFromUrlSrc = sourceAny([
+const langFromUrlSrc = sourceAny([
   "ru",
-  path(regexpMatch("#/(\\w+)/", window.location.href), "1"),
+  path(regexpMatch("#/(\\w{2})/", window.location.href), "1"),
 ]);
-window.langSrc = sourceMemoOf(landFromUrlSrc);
+window.langSrc = sourceMemoOf(langFromUrlSrc);
 set(nativeElement(".lang-select"), "value", window.langSrc);
+const isDefaultLangSrc = sourceApplied(
+  window.langSrc,
+  (l) => l === defaultLang,
+);
+
+nativeLog("lang:", window.langSrc);
 
 // Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
+nativeLog("bp", basePath);
 const urlSrc = regexpReplaced(
   sourceAny([
     historyPoppedPage(window, sourceOf()),
@@ -85,13 +92,14 @@ const urlSrc = regexpReplaced(
   "/",
 );
 nativeHistoryUrl(
-  fork(
-    window.langSrc,
-    (l) => l === defaultLang,
+  branch(
+    isDefaultLangSrc,
     urlSrc,
     regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
   ),
 );
+
+nativeLog("url: ", urlSrc);
 
 // Loading main styles and remove loading class on body after styles loaded
 const bodyStylesReady = sourceChain(
