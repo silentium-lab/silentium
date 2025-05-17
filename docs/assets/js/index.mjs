@@ -1,33 +1,34 @@
 import {
   lazy,
   lazyClass,
+  patron,
   sourceAny,
   sourceApplied,
   sourceChain,
-  sourceSync,
   sourceMap,
-  sourceOf,
   sourceMemoOf,
+  sourceOf,
+  sourceSync,
   value,
-  patron,
 } from "silentium";
 import {
+  branch,
   concatenated,
+  deferred,
   loading,
-  record,
-  regexpReplaced,
-  regexpMatch,
-  regexpMatched,
-  router,
-  fork,
-  tick,
   not,
   path,
+  record,
+  regexpMatch,
+  regexpMatched,
+  regexpReplaced,
+  router,
   set,
-  deferred,
-  branch,
+  tick,
+  memo,
 } from "silentium-components";
 import {
+  attribute,
   classRemoved,
   element,
   elements,
@@ -39,7 +40,6 @@ import {
   log,
   styleInstalled,
   visible,
-  attribute,
 } from "silentium-web-api";
 import "./components.mjs";
 
@@ -56,6 +56,7 @@ const nativeElements = elements.bind(
   window.document,
 );
 const nativeLog = log.bind(null, window.console);
+// const nativeLog = log.bind(null, () => {});
 const nativeFetched = fetched.bind(null, {
   fetch: window.fetch.bind(window),
 });
@@ -93,7 +94,7 @@ const urlSrc = regexpReplaced(
 );
 nativeHistoryUrl(
   branch(
-    isDefaultLangSrc,
+    sourceChain(urlSrc, window.langSrc, isDefaultLangSrc),
     urlSrc,
     regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
   ),
@@ -185,21 +186,22 @@ html(nativeElement("article.container .page-area"), layoutContentSrc);
 
 const templateUrlSrc = deferred(urlSrc, layoutContentSrc);
 
+const langUrlPartSrc = branch(
+  isDefaultLangSrc,
+  "/",
+  concatenated(["/", window.langSrc, "/"]),
+);
+nativeLog("langUrlPartSrc:", langUrlPartSrc);
+
 // Template content fetching
 const templateSrc = tick(router(templateUrlSrc, routesSrc, "404.html"));
+nativeLog("templateSrc: ", templateSrc);
 const templateRequestSrc = record({
   method: "get",
-  url: concatenated([
-    basePath,
-    fork(
-      window.langSrc,
-      (l) => l === defaultLang,
-      "pages/",
-      concatenated(["pages/", window.langSrc, "/"]),
-    ),
-    templateSrc,
-  ]),
+  url: memo(concatenated([basePath, "pages", langUrlPartSrc, templateSrc])),
 });
+nativeLog("isDefaultLangSrc:", isDefaultLangSrc);
+nativeLog("templateRequestSrc: ", templateRequestSrc);
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
 // Template loading visualization
@@ -223,6 +225,11 @@ value(
   patron((v) => (window.document.title = v)),
 );
 
+nativeLog(
+  "templateContentSrc",
+  sourceApplied(templateContentSrc, (v) => v.length),
+);
+
 // chunks rendering
 const chunkError = sourceOf();
 value(chunkError, patron(errors));
@@ -238,16 +245,17 @@ sourceSync(
             nativeFetched(
               record({
                 method: "get",
-                url: concatenated([
-                  basePath,
-                  fork(
-                    window.langSrc,
-                    (l) => l === defaultLang,
-                    "chunks/",
-                    concatenated(["chunks/", window.langSrc, "/"]),
-                  ),
-                  attribute("data-url", el),
-                ]),
+                url: memo(
+                  concatenated([
+                    basePath,
+                    branch(
+                      isDefaultLangSrc,
+                      "chunks/",
+                      concatenated(["chunks/", window.langSrc, "/"]),
+                    ),
+                    attribute("data-url", el),
+                  ]),
+                ),
               }),
               chunkError,
             ),

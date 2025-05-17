@@ -11,7 +11,7 @@ sed -i "s/TPL_SILENTIUM_COMPONENTS/https:\/\/cdn.jsdelivr.net\/npm\/silentium-co
 
 
 cp template.html index-dev.html
-sed -i "s/TPL_SILENTIUM_OOP/http:\/\/127.0.0.1:5502\/dist\/silentium.min.mjs/g" "index-dev.html"
+sed -i "s/TPL_SILENTIUM_OOP/http:\/\/127.0.0.1:5502\/dist\/silentium.mjs/g" "index-dev.html"
 
 sed -i "s/TPL_SILENTIUM_WEB_API/http:\/\/127.0.0.1:5501\/dist\/silentium-web-api.min.mjs/g" "index-dev.html"
 
