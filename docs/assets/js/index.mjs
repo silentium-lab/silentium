@@ -65,7 +65,7 @@ const nativeFetched = fetched.bind(null, {
 const defaultLang = "ru";
 const langFromUrlSrc = sourceAny([
   "ru",
-  path(regexpMatch("#/(\\w{2})/", window.location.href), "1"),
+  path(regexpMatch("/(\\w{2})/", window.location.hash), "1"),
 ]);
 window.langSrc = sourceMemoOf(langFromUrlSrc);
 set(nativeElement(".lang-select"), "value", window.langSrc);
@@ -78,7 +78,7 @@ nativeLog("lang:", window.langSrc);
 
 // Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
-nativeLog("bp", basePath);
+nativeLog("basePath: ", basePath);
 const urlSrc = regexpReplaced(
   sourceAny([
     historyPoppedPage(window, sourceOf()),
@@ -92,11 +92,17 @@ const urlSrc = regexpReplaced(
   concatenated(["/", window.langSrc, "/"]),
   "/",
 );
+
+nativeLog("isDefaultLangSrc: ", isDefaultLangSrc);
+
 nativeHistoryUrl(
-  branch(
-    sourceChain(urlSrc, window.langSrc, isDefaultLangSrc),
-    urlSrc,
-    regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
+  nativeLog(
+    "nativeHistoryUrl = ",
+    branch(
+      sourceChain(urlSrc, window.langSrc, isDefaultLangSrc),
+      urlSrc,
+      regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
+    ),
   ),
 );
 
@@ -184,6 +190,11 @@ const layoutContentSrc = nativeFetched(
 );
 html(nativeElement("article.container .page-area"), layoutContentSrc);
 
+nativeLog(
+  "layoutContentSrc",
+  sourceApplied(layoutContentSrc, (v) => v.length),
+);
+
 const templateUrlSrc = deferred(urlSrc, layoutContentSrc);
 
 const langUrlPartSrc = branch(
@@ -193,12 +204,16 @@ const langUrlPartSrc = branch(
 );
 nativeLog("langUrlPartSrc:", langUrlPartSrc);
 
+const templateLangUrlPartSrc = deferred(langUrlPartSrc, layoutContentSrc);
+
 // Template content fetching
 const templateSrc = tick(router(templateUrlSrc, routesSrc, "404.html"));
 nativeLog("templateSrc: ", templateSrc);
 const templateRequestSrc = record({
   method: "get",
-  url: memo(concatenated([basePath, "pages", langUrlPartSrc, templateSrc])),
+  url: memo(
+    concatenated([basePath, "pages", templateLangUrlPartSrc, templateSrc]),
+  ),
 });
 nativeLog("isDefaultLangSrc:", isDefaultLangSrc);
 nativeLog("templateRequestSrc: ", templateRequestSrc);
@@ -234,27 +249,31 @@ nativeLog(
 const chunkError = sourceOf();
 value(chunkError, patron(errors));
 sourceSync(
-  sourceMap(
-    nativeElements(sourceChain(templateContentSrc, ".chunk")),
-    lazy((el) =>
-      html(
-        el,
-        tick(
+  nativeLog(
+    "chunks: ",
+    sourceMap(
+      nativeLog(
+        "chunk elements: ",
+        sourceChain(templateContentSrc, nativeElements(".chunk")),
+      ),
+      lazy((el) =>
+        html(
+          el,
           sourceAny([
             sourceChain(chunkError, "ChunkError!"),
             nativeFetched(
               record({
                 method: "get",
-                url: memo(
-                  concatenated([
-                    basePath,
-                    branch(
-                      isDefaultLangSrc,
-                      "chunks/",
-                      concatenated(["chunks/", window.langSrc, "/"]),
-                    ),
-                    attribute("data-url", el),
-                  ]),
+                url: nativeLog(
+                  "url chunk: ",
+                  memo(
+                    concatenated([
+                      basePath,
+                      "chunks",
+                      langUrlPartSrc,
+                      attribute("data-url", el),
+                    ]),
+                  ),
                 ),
               }),
               chunkError,

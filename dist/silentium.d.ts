@@ -215,7 +215,7 @@ declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource:
  * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
-declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (guest: GuestType<TG[]>) => undefined;
+declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => SourceExecutorType<TG[]>;
 
 /**
  * Connects guest with source what give response faster than others

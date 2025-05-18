@@ -532,27 +532,26 @@ const sourceMap = (baseSource, targetSource) => {
   if (targetSource === void 0) {
     throw new Error("SourceMap didn't receive targetSource argument");
   }
-  return (guest) => {
-    value(
-      baseSource,
-      guestCast(guest, (theValue) => {
-        const sources = [];
-        theValue.forEach((val) => {
-          const source = targetSource.get(val);
-          subSource(source, baseSource);
-          sources.push(source);
-        });
-        value(
-          sourceAll(sources),
-          guestCast(guest, (v) => {
-            destroy(sources);
-            give(v, guest);
-          })
-        );
-      })
-    );
-    return void 0;
-  };
+  const result = sourceOf();
+  value(
+    baseSource,
+    patron((theValue) => {
+      const sources = [];
+      theValue.forEach((val) => {
+        const source = targetSource.get(val);
+        subSource(source, baseSource);
+        sources.push(source);
+      });
+      value(
+        sourceAll(sources),
+        patronOnce((v) => {
+          destroy(sources);
+          give(v, result);
+        })
+      );
+    })
+  );
+  return result.value;
 };
 
 const sourceRace = (sources) => {

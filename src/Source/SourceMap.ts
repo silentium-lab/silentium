@@ -1,7 +1,9 @@
-import { destroy, subSource } from "../Patron/PatronPool";
-import { give, GuestType } from "../Guest/Guest";
-import { guestCast } from "../Guest/GuestCast";
+import { patron } from "../Patron/Patron";
+import { patronOnce } from "../Patron/PatronOnce";
+import { sourceOf } from "../Source/SourceChangeable";
+import { give } from "../Guest/Guest";
 import { LazyType } from "../Lazy/Lazy";
+import { destroy, subSource } from "../Patron/PatronPool";
 import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 
@@ -20,25 +22,26 @@ export const sourceMap = <T, TG>(
     throw new Error("SourceMap didn't receive targetSource argument");
   }
 
-  return (guest: GuestType<TG[]>) => {
-    value(
-      baseSource,
-      guestCast(<GuestType>guest, (theValue) => {
-        const sources: SourceType[] = [];
-        theValue.forEach((val) => {
-          const source = targetSource.get(val);
-          subSource(source, baseSource);
-          sources.push(source);
-        });
-        value(
-          sourceAll(sources),
-          guestCast(guest, (v) => {
-            destroy(sources);
-            give(v, guest);
-          }),
-        );
-      }),
-    );
-    return this;
-  };
+  const result = sourceOf<TG[]>();
+
+  value(
+    baseSource,
+    patron((theValue) => {
+      const sources: SourceType[] = [];
+      theValue.forEach((val) => {
+        const source = targetSource.get(val);
+        subSource(source, baseSource);
+        sources.push(source);
+      });
+      value(
+        sourceAll(sources),
+        patronOnce((v) => {
+          destroy(sources);
+          give(v, result);
+        }),
+      );
+    }),
+  );
+
+  return result.value;
 };
