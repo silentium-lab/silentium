@@ -26,6 +26,7 @@ import {
   set,
   tick,
   memo,
+  lock,
 } from "silentium-components";
 import {
   attribute,
@@ -256,31 +257,34 @@ sourceSync(
         "chunk elements: ",
         sourceChain(templateContentSrc, nativeElements(".chunk")),
       ),
-      lazy((el) =>
-        html(
+      lazy((el) => {
+        return html(
           el,
           sourceAny([
             sourceChain(chunkError, "ChunkError!"),
             nativeFetched(
-              record({
-                method: "get",
-                url: nativeLog(
-                  "url chunk: ",
-                  memo(
-                    concatenated([
-                      basePath,
-                      "chunks",
-                      langUrlPartSrc,
-                      attribute("data-url", el),
-                    ]),
+              lock(
+                record({
+                  method: "get",
+                  url: nativeLog(
+                    "url chunk: ",
+                    memo(
+                      concatenated([
+                        basePath,
+                        "chunks",
+                        langUrlPartSrc,
+                        attribute("data-url", el),
+                      ]),
+                    ),
                   ),
-                ),
-              }),
+                }),
+                langUrlPartSrc,
+              ),
               chunkError,
             ),
           ]),
-        ),
-      ),
+        );
+      }),
     ),
   ),
 );
