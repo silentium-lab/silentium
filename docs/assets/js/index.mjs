@@ -9,6 +9,7 @@ import {
   sourceMemoOf,
   sourceOf,
   sourceSync,
+  sourceAll,
   value,
 } from "silentium";
 import {
@@ -26,7 +27,7 @@ import {
   set,
   tick,
   memo,
-  lock,
+  moment,
 } from "silentium-components";
 import {
   attribute,
@@ -80,6 +81,7 @@ nativeLog("lang:", window.langSrc);
 // Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
 nativeLog("basePath: ", basePath);
+
 const urlSrc = regexpReplaced(
   sourceAny([
     historyPoppedPage(window, sourceOf()),
@@ -90,20 +92,25 @@ const urlSrc = regexpReplaced(
       link(nativeElement("body"), ".dynamic-navigation"),
     ]),
   ]),
-  concatenated(["/", window.langSrc, "/"]),
-  "/",
+  concatenated(["#/", window.langSrc, "/"]),
+  "#/",
 );
 
 nativeLog("isDefaultLangSrc: ", isDefaultLangSrc);
 
+const langUrlPartSrc = branch(
+  isDefaultLangSrc,
+  "/",
+  concatenated(["/", window.langSrc, "/"]),
+);
+nativeLog("langUrlPartSrc:", langUrlPartSrc);
+
+const historyPageChangeSrc = sourceAll([urlSrc, window.langSrc]);
+nativeLog("historyPageChangeSrc: ", historyPageChangeSrc);
 nativeHistoryUrl(
   nativeLog(
-    "nativeHistoryUrl = ",
-    branch(
-      sourceChain(urlSrc, window.langSrc, isDefaultLangSrc),
-      urlSrc,
-      regexpReplaced(urlSrc, "#/", concatenated(["#/", window.langSrc, "/"])),
-    ),
+    "XX nativeHistoryUrl = ",
+    regexpReplaced(urlSrc, "#/", concatenated(["#", langUrlPartSrc])),
   ),
 );
 
@@ -198,13 +205,6 @@ nativeLog(
 
 const templateUrlSrc = deferred(urlSrc, layoutContentSrc);
 
-const langUrlPartSrc = branch(
-  isDefaultLangSrc,
-  "/",
-  concatenated(["/", window.langSrc, "/"]),
-);
-nativeLog("langUrlPartSrc:", langUrlPartSrc);
-
 const templateLangUrlPartSrc = deferred(langUrlPartSrc, layoutContentSrc);
 
 // Template content fetching
@@ -263,23 +263,18 @@ sourceSync(
           sourceAny([
             sourceChain(chunkError, "ChunkError!"),
             nativeFetched(
-              lock(
-                record({
-                  method: "get",
-                  url: nativeLog(
-                    "url chunk: ",
-                    memo(
-                      concatenated([
-                        basePath,
-                        "chunks",
-                        langUrlPartSrc,
-                        attribute("data-url", el),
-                      ]),
-                    ),
-                  ),
-                }),
-                langUrlPartSrc,
-              ),
+              record({
+                method: "get",
+                url: nativeLog(
+                  "url chunk: ",
+                  concatenated([
+                    basePath,
+                    "chunks",
+                    moment(langUrlPartSrc),
+                    attribute("data-url", el),
+                  ]),
+                ),
+              }),
               chunkError,
             ),
           ]),
