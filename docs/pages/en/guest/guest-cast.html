@@ -3,11 +3,11 @@
 </script>
 
 <div class="breadcrumbs mb-4">
-  <link-dynamic href="/">Главная</link-dynamic>
+<link-dynamic href="/">Home</link-dynamic>
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestCast</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">GuestCast class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestCast.ts"
@@ -19,39 +19,39 @@
     width="16"
     height="16"
   />
-  GuestCast на GitHub
+  GuestCast on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для наследования
-  <link-dynamic href="/terminology/introduction"    >
-    представления
+  Designed for inheritance
+  <link-dynamic href="/terminology/introduction" >
+views
   </link-dynamic>
-  посетителя (introduction). Принимает 2 аргумента, если первый посетитель
-  является -
-  <link-dynamic
+  the user (introduction). Accepts 2 arguments if the first user
+  is -
+<link-dynamic
     href="/terminology/guest"
-  >
-    гостем
+>
+guest
   </link-dynamic>
-  ('guest' или функция), то результирующий объект возьмет функциональность
-  второго посетителя и будет тоже гостем. Если первый посетитель является
+  ('guest' or function), then the resulting object will take the functionality
+  the second visitor will also be a guest. If the first visitor is
   <link-dynamic
     href="/terminology/patron"
-  >
-    патроном
+>
+patron
   </link-dynamic>
-  , то результирующий объект возьмет функциональность второго посетителя, но
-  будет так же патроном как и первый посетитель
+  , the resulting object will take on the functionality of the second visitor, but
+will be the same patron as the first visitor
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Это наследование полезно в случаях, когда нужно имея оригинальный посетитель,
-  приходящий в метод, наследовать его представление для уже существующих
-  посетителей, созданных по внутренней логике
+  This inheritance is useful in cases where you need to have an original visitor.,
+  coming to a method, inherit its representation for already existing ones
+  users created by internal logic
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
     give,
     patron,
@@ -111,7 +111,7 @@
   const renderResult = patron((value) => {
     const resultEl = document.querySelector(".guest-cast-result");
     if (resultEl) {
-      resultEl.textContent = `Результат = ${value}`;
+      resultEl.textContent = `Result = ${value}`;
     } else {
       removePatronFromPools(renderResult);
       totalSumGuests.forEach(removePatronFromPools);
@@ -124,9 +124,9 @@
   ]).sum(renderResult);
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-cast-result">Результат = 0</span>
+  <span class="guest-cast-result">Result = 0</span>/span>
 </div>
 <script type="module">
   import {
@@ -188,7 +188,7 @@
   const renderResult = patron((value) => {
     const resultEl = document.querySelector(".guest-cast-result");
     if (resultEl) {
-      resultEl.textContent = `Результат = ${value}`;
+      resultEl.textContent = `Result = ${value}`;
     } else {
       removePatronFromPools(renderResult);
       totalSumGuests.forEach(removePatronFromPools);
@@ -201,7 +201,7 @@
   ]).sum(renderResult);
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

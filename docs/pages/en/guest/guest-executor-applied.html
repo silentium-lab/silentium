@@ -3,11 +3,11 @@
 </script>
 
 <div class="breadcrumbs mb-4">
-  <link-dynamic href="/">Главная</link-dynamic>
+<link-dynamic href="/">Home</link-dynamic>
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestExecutorApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">gutexecutorapplied class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestExecutorApplied.ts"
@@ -19,15 +19,15 @@
     width="16"
     height="16"
   />
-  GuestExecutorApplied на GitHub
+  gutexecutorapplied on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Иногда нам нужно контролировать не значение, которое приходит гостю, а процесс передачи значения, например если мы хотим применить к гостю функцию debounce или функцию throttle, чтобы снизить количество срабатываний логики гостя.
+  Sometimes we need to control not the value that comes to the guest, but the process of transferring the value, for example, if we want to apply the debounce function or the throttle function to the guest in order to reduce the number of triggers of the guest logic.
 </p>
 
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4 w-full"
 ><code class="language-js">import { guest, guestExecutorApplied, sourceOf } from "silentium";
@@ -48,9 +48,9 @@ sourceOf(40).value(
   })
 );</code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Результат через 5 сек...</span>
+  <span class="guest-result">The result is in 5 seconds...</span>/span>
 </div>
 <script type="module">
   import { guest, guestExecutorApplied, sourceOf } from "silentium";

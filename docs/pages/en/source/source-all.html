@@ -2,7 +2,7 @@
   SourceAll
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceAll</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceAll class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/SourceAll.ts"
@@ -14,26 +14,26 @@
     width="16"
     height="16"
   />
-  SourceAll на GitHub
+  SourceAll on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для объединения результатов из нескольких
+  Designed to combine results from multiple
   <link-dynamic
     href="/terminology/source"
-  >
-    источников данных
-  </link-dynamic>
-  в один источник
+>
+data sources
+</link-dynamic>
+  into a single source
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезное поведение в случаях, когда есть множество источников данных, на
-  основе которых нужно принимать решение в момент, когда все источники отдадут
-  свои данные
+Useful behavior in cases where there are many data sources on
+the basis of which you need to make a decision at the moment when all sources give
+their data
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
     source,
     sourceAll
@@ -47,13 +47,13 @@ const all = sourceAll({
 all.value(({one, two}) => {
     document
         .querySelector('.guest-result')
-        .textContent = `Результат = ${one + two}`;
+        .textContent = `Result = ${one + two}`;
 });
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Результат = 0</span>
+  <span class="guest-result">Result = 0</span>/span>
 </div>
 <script type="module">
   import { give, Patron, SourceChangeable, GuestCast, sourceAll, source } from "silentium";
@@ -64,17 +64,17 @@ all.value(({one, two}) => {
   });
 
   all.value(({ one, two }) => {
-    document.querySelector(".guest-result").textContent = `Результат = ${
+    document.querySelector(".guest-result").textContent = `Result = ${
       one + two
     }`;
   });
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
-  Также предусмотрена возможность собрать результаты в массив а не объект.
+  It is also possible to collect the results in an array rather than an object.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   SourceChangeable,
   sourceAll,
@@ -87,13 +87,13 @@ const all = sourceAll([
 ]);
 
 all.valueArray((numbers) => {
-    document.querySelector('.guest-result-array').textContent = `Результат = ${numbers}`;
+    document.querySelector('.guest-result-array').textContent = `Result = ${numbers}`;
 });
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result-array">Результат = 0</span>
+  <span class="guest-result-array">Result = 0</span>/span>
 </div>
 <script type="module">
   import { give, Patron, SourceChangeable, GuestCast, SourceAll } from "silentium";
@@ -107,12 +107,12 @@ all.valueArray((numbers) => {
     all.valueArray((numbers) => {
       document.querySelector(
         ".guest-result-array"
-      ).textContent = `Результат = ${numbers}`;
+      ).textContent = `Result = ${numbers}`;
     });
   })();
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

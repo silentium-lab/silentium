@@ -2,7 +2,7 @@
   PatronPool
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс PatronPool</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">PatronPool class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Patron/PatronPool.ts"
@@ -14,32 +14,32 @@
     width="16"
     height="16"
   />
-  PatronPool на GitHub
+  PatronPool on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для хранения списка
+  Designed to store a list
   <link-dynamic
     href="/terminology/patron"
-  >
-    патронов
+>
+cartridges
   </link-dynamic>
-  , которым нужно передавать значения
+   to pass values to
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезно для организации списка подписчиков на обновление данных какого-то
+Useful for organizing a list of subscribers for updating data of some kind
   <link-dynamic
     href="/terminology/source"
-  >
-    источника
+>
+source
   </link-dynamic>
-  . Сам по себе класс PatronPool - достаточно низкоуровневый и желательно
-  использовать класс Source, который именно является источником значений (у
-  Source под капотом работает PatronPool)
+  . The PatronPool class itself is quite low-level and desirable.
+  use the Source class, which is exactly the source of the values (
+Source has a PatronPool running under the hood)
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
     PatronPool,
     patron
@@ -54,13 +54,13 @@ pool.add(patron((value) => {
     document.querySelector('.patron-pool-result2').textContent = value + ' 2';
 }));
 
-pool.give('Значение из пула');
+pool.give('Value from the pool');
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <div class="patron-pool-result1">Нет результата 1!</div>
-  <div class="patron-pool-result2">Нет результата 2!</div>
+  <div class="patron-pool-result1">There is no result 1!</div>
+  <div class="patron-pool-result2">No result 2!</div>
 </div>
 <script type="module">
   import { PatronPool, patron } from "silentium";
@@ -78,10 +78,10 @@ pool.give('Значение из пула');
     })
   );
 
-  pool.give("Значение из пула");
+  pool.give("Value from the pool");
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

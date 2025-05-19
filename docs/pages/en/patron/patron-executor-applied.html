@@ -2,7 +2,7 @@
   PatronExecutorApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс PatronExecutorApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">PatronExecutorApplied class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Patron/PatronExecutorApplied.ts"
@@ -14,18 +14,18 @@
     width="16"
     height="16"
   />
-  PatronExecutorApplied на GitHub
+  PatronExecutorApplied on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс PatronExecutorApplied под капотом использует GuestExecutorApplied, только является патроном.
+  The PatronExecutorApplied class under the hood uses gutexecutorapplied, but it is a patron.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезен когда мы работаем с источниками данных обладающими пулом патронов, которые могут присылать новые значения.
+Is useful when we work with data sources with a pool of cartridges that can send new values.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4"
 ><code class="language-js">import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
@@ -45,7 +45,7 @@ loadingSource.value(patron(guest));
 window.source.value(
   new PatronExecutorApplied(guest, (guestFn) => {
     return v => {
-      loadingSource.give('Загрузка...');
+      loadingSource.give('Loading...');
       setTimeout(() => {
         guestFn(v);
       }, 5000)
@@ -54,21 +54,21 @@ window.source.value(
 );
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Результат через 5 сек...</span>
+  <span class="guest-result">The result is in 5 seconds...</span>/span>
 </div>
 <button
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4"
-  onclick="source.give(40)"
+onclick="source.give(40)"
 >
-  Дать источнику значение 40
+Give the source a value of 40
 </button>
 <button
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4"
-  onclick="source.give(25)"
+onclick="source.give(25)"
 >
-  Дать источнику значение 25
+Give the source a value of 25
 </button>
 <script type="module">
   import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
@@ -88,7 +88,7 @@ window.source.value(
   window.source.value(
     new PatronExecutorApplied(guest, (guestFn) => {
       return v => {
-        loadingSource.give('Загрузка...');
+        loadingSource.give('Loading...');
         setTimeout(() => {
           guestFn(v);
         }, 5000)

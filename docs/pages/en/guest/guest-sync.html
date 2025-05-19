@@ -3,11 +3,11 @@
 </script>
 
 <div class="breadcrumbs mb-4">
-  <link-dynamic href="/">Главная</link-dynamic>
+<link-dynamic href="/">Home</link-dynamic>
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestSync</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">GuestSync class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestSync.ts"
@@ -19,52 +19,52 @@
     width="16"
     height="16"
   />
-  GuestSync на GitHub
+  GuestSync on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для синхронного возвращения значения из объекта
+  Designed to synchronously return a value from an object
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезно в случаях работы с синхронным(процедурным) кодом, когда нужно вынуть
-  значение из объекта и передать в виде чистых данных(nacked data). Использовать
-  этот класс часто не рекомендуется, наиболее вероятная область применения -
-  создание адаптеров с процедурным кодом
-</p>
+Useful when working with synchronous (procedural) code, when you need to remove
+a value from an object and transfer it as pure data (naked data). Use
+  This class is often not recommended. The most likely application area is the creation of adapters with procedural code
+
+
 
 <p class="text-gray-600 text-lg mb-4">
-  Значение внутри <b>GuestSync</b> мутируется! Стоит быть аккуратным при
-  использовании и учитывать это
+The value inside <b>GuestSync</b> is mutated! It is worth being careful when
+  use and take this into account
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4"
 ><code class="language-js">import { sourceChangeable, guestSync } from 'silentium';
 
-const source = sourceChangeable('Успешно установлено синхронно!');
+const source = sourceChangeable('Successfully installed synchronously!');
 const syncGuest = guestSync('');
 source.value(syncGuest);
 
 document.querySelector('.guest-result').textContent = syncGuest.value();
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Значение установится синхронно!</span>
+<span class="guest-result">The value will be set synchronously!</span>/span>
 </div>
 <script type="module">
   import { sourceChangeable, guestSync } from "silentium";
 
-  const source = sourceChangeable("Успешно установлено синхронно!");
+  const source = sourceChangeable("Successfully installed synchronously!");
   const syncGuest = guestSync('');
   source.value(syncGuest);
 
   document.querySelector(".guest-result").textContent = syncGuest.value();
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

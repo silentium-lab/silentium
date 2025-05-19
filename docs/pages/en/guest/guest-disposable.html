@@ -3,11 +3,11 @@
 </script>
 
 <div class="breadcrumbs mb-4">
-  <link-dynamic href="/">Главная</link-dynamic>
+<link-dynamic href="/">Home</link-dynamic>
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestDisposable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">GuestDisposable class</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestDisposable.ts"
@@ -19,58 +19,58 @@
     width="16"
     height="16"
   />
-  GuestDisposable на GitHub
+  GuestDisposable on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для динамического создания
+  Designed for dynamic creation
   <link-dynamic
     href="/terminology/guest"
-  >
-    гостя
+>
+guest
   </link-dynamic>
-  с функциональностью его удаления из
-  <link-dynamic
+  with the functionality of removing it from
+<link-dynamic
     href="/patron/patron-pool"
   >
-    пула патронов
+ammo pool
   </link-dynamic>
-  , на случай, если гость станет
+  , in case the guest becomes
   <link-dynamic
     href="/terminology/patron"
-  >
-    патроном
-  </link-dynamic>
+>
+patron
+</link-dynamic>
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезно в случаях, когда гость сделал свою работу и должен быть удален из пула
-  патронов, но в случае если гость стал патроном. У класса Patron есть метод
-  disposed, который берется от гостя. В логике PatronPool после каждой передачи
-  значения патрону идет проверка не нужно ли удалить этот патрон из пула вызовом
-  метода disposed
+Useful in cases where a guest has done his job and needs to be removed from the pool
+  cartridges, but only if the guest has become a patron. The Patron class has a method
+  disposed, which is taken from the guest. In the PatronPool logic, after each transfer
+of a value to a patron, it is checked whether it is necessary to remove this patron from the pool by calling
+  the disposed method
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Вместо класса GuestDisposable можно использовать функцию
-  <link-dynamic
+  Instead of the GuestDisposable class, you can use
+the <link-dynamic> function.
     href="/utils/remove-patron-from-pools"
   >
     removePatronFromPools
   </link-dynamic>
-  - для того чтобы удалить патрон из всех пулов. либо функцию
-  <link-dynamic
+  - in order to remove a cartridge from all pools. or
+the <link-dynamic> function
     href="/utils/is-patron-in-pools"
   >
     isPatronInPools
   </link-dynamic>
-  - проверяет есть ли патрон в каком-либо пуле
+  - checks if there is a cartridge in any bullet
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import { sourceChangeable, patron, guestDisposable } from "silentium";
 
-  const source = sourceChangeable("Один");
+  const source = sourceChangeable("One");
 
   source.value(
     patron(
@@ -79,29 +79,29 @@
           document.querySelector(".guest-result").textContent = value;
         },
         (value) => {
-          return value !== "Один";
+          return value !== "One";
         }
       )
     )
   );
 
   setTimeout(() => {
-    source.give("Два");
+    source.give("Two");
   });
 
   setTimeout(() => {
-    source.give("Три");
+    source.give("Three");
   }, 100);
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Нет значения</span>
+  <span class="guest-result">No value</span>/span>
 </div>
 <script type="module">
   import { sourceChangeable, patron, guestDisposable } from "silentium";
 
-  const source = sourceChangeable("Один");
+  const source = sourceChangeable("One");
 
   source.value(
     patron(
@@ -110,22 +110,22 @@
           document.querySelector(".guest-result").textContent = value;
         },
         (value) => {
-          return value !== "Один";
+          return value !== "One";
         }
       )
     )
   );
 
   setTimeout(() => {
-    source.give("Два");
+    source.give("Two");
   });
 
   setTimeout(() => {
-    source.give("Три");
+    source.give("Three");
   }, 100);
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a
