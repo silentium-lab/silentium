@@ -9,7 +9,6 @@ import {
   sourceMemoOf,
   sourceOf,
   sourceSync,
-  sourceAll,
   value,
 } from "silentium";
 import {
@@ -17,6 +16,8 @@ import {
   concatenated,
   deferred,
   loading,
+  memo,
+  moment,
   not,
   path,
   record,
@@ -26,8 +27,6 @@ import {
   router,
   set,
   tick,
-  memo,
-  moment,
 } from "silentium-components";
 import {
   attribute,
@@ -58,7 +57,7 @@ const nativeElements = elements.bind(
   window.document,
 );
 const nativeLog = log.bind(null, window.console);
-// const nativeLog = log.bind(null, () => {});
+
 const nativeFetched = fetched.bind(null, {
   fetch: window.fetch.bind(window),
 });
@@ -76,11 +75,8 @@ const isDefaultLangSrc = sourceApplied(
   (l) => l === defaultLang,
 );
 
-nativeLog("lang:", window.langSrc);
-
 // Url source
 const basePath = concatenated([window.location.origin, "/docs/"]);
-nativeLog("basePath: ", basePath);
 
 const urlSrc = regexpReplaced(
   sourceAny([
@@ -96,25 +92,15 @@ const urlSrc = regexpReplaced(
   "#/",
 );
 
-nativeLog("isDefaultLangSrc: ", isDefaultLangSrc);
-
 const langUrlPartSrc = branch(
   isDefaultLangSrc,
   "/",
   concatenated(["/", window.langSrc, "/"]),
 );
-nativeLog("langUrlPartSrc:", langUrlPartSrc);
 
-const historyPageChangeSrc = sourceAll([urlSrc, window.langSrc]);
-nativeLog("historyPageChangeSrc: ", historyPageChangeSrc);
 nativeHistoryUrl(
-  nativeLog(
-    "XX nativeHistoryUrl = ",
-    regexpReplaced(urlSrc, "#/", concatenated(["#", langUrlPartSrc])),
-  ),
+  regexpReplaced(urlSrc, "#/", concatenated(["#", langUrlPartSrc])),
 );
-
-nativeLog("url: ", urlSrc);
 
 // Loading main styles and remove loading class on body after styles loaded
 const bodyStylesReady = sourceChain(
@@ -198,26 +184,20 @@ const layoutContentSrc = nativeFetched(
 );
 html(nativeElement("article.container .page-area"), layoutContentSrc);
 
-nativeLog(
-  "layoutContentSrc",
-  sourceApplied(layoutContentSrc, (v) => v.length),
-);
-
 const templateUrlSrc = deferred(urlSrc, layoutContentSrc);
 
 const templateLangUrlPartSrc = deferred(langUrlPartSrc, layoutContentSrc);
 
 // Template content fetching
 const templateSrc = tick(router(templateUrlSrc, routesSrc, "404.html"));
-nativeLog("templateSrc: ", templateSrc);
+
 const templateRequestSrc = record({
   method: "get",
   url: memo(
     concatenated([basePath, "pages", templateLangUrlPartSrc, templateSrc]),
   ),
 });
-nativeLog("isDefaultLangSrc:", isDefaultLangSrc);
-nativeLog("templateRequestSrc: ", templateRequestSrc);
+
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 
 // Template loading visualization
@@ -241,45 +221,31 @@ value(
   patron((v) => (window.document.title = v)),
 );
 
-nativeLog(
-  "templateContentSrc",
-  sourceApplied(templateContentSrc, (v) => v.length),
-);
-
 // chunks rendering
 const chunkError = sourceOf();
 value(chunkError, patron(errors));
 sourceSync(
-  nativeLog(
-    "chunks: ",
-    sourceMap(
-      nativeLog(
-        "chunk elements: ",
-        sourceChain(templateContentSrc, nativeElements(".chunk")),
-      ),
-      lazy((el) => {
-        return html(
-          el,
-          sourceAny([
-            sourceChain(chunkError, "ChunkError!"),
-            nativeFetched(
-              record({
-                method: "get",
-                url: nativeLog(
-                  "url chunk: ",
-                  concatenated([
-                    basePath,
-                    "chunks",
-                    moment(langUrlPartSrc),
-                    attribute("data-url", el),
-                  ]),
-                ),
-              }),
-              chunkError,
-            ),
-          ]),
-        );
-      }),
-    ),
+  sourceMap(
+    sourceChain(templateContentSrc, nativeElements(".chunk")),
+    lazy((el) => {
+      return html(
+        el,
+        sourceAny([
+          sourceChain(chunkError, "ChunkError!"),
+          nativeFetched(
+            record({
+              method: "get",
+              url: concatenated([
+                basePath,
+                "chunks",
+                moment(langUrlPartSrc),
+                attribute("data-url", el),
+              ]),
+            }),
+            chunkError,
+          ),
+        ]),
+      );
+    }),
   ),
 );
