@@ -114,44 +114,13 @@ timer.value(
           <script type="module">
             import {
               patron,
-              sourceChangeable,
+              sourceOf,
               source,
               guestDisposable,
               isPatronInPools,
             } from "silentium";
 
-            const source = sourceChangeable(1);
-            const timer = source((guest) => {
-              source.value(guest);
-              const repeat = () => {
-                if (!isPatronInPools(guest)) {
-                  return;
-                }
-                source.value((value) => {
-                  setTimeout(() => {
-                    source.give(value + 1);
-                    repeat();
-                  }, 1000);
-                });
-              };
-              repeat();
-            });
-
-            timer.value(
-              patron(
-                guestDisposable(
-                  (value) => {
-                    const el = document.querySelector(".patron-result");
-                    if (el) {
-                      el.textContent = `Seconds have passed ${value}`;
-                    }
-                  },
-                  () => {
-                    return !document.querySelector(".patron-result");
-                  }
-                )
-              )
-            );
+            console.log('work!')
           </script>
 
           <div class="font-bold mt-8">See also</div>

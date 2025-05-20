@@ -254,3 +254,22 @@ sourceSync(
     }),
   ),
 );
+
+value(
+  templateContentSrc,
+  patron(() => {
+    const destination = window.document.querySelector(
+      "article.container .page-area",
+    );
+    destination.querySelectorAll("script").forEach((x) => {
+      if (x.getAttribute("type") === "text/template") {
+        return;
+      }
+
+      const sc = window.document.createElement("script");
+      sc.setAttribute("type", "module");
+      sc.appendChild(window.document.createTextNode(x.innerText));
+      destination.appendChild(sc);
+    });
+  }),
+);
