@@ -172,11 +172,16 @@ const layoutContentSrc = nativeFetched(
         ),
         branch(
           regexpMatched("/terminology/", urlSrc),
-          concatenated([basePath, "layouts/terminology.html"]),
+          concatenated([
+            basePath,
+            "layouts",
+            langUrlPartSrc,
+            "terminology.html",
+          ]),
         ),
         branch(
           regexpMatched("/examples/", urlSrc),
-          concatenated([basePath, "layouts/examples.html"]),
+          concatenated([basePath, "layouts", langUrlPartSrc, "examples.html"]),
         ),
       ]),
     ),

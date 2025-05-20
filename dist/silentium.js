@@ -235,6 +235,7 @@ const destroy = (initiators) => {
     const pool = poolsOfInitiators.get(initiator);
     pool?.destroy();
     const relatedInitiators = subSources.get(initiator);
+    subSources.delete(initiator);
     if (relatedInitiators) {
       destroy(relatedInitiators);
     }

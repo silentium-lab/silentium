@@ -55,3 +55,10 @@ pre {
 .text-left {
     text-align: left;
 }
+
+.lang {
+    height: 32px;
+    margin-right: 6px;
+    outline: none;
+    cursor: pointer;
+}
