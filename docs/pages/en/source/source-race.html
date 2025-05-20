@@ -2,7 +2,7 @@
   SourceRace
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceRace</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceRace</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/SourceRace.ts"
@@ -14,28 +14,28 @@
     width="16"
     height="16"
   />
-  SourceRace на GitHub
+  SourceRace on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Это
-  <link-dynamic href="/terminology/source">источник данных</link-dynamic>
-  предназначенный для получения данных только от первого ответившего источника.
+  This
+  <link-dynamic href="/terminology/source">data source</link-dynamic>
+  designed to receive data only from the first responding source.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Это поведение может быть очень полезным, чтобы избавиться от условий в
-  приложении. Благодаря классу SourceRace каждый источник данных может сам
-  решить должен ли он вообще отдавать какую-либо информацию или можно
-  промолчать.
+  This behavior can be very useful to get rid of the conditions in
+the application. Thanks to the SourceRace class, each data source can
+decide for itself whether it should give any information at all or not.
+  Keep quiet.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Для примера сделаем программу, которая будет умножать на 2 четные числа и на 3
-  нечетные
+  For example, let's make a program that will multiply by 2 even numbers and by 3
+  odd numbers
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   sourceMap,
   sourceRace,
@@ -78,9 +78,9 @@ guestMapped.value((v) => {
 });
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Результат = 0</span>
+  <span class="guest-result">Result = 0</span>/span>
 </div>
 <script type="module">
   import {
@@ -126,50 +126,48 @@ guestMapped.value((v) => {
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
-  В программе использованы классы и функции:
+The program uses classes and functions:
 </p>
 
 <ul>
   <li>
     <link-dynamic href="/terminology/source">SourceMap</link-dynamic>
-    - для применения источника на каждый элемент внутри итерируемого источника
+    - to apply a source to each element inside the iterated source
   </li>
   <li>
     <link-dynamic href="/terminology/source">SourceRace</link-dynamic>
-    - для оборачивания набора источников, которым подходит значение на текущем
-    цикле итерации.
+    - to wrap a set of sources that are suitable for the current value
+    the iteration cycle.
   </li>
   <li>
     <link-dynamic href="/terminology/source">Source</link-dynamic>
-    - для представления данных итерируемых
-  </li>
-  <li>
+    - to represent iterable data
+</li>
+<li>
     <link-dynamic href="/terminology/source">give</link-dynamic>
-    - для передачи данных источнику
+    - to transfer data to the source
   </li>
   <li>
     <link-dynamic href="/terminology/source">value</link-dynamic>
-    - для получения данных от источника
+    - to receive data from a source
   </li>
   <li>
     <link-dynamic href="/terminology/source">GuestCast</link-dynamic>
-    - для наследования представления гостя, возможно данные нужны патрону
+    - the patron may need the data to inherit the guest's representation.
   </li>
   <li>
     <link-dynamic href="/terminology/source">Private</link-dynamic>
-    - для объявления новой композиции
+    - to announce a new song
   </li>
 </ul>
 
 <p>&nbsp;</p>
 <p class="text-gray-600 text-lg mb-4">
-  Можно сказать, что код примера слишком сложный для такой простой задачи. Да
-  это правда, но пример показывает, что можно построить код таким образом, чтобы
-  классы или функции сами в зависимости от значения решали должны ли они
-  выполнять свою работу или нет
+  We can say that the example code is too complicated for such a simple task. Yes
+, this is true, but the example shows that it is possible to build the code in such a way that
+  the classes or functions themselves, depending on the value, decided whether they should
+do their job or not.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Эта возможность - принимать решение давать свой ответ или нет внутри объектов
-  - может быть очень ценной для инкапсуляции логики и переиспользования
-</p>
+  Thisty to decide whether to give your answer or not inside objects can be very valuable for logic encapsulation and reuse

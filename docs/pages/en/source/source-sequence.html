@@ -3,7 +3,7 @@
 </script>
 
 <h1 class="pb-3 text-xl font-semibold text-gray-600">
-  Класс SourceSequence
+  SourceSequence
 </h1>
 
 <a
@@ -16,23 +16,23 @@
     width="16"
     height="16"
   />
-  SourceSequence на GitHub
+  SourceSequence on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс <b>SourceSequence</b> работает так же как и
-  <link-dynamic href="/source/source-map">SourceMap</link-dynamic>
-  , но перебирает источники данных последовательно а не параллельно
+  The <b>SourceSequence</b> class works the same way as
+<link-dynamic href="/source/source-map">SourceMap</link-dynamic>
+  , but iterates through the data sources sequentially rather than in parallel
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Такое поведение - последовательного перебора элементов может быть полезно либо
-  в случаях перебора синхронных данных, что позволяет экономить память не
-  оборачивая каждый источник данных в лишние объекты, либо в случаях когда по
-  бизнес логике нужно сделать последовательный перебор источников данных.
+  This behavior of sequential iteration of elements can be useful either
+  in cases of iterating through synchronous data, which saves memory, do not
+  by wrapping each data source in redundant objects, or in cases where the software
+  business logic needs to make a sequential search of data sources.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import {
   source,
   patron,
@@ -90,14 +90,14 @@ tillResult.value(
   patron((v) => {
     document.querySelector(
       ".guest-result"
-    ).textContent = `Результат через ${v} сек.`;
+    ).textContent = `Result in ${v} sec.`;
   })
 );
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Result here</span>
+  <span class="guest-result">Result here</span>/span>
 </div>
 
 <script type="module">
@@ -158,7 +158,7 @@ tillResult.value(
     patron((v) => {
       document.querySelector(
         ".guest-result"
-      ).textContent = `Результат через ${v} сек.`;
-    })
+      ).textContent = `Result in ${v} sec.`;
+})
   );
 </script>

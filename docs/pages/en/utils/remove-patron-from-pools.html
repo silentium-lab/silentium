@@ -1,9 +1,9 @@
 <script class="page-title" type="text/template">
-  Функция removePatronFromPools
+  removePatronFromPools function
 </script>
 
 <h1 class="pb-3 text-xl font-semibold text-gray-600">
-  Функция removePatronFromPools
+removePatronFromPools function
 </h1>
 
 <a
@@ -16,34 +16,34 @@
     width="16"
     height="16"
   />
-  removePatronFromPools на GitHub
+  removePatronFromPools on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Позволяет удалить патрона из всех пулов. Полезно в случаях когда по бизнес
-  логике патрон больше не должен получать обновления
+  Allows you to remove a patron from all pools. It is useful in cases where the business
+  Logically, the patron should no longer receive updates.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Этого же эффекта - удаление патрона из пула можно добиться другими способами,
-  например если у вас есть доступ к объекту-пулу патронов, в этом случае можно
-  вызвать метод remove от пула
+  The same effect of removing a cartridge from the pool can be achieved in other ways.,
+  for example, if you have access to a bullet pool object, in this case you can
+  call the remove method from the pool
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Второй способ использовать класс GuestDisposable, который принимает 2
-  аргумента. Первый аргумент - это гость, который мы превращаем в
-  самоотменяемого гостя. Второй аргумент - это функция проверки нужно ли
-  отменять(удалять) патрон из пулов
+  The second way is to use the GuestDisposable class, which accepts 2
+  the argument. The first argument is the guest, which we turn into
+  a self-canceling guest. The second argument is a function to check whether it is necessary
+  cancel (delete) a patron from pools
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Третий способ - вы можете сделать собственный класс патрон, имплементировать
-  интерфейс GuestDisposableType - в котором описан метод disposed, в случаях,
-  когда этот метод возвращает true - патрон удаляется из пула
+  The third way is to create your own patron class, implement
+the GuestDisposableType interface, which describes the disposed method, in cases,
+  when this method returns true, the patron is removed from the pool.
 </p>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

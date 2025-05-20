@@ -2,7 +2,7 @@
   SourceChangeable
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceChangeable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceChangeable</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceChangeable.ts"
@@ -14,85 +14,85 @@
     width="16"
     height="16"
   />
-  SourceChangeable на GitHub
+  SourceChangeable on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Предназначен для представления данных в виде&nbsp;<span
+  Designed to represent data in the form of <span
     class="dynamic-navigation"
   >
     <a
       class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-white bg-slate-900"
       href="/terminology/source"
     >
-      источника
+source
     </a> </span
-  >, который умеет оповещать своих
-  <link-dynamic
+  >, who knows how to notify his
+<link-dynamic
     href="/terminology/patron"
-  >
-    патронов
+>
+cartridges
   </link-dynamic>
-  об изменении данных
+  about data changes
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Полезно в случаях, когда есть какие-то данные, которые могут изменяться со
-  временем. В этом случае данные полезно обернуть в SourceChangeable, чтобы посетители
-  данных могли сами решить нужно их уведомлять или не нужно и они сами себя
-  удалят из PatronPool внутри SourceChangeable
+  It is useful in cases where there is some data that may change over
+time. In this case, it is useful to wrap the data in SourceChangeable so
+that data visitors can decide for themselves whether they need to be notified or not and they themselves
+  removed from PatronPool inside SourceChangeable
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre class="mb-4"><code class="language-js">import { sourceChangeable, patron } from "silentium";
 
-const source = sourceChangeable("один");
+const source = sourceChangeable("one");
 source.value((value) => {
   document.querySelector(
     ".source-result-1"
-  ).textContent = `Результат гостя = ${value}`;
+  ).textContent = `Guest result = ${value}`;
 });
 source.value(
   patron((value) => {
     document.querySelector(
       ".source-result-2"
-    ).textContent = `Результат патрона = ${value}`;
-  })
+    ).textContent = `Cartridge result = ${value}`;
+})
 );
 
 setTimeout(() => {
-  source.give("два");
+source.give("two");
 });
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <div class="source-result-1">Нет результата!</div>
-  <div class="source-result-2">Нет результата!</div>
+  <div class="source-result-1">No result!</div>
+  <div class="source-result-2">No result!</div>
 </div>
 <script type="module">
   import { sourceChangeable, patron } from "silentium";
 
-  const source = sourceChangeable("один");
+  const source = sourceChangeable("one");
   source.value((value) => {
     document.querySelector(
       ".source-result-1"
-    ).textContent = `Результат гостя = ${value}`;
-  });
+    ).textContent = `Guest result = ${value}`;
+});
   source.value(
     patron((value) => {
       document.querySelector(
         ".source-result-2"
-      ).textContent = `Результат патрона = ${value}`;
+      ).textContent = `Cartridge result = ${value}`;
     })
   );
 
   setTimeout(() => {
-    source.give("два");
+    source.give("two");
   });
 </script>
 
-<div class="font-bold mt-8">Смотрите также</div>
+<div class="font-bold mt-8">See also</div>
 
 <p class="text-gray-600 text-lg mb-4 dynamic-navigation">
   <a

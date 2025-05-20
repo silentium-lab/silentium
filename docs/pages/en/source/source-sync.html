@@ -3,7 +3,7 @@
 </script>
 
 <h1 class="pb-3 text-xl font-semibold text-gray-600">
-    Класс SourceSync
+  SourceSync
 </h1>
 
 <a
@@ -16,34 +16,34 @@
     width="16"
     height="16"
   />
-  SourceSync на GitHub
+  SourceSync on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    Класс SourceSync позволяет построить композицию классов и синхронно прочитать полученное значение.
-    Под капотом класс основан на <link-dynamic href="/guest/guest-sync">GuestSync</link-dynamic>. Класс будет полезен в логике тестов, чтобы проверять композиции сразу синхронно в тесте.
+    The SourceSync class allows you to build a composition of classes and synchronously read the received value.
+    Under the hood, the class is based on <link-dynamic href="/guest/guest-sync">GuestSync</link-dynamic>. The class will be useful in the logic of tests to check compositions immediately synchronously in the test.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-    Если сравнивать пример из документации GuestSync c примером ниже, то видно что SourceSync более лаконичный.
+If we compare the example from the GuestSync documentation with the example below, we can see that SourceSync is more concise.
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4"
 ><code class="language-js">import { sourceChangeable, sourceSync } from "silentium";
 
-const syncSource = sourceSync(sourceChangeable("Успешно установлено синхронно!"));
+const syncSource = SourceSync(sourceChangeable("Successfully installed synchronously!"));
 document.querySelector(".guest-result").textContent = syncSource.syncValue();
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Значение установится синхронно!</span>
+<span class="guest-result">The value will be set synchronously!</span>/span>
 </div>
 <script type="module">
   import { sourceChangeable, sourceSync } from "silentium";
 
-  const syncSource = sourceSync(sourceChangeable("Успешно установлено синхронно!"));
+  const syncSource = SourceSync(sourceChangeable("Successfully installed synchronously!"));
   document.querySelector(".guest-result").textContent = syncSource.syncValue();
 </script>

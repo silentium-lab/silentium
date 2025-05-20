@@ -2,7 +2,7 @@
   SourceMap
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceMap</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceMap</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceMap.ts"
@@ -14,20 +14,20 @@
     width="16"
     height="16"
   />
-  SourceMap на GitHub
+  SourceMap on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс <b>SourceMap</b> нужен в случаях обработки множества значений, через
-  создание на основе этих значений объектов -
-  <link-dynamic href="/terminology/source">источников данных</link-dynamic>.
-  Например у нас есть класс - результат умножения числа на 2. SourceMap
-  позволит применить этот класс к какому-то итерируемому источнику данных,
-  преобразовывая каждое значение в новое, в результате получим новый итерируемый
-  источник данных, в котором все числа умножены на 2.
-</p>
+  The <b>SourceMap</b> class is needed when processing multiple values, via
+  The creation of objects based on these values
+is <link-dynamic href="/terminology/source">data sources</link-dynamic>.
+  For example, we have a class that is the result of multiplying a number by 2. SourceMap
+  allows you to apply this class to some iterable data source,
+converting each value to a new one. As a result, we get a new iterable
+data source in which all the numbers are multiplied by 2
+.
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
 <pre
   class="mb-4"
 ><code class="language-js">import { Source, sourceChangeable, guestCast, sourceMap, lazyClass, give } from "silentium";
@@ -55,9 +55,9 @@ guestMapped.value((v) => {
 });
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Result here</span>
+  <span class="guest-result">Result here</span>/span>
 </div>
 
 <script type="module">
@@ -87,12 +87,12 @@ guestMapped.value((v) => {
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
-  Так же можно передавать итерируемый источник источников данных. Благодаря
-  этому можно параллельно вычислить общий результат нескольких источников.
-  Пример использования ниже
+  You can also transfer an iterable source of data sources. Thanks to
+  This can be used to calculate the total result of several sources in parallel.
+  Usage example below
 </p>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Пример 2.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Example 2.</p>
 <pre class="mb-4"><code class="language-js">import {
   source,
   sourceChangeable,
@@ -141,9 +141,9 @@ guestMapped.value((v) => {
 })();
 </code></pre>
 
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 2.</p>
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 2.</p>
 <div class="example mb-4">
-  <span class="guest-result-2">Все результаты через 8 сек.</span>
+<span class="guest-result-2">All results in 8 seconds.</span>/span>
 </div>
 
 <script type="module">
