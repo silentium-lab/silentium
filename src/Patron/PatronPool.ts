@@ -1,6 +1,7 @@
 import { source, SourceType } from "../Source/Source";
 import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
+import { DestroyableType } from "../Source/SourceDestroyable";
 
 const poolSets = new Map<PoolType, Set<GuestObjectType>>();
 const poolsOfInitiators = new Map<SourceType, PoolType>();
@@ -14,8 +15,9 @@ const lastPatronPoolsStatistic = {
   poolsCount: 0,
   patronsCount: 0,
 };
+
 /**
- * Helps to debug application and see is it have problems with frozen pools
+ * Helps debug the application and detect issues with frozen pools
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
  */
 export const patronPoolsStatistic = source<{
@@ -43,11 +45,6 @@ export const subSource = <T>(
   subSource: SourceType,
   source: SourceType<T>,
 ): SourceType<T> => {
-  // sub sources can appear only on SourceObjectType
-  if (source !== null && typeof source !== "object") {
-    return source;
-  }
-
   if (!subSources.has(source)) {
     subSources.set(source, []);
   }
@@ -71,17 +68,33 @@ export const subSourceMany = <T>(
 };
 
 /**
+ * Helps to check what given source is destroyable
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-destroyable
+ */
+export const isDestroyable = (s: unknown): s is DestroyableType => {
+  return (
+    typeof s === "object" &&
+    s !== null &&
+    "destroy" in s &&
+    typeof s.destroy === "function"
+  );
+};
+
+/**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
-export const destroy = (initiators: SourceType[]) => {
+export const destroy = (...initiators: SourceType[]) => {
   initiators.forEach((initiator) => {
+    if (isDestroyable(initiator)) {
+      initiator.destroy();
+    }
     const pool = poolsOfInitiators.get(initiator);
     pool?.destroy();
-    const relatedInitiators = subSources.get(initiator);
+    const foundSubSources = subSources.get(initiator);
     subSources.delete(initiator);
-    if (relatedInitiators) {
-      destroy(relatedInitiators);
+    if (foundSubSources) {
+      destroy(...foundSubSources);
     }
   });
 };

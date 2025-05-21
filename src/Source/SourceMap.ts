@@ -36,7 +36,7 @@ export const sourceMap = <T, TG>(
       value(
         sourceAll(sources),
         patronOnce((v) => {
-          destroy(sources);
+          destroy(...sources);
           give(v, result);
         }),
       );

@@ -27,7 +27,7 @@ test("PatronPool.subSourceMany.test", () => {
   expect(statistic.syncValue().poolsCount).toBe(2);
 
   // sub sources will be destroyed together with src
-  destroy([src]);
+  destroy(src);
 
   expect(statistic.syncValue().patronsCount).toBe(0);
   expect(statistic.syncValue().poolsCount).toBe(0);

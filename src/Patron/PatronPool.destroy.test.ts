@@ -20,7 +20,7 @@ test("PatronPool.destroy.test", () => {
   expect(statistic.syncValue().patronsCount).toBe(1);
   expect(statistic.syncValue().poolsCount).toBe(1);
 
-  destroy([src]);
+  destroy(src);
 
   expect(statistic.syncValue().patronsCount).toBe(0);
   expect(statistic.syncValue().poolsCount).toBe(0);

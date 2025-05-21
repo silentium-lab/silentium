@@ -6,11 +6,13 @@ import { lazyClass } from "../Lazy/LazyClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic, subSource } from "../Patron/PatronPool";
 import { sourceOf } from "../Source/SourceChangeable";
 
 class X2 implements SourceObjectType<number> {
-  public constructor(private baseNumber: SourceType<number>) {}
+  public constructor(private baseNumber: SourceType<number>) {
+    subSource(this, baseNumber);
+  }
 
   public value(guest: GuestType<number>) {
     value(
@@ -33,9 +35,9 @@ test("SourceMap._destroy.test", () => {
 
   expect(guest.value().join()).toBe("2,4,6,18");
 
-  destroy([srcMapped]);
+  destroy(srcMapped);
   destroy(sources);
 
   expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(1);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

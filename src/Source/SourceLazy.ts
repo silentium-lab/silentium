@@ -33,7 +33,7 @@ export const sourceLazy = <T>(
     value(
       resetSrc,
       patron(() => {
-        destroy([instance]);
+        destroy(instance);
         instance = null;
       }),
     );

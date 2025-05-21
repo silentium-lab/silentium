@@ -1,6 +1,6 @@
 import { give, GuestType } from "../Guest/Guest";
 
-export type SourceExecutorType<T> = (guest: GuestType<T>) => unknown;
+export type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
 
 export interface SourceObjectType<T> {
   value: SourceExecutorType<T>;
