@@ -66,24 +66,33 @@ This behavior is useful in cases where you need to turn from just a visitor (gue
 </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-          <pre class="mb-4"><code class="language-js">import {
+          <pre class="mb-4"><code class="language-js listing-1"></code></pre>
+
+          <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
+          <div class="example mb-4">
+            <span class="patron-result">Result here</span>
+          </div>
+          <script type="module" data-listing=".listing-1">
+import {
   patron,
-  sourceChangeable,
+  patronOnce,
+  sourceOf,
+  value,
   source,
   guestDisposable,
   isPatronInPools,
 } from "silentium";
 
-const source = sourceChangeable(1);
+const src = sourceOf(1);
 const timer = source((guest) => {
-  source.value(guest);
+  src.value(guest);
   const repeat = () => {
     if (!isPatronInPools(guest)) {
       return;
     }
-    source.value((value) => {
+    src.value((value) => {
       setTimeout(() => {
-        source.give(value + 1);
+        src.give(value + 1);
         repeat();
       }, 1000);
     });
@@ -91,13 +100,14 @@ const timer = source((guest) => {
   repeat();
 });
 
-timer.value(
+value(
+  timer,
   patron(
     guestDisposable(
       (value) => {
         const el = document.querySelector(".patron-result");
         if (el) {
-          el.textContent = `Seconds have passed ${value}`;
+          el.textContent = `Секунд прошло ${value}`;
         }
       },
       () => {
@@ -105,22 +115,11 @@ timer.value(
       }
     )
   )
-);</code></pre>
+);
 
-          <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
-          <div class="example mb-4">
-            <span class="patron-result">Result here</span>
-          </div>
-          <script type="module">
-            import {
-              patron,
-              sourceOf,
-              source,
-              guestDisposable,
-              isPatronInPools,
-            } from "silentium";
-
-            console.log('work!')
+value(window.urlChanged, patronOnce(() => {
+  console.log('destroy in patron!');
+}))
           </script>
 
           <div class="font-bold mt-8">See also</div>
