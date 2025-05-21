@@ -79,8 +79,8 @@ import {
   sourceOf,
   value,
   guestDisposable,
-  isPatronInPools,
   sourceDestroyable,
+  destroy,
 } from "silentium";
 
 const src = sourceOf(1);
@@ -88,9 +88,6 @@ const timer = sourceDestroyable((guest) => {
   let lastTimerHead = null;
   src.value(guest);
   const repeat = () => {
-    if (!isPatronInPools(guest)) {
-      return;
-    }
     src.value((value) => {
       lastTimerHead = setTimeout(() => {
         src.give(value + 1);
@@ -109,23 +106,18 @@ const timer = sourceDestroyable((guest) => {
 value(
   timer,
   patron(
-    guestDisposable(
-      (value) => {
-        const el = document.querySelector(".patron-result");
-        if (el) {
-          el.textContent = `Секунд прошло ${value}`;
-        }
-      },
-      () => {
-        return !document.querySelector(".patron-result");
+    (value) => {
+      const el = document.querySelector(".patron-result");
+      if (el) {
+        el.textContent = `Секунд прошло ${value}`;
       }
-    )
+    },
   )
 );
 
 value(window.urlChanged, patronOnce(() => {
-  console.log('destroy in patron!');
-}))
+  destroy(src, timer)
+}));
           </script>
 
           <div class="font-bold mt-8">See also</div>
