@@ -78,26 +78,32 @@ import {
   patronOnce,
   sourceOf,
   value,
-  source,
   guestDisposable,
   isPatronInPools,
+  sourceDestroyable,
 } from "silentium";
 
 const src = sourceOf(1);
-const timer = source((guest) => {
+const timer = sourceDestroyable((guest) => {
+  let lastTimerHead = null;
   src.value(guest);
   const repeat = () => {
     if (!isPatronInPools(guest)) {
       return;
     }
     src.value((value) => {
-      setTimeout(() => {
+      lastTimerHead = setTimeout(() => {
         src.give(value + 1);
         repeat();
       }, 1000);
     });
   };
   repeat();
+  return () => {
+    if (lastTimerHead !== null) {
+      clearTimeout(lastTimerHead);
+    }
+  }
 });
 
 value(

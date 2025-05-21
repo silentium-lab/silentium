@@ -26,5 +26,6 @@ export * from "./Source/SourceCombined";
 export * from "./Source/SourceResettable";
 export * from "./Source/SourceAny";
 export * from "./Source/SourceLazy";
+export * from "./Source/SourceDestroyable";
 export * from "./Lazy/LazyClass";
 export * from "./Lazy/Lazy";
