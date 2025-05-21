@@ -1,4 +1,6 @@
-type SourceExecutorType<T> = (guest: GuestType<T>) => unknown;
+import { DestroyableType as DestroyableType$1 } from 'src/Source/SourceDestroyable';
+
+type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
 interface SourceObjectType<T> {
     value: SourceExecutorType<T>;
 }
@@ -106,14 +108,19 @@ declare const patron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T>;
  */
 declare const patronOnce: <T>(baseGuest: GuestType<T>) => GuestDisposableType<T>;
 
+type DestructorType = () => void;
+interface DestroyableType {
+    destroy: DestructorType;
+}
+
 /**
- * Helps to debug application and see is it have problems with frozen pools
+ * Helps debug the application and detect issues with frozen pools
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
  */
 declare const patronPoolsStatistic: SourceExecutorType<{
     poolsCount: number;
     patronsCount: number;
-}>;
+}, unknown>;
 /**
  * Helps to connect source and subsource, needed to destroy all sub sources
  * when base source will be destroyed
@@ -125,10 +132,15 @@ declare const subSource: <T>(subSource: SourceType, source: SourceType<T>) => So
  */
 declare const subSourceMany: <T>(subSourceSrc: SourceType<T>, sourcesSrc: SourceType[]) => SourceType<T>;
 /**
+ * Helps to check what given source is destroyable
+ * @url https://silentium-lab.github.io/silentium/#/utils/is-destroyable
+ */
+declare const isDestroyable: (s: unknown) => s is DestroyableType;
+/**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
-declare const destroy: (initiators: SourceType[]) => void;
+declare const destroy: (...initiators: SourceType[]) => void;
 /**
  * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
@@ -194,7 +206,7 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceType<ExtractTypesFromArray<T>>;
+declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType$1;
 
 interface LazyType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
@@ -215,7 +227,7 @@ declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource:
  * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
-declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => SourceExecutorType<TG[]>;
+declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => SourceExecutorType<TG[], unknown>;
 
 /**
  * Connects guest with source what give response faster than others
@@ -314,4 +326,4 @@ interface Prototyped<T> {
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
