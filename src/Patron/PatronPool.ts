@@ -124,6 +124,7 @@ export const removePatronFromPools = (patron: GuestObjectType) => {
   poolSets.forEach((pool) => {
     pool.delete(patron);
   });
+  notifyPoolsChange();
 };
 
 /**

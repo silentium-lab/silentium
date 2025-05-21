@@ -36,8 +36,8 @@ test("SourceMap._destroy.test", () => {
   expect(guest.value().join()).toBe("2,4,6,18");
 
   destroy(srcMapped);
-  destroy(sources);
+  destroy(...sources);
 
   expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(1);
 });

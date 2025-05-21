@@ -21,7 +21,8 @@ test("SourceAll._destroyed.test", () => {
 
   destroy(all);
   destroy(allSync);
-
   expect(statistic.syncValue().patronsCount).toBe(0);
+
+  destroy(src1, src2);
   expect(statistic.syncValue().poolsCount).toBe(0);
 });
