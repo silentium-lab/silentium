@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.34](https://github.com/silentium-lab/silentium/compare/v0.0.33...v0.0.34) (2025-05-21)
+
+
+### Features
+
+* **42-issue:** scripts alive on new loaded page ([10cd96e](https://github.com/silentium-lab/silentium/commit/10cd96e771dc25fdf7590b6fabc04e827da1c410))
+* **42-issue:** work on scripts alive ([8df2a86](https://github.com/silentium-lab/silentium/commit/8df2a86099ba76c08e299b80168a89866982c893))
+* **43-issue:** destroyable logic done ([41affc2](https://github.com/silentium-lab/silentium/commit/41affc23949e0c73de3f6169cdfca509b9f9b49e))
+* **43-issue:** work on destuct of sources ([0bec3f7](https://github.com/silentium-lab/silentium/commit/0bec3f70e0c768f9237d7dda091da9561e402fcf))
+* **main:** docs improovements ([144530f](https://github.com/silentium-lab/silentium/commit/144530f0b58e96eec9b8f27c02a980bb56240672))
+* **main:** en переводы ([a70dfde](https://github.com/silentium-lab/silentium/commit/a70dfde53000bb6a23c5a64ca121479f6611594f))
+* **main:** fixes for documentation ([916d92f](https://github.com/silentium-lab/silentium/commit/916d92f144138c0c6a2c79815a2a7d8305420d63))
+* **main:** layout done ([8ab01de](https://github.com/silentium-lab/silentium/commit/8ab01deeed0293a005f4332dd864a98055a77c7d))
+* **main:** remove native logs calls ([8533ab7](https://github.com/silentium-lab/silentium/commit/8533ab701821e99f3353b845386760c825e4f32c))
+* **main:** translation to en ([da15be7](https://github.com/silentium-lab/silentium/commit/da15be71e7867a1d909e588ba2fe18ba6cc49eac))
+* **main:** translation to en ([792cdc1](https://github.com/silentium-lab/silentium/commit/792cdc1b157bb9826bbbce59e7c8ea8083513eff))
+* **main:** work on documentation ([ac8ba84](https://github.com/silentium-lab/silentium/commit/ac8ba847da1fd9373099afb729766b0e6ea9af65))
+* **main:** work on en translation ([2282bba](https://github.com/silentium-lab/silentium/commit/2282bbaf35c87bab3c9dcb4f2da93de18a03287b))
+
+
+### Bug Fixes
+
+* **main:** fix lang ([170c44b](https://github.com/silentium-lab/silentium/commit/170c44b3b76a3037c291a79142b25aa5f79dba97))
+* **main:** fix source map ([3eb1342](https://github.com/silentium-lab/silentium/commit/3eb1342f8b0e62c48178b7d31084e5e05caa6ec4))
+* **main:** remove initiator from sub sources ([0d1b7a7](https://github.com/silentium-lab/silentium/commit/0d1b7a7178b009c1d9aa5ca9a8c5e31422f31a5f))
+
 ### [0.0.33](https://github.com/silentium-lab/silentium/compare/v0.0.32...v0.0.33) (2025-05-11)
 
 
