@@ -27,6 +27,8 @@ import {
   router,
   set,
   tick,
+  shot,
+  onlyChanged,
 } from "silentium-components";
 import {
   attribute,
@@ -204,6 +206,7 @@ const templateRequestSrc = record({
 });
 
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
+window.urlChanged = shot(urlSrc, onlyChanged(urlSrc));
 
 // Template loading visualization
 const templateContentLoadingSrc = loading(urlSrc, layoutContentSrc);
@@ -253,4 +256,36 @@ sourceSync(
       );
     }),
   ),
+);
+
+// scripts alive on new loaded page
+value(
+  templateContentSrc,
+  patron(() => {
+    window.setTimeout(() => {
+      window.hljs.highlightAll();
+    }, 0);
+    const destination = window.document.querySelector(
+      "article.container .page-area",
+    );
+    destination.querySelectorAll("script").forEach((x) => {
+      if (x.getAttribute("type") === "text/template") {
+        return;
+      }
+
+      if (x.getAttribute("data-listing")) {
+        const listingEl = window.document.querySelector(
+          x.getAttribute("data-listing"),
+        );
+        if (listingEl) {
+          listingEl.textContent = x.innerText.trim();
+        }
+      }
+
+      const sc = window.document.createElement("script");
+      sc.setAttribute("type", "module");
+      sc.appendChild(window.document.createTextNode(x.innerText));
+      destination.appendChild(sc);
+    });
+  }),
 );
