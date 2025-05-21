@@ -215,9 +215,6 @@ const patronPoolsStatistic = source((g) => {
   });
 });
 const subSource = (subSource2, source2) => {
-  if (source2 !== null && typeof source2 !== "object") {
-    return source2;
-  }
   if (!subSources.has(source2)) {
     subSources.set(source2, []);
   }
@@ -230,14 +227,20 @@ const subSourceMany = (subSourceSrc, sourcesSrc) => {
   });
   return subSourceSrc;
 };
-const destroy = (initiators) => {
+const isDestroyable = (s) => {
+  return typeof s === "object" && s !== null && "destroy" in s && typeof s.destroy === "function";
+};
+const destroy = (...initiators) => {
   initiators.forEach((initiator) => {
+    if (isDestroyable(initiator)) {
+      initiator.destroy();
+    }
     const pool = poolsOfInitiators.get(initiator);
     pool?.destroy();
-    const relatedInitiators = subSources.get(initiator);
+    const foundSubSources = subSources.get(initiator);
     subSources.delete(initiator);
-    if (relatedInitiators) {
-      destroy(relatedInitiators);
+    if (foundSubSources) {
+      destroy(...foundSubSources);
     }
   });
 };
@@ -257,6 +260,7 @@ const removePatronFromPools = (patron) => {
   poolSets.forEach((pool) => {
     pool.delete(patron);
   });
+  notifyPoolsChange();
 };
 const isPatronInPools = (patron) => {
   if (patron === void 0) {
@@ -364,7 +368,7 @@ const patronExecutorApplied = (baseGuest, applier) => {
 const sourceSync = (baseSource, defaultValue) => {
   const syncGuest = guestSync(defaultValue);
   value(baseSource, patron(syncGuest));
-  return {
+  const result = {
     value(guest) {
       value(baseSource, guest);
       return this;
@@ -377,6 +381,8 @@ const sourceSync = (baseSource, defaultValue) => {
       }
     }
   };
+  subSource(result, baseSource);
+  return result;
 };
 
 const sourceIsEmpty = (source) => source === void 0 || source === null;
@@ -439,35 +445,40 @@ const sourceAll = (sources) => {
     return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
   };
   const theAll = sourceOf({});
+  const patrons = [];
   Object.entries(sources).forEach(([key, source]) => {
     subSource(theAll, source);
     keysKnown.add(key);
-    value(
-      source,
-      patron((v) => {
-        theAll.value(
-          guest((all) => {
-            keysFilled.add(key);
-            const lastAll = {
-              ...all,
-              [key]: v
-            };
-            theAll.give(lastAll);
-          })
-        );
-      })
-    );
-  });
-  return (guest2) => {
-    value((g) => {
+    const keyPatron = patron((v) => {
       theAll.value(
-        guestCast(g, (value2) => {
-          if (isAllFilled()) {
-            give(Object.values(value2), g);
-          }
+        guest((all) => {
+          keysFilled.add(key);
+          const lastAll = {
+            ...all,
+            [key]: v
+          };
+          theAll.give(lastAll);
         })
       );
-    }, guest2);
+    });
+    patrons.push(keyPatron);
+    value(source, keyPatron);
+  });
+  return {
+    value(guest2) {
+      const mbPatron = guestCast(guest2, (value2) => {
+        if (isAllFilled()) {
+          give(Object.values(value2), guest2);
+        }
+      });
+      patrons.push(mbPatron);
+      theAll.value(mbPatron);
+    },
+    destroy() {
+      patrons.forEach((patron2) => {
+        removePatronFromPools(patron2);
+      });
+    }
   };
 };
 
@@ -544,7 +555,7 @@ const sourceMap = (baseSource, targetSource) => {
       value(
         sourceAll(sources),
         patronOnce((v) => {
-          destroy(sources);
+          destroy(...sources);
           give(v, result);
         })
       );
@@ -714,7 +725,7 @@ const sourceLazy = (lazySrc, args, resetSrc) => {
     value(
       resetSrc,
       patron(() => {
-        destroy([instance]);
+        destroy(instance);
         instance = null;
       })
     );
@@ -747,5 +758,5 @@ const lazy = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.js.map
