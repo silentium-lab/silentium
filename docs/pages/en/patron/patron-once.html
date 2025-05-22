@@ -44,47 +44,30 @@ data source
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patronOnce } from "silentium";
-
-const source = sourceChangeable("once");
-source.value(
-patronOnce((value) => {
-    document.querySelector(
-      ".patron-once-result"
-    ).textContent = `The result is ${value}`;
-})
-);
-
-setTimeout(() => {
-source.give("twice");
-});
-setTimeout(() => {
-source.give("three times");
-});
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="patron-once-result">There is no result!</span>/span>
+  <span class="patron-once-result">There is no result!</span>
 </div>
-<script type="module">
-  import { sourceChangeable, patronOnce } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceOf, patronOnce } from "silentium";
 
-  const source = sourceChangeable("once");
-  source.value(
-    patronOnce((value) => {
-      document.querySelector(
-        ".patron-once-result"
-      ).textContent = `Result of ${value}`;
-    })
-  );
+const source = sourceOf("once");
+source.value(
+  patronOnce((value) => {
+    document.querySelector(
+      ".patron-once-result"
+    ).textContent = `Result of ${value}`;
+  })
+);
 
-  setTimeout(() => {
-    source.give("twice");
-  });
-  setTimeout(() => {
-    source.give("three times");
-  });
+setTimeout(() => {
+  source.give("twice");
+});
+setTimeout(() => {
+  source.give("three times");
+});
 </script>
 
 <div class="font-bold mt-8">See also</div>

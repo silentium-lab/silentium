@@ -20,22 +20,7 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { guest, PatronApplied, sourceChangeable } from "silentium";
-
-window.source = sourceChangeable(20);
-
-const g = guest((value) => {
-  document.querySelector(
-    ".guest-result"
-  ).textContent = `Double value is ${value}`;
-});
-
-window.source.value(
-  new PatronApplied(g, (x) => x * 2)
-);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
@@ -53,18 +38,18 @@ window.source.value(
 >
   Дать источнику значение 25
 </button>
-<script type="module">
-  import { guest, PatronApplied, sourceChangeable } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { guest, patronApplied, sourceOf } from "silentium";
 
-  window.source = sourceChangeable(20);
+window.source = sourceOf(20);
 
-  const g = guest((value) => {
-    document.querySelector(
-      ".guest-result"
-    ).textContent = `Double value is ${value}`;
-  });
+const g = guest((value) => {
+  document.querySelector(
+    ".guest-result"
+  ).textContent = `Double value is ${value}`;
+});
 
-  window.source.value(
-    new PatronApplied(g, (x) => x * 2)
-  );
+window.source.value(
+  patronApplied(g, (x) => x * 2)
+);
 </script>

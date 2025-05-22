@@ -40,45 +40,30 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import {
-    PatronPool,
-    patron
-} from 'silentium';
-
-const pool = new PatronPool();
-
-pool.add(patron((value) => {
-    document.querySelector('.patron-pool-result1').textContent = value + ' 1';
-}));
-pool.add(patron((value) => {
-    document.querySelector('.patron-pool-result2').textContent = value + ' 2';
-}));
-
-pool.give('Значение из пула');
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <div class="patron-pool-result1">Нет результата 1!</div>
   <div class="patron-pool-result2">Нет результата 2!</div>
 </div>
-<script type="module">
-  import { PatronPool, patron } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { PatronPool, patron } from "silentium";
 
-  const pool = new PatronPool();
+const pool = new PatronPool();
 
-  pool.add(
-    patron((value) => {
-      document.querySelector(".patron-pool-result1").textContent = value + " 1";
-    })
-  );
-  pool.add(
-    patron((value) => {
-      document.querySelector(".patron-pool-result2").textContent = value + " 2";
-    })
-  );
+pool.add(
+  patron((value) => {
+    document.querySelector(".patron-pool-result1").textContent = value + " 1";
+  })
+);
+pool.add(
+  patron((value) => {
+    document.querySelector(".patron-pool-result2").textContent = value + " 2";
+  })
+);
 
-  pool.give("Значение из пула");
+pool.give("Значение из пула");
 </script>
 
 <div class="font-bold mt-8">Смотрите также</div>

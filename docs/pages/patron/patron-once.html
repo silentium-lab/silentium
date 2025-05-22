@@ -44,9 +44,16 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patronOnce } from "silentium";
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
-const source = sourceChangeable("один раз");
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<div class="example mb-4">
+  <span class="patron-once-result">Нет результата!</span>
+</div>
+<script type="module" data-listing=".listing-1">
+import { sourceOf, patronOnce } from "silentium";
+
+const source = sourceOf("один раз");
 source.value(
   patronOnce((value) => {
     document.querySelector(
@@ -61,30 +68,6 @@ setTimeout(() => {
 setTimeout(() => {
   source.give("три раза");
 });
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
-<div class="example mb-4">
-  <span class="patron-once-result">Нет результата!</span>
-</div>
-<script type="module">
-  import { sourceChangeable, patronOnce } from "silentium";
-
-  const source = sourceChangeable("один раз");
-  source.value(
-    patronOnce((value) => {
-      document.querySelector(
-        ".patron-once-result"
-      ).textContent = `Результат ${value}`;
-    })
-  );
-
-  setTimeout(() => {
-    source.give("два раза");
-  });
-  setTimeout(() => {
-    source.give("три раза");
-  });
 </script>
 
 <div class="font-bold mt-8">Смотрите также</div>

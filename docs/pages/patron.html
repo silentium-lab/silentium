@@ -66,92 +66,58 @@
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-          <pre class="mb-4"><code class="language-js">import {
-  patron,
-  sourceChangeable,
-  source,
-  guestDisposable,
-  isPatronInPools,
-} from "silentium";
-
-const source = sourceChangeable(1);
-const timer = source((guest) => {
-  source.value(guest);
-  const repeat = () => {
-    if (!isPatronInPools(guest)) {
-      return;
-    }
-    source.value((value) => {
-      setTimeout(() => {
-        source.give(value + 1);
-        repeat();
-      }, 1000);
-    });
-  };
-  repeat();
-});
-
-timer.value(
-  patron(
-    guestDisposable(
-      (value) => {
-        const el = document.querySelector(".patron-result");
-        if (el) {
-          el.textContent = `Секунд прошло ${value}`;
-        }
-      },
-      () => {
-        return !document.querySelector(".patron-result");
-      }
-    )
-  )
-);</code></pre>
+          <pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
           <div class="example mb-4">
             <span class="patron-result">Result here</span>
           </div>
-          <script type="module">
-            import {
-              patron,
-              sourceChangeable,
-              source,
-              guestDisposable,
-              isPatronInPools,
-            } from "silentium";
+          <script type="module" data-listing=".listing-1">
+import {
+  patron,
+  patronOnce,
+  sourceOf,
+  value,
+  guestDisposable,
+  sourceDestroyable,
+  destroy,
+} from "silentium";
 
-            const source = sourceChangeable(1);
-            const timer = source((guest) => {
-              source.value(guest);
-              const repeat = () => {
-                if (!isPatronInPools(guest)) {
-                  return;
-                }
-                source.value((value) => {
-                  setTimeout(() => {
-                    source.give(value + 1);
-                    repeat();
-                  }, 1000);
-                });
-              };
-              repeat();
-            });
+const src = sourceOf(1);
+const timer = sourceDestroyable((guest) => {
+  let lastTimerHead = null;
+  src.value(guest);
+  const repeat = () => {
+    src.value((value) => {
+      lastTimerHead = setTimeout(() => {
+        src.give(value + 1);
+        repeat();
+      }, 1000);
+    });
+  };
+  repeat();
+  return () => {
+    if (lastTimerHead !== null) {
+      clearTimeout(lastTimerHead);
+    }
+  }
+});
 
-            timer.value(
-              patron(
-                guestDisposable(
-                  (value) => {
-                    const el = document.querySelector(".patron-result");
-                    if (el) {
-                      el.textContent = `Секунд прошло ${value}`;
-                    }
-                  },
-                  () => {
-                    return !document.querySelector(".patron-result");
-                  }
-                )
-              )
-            );
+value(
+  timer,
+  patron(
+    (value) => {
+      const el = document.querySelector(".patron-result");
+      if (el) {
+        el.textContent = `Секунд прошло ${value}`;
+      }
+    },
+  )
+);
+
+value(window.urlChanged, patronOnce(() => {
+  destroy(src, timer)
+}));
           </script>
 
           <div class="font-bold mt-8">Смотрите также</div>

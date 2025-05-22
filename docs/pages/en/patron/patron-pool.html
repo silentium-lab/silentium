@@ -40,29 +40,14 @@ Source has a PatronPool running under the hood)
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import {
-    PatronPool,
-    patron
-} from 'silentium';
-
-const pool = new PatronPool();
-
-pool.add(patron((value) => {
-    document.querySelector('.patron-pool-result1').textContent = value + ' 1';
-}));
-pool.add(patron((value) => {
-    document.querySelector('.patron-pool-result2').textContent = value + ' 2';
-}));
-
-pool.give('Value from the pool');
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
   <div class="patron-pool-result1">There is no result 1!</div>
   <div class="patron-pool-result2">No result 2!</div>
 </div>
-<script type="module">
+<script type="module" data-listing=".listing-1">
   import { PatronPool, patron } from "silentium";
 
   const pool = new PatronPool();
