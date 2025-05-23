@@ -77,42 +77,29 @@ user
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-          <pre
-            class="mb-4 w-full"
-          ><code class="language-js">import { guest } from 'silentium';
-
-class Timestamp {
-    seconds(guest) {
-        guest.give(Date.now())
-    }
-}
-
-const timestamp = new Timestamp();
-timestamp.seconds(guest((timestamp) => {
-    console.log('timestamp is', timestamp);
-}));</code></pre>
+          <pre class="mb-4 w-full"><code class="language-js listing-1"></code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
           <div class="example mb-4">
             <span class="guest-result">Result here</span>
           </div>
-          <script type="module">
-            import { guest } from "silentium";
+          <script type="module" data-listing=".listing-1">
+import { guest } from "silentium";
 
-            class Timestamp {
-              seconds(guest) {
-                guest.give(Date.now());
-              }
-            }
+class Timestamp {
+  seconds(guest) {
+    guest.give(Date.now());
+  }
+}
 
-            const timestamp = new Timestamp();
-            timestamp.seconds(
-              guest((timestamp) => {
-                document.querySelector(
-                  ".guest-result"
-                ).textContent = `timestamp is ${timestamp}`;
-              })
-            );
+const timestamp = new Timestamp();
+timestamp.seconds(
+  guest((timestamp) => {
+    document.querySelector(
+      ".guest-result"
+    ).textContent = `timestamp is ${timestamp}`;
+  })
+);
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
@@ -130,9 +117,7 @@ The ability to create a visitor object from the function was
           <p class="text-gray-600 text-lg font-bold mb-0">Example 2.</p>
           <pre
             class="mt-0 w-full"
-          ><code class="language-js">import { Guest } from 'silentium';
-
-class Timestamp {
+          ><code class="language-js">class Timestamp {
     seconds(guest) {
         give(Date.now(), guest);
     }

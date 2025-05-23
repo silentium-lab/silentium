@@ -77,48 +77,35 @@
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-          <pre
-            class="mb-4 w-full"
-          ><code class="language-js">import { guest } from 'silentium';
-
-class Timestamp {
-    seconds(guest) {
-        guest.give(Date.now())
-    }
-}
-
-const timestamp = new Timestamp();
-timestamp.seconds(guest((timestamp) => {
-    console.log('timestamp is', timestamp);
-}));</code></pre>
+          <pre class="mb-4 w-full"><code class="language-js listing-1"></code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
           <div class="example mb-4">
             <span class="guest-result">Result here</span>
           </div>
-          <script type="module">
-            import { guest } from "silentium";
+          <script type="module" data-listing=".listing-1">
+import { guest } from "silentium";
 
-            class Timestamp {
-              seconds(guest) {
-                guest.give(Date.now());
-              }
-            }
+class Timestamp {
+  seconds(guest) {
+    guest.give(Date.now());
+  }
+}
 
-            const timestamp = new Timestamp();
-            timestamp.seconds(
-              guest((timestamp) => {
-                document.querySelector(
-                  ".guest-result"
-                ).textContent = `timestamp is ${timestamp}`;
-              })
-            );
+const timestamp = new Timestamp();
+timestamp.seconds(
+  guest((timestamp) => {
+    document.querySelector(
+      ".guest-result"
+    ).textContent = `timestamp is ${timestamp}`;
+  })
+);
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
-            Возможность создавать объект-посетитель из функции была
+            Возможность создавать объект-посетитель через функцию guest была
             единственной в первых версиях библиотеки. На текущий момент вы можете также
-            передать функцию-колбэк в качестве посетителя, тк функция соответствует типу
+            передать анонимную функцию-колбэк в качестве посетителя, тк функция соответствует типу
             <link-dynamic
               href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
             >
@@ -130,9 +117,7 @@ timestamp.seconds(guest((timestamp) => {
           <p class="text-gray-600 text-lg font-bold mb-0">Пример 2.</p>
           <pre
             class="mt-0 w-full"
-          ><code class="language-js">import { Guest } from 'silentium';
-
-class Timestamp {
+          ><code class="language-js">class Timestamp {
     seconds(guest) {
         give(Date.now(), guest);
     }

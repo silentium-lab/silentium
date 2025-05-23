@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  GuestSync
+  guestSync
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">GuestSync</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">guestSync</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestSync.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  GuestSync on GitHub
+  guestSync on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -29,34 +29,25 @@ a value from an object and transfer it as pure data (naked data). Use
 
 
 <p class="text-gray-600 text-lg mb-4">
-The value inside <b>GuestSync</b> is mutated! It is worth being careful when
+The value inside <b>guestSync</b> is mutated! It is worth being careful when
   use and take this into account
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { sourceChangeable, guestSync } from 'silentium';
-
-const source = sourceChangeable('Successfully installed synchronously!');
-const syncGuest = guestSync('');
-source.value(syncGuest);
-
-document.querySelector('.guest-result').textContent = syncGuest.value();
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-<span class="guest-result">The value will be set synchronously!</span>/span>
+<span class="guest-result">The value will be set synchronously!</span>
 </div>
-<script type="module">
-  import { sourceChangeable, guestSync } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceOf, guestSync } from "silentium";
 
-  const source = sourceChangeable("Successfully installed synchronously!");
-  const syncGuest = guestSync('');
-  source.value(syncGuest);
+const source = sourceOf("Set synchronously successfully!");
+const syncGuest = guestSync('');
+source.value(syncGuest);
 
-  document.querySelector(".guest-result").textContent = syncGuest.value();
+document.querySelector(".guest-result").textContent = syncGuest.value();
 </script>
 
 <div class="font-bold mt-8">See also</div>
