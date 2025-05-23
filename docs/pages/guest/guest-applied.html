@@ -1,5 +1,5 @@
 <script class="page-title" type="text/template">
-  GuestApplied
+  guestApplied
 </script>
 
 <div class="breadcrumbs mb-4">
@@ -7,12 +7,12 @@
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">guestApplied</h1>
 
 <a href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestApplied.ts" target="_blank"
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
   <img src="./assets/img/github_16.jpg" width="16" height="16" />
-  GuestApplied на GitHub
+  guestApplied на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -28,32 +28,22 @@
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
 <pre
   class="mb-4 w-full"
-><code class="language-js">import { guest, guestApplied, sourceOf } from "silentium";
-
-const guest = guest((value) => {
-  document.querySelector(
-    ".guest-result"
-  ).textContent = `Double value is ${value}`;
-});
-
-sourceOf(40).value(
-  guestApplied(guest, (x) => x * 2)
-);</code></pre>
+><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-result">Result here</span>
 </div>
-<script type="module">
+<script type="module" data-listing=".listing-1">
   import { guest, guestApplied, sourceOf } from "silentium";
 
-  const guest = guest((value) => {
+  const g = guest((value) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `Double value is ${value}`;
   });
 
   sourceOf(40).value(
-    guestApplied(guest, (x) => x * 2)
+    guestApplied(g, (x) => x * 2)
   );
 </script>
