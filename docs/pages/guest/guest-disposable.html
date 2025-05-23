@@ -1,5 +1,5 @@
 <script class="page-title" type="text/template">
-  GuestDisposable
+  guestDisposable
 </script>
 
 <div class="breadcrumbs mb-4">
@@ -7,7 +7,7 @@
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestDisposable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">guestDisposable</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestDisposable.ts"
@@ -19,7 +19,7 @@
     width="16"
     height="16"
   />
-  GuestDisposable на GitHub
+  guestDisposable на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -68,40 +68,16 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patron, guestDisposable } from "silentium";
-
-  const source = sourceChangeable("Один");
-
-  source.value(
-    patron(
-      guestDisposable(
-        (value) => {
-          document.querySelector(".guest-result").textContent = value;
-        },
-        (value) => {
-          return value !== "Один";
-        }
-      )
-    )
-  );
-
-  setTimeout(() => {
-    source.give("Два");
-  });
-
-  setTimeout(() => {
-    source.give("Три");
-  }, 100);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-result">Нет значения</span>
 </div>
-<script type="module">
-  import { sourceChangeable, patron, guestDisposable } from "silentium";
+<script type="module" data-listing=".listing-1">
+  import { sourceOf, patron, guestDisposable } from "silentium";
 
-  const source = sourceChangeable("Один");
+  const source = sourceOf("Один");
 
   source.value(
     patron(

@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  GuestDisposable
+  guestDisposable
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">GuestDisposable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">guestDisposable</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestDisposable.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  GuestDisposable on GitHub
+  guestDisposable on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -48,76 +48,48 @@ of a value to a patron, it is checked whether it is necessary to remove this pat
 
 <p class="text-gray-600 text-lg mb-4">
   Instead of the GuestDisposable class, you can use
-the <link-dynamic> function.
-    href="/utils/remove-patron-from-pools"
-  >
+the <link-dynamic href="/utils/remove-patron-from-pools">
     removePatronFromPools
   </link-dynamic>
   - in order to remove a cartridge from all pools. or
-the <link-dynamic> function
-    href="/utils/is-patron-in-pools"
-  >
+the <link-dynamic href="/utils/is-patron-in-pools">
     isPatronInPools
   </link-dynamic>
   - checks if there is a cartridge in any bullet
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patron, guestDisposable } from "silentium";
-
-  const source = sourceChangeable("One");
-
-  source.value(
-    patron(
-      guestDisposable(
-        (value) => {
-          document.querySelector(".guest-result").textContent = value;
-        },
-        (value) => {
-          return value !== "One";
-        }
-      )
-    )
-  );
-
-  setTimeout(() => {
-    source.give("Two");
-  });
-
-  setTimeout(() => {
-    source.give("Three");
-  }, 100);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">No value</span>/span>
+  <span class="guest-result">No value</span>
 </div>
-<script type="module">
-  import { sourceChangeable, patron, guestDisposable } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceOf, patron, guestDisposable } from "silentium";
 
-  const source = sourceChangeable("One");
+const source = sourceOf("One");
 
-  source.value(
-    patron(
-      guestDisposable(
-        (value) => {
-          document.querySelector(".guest-result").textContent = value;
-        },
-        (value) => {
-          return value !== "One";
-        }
-      )
+source.value(
+  patron(
+    guestDisposable(
+      (value) => {
+        document.querySelector(".guest-result").textContent = value;
+      },
+      (value) => {
+        return value !== "One";
+      }
     )
-  );
+  )
+);
 
-  setTimeout(() => {
-    source.give("Two");
-  });
+setTimeout(() => {
+  source.give("Two");
+});
 
-  setTimeout(() => {
-    source.give("Three");
-  }, 100);
+setTimeout(() => {
+  source.give("Three");
+}, 100);
 </script>
 
 <div class="font-bold mt-8">See also</div>
