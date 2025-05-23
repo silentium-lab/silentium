@@ -1,5 +1,5 @@
 <script class="page-title" type="text/template">
-  GuestCast
+  guestCast
 </script>
 
 <div class="breadcrumbs mb-4">
@@ -7,7 +7,7 @@
   <link-dynamic href="/guest">Guest</link-dynamic>
 </div>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс GuestCast</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">guestCast</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/GuestCast.ts"
@@ -19,7 +19,7 @@
     width="16"
     height="16"
   />
-  GuestCast на GitHub
+  guestCast на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -52,87 +52,17 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import {
-    give,
-    patron,
-    sourceChangeable,
-    guestCast,
-    removePatronFromPools,
-    isPatronInPools,
-  } from "silentium";
-
-  class NumberOnceATime {
-    constructor(number, delay) {
-      this.delay = delay;
-      this.theNumber = number;
-    }
-
-    number(guest) {
-      const source = sourceChangeable(this.theNumber);
-      source.value(guest);
-      const repeat = () => {
-        if (!isPatronInPools(guest)) {
-          return;
-        }
-
-        setTimeout(() => {
-          source.give(this.theNumber);
-          repeat();
-        }, this.delay);
-      };
-      repeat();
-    }
-  }
-
-  class TotalSum {
-    constructor(numbers) {
-      this.numbers = numbers;
-    }
-
-    sum(guest) {
-      let totalSum = 0;
-      const source = sourceChangeable(totalSum);
-      source.value(guest);
-      const numbersGuests = [];
-      this.numbers.forEach((numberSource, index) => {
-        const numberGuest = guestCast(guest, (value) => {
-          totalSum += value;
-          source.give(totalSum);
-        });
-        numberSource.number(numberGuest);
-        numbersGuests.push(numberGuest);
-      });
-
-      return numbersGuests;
-    }
-  }
-
-  let totalSumGuests = [];
-  const renderResult = patron((value) => {
-    const resultEl = document.querySelector(".guest-cast-result");
-    if (resultEl) {
-      resultEl.textContent = `Результат = ${value}`;
-    } else {
-      removePatronFromPools(renderResult);
-      totalSumGuests.forEach(removePatronFromPools);
-    }
-  }, "renderResult");
-  totalSumGuests = new TotalSum([
-    new NumberOnceATime(1, 1000),
-    new NumberOnceATime(10, 5000),
-    new NumberOnceATime(100, 10000),
-  ]).sum(renderResult);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-cast-result">Результат = 0</span>
 </div>
-<script type="module">
+<script type="module" data-listing=".listing-1">
   import {
     give,
     patron,
-    SourceChangeable,
+    sourceOf,
     guestCast,
     removePatronFromPools,
     isPatronInPools,
@@ -145,7 +75,7 @@
     }
 
     number(guest) {
-      const source = sourceChangeable(this.theNumber);
+      const source = sourceOf(this.theNumber);
       source.value(guest);
       const repeat = () => {
         if (!isPatronInPools(guest)) {
@@ -168,7 +98,7 @@
 
     sum(guest) {
       let totalSum = 0;
-      const source = sourceChangeable(totalSum);
+      const source = sourceOf(totalSum);
       source.value(guest);
       const numbersGuests = [];
       this.numbers.forEach((numberSource, index) => {
