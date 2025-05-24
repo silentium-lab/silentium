@@ -208,6 +208,11 @@ const templateRequestSrc = record({
 const templateContentSrc = nativeFetched(templateRequestSrc, errors);
 window.urlChanged = shot(urlSrc, onlyChanged(urlSrc));
 
+value(
+  window.urlChanged,
+  patron(window.console.log.bind(window.console, "url changed: ")),
+);
+
 // Template loading visualization
 const templateContentLoadingSrc = loading(urlSrc, layoutContentSrc);
 visible(templateContentLoadingSrc, nativeElement("article.container .loader"));
