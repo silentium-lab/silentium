@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceOnce
+  sourceOnce
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceOnce</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceOnce</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceOnce.ts"
@@ -14,46 +14,24 @@
     width="16"
     height="16"
   />
-  SourceOnce on GitHub
+  sourceOnce on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    The SourceOnce class is used in cases where you need to create a data source in which
+    The sourceOnce is used in cases where you need to create a data source in which
     there will be no value at the start, it will be installed later but only once, subsequent installations
     new values will be ignored.
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { sourceOnce, patron } from "silentium";
-
-const source = sourceOnce();
-
-source.value(patron((v) => {
-    document.querySelector(".guest-result").textContent = v;
-}));
-
-setTimeout(() => {
-    source.give(10)
-}, 1000);
-
-// The code below has
-no setTimeout(() effect => {
-    source.give(20)
-}, 2000);
-
-setTimeout(() => {
-    source.give(30)
-}, 3000);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-<span class="guest-result">After 1 sec...</span>/span>
+<span class="guest-result">After 1 sec...</span>
 </div>
 
-<script type="module">
+<script type="module" data-listing=".listing-1">
 import { sourceOnce, patron } from "silentium";
 
 const source = sourceOnce();
@@ -66,8 +44,8 @@ setTimeout(() => {
     source.give(10)
 }, 1000);
 
-// The code below has
-no setTimeout(() effect => {
+// Код ниже не имеет эффекта
+setTimeout(() => {
     source.give(20)
 }, 2000);
 

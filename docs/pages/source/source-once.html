@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceOnce
+  sourceOnce
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceOnce</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceOnce</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceOnce.ts"
@@ -14,46 +14,24 @@
     width="16"
     height="16"
   />
-  SourceOnce на GitHub
+  sourceOnce на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    Класс SourceOnce используется в случаях когда нужно создать источник данных в котором на
+    sourceOnce используется в случаях когда нужно создать источник данных в котором на
     старте не будет значения, оно будет установлено позже но только один раз, последующие установки
     новых значений будут игнорироваться.
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { sourceOnce, patron } from "silentium";
-
-const source = sourceOnce();
-
-source.value(patron((v) => {
-    document.querySelector(".guest-result").textContent = v;
-}));
-
-setTimeout(() => {
-    source.give(10)
-}, 1000);
-
-// Код ниже не имеет эффекта
-setTimeout(() => {
-    source.give(20)
-}, 2000);
-
-setTimeout(() => {
-    source.give(30)
-}, 3000);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-result">Через 1 сек...</span>
 </div>
 
-<script type="module">
+<script type="module" data-listing=".listing-1">
 import { sourceOnce, patron } from "silentium";
 
 const source = sourceOnce();
