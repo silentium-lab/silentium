@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceApplied
+  sourceApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceApplied</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceApplied.ts"
@@ -14,46 +14,23 @@
     width="16"
     height="16"
   />
-  SourceApplied на GitHub
+  sourceApplied на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    Иногда к значению источника нужно применить какую-нибудь существующую функцию, для этого можно использовать класс SourceApplied
+    Иногда к значению источника нужно применить какую-нибудь существующую функцию, для этого можно использовать sourceApplied
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { source, SourceApplied, patron } from "silentium";
-
-const guest = v => {
-  const r = document.querySelector(".guest-result");
-  if (r) {
-    r.textContent = v;
-  }
-}
-
-const max = 10;
-let iterations = 0;
-const timer = source((g) => {
-  const tick = () => {
-    iterations++;
-    g.give(iterations);
-    setTimeout(tick, 1000);
-  }
-tick();
-});
-
-sourceApplied(timer, x => x * 2).value(patron(guest));
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-result">Через 1 сек...</span>
 </div>
 
-<script type="module">
-import { source, sourceApplied, patron } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { source, sourceApplied, value, patron } from "silentium";
 
 const guest = v => {
     const r = document.querySelector(".guest-result");
@@ -73,5 +50,5 @@ const timer = source((g) => {
     tick();
 });
 
-sourceApplied(timer, x => x * 2).value(patron(guest));
+value(sourceApplied(timer, x => x * 2), patron(guest));
 </script>
