@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceAll
+  sourceAll
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceAll</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceAll</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/SourceAll.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  SourceAll on GitHub
+  sourceAll on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -34,82 +34,25 @@ their data
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import {
-    source,
-    sourceAll
-} from 'silentium';
-
-const all = sourceAll({
-  one: source(1),
-  two: source(2),
-});
-
-all.value(({one, two}) => {
-    document
-        .querySelector('.guest-result')
-        .textContent = `Result = ${one + two}`;
-});
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">Result = 0</span>/span>
+  <span class="guest-result">Result = 0</span>
 </div>
-<script type="module">
-  import { give, Patron, SourceChangeable, GuestCast, sourceAll, source } from "silentium";
-
-  const all = sourceAll({
-    one: source(1),
-    two: source(2),
-  });
-
-  all.value(({ one, two }) => {
-    document.querySelector(".guest-result").textContent = `Result = ${
-      one + two
-    }`;
-  });
-</script>
-
-<p class="text-gray-600 text-lg mb-4">
-  It is also possible to collect the results in an array rather than an object.
-</p>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import {
-  SourceChangeable,
-  sourceAll,
-  source
-} from 'silentium';
+<script type="module" data-listing=".listing-1">
+import { give, patron, sourceOf, guestCast, sourceAll, source } from "silentium";
 
 const all = sourceAll([
   source(1),
   source(2),
 ]);
 
-all.valueArray((numbers) => {
-    document.querySelector('.guest-result-array').textContent = `Result = ${numbers}`;
+all.value(([one, two]) => {
+  document.querySelector(".guest-result").textContent = `Результат = ${
+    one + two
+  }`;
 });
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
-<div class="example mb-4">
-  <span class="guest-result-array">Result = 0</span>/span>
-</div>
-<script type="module">
-  import { give, Patron, SourceChangeable, GuestCast, SourceAll } from "silentium";
-
-  (() => {
-  const all = sourceAll([
-    source(1),
-    source(2),
-  ]);
-
-    all.valueArray((numbers) => {
-      document.querySelector(
-        ".guest-result-array"
-      ).textContent = `Result = ${numbers}`;
-    });
-  })();
 </script>
 
 <div class="font-bold mt-8">See also</div>
