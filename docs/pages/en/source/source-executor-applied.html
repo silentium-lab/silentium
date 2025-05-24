@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-    SourceExecutorApplied
+    sourceExecutorApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceExecutorApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceExecutorApplied</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceExecutorApplied.ts"
@@ -14,61 +14,40 @@
     width="16"
     height="16"
   />
-  SourceExecutorApplied on GitHub
+  sourceExecutorApplied on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    The SourceExecutorApplied is useful when you need to limit the process of giving value to visitors, for example
+    The sourceExecutorApplied is useful when you need to limit the process of giving value to visitors, for example
     you can delay giving the value for a while, or apply the debounce or throttle functions
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { SourceExecutorApplied, patron, sourceOf, value } from "silentium";
-
-const guest = v => {
-    const r = document.querySelector(".guest-result");
-    if (r) {
-        r.textContent = v;
-    }
-}
-
-value(
-    sourceExecutorApplied(sourceOf(40), (source) => {
-        return (g) => {
-            setTimeout(() => {
-                value(source, g);
-            }, 5000);
-        };
-    }),
-    patron(guest)
-);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-<span class="guest-result">After 5 seconds...</span>/span>
+<span class="guest-result">After 5 seconds...</span>
 </div>
 
-<script type="module">
-import { SourceExecutorApplied, patron, sourceOf, value } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceExecutorApplied, patron, sourceOf, value } from "silentium";
 
 const guest = v => {
-    const r = document.querySelector(".guest-result");
-    if (r) {
-        r.textContent = v;
-    }
+const r = document.querySelector(".guest-result");
+  if (r) {
+    r.textContent = v;
+  }
 }
 
 value(
-    sourceExecutorApplied(sourceOf(40), (source) => {
-        return (g) => {
-            setTimeout(() => {
-                value(source, g);
-            }, 5000);
-        };
-    }),
-    patron(guest)
+  sourceExecutorApplied(sourceOf(40), (source) => {
+      return (g) => {
+        setTimeout(() => {
+        value(source, g);
+      }, 5000);
+    };
+  }),
+  patron(guest)
 );
 </script>
