@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceRace
+  sourceRace
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceRace</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceRace</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Guest/SourceRace.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  SourceRace на GitHub
+  sourceRace на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -25,7 +25,7 @@
 
 <p class="text-gray-600 text-lg mb-4">
   Это поведение может быть очень полезным, чтобы избавиться от условий в
-  приложении. Благодаря классу SourceRace каждый источник данных может сам
+  приложении. Благодаря sourceRace каждый источник данных может сам
   решить должен ли он вообще отдавать какую-либо информацию или можно
   промолчать.
 </p>
@@ -36,11 +36,17 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import {
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<div class="example mb-4">
+  <span class="guest-result">Результат = 0</span>
+</div>
+<script type="module" data-listing=".listing-1">
+import {
   sourceMap,
   sourceRace,
-  Source,
-  sourceChangeable,
+  sourceOf,
   give,
   value,
   guestCast,
@@ -61,7 +67,7 @@ const nTimesSource = (condition, n, baseSource) => (guest) => {
   );
 };
 
-const source = sourceChangeable([1, 2, 3, 4, 5]);
+const source = sourceOf([1, 2, 3, 4, 5]);
 const guestMapped = sourceMap(
   source,
   lazy(
@@ -73,56 +79,9 @@ const guestMapped = sourceMap(
   )
 );
 
-guestMapped.value((v) => {
+value(guestMapped, (v) => {
   document.querySelector(".guest-result").textContent = v.join();
 });
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
-<div class="example mb-4">
-  <span class="guest-result">Результат = 0</span>
-</div>
-<script type="module">
-  import {
-    sourceMap,
-    sourceRace,
-    Source,
-    sourceChangeable,
-    give,
-    value,
-    guestCast,
-    lazy,
-  } from "silentium";
-
-  const isEven = (v) => v % 2 === 0;
-  const isOdd = (v) => v % 2 !== 0;
-
-  const nTimesSource = (condition, n, baseSource) => (guest) => {
-    value(
-      baseSource,
-      guestCast(guest, (value) => {
-        if (condition(value)) {
-          give(value * n, guest);
-        }
-      })
-    );
-  };
-
-  const source = sourceChangeable([1, 2, 3, 4, 5]);
-  const guestMapped = sourceMap(
-    source,
-    lazy(
-      (itemSource) =>
-        sourceRace([
-          nTimesSource(isEven, 2, itemSource),
-          nTimesSource(isOdd, 3, itemSource),
-        ])
-    )
-  );
-
-  guestMapped.value((v) => {
-    document.querySelector(".guest-result").textContent = v.join();
-  });
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
