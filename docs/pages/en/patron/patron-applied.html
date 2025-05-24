@@ -1,17 +1,17 @@
 <script class="page-title" type="text/template">
-  PatronApplied
+  patronApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">PatronApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">patronApplied</h1>
 
 <a href="https://github.com/kosukhin/patron/blob/main/src/Patron/PatronApplied.ts" target="_blank"
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
   <img src="./assets/img/github_16.jpg" width="16" height="16" />
-  PatronApplied on GitHub
+  patronApplied on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  The PatronApplied under the hood uses GuestApplied, only it is a patron.
+  The patronApplied under the hood uses guestApplied, only it is a patron.
 </p>
 
 
@@ -20,22 +20,7 @@ Is useful when we work with data sources with a pool of cartridges that can send
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { guest, PatronApplied, sourceChangeable } from "silentium";
-
-window.source = sourceChangeable(20);
-
-const g = guest((value) => {
-  document.querySelector(
-    ".guest-result"
-  ).textContent = `Double value is ${value}`;
-});
-
-window.source.value(
-  new PatronApplied(g, (x) => x * 2)
-);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
@@ -53,18 +38,18 @@ Give the source a value of 40
 >
 Give the source a value of 25
 </button>
-<script type="module">
-  import { guest, PatronApplied, sourceChangeable } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { guest, patronApplied, sourceOf } from "silentium";
 
-  window.source = sourceChangeable(20);
+window.source = sourceOf(20);
 
-  const g = guest((value) => {
-    document.querySelector(
-      ".guest-result"
-    ).textContent = `Double value is ${value}`;
-  });
+const g = guest((value) => {
+  document.querySelector(
+    ".guest-result"
+  ).textContent = `Double value is ${value}`;
+});
 
-  window.source.value(
-    new PatronApplied(g, (x) => x * 2)
-  );
+window.source.value(
+  patronApplied(g, (x) => x * 2)
+);
 </script>
