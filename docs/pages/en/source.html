@@ -50,12 +50,12 @@
           </div>
         </div>
         <div class="sm:w-2/3 sm:pl-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 sm:mt-0">
-          <h1 class="pb-3 text-xl font-semibold text-gray-600">Source</h1>
+          <h1 class="pb-3 text-xl font-semibold text-gray-600">source</h1>
 
           <a href="https://github.com/kosukhin/patron/blob/main/src/Source/Source.ts" target="_blank"
             class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4">
 <img src="./assets/img/github_16.jpg " width="16" height="16" />
-Source on GitHub
+source on GitHub
           </a>
 
           <p class="text-gray-600 text-lg mb-4">
@@ -73,34 +73,23 @@ Useful in cases where you need to create a new object with unique software behav
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-          <pre class="mb-4"><code class="language-js">import {
-            source,
-            give
-        } from 'silentium';
-
-        const timestamp = source((guest) => {
-            give(Date.now(), guest);
-        });
-        timestamp.value((timestamp) => {
-            console.log('timestamp is', timestamp);
-        });
-        </code></pre>
+          <pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
           <div class="example mb-4">
             <span class="guest-result">Result here</span>
           </div>
-          <script type="module">
-            import { source, give } from "silentium";
+          <script type="module" data-listing=".listing-1">
+import { source, give, value } from "silentium";
 
-            const timestamp = source((guest) => {
-              give(Date.now(), guest);
-            });
-            timestamp.value((timestamp) => {
-              document.querySelector(
-                ".guest-result"
-              ).textContent = `timestamp is ${timestamp}`;
-            });
+const timestamp = source((guest) => {
+  give(Date.now(), guest);
+});
+value(timestamp, (timestamp) => {
+  document.querySelector(
+    ".guest-result"
+  ).textContent = `timestamp is ${timestamp}`;
+});
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
@@ -113,41 +102,26 @@ The data source can be not only an object, but also a function of the form
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Example 2.</p>
-          <pre class="mb-4"><code class="language-js">import {
-          give,
-          value
-        } from "silentium";
+          <pre class="mb-4"><code class="language-js listing-2"></code></pre>
 
-        const helloSource = (guest) => {
-          setTimeout(() => {
-            give("Hello world", guest);
-          }, 1000);
-        };
-
-        value(helloSource, (greeting) => {
-          document.querySelector(
-            ".guest-result-2"
-          ).textContent = `greeting is "${greeting}"`;
-        });
-        </code></pre>
           <p class="text-gray-600 text-lg mb-0 font-bold">Result 2.</p>
           <div class="example mb-4">
             <span class="guest-result-2">Result here</span>
           </div>
-          <script type="module">
-            import { give, value } from "silentium";
+          <script type="module" data-listing=".listing-2">
+import { give, value } from "silentium";
 
-            const helloSource = (guest) => {
-              setTimeout(() => {
-                give("Hello world", guest);
-              }, 1000);
-            };
+const helloSource = (guest) => {
+  setTimeout(() => {
+    give("Hello world", guest);
+  }, 1000);
+};
 
-            value(helloSource, (greeting) => {
-              document.querySelector(
-                ".guest-result-2"
-              ).textContent = `greeting is "${greeting}"`;
-            });
+value(helloSource, (greeting) => {
+  document.querySelector(
+    ".guest-result-2"
+  ).textContent = `greeting is "${greeting}"`;
+});
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
@@ -158,34 +132,24 @@ Or you can transfer the source function as a dependency to objects that
           </p>
 
           <p class="text-gray-600 text-lg mb-0 font-bold">Example 3.</p>
-          <pre class="mb-4"><code class="language-js">import { sourceAll, source, give, value } from "silentium";
+          <pre class="mb-4"><code class="language-js listing-3"></code></pre>
 
-            const all = sourceAll({
-              one: source('one'),
-              two: source('two'),
-            });
-
-            all.value(({ one, two }) => {
-              document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
-                }"`;
-            });
-        </code></pre>
           <p class="text-gray-600 text-lg mb-0 font-bold">Result 3.</p>
           <div class="example mb-4">
             <span class="guest-result-3">Result here</span>
           </div>
-          <script type="module">
-            import { sourceAll, source, give, value } from "silentium";
+          <script type="module" data-listing=".listing-3">
+import { sourceAll, source, give, value } from "silentium";
 
-            const all = sourceAll({
-              one: source('one'),
-              two: source('two'),
-            });
+const all = sourceAll([
+  source('one'),
+  source('two'),
+]);
 
-            all.value(({ one, two }) => {
-              document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
-                }"`;
-            });
+all.value(([one, two]) => {
+  document.querySelector(".guest-result-3").textContent = `one + two = "${one + two
+    }"`;
+});
           </script>
 
           <p class="text-gray-600 text-lg mb-4">
