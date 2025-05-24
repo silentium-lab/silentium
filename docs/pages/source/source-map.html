@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceMap
+  sourceMap
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceMap</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceMap</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceMap.ts"
@@ -14,23 +14,36 @@
     width="16"
     height="16"
   />
-  SourceMap на GitHub
+  sourceMap на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс <b>SourceMap</b> нужен в случаях обработки множества значений, через
+  <b>sourceMap</b> нужен в случаях обработки множества значений, через
   создание на основе этих значений объектов -
   <link-dynamic href="/terminology/source">источников данных</link-dynamic>.
-  Например у нас есть класс - результат умножения числа на 2. SourceMap
+  Например у нас есть класс - результат умножения числа на 2. sourceMap
   позволит применить этот класс к какому-то итерируемому источнику данных,
   преобразовывая каждое значение в новое, в результате получим новый итерируемый
   источник данных, в котором все числа умножены на 2.
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { Source, sourceChangeable, guestCast, sourceMap, lazyClass, give } from "silentium";
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<div class="example mb-4">
+  <span class="guest-result">Result here</span>
+</div>
+
+<script type="module" data-listing=".listing-1">
+import {
+  sourceOf,
+  guestCast,
+  sourceMap,
+  lazyClass,
+  give,
+  value
+} from "silentium";
 
 class X2 {
   constructor(baseNumber) {
@@ -38,7 +51,8 @@ class X2 {
   }
 
   value(guest) {
-    this.baseNumber.value(
+    value(
+      this.baseNumber,
       guestCast(guest, (v) => {
         give(v * 2, guest);
       })
@@ -47,43 +61,12 @@ class X2 {
   }
 }
 
-const source = sourceChangeable([1, 2, 3, 9]);
+const source = sourceOf([1, 2, 3, 9]);
 const guestMapped = sourceMap(source, lazyClass(X2));
 
-guestMapped.value((v) => {
+value(guestMapped, (v) => {
   document.querySelector(".guest-result").textContent = v.join();
 });
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
-<div class="example mb-4">
-  <span class="guest-result">Result here</span>
-</div>
-
-<script type="module">
-  import { Source, sourceChangeable, guestCast, sourceMap, lazyClass, give } from "silentium";
-
-  class X2 {
-    constructor(baseNumber) {
-      this.baseNumber = baseNumber;
-    }
-
-    value(guest) {
-      this.baseNumber.value(
-        guestCast(guest, (v) => {
-          give(v * 2, guest);
-        })
-      );
-      return this;
-    }
-  }
-
-  const source = sourceChangeable([1, 2, 3, 9]);
-  const guestMapped = sourceMap(source, lazyClass(X2));
-
-  guestMapped.value((v) => {
-    document.querySelector(".guest-result").textContent = v.join();
-  });
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -93,13 +76,23 @@ guestMapped.value((v) => {
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 2.</p>
-<pre class="mb-4"><code class="language-js">import {
+<pre class="mb-4"><code class="language-js listing-2"></code></pre>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 2.</p>
+<div class="example mb-4">
+  <span class="guest-result-2">Все результаты через 8 сек.</span>
+</div>
+
+<script type="module" data-listing=".listing-2">
+import {
   source,
-  sourceChangeable,
+  sourceOf,
   guestCast,
-  SourceMap,
+  sourceMap,
   lazyClass,
   give,
+  value,
+  patron,
   isSource,
 } from "silentium";
 
@@ -110,7 +103,7 @@ guestMapped.value((v) => {
     }
 
     value(guest) {
-      this.baseNumber.value(
+      value(this.baseNumber,
         guestCast(guest, (v) => {
           give(v * 3, guest);
         })
@@ -126,71 +119,17 @@ guestMapped.value((v) => {
       }, 8000)
     );
 
-  const source = sourceChangeable([
+  const src = sourceOf([
     numSource(1),
     numSource(2),
     numSource(3),
     numSource(4),
     numSource(5),
   ]);
-  const map = sourceMap(source, lazyClass(X3));
+  const map = sourceMap(src, lazyClass(X3));
 
-  map.value((v) => {
+  value(map, patron((v) => {
     document.querySelector(".guest-result-2").textContent = v.join();
-  });
+  }));
 })();
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 2.</p>
-<div class="example mb-4">
-  <span class="guest-result-2">Все результаты через 8 сек.</span>
-</div>
-
-<script type="module">
-  import {
-    source,
-    sourceChangeable,
-    guestCast,
-    sourceMap,
-    lazyClass,
-    give,
-    isSource,
-  } from "silentium";
-
-  (() => {
-    class X3 {
-      constructor(baseNumber) {
-        this.baseNumber = baseNumber;
-      }
-
-      value(guest) {
-        this.baseNumber.value(
-          guestCast(guest, (v) => {
-            give(v * 3, guest);
-          })
-        );
-        return this;
-      }
-    }
-
-    const numSource = (num) =>
-      source((guest) =>
-        setTimeout(() => {
-          give(num, guest);
-        }, 8000)
-      );
-
-    const src = sourceChangeable([
-      numSource(1),
-      numSource(2),
-      numSource(3),
-      numSource(4),
-      numSource(5),
-    ]);
-    const map = sourceMap(src, lazyClass(X3));
-
-    map.value((v) => {
-      document.querySelector(".guest-result-2").textContent = v.join();
-    });
-  })();
 </script>
