@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  PatronExecutorApplied
+  patronExecutorApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">PatronExecutorApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">patronExecutorApplied</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Patron/PatronExecutorApplied.ts"
@@ -14,11 +14,11 @@
     width="16"
     height="16"
   />
-  PatronExecutorApplied on GitHub
+  patronExecutorApplied on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  The PatronExecutorApplied under the hood uses gutexecutorapplied, but it is a patron.
+  The patronExecutorApplied under the hood uses guestExecutorApplied, but it is a patron.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -26,37 +26,11 @@ Is useful when we work with data sources with a pool of cartridges that can send
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
-
-window.source = sourceChangeable(20);
-
-const loadingSource = sourceChangeable('');
-
-const guest = guest((value) => {
-  document.querySelector(
-    ".guest-result"
-  ).textContent = `value is ${value}`;
-});
-
-loadingSource.value(patron(guest));
-
-window.source.value(
-  new PatronExecutorApplied(guest, (guestFn) => {
-    return v => {
-      loadingSource.give('Loading...');
-      setTimeout(() => {
-        guestFn(v);
-      }, 5000)
-    }
-  })
-);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
-  <span class="guest-result">The result is in 5 seconds...</span>/span>
+  <span class="guest-result">The result is in 5 seconds...</span>
 </div>
 <button
   class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 mb-4"
@@ -70,23 +44,23 @@ onclick="source.give(25)"
 >
 Give the source a value of 25
 </button>
-<script type="module">
-  import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
+<script type="module" data-listing=".listing-1">
+  import { guest, patronExecutorApplied, patron, sourceOf } from "silentium";
 
-  window.source = sourceChangeable(20);
+  window.source = sourceOf(20);
 
-  const loadingSource = sourceChangeable('');
+  const loadingSource = sourceOf('');
 
-  const guest = guest((value) => {
+  const g = guest((value) => {
     document.querySelector(
       ".guest-result"
     ).textContent = `value is ${value}`;
   });
 
-  loadingSource.value(patron(guest));
+  loadingSource.value(patron(g));
 
   window.source.value(
-    new PatronExecutorApplied(guest, (guestFn) => {
+    patronExecutorApplied(g, (guestFn) => {
       return v => {
         loadingSource.give('Loading...');
         setTimeout(() => {

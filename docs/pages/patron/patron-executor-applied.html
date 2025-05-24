@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  PatronExecutorApplied
+  patronExecutorApplied
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс PatronExecutorApplied</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">patronExecutorApplied</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Patron/PatronExecutorApplied.ts"
@@ -14,11 +14,11 @@
     width="16"
     height="16"
   />
-  PatronExecutorApplied на GitHub
+  patronExecutorApplied на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  Класс PatronExecutorApplied под капотом использует GuestExecutorApplied, только является патроном.
+  patronExecutorApplied под капотом использует guestExecutorApplied, только является патроном.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -26,33 +26,7 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
-
-window.source = sourceChangeable(20);
-
-const loadingSource = sourceChangeable('');
-
-const guest = guest((value) => {
-  document.querySelector(
-    ".guest-result"
-  ).textContent = `value is ${value}`;
-});
-
-loadingSource.value(patron(guest));
-
-window.source.value(
-  new PatronExecutorApplied(guest, (guestFn) => {
-    return v => {
-      loadingSource.give('Загрузка...');
-      setTimeout(() => {
-        guestFn(v);
-      }, 5000)
-    }
-  })
-);
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
@@ -70,29 +44,29 @@ window.source.value(
 >
   Дать источнику значение 25
 </button>
-<script type="module">
-  import { guest, PatronExecutorApplied, patron, sourceChangeable } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { guest, patronExecutorApplied, patron, sourceOf } from "silentium";
 
-  window.source = sourceChangeable(20);
+window.source = sourceOf(20);
 
-  const loadingSource = sourceChangeable('');
+const loadingSource = sourceOf('');
 
-  const guest = guest((value) => {
-    document.querySelector(
-      ".guest-result"
-    ).textContent = `value is ${value}`;
-  });
+const g = guest((value) => {
+  document.querySelector(
+    ".guest-result"
+  ).textContent = `value is ${value}`;
+});
 
-  loadingSource.value(patron(guest));
+loadingSource.value(patron(g));
 
-  window.source.value(
-    new PatronExecutorApplied(guest, (guestFn) => {
-      return v => {
-        loadingSource.give('Загрузка...');
-        setTimeout(() => {
-          guestFn(v);
-        }, 5000)
-      }
-    })
-  );
+window.source.value(
+  patronExecutorApplied(g, (guestFn) => {
+    return v => {
+      loadingSource.give('Загрузка...');
+      setTimeout(() => {
+        guestFn(v);
+      }, 5000)
+    }
+  })
+);
 </script>
