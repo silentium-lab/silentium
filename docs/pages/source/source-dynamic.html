@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceDynamic
+  sourceDynamic
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceDynamic</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceDynamic</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceDynamic.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  SourceDynamic на GitHub
+  sourceDynamic на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -28,11 +28,11 @@
   Например, источником данных структуры <b>Х</b> может быть объект <b>А</b>, а
   посетителем, получающим новую версию структуры <b>X</b> может быть объект
   <b>B</b>. В таком случае можно объединить объекты <b>A</b> и <b>B</b> в один
-  общий SourceType, что упростит манипуляции над структурой <b>X</b>
+  общий SourceChangeableType, что упростит манипуляции над структурой <b>X</b>
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-  Для таких случаев подходит класс SourceDynamic объединяющий
+  Для таких случаев подходит sourceDynamic объединяющий
   <link-reloadable
     target-blank
     href="https://github.com/kosukhin/patron/blob/main/src/Guest/Guest.ts#L17"
@@ -49,49 +49,30 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { sourceDynamic, guest, source } from "silentium";
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
-let theValue = 1;
-const sd = sourceDynamic(
-    guest((value) => {
-        theValue = value;
-    }),
-    source((guest) => {
-        give(theValue, guest);
-    })
-);
-
-sd.give(42);
-sd.value((value) => {
-    document.querySelector(
-    ".source-dynamic-result"
-    ).textContent = `Результат = ${value}`;
-});
-</code></pre>
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <div class="source-dynamic-result">Нет результата!</div>
 </div>
 
-<script type="module">
-  import { sourceDynamic, guest, source, give } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceDynamic, guest, source, give } from "silentium";
 
-  let theValue = 1;
-  const sd = sourceDynamic(
-    guest((value) => {
-      theValue = value;
-    }),
-    source((guest) => {
-      give(theValue, guest);
-    })
-  );
+let theValue = 1;
+const sd = sourceDynamic(
+  guest((value) => {
+    theValue = value;
+  }),
+  source((guest) => {
+    give(theValue, guest);
+  })
+);
 
-  sd.give(42);
-  sd.value((value) => {
-    document.querySelector(
-      ".source-dynamic-result"
-    ).textContent = `Результат = ${value}`;
-  });
+sd.give(42);
+sd.value((value) => {
+  document.querySelector(
+    ".source-dynamic-result"
+  ).textContent = `Результат = ${value}`;
+});
 </script>
