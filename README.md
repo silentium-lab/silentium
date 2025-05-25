@@ -14,3 +14,7 @@ https://arxiv.org/pdf/2111.13384
 ## Difference from eolang
 
 Unlike eolang, where the program starts working at the moment when some method receives data, which is called dataization, Silentium starts executing the program at the moment when a guest comes to the information source, requesting data, this difference allows the Silentium library to work on top of JavaScript events, creating abstractions of information around some event models.
+
+## Is silentium reactive?
+
+Silentium is not a reactive programming library, chains of objects only interact with each other through message passing, but due to the fact that Silentium is developed with the idea of ​​working on top of events, it allows for easy integration with any reactive library or framework, transferring event sources to the reactive mechanisms of the required frameworks.
