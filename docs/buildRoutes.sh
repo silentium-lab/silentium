@@ -8,7 +8,7 @@ to_json_array() {
   mapfile -t files < <(find "$dir" -type f)
 
   # Преобразуем массив в JSON с помощью jq
-  echo "$(echo ${files[@]} | jq -Rsc 'split(" ")')" > "$output"
+  echo "$(echo ${files[@]} | jq -Rsc 'split(" ")')" | sed 's/\\n"/"/g' > "$output"
 }
 
 # Вызываем функцию с аргументами: директорией и именем выходного файла
