@@ -81,12 +81,13 @@ const isDefaultLangSrc = sourceApplied(
 const basePath = concatenated([
   window.location.origin,
   regexpReplaced(
-    regexpReplaced(window.location.pathname, "/docs/", ""),
+    regexpReplaced(window.location.pathname, "/docs", ""),
     "index(-dev)?\\.html",
     "",
   ),
-  "/docs/",
+  "docs/",
 ]);
+window.basePath = basePath;
 
 const urlSrc = regexpReplaced(
   sourceAny([
