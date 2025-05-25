@@ -78,7 +78,15 @@ const isDefaultLangSrc = sourceApplied(
 );
 
 // Url source
-const basePath = concatenated([window.location.origin, "/docs/"]);
+const basePath = concatenated([
+  window.location.origin,
+  regexpReplaced(
+    regexpReplaced(window.location.pathname, "/docs/", ""),
+    "index(-dev)?\\.html",
+    "",
+  ),
+  "/docs/",
+]);
 
 const urlSrc = regexpReplaced(
   sourceAny([
@@ -93,6 +101,8 @@ const urlSrc = regexpReplaced(
   concatenated(["#/", window.langSrc, "/"]),
   "#/",
 );
+
+window.urlSrc = urlSrc;
 
 const langUrlPartSrc = branch(
   isDefaultLangSrc,
@@ -139,6 +149,10 @@ const routesSrc = sourceApplied(
     ),
   ),
   Array.prototype.concat.bind([
+    {
+      pattern: "/$",
+      template: "index.html",
+    },
     {
       pattern: "#/$",
       template: "index.html",
