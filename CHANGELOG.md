@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.35](https://github.com/silentium-lab/silentium/compare/v0.0.34...v0.0.35) (2025-05-25)
+
+
+### Features
+
+* **main:** fix docs ([9aa9c9d](https://github.com/silentium-lab/silentium/commit/9aa9c9d01b1e7c40691a94eb8fc53b3c4fb5c2d6))
+* **main:** fixes for code examples ([a2ce207](https://github.com/silentium-lab/silentium/commit/a2ce2071ea8cb3be1c7976f2d6c4c29e7bfae97a))
+* **main:** guest applied en done ([4fee232](https://github.com/silentium-lab/silentium/commit/4fee23232873f188a3f4d8f963502460a85742ad))
+* **main:** guest cast done ([8c3632d](https://github.com/silentium-lab/silentium/commit/8c3632dd86dc52d0cb9ec4ad99667748e26d6a9d))
+* **main:** guest cast ru done ([db0cbcd](https://github.com/silentium-lab/silentium/commit/db0cbcd0ab5d2d3f040aeaba360013b5a12bffc8))
+* **main:** guest disposable done ([dcebfff](https://github.com/silentium-lab/silentium/commit/dcebfff46621785b34c4747be417211292b944f0))
+* **main:** guest syn and guest done ([ced7528](https://github.com/silentium-lab/silentium/commit/ced7528175223289e5666ffcb76e94438a351c05))
+* **main:** patron page ([54da1c0](https://github.com/silentium-lab/silentium/commit/54da1c0b175615a8e8aff3d61529ea15ac804150))
+* **main:** source sync and errors done ([4210875](https://github.com/silentium-lab/silentium/commit/4210875d2e0259c56d4ac586c8ca15c34c4a6ef7))
+
 ### [0.0.34](https://github.com/silentium-lab/silentium/compare/v0.0.33...v0.0.34) (2025-05-21)
 
 
