@@ -1,5 +1,7 @@
 # Silentium
 
+[Documentation](https://silentium-lab.github.io/silentium/#/en/)
+
 To install the library you can use the command.
 
 ```bash
