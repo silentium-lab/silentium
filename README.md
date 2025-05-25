@@ -1,3 +1,9 @@
 # Silentium
 
-[Документация](https://github.com/silentium-lab/)
+To install the library you can use the command.
+
+```bash
+npm install silentium
+```
+
+
