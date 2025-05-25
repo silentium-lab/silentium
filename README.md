@@ -1,3 +1,5 @@
+[![Node.js CI](https://github.com/silentium-lab/silentium/actions/workflows/node.js.yml/badge.svg)](https://github.com/silentium-lab/silentium/actions/workflows/node.js.yml)
+
 # Silentium
 
 [Documentation](https://silentium-lab.github.io/silentium/#/en/)
