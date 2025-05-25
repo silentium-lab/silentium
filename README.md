@@ -10,3 +10,7 @@ The library helps you create abstractions for information in your system. Instea
 
 The idea for the project was born from the ideas of eolang and was inspired by this paper, 𝜑-calculus:
 https://arxiv.org/pdf/2111.13384
+
+## Difference from eolang
+
+Unlike eolang, where the program starts working at the moment when some method receives data, which is called dataization, Silentium starts executing the program at the moment when a guest comes to the information source, requesting data, this difference allows the Silentium library to work on top of JavaScript events, creating abstractions of information around some event models.
