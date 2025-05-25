@@ -1,9 +1,9 @@
 <script class="page-title" type="text/template">
-  SourceSequence
+  sourceSequence
 </script>
 
 <h1 class="pb-3 text-xl font-semibold text-gray-600">
-  SourceSequence
+  sourceSequence
 </h1>
 
 <a
@@ -16,12 +16,12 @@
     width="16"
     height="16"
   />
-  SourceSequence on GitHub
+  sourceSequence on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-  The <b>SourceSequence</b> class works the same way as
-<link-dynamic href="/source/source-map">SourceMap</link-dynamic>
+  The <b>sourceSequence</b> works the same way as
+<link-dynamic href="/source/source-map">sourceMap</link-dynamic>
   , but iterates through the data sources sequentially rather than in parallel
 </p>
 
@@ -33,14 +33,23 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import {
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
+
+<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
+<div class="example mb-4">
+  <span class="guest-result">Result here</span>
+</div>
+
+<script type="module" data-listing=".listing-1">
+import {
   source,
   patron,
   guestCast,
-  sourceChangeable,
+  sourceOf,
   sourceSequence,
   lazyClass,
   give,
+  value,
   isSource,
 } from "silentium";
 
@@ -59,7 +68,7 @@ class X3 {
   }
 }
 
-const tillResult = sourceChangeable(9);
+const tillResult = sourceOf(9);
 const numSource = (num) =>
   source((guest) =>
     setTimeout(() => {
@@ -70,7 +79,7 @@ const numSource = (num) =>
     }, 1000)
   );
 
-const source = sourceChangeable([
+const src = sourceOf([
   numSource(1),
   numSource(2),
   numSource(3),
@@ -81,84 +90,16 @@ const source = sourceChangeable([
   numSource(8),
   numSource(9),
 ]);
-const sequence = sourceSequence(source, lazyClass(X3));
+const sequence = sourceSequence(src, lazyClass(X3));
 
-sequence.value((v) => {
+value(sequence, patron((v) => {
   document.querySelector(".guest-result").textContent = v.join();
-});
+}));
 tillResult.value(
   patron((v) => {
     document.querySelector(
       ".guest-result"
-    ).textContent = `Result in ${v} sec.`;
+    ).textContent = `Результат через ${v} сек.`;
   })
 );
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
-<div class="example mb-4">
-  <span class="guest-result">Result here</span>/span>
-</div>
-
-<script type="module">
-  import {
-    source,
-    patron,
-    guestCast,
-    sourceChangeable,
-    sourceSequence,
-    lazyClass,
-    give,
-    isSource,
-  } from "silentium";
-
-  class X3 {
-    constructor(baseNumber) {
-      this.baseNumber = baseNumber;
-    }
-
-    value(guest) {
-      this.baseNumber.value(
-        guestCast(guest, (v) => {
-          give(v * 3, guest);
-        })
-      );
-      return this;
-    }
-  }
-
-  const tillResult = sourceChangeable(9);
-  const numSource = (num) =>
-    source((guest) =>
-      setTimeout(() => {
-        tillResult.value((theValue) => {
-          tillResult.give(theValue - 1);
-        });
-        give(num, guest);
-      }, 1000)
-    );
-
-  const src = sourceChangeable([
-    numSource(1),
-    numSource(2),
-    numSource(3),
-    numSource(4),
-    numSource(5),
-    numSource(6),
-    numSource(7),
-    numSource(8),
-    numSource(9),
-  ]);
-  const sequence = sourceSequence(src, lazyClass(X3));
-
-  sequence.value((v) => {
-    document.querySelector(".guest-result").textContent = v.join();
-  });
-  tillResult.value(
-    patron((v) => {
-      document.querySelector(
-        ".guest-result"
-      ).textContent = `Result in ${v} sec.`;
-})
-  );
 </script>
