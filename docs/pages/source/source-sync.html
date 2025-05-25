@@ -1,9 +1,9 @@
 <script class="page-title" type="text/template">
-  SourceSync
+  sourceSync
 </script>
 
 <h1 class="pb-3 text-xl font-semibold text-gray-600">
-    Класс SourceSync
+    sourceSync
 </h1>
 
 <a
@@ -16,34 +16,28 @@
     width="16"
     height="16"
   />
-  SourceSync на GitHub
+  sourceSync на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
-    Класс SourceSync позволяет построить композицию классов и синхронно прочитать полученное значение.
+    sourceSync позволяет построить композицию классов и синхронно прочитать полученное значение.
     Под капотом класс основан на <link-dynamic href="/guest/guest-sync">GuestSync</link-dynamic>. Класс будет полезен в логике тестов, чтобы проверять композиции сразу синхронно в тесте.
 </p>
 
 <p class="text-gray-600 text-lg mb-4">
-    Если сравнивать пример из документации GuestSync c примером ниже, то видно что SourceSync более лаконичный.
+    Если сравнивать пример из документации GuestSync c примером ниже, то видно что sourceSync более лаконичный.
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { sourceChangeable, sourceSync } from "silentium";
-
-const syncSource = sourceSync(sourceChangeable("Успешно установлено синхронно!"));
-document.querySelector(".guest-result").textContent = syncSource.syncValue();
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
 <div class="example mb-4">
   <span class="guest-result">Значение установится синхронно!</span>
 </div>
-<script type="module">
-  import { sourceChangeable, sourceSync } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceOf, sourceSync } from "silentium";
 
-  const syncSource = sourceSync(sourceChangeable("Успешно установлено синхронно!"));
-  document.querySelector(".guest-result").textContent = syncSource.syncValue();
+const syncSource = sourceSync(sourceOf("Успешно установлено синхронно!"));
+document.querySelector(".guest-result").textContent = syncSource.syncValue();
 </script>

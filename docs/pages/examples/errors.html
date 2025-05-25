@@ -36,136 +36,75 @@
 </div>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre
-  class="mb-4"
-><code class="language-js">import { SourceActive, SourceEmpty, guestCast, patron } from "silentium";
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
-  class Random {
-    constructor(till) {
-      this.activeSource = new SourceActive((_, source) => {
-        source.give(Math.round(Math.random() * till));
-      });
-    }
+<script type="module" data-listing=".listing-1">
+import { sourceOf, guestCast, source, give, value, patron } from "silentium";
 
-    do() {
-      this.activeSource.do();
-      return this;
-    }
-
-    value(guest) {
-      this.activeSource.value(guest);
-      return this;
-    }
+class Random {
+  constructor(till) {
+    this.activeSource = sourceOf();
+    this.nextNumberSrc = source((g) => {
+      give(Math.round(Math.random() * till), g);
+    });
   }
 
-  window.random = new Random(99);
-
-  class EvenNumberMessage {
-    constructor(baseNumber, errorGuest) {
-      this.baseNumber = baseNumber;
-      this.errorGuest = errorGuest;
-    }
-
-    value(guest) {
-      this.baseNumber.value(
-        guestCast(guest, (value) => {
-          if (value % 2 === 0) {
-            guest.give(`${value} - четное!`);
-          } else {
-            this.errorGuest.give(`${value} - не четное!`);
-          }
-        })
-      );
-      return this;
-    }
+  do() {
+    value(this.nextNumberSrc, this.activeSource);
+    return this;
   }
 
-  const randomErrors = new SourceEmpty();
-  const randomMessage = new EvenNumberMessage(random, randomErrors);
+  value(guest) {
+    this.activeSource.value(guest);
+    return this;
+  }
+}
 
-  random.value(
-    patron((val) => {
-      document.querySelector(".guest-result").textContent = val;
-    })
-  );
-  randomMessage.value(
-    patron((val) => {
-      document.querySelector(".guest-message").textContent = val;
-    })
-  );
-  randomErrors.value(
-    patron((val) => {
-      document.querySelector(".guest-error").textContent = val;
-    })
-  );
-</code></pre>
+window.random = new Random(99);
 
-<script type="module">
-  import { SourceActive, SourceEmpty, guestCast, patron } from "silentium";
-
-  class Random {
-    constructor(till) {
-      this.activeSource = new SourceActive((_, source) => {
-        source.give(Math.round(Math.random() * till));
-      });
-    }
-
-    do() {
-      this.activeSource.do();
-      return this;
-    }
-
-    value(guest) {
-      this.activeSource.value(guest);
-      return this;
-    }
+class EvenNumberMessage {
+  constructor(baseNumber, errorGuest) {
+    this.baseNumber = baseNumber;
+    this.errorGuest = errorGuest;
   }
 
-  window.random = new Random(99);
-
-  class EvenNumberMessage {
-    constructor(baseNumber, errorGuest) {
-      this.baseNumber = baseNumber;
-      this.errorGuest = errorGuest;
-    }
-
-    value(guest) {
-      this.baseNumber.value(
-        guestCast(guest, (value) => {
-          if (value % 2 === 0) {
-            guest.give(`${value} - четное!`);
-          } else {
-            this.errorGuest.give(`${value} - не четное!`);
-          }
-        })
-      );
-      return this;
-    }
+  value(guest) {
+    this.baseNumber.value(
+      guestCast(guest, (value) => {
+        if (value % 2 === 0) {
+          guest.give(`${value} - четное!`);
+        } else {
+          this.errorGuest.give(`${value} - не четное!`);
+        }
+      })
+    );
+    return this;
   }
+}
 
-  const randomErrors = new SourceEmpty();
-  const randomMessage = new EvenNumberMessage(random, randomErrors);
+const randomErrors = sourceOf();
+const randomMessage = new EvenNumberMessage(random, randomErrors);
 
-  random.value(
-    patron((val) => {
-      document.querySelector(".guest-result").textContent = val;
-    })
-  );
-  randomMessage.value(
-    patron((val) => {
-      document.querySelector(".guest-message").textContent = val;
-    })
-  );
-  randomErrors.value(
-    patron((val) => {
-      document.querySelector(".guest-error").textContent = val;
-    })
-  );
+random.value(
+  patron((val) => {
+    document.querySelector(".guest-result").textContent = val;
+  })
+);
+randomMessage.value(
+  patron((val) => {
+    document.querySelector(".guest-message").textContent = val;
+  })
+);
+randomErrors.value(
+  patron((val) => {
+    document.querySelector(".guest-error").textContent = val;
+  })
+);
 </script>
 
 <p class="text-gray-600 text-lg mb-4">
   На уровне приложения, если нам нужно обрабатывать ошибки централизованно можно
-  создать один объект от класса SourceEmpty и передавать этот объект в качестве
+  создать один объект через sourceOf и передавать этот объект в качестве
   посетителя для любых ошибок, что позволит собрать все ошибки в одном месте и
   обработать.
 </p>
