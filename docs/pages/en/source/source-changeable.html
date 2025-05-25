@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceChangeable
+  sourceOf
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">SourceChangeable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceOf</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceChangeable.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  SourceChangeable on GitHub
+  sourceOf on GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -44,52 +44,33 @@ that data visitors can decide for themselves whether they need to be notified or
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Example 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patron } from "silentium";
-
-const source = sourceChangeable("one");
-source.value((value) => {
-  document.querySelector(
-    ".source-result-1"
-  ).textContent = `Guest result = ${value}`;
-});
-source.value(
-  patron((value) => {
-    document.querySelector(
-      ".source-result-2"
-    ).textContent = `Cartridge result = ${value}`;
-})
-);
-
-setTimeout(() => {
-source.give("two");
-});
-</code></pre>
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Result 1.</p>
 <div class="example mb-4">
   <div class="source-result-1">No result!</div>
   <div class="source-result-2">No result!</div>
 </div>
-<script type="module">
-  import { sourceChangeable, patron } from "silentium";
+<script type="module" data-listing=".listing-1">
+import { sourceOf, patron } from "silentium";
 
-  const source = sourceChangeable("one");
-  source.value((value) => {
-    document.querySelector(
-      ".source-result-1"
-    ).textContent = `Guest result = ${value}`;
+const source = sourceOf("один");
+source.value((value) => {
+  document.querySelector(
+    ".source-result-1"
+  ).textContent = `Результат гостя = ${value}`;
 });
-  source.value(
-    patron((value) => {
-      document.querySelector(
-        ".source-result-2"
-      ).textContent = `Cartridge result = ${value}`;
-    })
-  );
+source.value(
+  patron((value) => {
+    document.querySelector(
+      ".source-result-2"
+    ).textContent = `Результат патрона = ${value}`;
+  })
+);
 
-  setTimeout(() => {
-    source.give("two");
-  });
+setTimeout(() => {
+  source.give("два");
+});
 </script>
 
 <div class="font-bold mt-8">See also</div>

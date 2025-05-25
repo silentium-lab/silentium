@@ -1,8 +1,8 @@
 <script class="page-title" type="text/template">
-  SourceChangeable
+  sourceOf
 </script>
 
-<h1 class="pb-3 text-xl font-semibold text-gray-600">Класс SourceChangeable</h1>
+<h1 class="pb-3 text-xl font-semibold text-gray-600">sourceOf</h1>
 
 <a
   href="https://github.com/kosukhin/patron/blob/main/src/Source/SourceChangeable.ts"
@@ -14,7 +14,7 @@
     width="16"
     height="16"
   />
-  SourceChangeable на GitHub
+  sourceOf на GitHub
 </a>
 
 <p class="text-gray-600 text-lg mb-4">
@@ -44,9 +44,17 @@
 </p>
 
 <p class="text-gray-600 text-lg mb-0 font-bold">Пример 1.</p>
-<pre class="mb-4"><code class="language-js">import { sourceChangeable, patron } from "silentium";
+<pre class="mb-4"><code class="language-js listing-1"></code></pre>
 
-const source = sourceChangeable("один");
+<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
+<div class="example mb-4">
+  <div class="source-result-1">Нет результата!</div>
+  <div class="source-result-2">Нет результата!</div>
+</div>
+<script type="module" data-listing=".listing-1">
+import { sourceOf, patron } from "silentium";
+
+const source = sourceOf("один");
 source.value((value) => {
   document.querySelector(
     ".source-result-1"
@@ -63,33 +71,6 @@ source.value(
 setTimeout(() => {
   source.give("два");
 });
-</code></pre>
-
-<p class="text-gray-600 text-lg mb-0 font-bold">Результат 1.</p>
-<div class="example mb-4">
-  <div class="source-result-1">Нет результата!</div>
-  <div class="source-result-2">Нет результата!</div>
-</div>
-<script type="module">
-  import { sourceChangeable, patron } from "silentium";
-
-  const source = sourceChangeable("один");
-  source.value((value) => {
-    document.querySelector(
-      ".source-result-1"
-    ).textContent = `Результат гостя = ${value}`;
-  });
-  source.value(
-    patron((value) => {
-      document.querySelector(
-        ".source-result-2"
-      ).textContent = `Результат патрона = ${value}`;
-    })
-  );
-
-  setTimeout(() => {
-    source.give("два");
-  });
 </script>
 
 <div class="font-bold mt-8">Смотрите также</div>
