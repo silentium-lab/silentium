@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.37](https://github.com/silentium-lab/silentium/compare/v0.0.36...v0.0.37) (2025-05-31)
+
+
+### Features
+
+* **49-sourcedetached:** firstVisit done and applied ([d596990](https://github.com/silentium-lab/silentium/commit/d596990daf05b0136e3860bbc6793950fb6ccaf2))
+
+
+### Bug Fixes
+
+* **49-sourcedetached:** fix tests ([e054cd6](https://github.com/silentium-lab/silentium/commit/e054cd6c63caa9b436212fc1e1e2db5e82622197))
+
 ### [0.0.36](https://github.com/silentium-lab/silentium/compare/v0.0.35...v0.0.36) (2025-05-31)
 
 
