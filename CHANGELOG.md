@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://github.com/silentium-lab/silentium/compare/v0.0.35...v0.0.36) (2025-05-31)
+
+
+### Features
+
+* **47-sourcelazy-component:** source lazy done ([ed97056](https://github.com/silentium-lab/silentium/commit/ed9705603913451e22ed6994005f6a5b656dacde))
+
 ### [0.0.35](https://github.com/silentium-lab/silentium/compare/v0.0.34...v0.0.35) (2025-05-25)
 
 
