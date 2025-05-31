@@ -1,10 +1,16 @@
 import { removePatronFromPools, subSource } from "../Patron/PatronPool";
-import { give, guest, GuestObjectType, GuestType } from "../Guest/Guest";
+import {
+  firstVisit,
+  give,
+  guest,
+  GuestObjectType,
+  GuestType,
+} from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Patron/Patron";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
-import { DestroyableType } from "src/Source/SourceDestroyable";
+import { DestroyableType } from "../Source/SourceDestroyable";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 
@@ -28,27 +34,30 @@ export const sourceAll = <const T extends SourceType[]>(
   const theAll = sourceOf({});
   const patrons: GuestObjectType[] = [];
 
-  Object.entries(sources).forEach(([key, source]) => {
-    subSource(theAll, source);
-    keysKnown.add(key);
-    const keyPatron = patron((v) => {
-      theAll.value(
-        guest((all: Record<string, unknown>) => {
-          keysFilled.add(key);
-          const lastAll = {
-            ...all,
-            [key]: v,
-          };
-          theAll.give(lastAll);
-        }),
-      );
+  const visited = firstVisit(() => {
+    Object.entries(sources).forEach(([key, source]) => {
+      subSource(theAll, source);
+      keysKnown.add(key);
+      const keyPatron = patron((v) => {
+        theAll.value(
+          guest((all: Record<string, unknown>) => {
+            keysFilled.add(key);
+            const lastAll = {
+              ...all,
+              [key]: v,
+            };
+            theAll.give(lastAll);
+          }),
+        );
+      });
+      patrons.push(keyPatron);
+      value(source, keyPatron);
     });
-    patrons.push(keyPatron);
-    value(source, keyPatron);
   });
 
   return {
     value(guest: GuestType<ExtractTypesFromArray<T>>) {
+      visited();
       const mbPatron = guestCast(guest, (value: T) => {
         if (isAllFilled()) {
           give(Object.values(value) as ExtractTypesFromArray<T>, guest);

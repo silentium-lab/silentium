@@ -7,6 +7,7 @@ import { SourceObjectType, SourceType, value } from "../Source/Source";
 /**
  * Helps to represent source value as sync value, what can be returned
  * useful for example in tests
+ * This source is not lazy! When we create it patron visit baseSource
  * @url https://silentium-lab.github.io/silentium/#/source/source-sync
  */
 export const sourceSync = <T>(
@@ -29,7 +30,6 @@ export const sourceSync = <T>(
       }
     },
   };
-
   subSource(result, baseSource);
 
   return result;

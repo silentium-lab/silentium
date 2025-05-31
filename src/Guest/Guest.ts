@@ -61,3 +61,19 @@ export const guest = <T>(receiver: GuestExecutorType<T>) => {
   };
   return result;
 };
+
+/**
+ * First visit of source, useful for detached sources
+ * This function is important because code of source must executes
+ * only after guest visited source, sources are lazy!
+ * @url https://silentium-lab.github.io/silentium/#/utils/first-visit
+ */
+export const firstVisit = (afterFirstVisit: () => void) => {
+  let isVisited = false;
+  return () => {
+    if (!isVisited) {
+      afterFirstVisit();
+    }
+    isVisited = true;
+  };
+};

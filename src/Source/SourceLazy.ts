@@ -15,11 +15,11 @@ import { sourceResettable } from "../Source/SourceResettable";
 export const sourceLazy = <T>(
   lazySrc: LazyType<SourceType<T>>,
   args: SourceType[],
-  resetSrc?: SourceType<unknown>,
+  destroySrc?: SourceType<unknown>,
 ) => {
   let instance: SourceType<T> | null = null;
   const result = sourceOf<T>();
-  const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
+  const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
   let wasInstantiated = false;
 
   const instantiate = () => {
@@ -39,9 +39,9 @@ export const sourceLazy = <T>(
     );
   };
 
-  if (resetSrc) {
+  if (destroySrc) {
     value(
-      resetSrc,
+      destroySrc,
       patron(() => {
         destroy(instance);
         instance = null;
@@ -51,6 +51,6 @@ export const sourceLazy = <T>(
 
   return (g: GuestType<T>) => {
     instantiate();
-    resultResettable.value(g);
+    value(resultResettable, g);
   };
 };
