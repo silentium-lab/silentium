@@ -61,6 +61,15 @@ const guest = (receiver) => {
   };
   return result;
 };
+const firstVisit = (afterFirstVisit) => {
+  let isVisited = false;
+  return () => {
+    if (!isVisited) {
+      afterFirstVisit();
+    }
+    isVisited = true;
+  };
+};
 
 const guestCast = (sourceGuest, targetGuest) => {
   if (sourceGuest === void 0) {
@@ -446,26 +455,29 @@ const sourceAll = (sources) => {
   };
   const theAll = sourceOf({});
   const patrons = [];
-  Object.entries(sources).forEach(([key, source]) => {
-    subSource(theAll, source);
-    keysKnown.add(key);
-    const keyPatron = patron((v) => {
-      theAll.value(
-        guest((all) => {
-          keysFilled.add(key);
-          const lastAll = {
-            ...all,
-            [key]: v
-          };
-          theAll.give(lastAll);
-        })
-      );
+  const visited = firstVisit(() => {
+    Object.entries(sources).forEach(([key, source]) => {
+      subSource(theAll, source);
+      keysKnown.add(key);
+      const keyPatron = patron((v) => {
+        theAll.value(
+          guest((all) => {
+            keysFilled.add(key);
+            const lastAll = {
+              ...all,
+              [key]: v
+            };
+            theAll.give(lastAll);
+          })
+        );
+      });
+      patrons.push(keyPatron);
+      value(source, keyPatron);
     });
-    patrons.push(keyPatron);
-    value(source, keyPatron);
   });
   return {
     value(guest2) {
+      visited();
       const mbPatron = guestCast(guest2, (value2) => {
         if (isAllFilled()) {
           give(Object.values(value2), guest2);
@@ -543,25 +555,30 @@ const sourceMap = (baseSource, targetSource) => {
     throw new Error("SourceMap didn't receive targetSource argument");
   }
   const result = sourceOf();
-  value(
-    baseSource,
-    patron((theValue) => {
-      const sources = [];
-      theValue.forEach((val) => {
-        const source = targetSource.get(val);
-        subSource(source, baseSource);
-        sources.push(source);
-      });
-      value(
-        sourceAll(sources),
-        patronOnce((v) => {
-          destroy(...sources);
-          give(v, result);
-        })
-      );
-    })
-  );
-  return result.value;
+  const visited = firstVisit(() => {
+    value(
+      baseSource,
+      patron((theValue) => {
+        const sources = [];
+        theValue.forEach((val) => {
+          const source = targetSource.get(val);
+          subSource(source, baseSource);
+          sources.push(source);
+        });
+        value(
+          sourceAll(sources),
+          patronOnce((v) => {
+            destroy(...sources);
+            give(v, result);
+          })
+        );
+      })
+    );
+  });
+  return (g) => {
+    visited();
+    result.value(g);
+  };
 };
 
 const sourceRace = (sources) => {
@@ -588,21 +605,26 @@ const sourceChain = (...sources) => {
   const resultSrc = sourceOf();
   const respondedSources = /* @__PURE__ */ new Set();
   let lastSourceValue = null;
-  sources.forEach((source, index) => {
-    value(
-      source,
-      patron((value2) => {
-        respondedSources.add(index);
-        if (index === sources.length - 1) {
-          lastSourceValue = value2;
-        }
-        if (respondedSources.size === sources.length && lastSourceValue !== null) {
-          resultSrc.give(lastSourceValue);
-        }
-      })
-    );
+  const visited = firstVisit(() => {
+    sources.forEach((source, index) => {
+      value(
+        source,
+        patron((value2) => {
+          respondedSources.add(index);
+          if (index === sources.length - 1) {
+            lastSourceValue = value2;
+          }
+          if (respondedSources.size === sources.length && lastSourceValue !== null) {
+            resultSrc.give(lastSourceValue);
+          }
+        })
+      );
+    });
   });
-  return resultSrc.value;
+  return (g) => {
+    visited();
+    resultSrc.value(g);
+  };
 };
 
 const sourceDynamic = (baseGuest, baseSource) => {
@@ -689,29 +711,39 @@ const sourceCombined = (...sources) => (source) => {
 
 const sourceResettable = (baseSrc, resettableSrc) => {
   const result = sourceOf();
-  value(
-    resettableSrc,
-    patron(() => {
-      give(null, result);
-    })
-  );
-  value(baseSrc, patron(result));
-  subSource(result, baseSrc);
-  return result;
+  const visited = firstVisit(() => {
+    value(
+      resettableSrc,
+      patron(() => {
+        give(null, result);
+      })
+    );
+    value(baseSrc, patron(result));
+    subSource(result, baseSrc);
+  });
+  return (g) => {
+    visited();
+    result.value(g);
+  };
 };
 
 const sourceAny = (sources) => {
   const lastSrc = sourceOf();
-  sources.forEach((source) => {
-    value(source, patron(lastSrc));
+  const visited = firstVisit(() => {
+    sources.forEach((source) => {
+      value(source, patron(lastSrc));
+    });
   });
-  return lastSrc;
+  return (g) => {
+    visited();
+    lastSrc.value(g);
+  };
 };
 
-const sourceLazy = (lazySrc, args, resetSrc) => {
+const sourceLazy = (lazySrc, args, destroySrc) => {
   let instance = null;
   const result = sourceOf();
-  const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
+  const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
   let wasInstantiated = false;
   const instantiate = () => {
     if (wasInstantiated) {
@@ -728,9 +760,9 @@ const sourceLazy = (lazySrc, args, resetSrc) => {
       })
     );
   };
-  if (resetSrc) {
+  if (destroySrc) {
     value(
-      resetSrc,
+      destroySrc,
       patron(() => {
         destroy(instance);
         instance = null;
@@ -739,7 +771,7 @@ const sourceLazy = (lazySrc, args, resetSrc) => {
   }
   return (g) => {
     instantiate();
-    resultResettable.value(g);
+    value(resultResettable, g);
   };
 };
 
@@ -784,5 +816,5 @@ const lazy = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { PatronPool, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
 //# sourceMappingURL=silentium.js.map

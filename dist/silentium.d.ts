@@ -1,4 +1,3 @@
-import { DestroyableType as DestroyableType$1 } from 'src/Source/SourceDestroyable';
 import { GuestType as GuestType$1 } from 'src/Guest/Guest';
 
 type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
@@ -49,6 +48,13 @@ declare const isGuest: (mbGuest: any) => mbGuest is GuestType;
 declare const guest: <T>(receiver: GuestExecutorType<T>) => {
     give(value: T): any;
 };
+/**
+ * First visit of source, useful for detached sources
+ * This function is important because code of source must executes
+ * only after guest visited source, sources are lazy!
+ * @url https://silentium-lab.github.io/silentium/#/utils/first-visit
+ */
+declare const firstVisit: (afterFirstVisit: () => void) => () => void;
 
 interface GuestDisposableType<T = any> extends GuestObjectType<T> {
     disposed(value: T | null): boolean;
@@ -212,7 +218,7 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType$1;
+declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType;
 
 interface LazyType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
@@ -233,7 +239,7 @@ declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource:
  * Helps to modify many sources with one private source
  * @url https://silentium-lab.github.io/silentium/#/source/source-map
  */
-declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => SourceExecutorType<TG[], unknown>;
+declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (g: GuestType<TG[]>) => void;
 
 /**
  * Connects guest with source what give response faster than others
@@ -296,6 +302,7 @@ declare const sourceOnce: <T>(initialValue?: SourceType<T>) => {
 /**
  * Helps to represent source value as sync value, what can be returned
  * useful for example in tests
+ * This source is not lazy! When we create it patron visit baseSource
  * @url https://silentium-lab.github.io/silentium/#/source/source-sync
  */
 declare const sourceSync: <T>(baseSource: SourceType<T>, defaultValue?: unknown) => SourceObjectType<T> & {
@@ -311,7 +318,7 @@ declare const sourceCombined: <const T extends SourceType[]>(...sources: T) => <
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
  */
-declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => SourceChangeableType<T>;
+declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => (g: GuestType<T>) => void;
 
 /**
  * Present source of value what was last appeared in any
@@ -319,18 +326,18 @@ declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: Sourc
  * don't respond
  * @url https://silentium-lab.github.io/silentium/#/source/source-any
  */
-declare const sourceAny: <T>(sources: SourceType<T>[]) => SourceChangeableType<T>;
+declare const sourceAny: <T>(sources: SourceType<T>[]) => (g: GuestType<T>) => void;
 
 /**
  * Helps to build source only when all sources will give its values
  * and only after some guest visit source
  * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
  */
-declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], resetSrc?: SourceType<unknown>) => (g: GuestType$1<T>) => void;
+declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], destroySrc?: SourceType<unknown>) => (g: GuestType$1<T>) => void;
 
 interface Prototyped<T> {
     prototype: T;
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
