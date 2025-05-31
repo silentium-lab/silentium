@@ -1,4 +1,4 @@
-import { give } from "../Guest/Guest";
+import { firstVisit, give, GuestType } from "../Guest/Guest";
 import { patron } from "../Patron/Patron";
 import { subSource } from "../Patron/PatronPool";
 import { SourceType, value } from "../Source/Source";
@@ -13,15 +13,20 @@ export const sourceResettable = <T>(
 ) => {
   const result = sourceOf<T>();
 
-  value(
-    resettableSrc,
-    patron(() => {
-      give(null, result);
-    }),
-  );
+  const visited = firstVisit(() => {
+    value(
+      resettableSrc,
+      patron(() => {
+        give(null, result);
+      }),
+    );
 
-  value(baseSrc, patron(result));
-  subSource(result, baseSrc);
+    value(baseSrc, patron(result));
+    subSource(result, baseSrc);
+  });
 
-  return result;
+  return (g: GuestType<T>) => {
+    visited();
+    result.value(g);
+  };
 };

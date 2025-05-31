@@ -1,3 +1,4 @@
+import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
 import { sourceSync } from "../Source/SourceSync";
@@ -14,11 +15,11 @@ test("SourceFiltered.test", () => {
   resetSrc.give(1);
 
   const g1 = vi.fn();
-  resettable.value(g1);
+  value(resettable, g1);
   expect(g1).not.toBeCalled();
 
   baseSrc.give(2);
   const g2 = vi.fn();
-  resettable.value(g2);
+  value(resettable, g2);
   expect(g2).toBeCalledWith(2);
 });
