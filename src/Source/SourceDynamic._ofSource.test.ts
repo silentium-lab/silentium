@@ -4,7 +4,7 @@ import { expect, test, vitest } from "vitest";
 
 test("SourceDynamic._ofSource.test", () => {
   const source = sourceOf(1);
-  const sd = sourceDynamic(source, source);
+  const sd = sourceDynamic<number>(source, source);
 
   const g1 = vitest.fn();
   sd.value(g1);
