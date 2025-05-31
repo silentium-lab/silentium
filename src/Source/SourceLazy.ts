@@ -1,3 +1,4 @@
+import { GuestType } from "src/Guest/Guest";
 import { LazyType } from "../Lazy/Lazy";
 import { patron } from "../Patron/Patron";
 import { destroy } from "../Patron/PatronPool";
@@ -8,6 +9,7 @@ import { sourceResettable } from "../Source/SourceResettable";
 
 /**
  * Helps to build source only when all sources will give its values
+ * and only after some guest visit source
  * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
  */
 export const sourceLazy = <T>(
@@ -18,16 +20,24 @@ export const sourceLazy = <T>(
   let instance: SourceType<T> | null = null;
   const result = sourceOf<T>();
   const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
+  let wasInstantiated = false;
 
-  value(
-    sourceAll(args),
-    patron(() => {
-      if (!instance) {
-        instance = lazySrc.get(...args);
-        value(instance, patron(result));
-      }
-    }),
-  );
+  const instantiate = () => {
+    if (wasInstantiated) {
+      return;
+    }
+
+    wasInstantiated = true;
+    value(
+      sourceAll(args),
+      patron(() => {
+        if (!instance) {
+          instance = lazySrc.get(...args);
+          value(instance, patron(result));
+        }
+      }),
+    );
+  };
 
   if (resetSrc) {
     value(
@@ -39,5 +49,8 @@ export const sourceLazy = <T>(
     );
   }
 
-  return resultResettable;
+  return (g: GuestType<T>) => {
+    instantiate();
+    resultResettable.value(g);
+  };
 };
