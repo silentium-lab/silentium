@@ -1,4 +1,5 @@
 import { DestroyableType as DestroyableType$1 } from 'src/Source/SourceDestroyable';
+import { GuestType as GuestType$1 } from 'src/Guest/Guest';
 
 type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
 interface SourceObjectType<T> {
@@ -322,9 +323,10 @@ declare const sourceAny: <T>(sources: SourceType<T>[]) => SourceChangeableType<T
 
 /**
  * Helps to build source only when all sources will give its values
+ * and only after some guest visit source
  * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
  */
-declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], resetSrc?: SourceType<unknown>) => SourceChangeableType<T>;
+declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], resetSrc?: SourceType<unknown>) => (g: GuestType$1<T>) => void;
 
 interface Prototyped<T> {
     prototype: T;

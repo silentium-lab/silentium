@@ -712,15 +712,22 @@ const sourceLazy = (lazySrc, args, resetSrc) => {
   let instance = null;
   const result = sourceOf();
   const resultResettable = sourceResettable(result, resetSrc ?? sourceOf());
-  value(
-    sourceAll(args),
-    patron(() => {
-      if (!instance) {
-        instance = lazySrc.get(...args);
-        value(instance, patron(result));
-      }
-    })
-  );
+  let wasInstantiated = false;
+  const instantiate = () => {
+    if (wasInstantiated) {
+      return;
+    }
+    wasInstantiated = true;
+    value(
+      sourceAll(args),
+      patron(() => {
+        if (!instance) {
+          instance = lazySrc.get(...args);
+          value(instance, patron(result));
+        }
+      })
+    );
+  };
   if (resetSrc) {
     value(
       resetSrc,
@@ -730,7 +737,10 @@ const sourceLazy = (lazySrc, args, resetSrc) => {
       })
     );
   }
-  return resultResettable;
+  return (g) => {
+    instantiate();
+    resultResettable.value(g);
+  };
 };
 
 const sourceDestroyable = (source) => {
