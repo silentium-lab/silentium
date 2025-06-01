@@ -17,4 +17,9 @@ test("SourceChain.test", () => {
   triggerSrc.give("done");
 
   expect(valueAfterTrigger.syncValue()).toBe("the-value");
+
+  valueSrc.give("new-value");
+  triggerSrc.give("done2");
+
+  expect(valueAfterTrigger.syncValue()).toBe("new-value");
 });

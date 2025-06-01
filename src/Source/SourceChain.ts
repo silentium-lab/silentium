@@ -1,5 +1,5 @@
-import { firstVisit, GuestType } from "../Guest/Guest";
 import { patron } from "../Patron/Patron";
+import { firstVisit, GuestType } from "../Guest/Guest";
 import { SourceType, value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 
@@ -14,23 +14,20 @@ export const sourceChain = <T extends SourceType[]>(
   ...sources: T
 ): SourceType<Last<T>> => {
   const resultSrc = sourceOf<Last<T>>();
-  const respondedSources = new Set();
-  let lastSourceValue: any = null;
+  const respondedSources: Record<string, string> = {};
+
+  const respondCount = () => Object.keys(respondedSources).length;
 
   const visited = firstVisit(() => {
+    const lastSrc = sources.at(-1);
+
     sources.forEach((source, index) => {
       value(
         source,
-        patron((value) => {
-          respondedSources.add(index);
-          if (index === sources.length - 1) {
-            lastSourceValue = value;
-          }
-          if (
-            respondedSources.size === sources.length &&
-            lastSourceValue !== null
-          ) {
-            resultSrc.give(lastSourceValue);
+        patron(() => {
+          respondedSources[index] = "1";
+          if (respondCount() === sources.length) {
+            value(lastSrc, resultSrc);
           }
         }),
       );
