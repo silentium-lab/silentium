@@ -1,5 +1,7 @@
 'use strict';
 
+var SourceDynamic = require('src/Source/SourceDynamic');
+
 const value = (source2, guest) => {
   if (source2 === void 0 || source2 === null) {
     throw new Error("value didn't receive source argument");
@@ -723,10 +725,10 @@ const sourceResettable = (baseSrc, resettableSrc) => {
     value(baseSrc, patron(result));
     subSource(result, baseSrc);
   });
-  return (g) => {
+  return SourceDynamic.sourceDynamic(result.give, (g) => {
     visited();
     result.value(g);
-  };
+  });
 };
 
 const sourceAny = (sources) => {

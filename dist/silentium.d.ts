@@ -318,7 +318,7 @@ declare const sourceCombined: <const T extends SourceType[]>(...sources: T) => <
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
  */
-declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => (g: GuestType<T>) => void;
+declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => SourceChangeableType<T>;
 
 /**
  * Present source of value what was last appeared in any
