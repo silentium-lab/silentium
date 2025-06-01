@@ -1,3 +1,4 @@
+import { sourceDynamic } from "src/Source/SourceDynamic";
 import { firstVisit, give, GuestType } from "../Guest/Guest";
 import { patron } from "../Patron/Patron";
 import { subSource } from "../Patron/PatronPool";
@@ -25,8 +26,8 @@ export const sourceResettable = <T>(
     subSource(result, baseSrc);
   });
 
-  return (g: GuestType<T>) => {
+  return sourceDynamic(result.give, (g: GuestType<T>) => {
     visited();
     result.value(g);
-  };
+  });
 };
