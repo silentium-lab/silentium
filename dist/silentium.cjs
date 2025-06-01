@@ -605,19 +605,17 @@ const sourceRace = (sources) => {
 
 const sourceChain = (...sources) => {
   const resultSrc = sourceOf();
-  const respondedSources = /* @__PURE__ */ new Set();
-  let lastSourceValue = null;
+  const respondedSources = {};
+  const respondCount = () => Object.keys(respondedSources).length;
   const visited = firstVisit(() => {
+    const lastSrc = sources.at(-1);
     sources.forEach((source, index) => {
       value(
         source,
-        patron((value2) => {
-          respondedSources.add(index);
-          if (index === sources.length - 1) {
-            lastSourceValue = value2;
-          }
-          if (respondedSources.size === sources.length && lastSourceValue !== null) {
-            resultSrc.give(lastSourceValue);
+        patron(() => {
+          respondedSources[index] = "1";
+          if (respondCount() === sources.length) {
+            value(lastSrc, resultSrc);
           }
         })
       );
