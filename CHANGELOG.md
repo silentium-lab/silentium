@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://github.com/silentium-lab/silentium/compare/v0.0.38...v0.0.39) (2025-06-01)
+
+
+### Bug Fixes
+
+* **main:** fixed imports for source resettable ([ad51a9e](https://github.com/silentium-lab/silentium/commit/ad51a9eef8f5033d61da2c5916ef8414a170f1da))
+
 ### [0.0.38](https://github.com/silentium-lab/silentium/compare/v0.0.37...v0.0.38) (2025-06-01)
 
 
