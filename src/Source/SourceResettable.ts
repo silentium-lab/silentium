@@ -1,4 +1,4 @@
-import { sourceDynamic } from "src/Source/SourceDynamic";
+import { sourceDynamic } from "../Source/SourceDynamic";
 import { firstVisit, give, GuestType } from "../Guest/Guest";
 import { patron } from "../Patron/Patron";
 import { subSource } from "../Patron/PatronPool";

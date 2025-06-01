@@ -1,5 +1,3 @@
-import { sourceDynamic as sourceDynamic$1 } from 'src/Source/SourceDynamic';
-
 const value = (source2, guest) => {
   if (source2 === void 0 || source2 === null) {
     throw new Error("value didn't receive source argument");
@@ -723,7 +721,7 @@ const sourceResettable = (baseSrc, resettableSrc) => {
     value(baseSrc, patron(result));
     subSource(result, baseSrc);
   });
-  return sourceDynamic$1(result.give, (g) => {
+  return sourceDynamic(result.give, (g) => {
     visited();
     result.value(g);
   });
