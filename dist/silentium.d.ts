@@ -282,7 +282,7 @@ declare const sourceApplied: <T, R>(baseSource: SourceType<T>, applier: (v: T) =
  * Ability to apply function to source executor, helpful when need to apply throttling or debounce
  * @url https://silentium-lab.github.io/silentium/#/source/source-executor-applied
  */
-declare const sourceExecutorApplied: <T>(source: SourceType<T>, applier: (executor: SourceExecutorType<T>) => SourceExecutorType<T>) => SourceExecutorType<T>;
+declare const sourceExecutorApplied: <T>(source: SourceType<T>, applier: (executor: GuestType<T>) => GuestType<T>) => (g: GuestType<T>) => void;
 
 /**
  * Helps not to respond with information what checked by predicate function

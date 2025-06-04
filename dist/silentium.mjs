@@ -657,9 +657,17 @@ const sourceApplied = (baseSource, applier) => {
 };
 
 const sourceExecutorApplied = (source, applier) => {
-  return applier((g) => {
-    value(source, g);
-  });
+  return (g) => {
+    value(
+      source,
+      guestCast(
+        g,
+        applier((v) => {
+          give(v, g);
+        })
+      )
+    );
+  };
 };
 
 const sourceFiltered = (baseSource, predicate, defaultValue) => {
