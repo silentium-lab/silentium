@@ -1,4 +1,6 @@
-import { SourceExecutorType, SourceType, value } from "../Source/Source";
+import { give, GuestType } from "../Guest/Guest";
+import { guestCast } from "../Guest/GuestCast";
+import { SourceType, value } from "../Source/Source";
 
 /**
  * Ability to apply function to source executor, helpful when need to apply throttling or debounce
@@ -6,9 +8,17 @@ import { SourceExecutorType, SourceType, value } from "../Source/Source";
  */
 export const sourceExecutorApplied = <T>(
   source: SourceType<T>,
-  applier: (executor: SourceExecutorType<T>) => SourceExecutorType<T>,
+  applier: (executor: GuestType<T>) => GuestType<T>,
 ) => {
-  return applier((g) => {
-    value(source, g);
-  });
+  return (g: GuestType<T>) => {
+    value(
+      source,
+      guestCast(
+        g,
+        applier((v) => {
+          give(v, g);
+        }),
+      ),
+    );
+  };
 };
