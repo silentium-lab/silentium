@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.41](https://github.com/silentium-lab/silentium/compare/v0.0.40...v0.0.41) (2025-06-04)
+
+
+### Features
+
+* **main:** work on source chain ([9da1162](https://github.com/silentium-lab/silentium/commit/9da11620ea7fd6bd3f2ebc2c7b098b5d9506e78d))
+
+
+### Bug Fixes
+
+* **55-recheck-sourceexecutorapplied-component:** source executor applied fixed ([888e9f6](https://github.com/silentium-lab/silentium/commit/888e9f6af432470119504feb1d57f1c7ab32d298))
+
 ### [0.0.40](https://github.com/silentium-lab/silentium/compare/v0.0.39...v0.0.40) (2025-06-01)
 
 
