@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://github.com/silentium-lab/silentium/compare/v0.0.41...v0.0.42) (2025-06-06)
+
+
+### Features
+
+* **57-source-chain-wrong-desing:** work on sourceChain fixing ([3c8dc96](https://github.com/silentium-lab/silentium/commit/3c8dc9698d08c2b6829903b18c2c26d161a38f79))
+
+
+### Bug Fixes
+
+* **57-source-chain-wrong-desing:** source chain fixed ([33e482d](https://github.com/silentium-lab/silentium/commit/33e482d744874b56ab43f68cc6b7519376705ce6))
+
 ### [0.0.41](https://github.com/silentium-lab/silentium/compare/v0.0.40...v0.0.41) (2025-06-04)
 
 
