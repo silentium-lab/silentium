@@ -14,24 +14,34 @@ export const sourceChain = <T extends SourceType[]>(
   ...sources: T
 ): SourceType<Last<T>> => {
   const resultSrc = sourceOf<Last<T>>();
-  const respondedSources: Record<string, string> = {};
+  const respondedSources = new WeakMap();
 
-  const respondCount = () => Object.keys(respondedSources).length;
+  const repeatValue = () => {
+    value(resultSrc, resultSrc);
+  };
+
+  const handleSource = (index: number) => {
+    const source = sources[index];
+    const nextSource = sources[index + 1];
+
+    value(
+      source,
+      patron((v) => {
+        repeatValue();
+
+        if (!nextSource) {
+          resultSrc.give(v as Last<T>);
+        } else if (!respondedSources.has(source)) {
+          handleSource(index + 1);
+        }
+
+        respondedSources.set(source, 1);
+      }),
+    );
+  };
 
   const visited = firstVisit(() => {
-    const lastSrc = sources.at(-1);
-
-    sources.forEach((source, index) => {
-      value(
-        source,
-        patron(() => {
-          respondedSources[index] = "1";
-          if (respondCount() === sources.length) {
-            value(lastSrc, resultSrc);
-          }
-        }),
-      );
-    });
+    handleSource(0);
   });
 
   return (g: GuestType<Last<T>>) => {
