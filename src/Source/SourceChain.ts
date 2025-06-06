@@ -27,7 +27,9 @@ export const sourceChain = <T extends SourceType[]>(
     value(
       source,
       patron((v) => {
-        repeatValue();
+        if (nextSource) {
+          repeatValue();
+        }
 
         if (!nextSource) {
           resultSrc.give(v as Last<T>);

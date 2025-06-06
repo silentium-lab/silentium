@@ -28,10 +28,10 @@ test("SourceChain.test", () => {
   expect(callsCounter).toBe(",the-value");
 
   valueSrc.give("new-value");
-  expect(callsCounter).toBe(",the-value");
+  expect(callsCounter).toBe(",the-value,new-value");
   triggerSrc.give("done2");
 
   expect(valueAfterTrigger.syncValue()).toBe("new-value");
 
-  expect(callsCounter).toBe(3);
+  expect(callsCounter).toBe(",the-value,new-value,new-value");
 });
