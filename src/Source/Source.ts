@@ -16,12 +16,7 @@ export type SourceType<T = any> =
   | SourceObjectType<T>
   | SourceDataType<T>;
 
-/**
- * Helps to connect source and guest, if you need to get value in guest from source
- * helpful because we don't know what shape of source do we have, it can be function or object or primitive
- * @url https://silentium-lab.github.io/silentium/#/utils/value
- */
-export const value = <T>(source: SourceType<T>, guest: GuestType<T>) => {
+const valueExact = <T>(source: SourceType<T>, guest: GuestType<T>) => {
   if (source === undefined || source === null) {
     throw new Error("value didn't receive source argument");
   }
@@ -38,6 +33,33 @@ export const value = <T>(source: SourceType<T>, guest: GuestType<T>) => {
     source.value(guest);
   } else {
     give(source as T, guest);
+  }
+
+  return source;
+};
+
+/**
+ * Helps to connect source and guest, if you need to get value in guest from source
+ * helpful because we don't know what shape of source do we have, it can be function or object or primitive
+ * @url https://silentium-lab.github.io/silentium/#/utils/value
+ */
+export const value = <T>(
+  source: SourceType<T>,
+  guest: GuestType<T> | GuestType<T>[],
+) => {
+  if (source === undefined || source === null) {
+    throw new Error("value didn't receive source argument");
+  }
+  if (guest === undefined || source === null) {
+    throw new Error("value didn't receive guest argument");
+  }
+
+  if (Array.isArray(guest)) {
+    guest.forEach((currentGuest) => {
+      valueExact(source, currentGuest);
+    });
+  } else {
+    valueExact(source, guest);
   }
 
   return source;
