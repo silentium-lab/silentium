@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://github.com/silentium-lab/silentium/compare/v0.0.43...v0.0.44) (2025-06-07)
+
+
+### Features
+
+* **main:** value can handle many guests ([4896ada](https://github.com/silentium-lab/silentium/commit/4896ada0bad5e5f05eff4360cacd113a155d7a75))
+
 ### [0.0.43](https://github.com/silentium-lab/silentium/compare/v0.0.42...v0.0.43) (2025-06-07)
 
 
