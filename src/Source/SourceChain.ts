@@ -27,17 +27,27 @@ export const sourceChain = <T extends SourceType[]>(
     value(
       source,
       patron((v) => {
+        let sourceKey = source;
+
+        if (
+          (typeof source !== "object" || source === null) &&
+          typeof source !== "function" &&
+          !Array.isArray(source)
+        ) {
+          sourceKey = { source };
+        }
+
         if (nextSource) {
           repeatValue();
         }
 
         if (!nextSource) {
           resultSrc.give(v as Last<T>);
-        } else if (!respondedSources.has(source)) {
+        } else if (!respondedSources.has(sourceKey)) {
           handleSource(index + 1);
         }
 
-        respondedSources.set(source, 1);
+        respondedSources.set(sourceKey, 1);
       }),
     );
   };
