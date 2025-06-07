@@ -613,15 +613,19 @@ const sourceChain = (...sources) => {
     value(
       source,
       patron((v) => {
+        let sourceKey = source;
+        if ((typeof source !== "object" || source === null) && typeof source !== "function" && !Array.isArray(source)) {
+          sourceKey = { source };
+        }
         if (nextSource) {
           repeatValue();
         }
         if (!nextSource) {
           resultSrc.give(v);
-        } else if (!respondedSources.has(source)) {
+        } else if (!respondedSources.has(sourceKey)) {
           handleSource(index + 1);
         }
-        respondedSources.set(source, 1);
+        respondedSources.set(sourceKey, 1);
       })
     );
   };
