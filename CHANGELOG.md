@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://github.com/silentium-lab/silentium/compare/v0.0.42...v0.0.43) (2025-06-07)
+
+
+### Bug Fixes
+
+* **main:** source chain fixed weak map error ([4578690](https://github.com/silentium-lab/silentium/commit/457869009222be1c5153f1da3132e84168ac1713))
+
 ### [0.0.42](https://github.com/silentium-lab/silentium/compare/v0.0.41...v0.0.42) (2025-06-06)
 
 
