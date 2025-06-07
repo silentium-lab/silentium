@@ -1,6 +1,6 @@
 'use strict';
 
-const value = (source2, guest) => {
+const valueExact = (source2, guest) => {
   if (source2 === void 0 || source2 === null) {
     throw new Error("value didn't receive source argument");
   }
@@ -13,6 +13,22 @@ const value = (source2, guest) => {
     source2.value(guest);
   } else {
     give(source2, guest);
+  }
+  return source2;
+};
+const value = (source2, guest) => {
+  if (source2 === void 0 || source2 === null) {
+    throw new Error("value didn't receive source argument");
+  }
+  if (guest === void 0 || source2 === null) {
+    throw new Error("value didn't receive guest argument");
+  }
+  if (Array.isArray(guest)) {
+    guest.forEach((currentGuest) => {
+      valueExact(source2, currentGuest);
+    });
+  } else {
+    valueExact(source2, guest);
   }
   return source2;
 };

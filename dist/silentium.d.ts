@@ -11,7 +11,7 @@ type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T> | SourceD
  * helpful because we don't know what shape of source do we have, it can be function or object or primitive
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
-declare const value: <T>(source: SourceType<T>, guest: GuestType<T>) => SourceType<T>;
+declare const value: <T>(source: SourceType<T>, guest: GuestType<T> | GuestType<T>[]) => SourceType<T>;
 /**
  * Helps to check what some information is of source shape
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
