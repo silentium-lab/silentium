@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.45](https://github.com/silentium-lab/silentium/compare/v0.0.44...v0.0.45) (2025-06-08)
+
+
+### Features
+
+* **59-patron-priority-method:** patron priority done ([7da1c3d](https://github.com/silentium-lab/silentium/commit/7da1c3dfcb2b5afc5f474ce7564a108672091280))
+
 ### [0.0.44](https://github.com/silentium-lab/silentium/compare/v0.0.43...v0.0.44) (2025-06-07)
 
 
