@@ -97,6 +97,17 @@ type PatronType<T> = GuestDisposableType<T> & {
     introduction(): "patron";
 };
 /**
+ * Patron may have priority information
+ * @url https://silentium-lab.github.io/silentium/#/en/terminology/priority
+ */
+interface PatronWithPriority {
+    priority(): number;
+}
+/**
+ * @url https://silentium-lab.github.io/silentium/#/en/utils/patron-priority
+ */
+declare const patronPriority: (g: GuestType | PatronWithPriority) => number;
+/**
  * Helps to check what incoming object is patron
  * @url https://silentium-lab.github.io/silentium/#/utils/is-patron
  */
@@ -107,6 +118,14 @@ declare const introduction: () => "patron";
  * @url https://silentium-lab.github.io/silentium/#/patron
  */
 declare const patron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T>;
+/**
+ * System patron with higher priority than regular patron
+ */
+declare const systemPatron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T> & PatronWithPriority;
+/**
+ * Set priority on existed patron
+ */
+declare const withPriority: <T extends PatronType<unknown>>(patron: T, priority: number) => T & PatronWithPriority;
 
 /**
  * Helps to call patron only once, this will be helpful when you
@@ -340,4 +359,4 @@ interface Prototyped<T> {
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, value };
+export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withPriority };

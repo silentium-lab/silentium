@@ -1,4 +1,3 @@
-import { removePatronFromPools, subSource } from "../Patron/PatronPool";
 import {
   firstVisit,
   give,
@@ -7,10 +6,11 @@ import {
   GuestType,
 } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
+import { removePatronFromPools, subSource } from "../Patron/PatronPool";
+import { DestroyableType } from "../Source/SourceDestroyable";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
-import { DestroyableType } from "../Source/SourceDestroyable";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 
@@ -38,7 +38,7 @@ export const sourceAll = <const T extends SourceType[]>(
     Object.entries(sources).forEach(([key, source]) => {
       subSource(theAll, source);
       keysKnown.add(key);
-      const keyPatron = patron((v) => {
+      const keyPatron = systemPatron((v) => {
         theAll.value(
           guest((all: Record<string, unknown>) => {
             keysFilled.add(key);

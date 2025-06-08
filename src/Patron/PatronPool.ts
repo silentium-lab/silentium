@@ -2,8 +2,10 @@ import { source, SourceType } from "../Source/Source";
 import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
 import { DestroyableType } from "../Source/SourceDestroyable";
+import PrioritySet from "../utils/PrioritySet";
+import { patronPriority } from "../Patron/Patron";
 
-const poolSets = new Map<PoolType, Set<GuestObjectType>>();
+const poolSets = new Map<PoolType, PrioritySet<GuestObjectType>>();
 const poolsOfInitiators = new Map<SourceType, PoolType>();
 const subSources = new Map<SourceType, SourceType[]>();
 
@@ -158,12 +160,12 @@ export interface PoolType<T = any> extends GuestObjectType<T> {
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
  */
 export class PatronPool<T> implements PoolType<T> {
-  private patrons: Set<GuestObjectType<T>>;
+  private patrons: PrioritySet<GuestObjectType<T>>;
 
   public give: (value: T) => this;
 
   public constructor(private initiator: SourceType) {
-    this.patrons = new Set<GuestObjectType<T>>();
+    this.patrons = new PrioritySet<GuestObjectType<T>>();
     poolSets.set(this, this.patrons);
     poolsOfInitiators.set(this.initiator, this);
     const doReceive = (value: T) => {
@@ -183,7 +185,7 @@ export class PatronPool<T> implements PoolType<T> {
   }
 
   public add(shouldBePatron: GuestType<T>) {
-    if (!shouldBePatron) {
+    if (shouldBePatron === undefined) {
       throw new Error("PatronPool add method received nothing!");
     }
     if (
@@ -191,7 +193,7 @@ export class PatronPool<T> implements PoolType<T> {
       shouldBePatron.introduction &&
       shouldBePatron.introduction() === "patron"
     ) {
-      this.patrons.add(shouldBePatron);
+      this.patrons.add(shouldBePatron, patronPriority(shouldBePatron));
     }
     notifyPoolsChange();
     return this;

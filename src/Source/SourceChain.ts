@@ -1,5 +1,5 @@
-import { patron } from "../Patron/Patron";
 import { firstVisit, GuestType } from "../Guest/Guest";
+import { systemPatron } from "../Patron/Patron";
 import { SourceType, value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 
@@ -26,7 +26,7 @@ export const sourceChain = <T extends SourceType[]>(
 
     value(
       source,
-      patron((v) => {
+      systemPatron((v) => {
         let sourceKey = source;
 
         if (

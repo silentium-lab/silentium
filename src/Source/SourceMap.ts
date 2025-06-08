@@ -1,9 +1,9 @@
-import { patron } from "../Patron/Patron";
-import { patronOnce } from "../Patron/PatronOnce";
-import { sourceOf } from "../Source/SourceChangeable";
 import { firstVisit, give, GuestType } from "../Guest/Guest";
 import { LazyType } from "../Lazy/Lazy";
+import { systemPatron } from "../Patron/Patron";
+import { patronOnce } from "../Patron/PatronOnce";
 import { destroy, subSource } from "../Patron/PatronPool";
+import { sourceOf } from "../Source/SourceChangeable";
 import { SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 
@@ -27,7 +27,7 @@ export const sourceMap = <T, TG>(
   const visited = firstVisit(() => {
     value(
       baseSource,
-      patron((theValue) => {
+      systemPatron((theValue) => {
         const sources: SourceType[] = [];
         theValue.forEach((val) => {
           const source = targetSource.get(val);
