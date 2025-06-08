@@ -1,9 +1,9 @@
-import { sourceDynamic } from "../Source/SourceDynamic";
 import { firstVisit, give, GuestType } from "../Guest/Guest";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
 import { subSource } from "../Patron/PatronPool";
 import { SourceType, value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
+import { sourceDynamic } from "../Source/SourceDynamic";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
@@ -17,12 +17,12 @@ export const sourceResettable = <T>(
   const visited = firstVisit(() => {
     value(
       resettableSrc,
-      patron(() => {
+      systemPatron(() => {
         give(null, result);
       }),
     );
 
-    value(baseSrc, patron(result));
+    value(baseSrc, systemPatron(result));
     subSource(result, baseSrc);
   });
 

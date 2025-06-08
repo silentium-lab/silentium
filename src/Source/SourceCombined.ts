@@ -1,5 +1,5 @@
 import { GuestType } from "../Guest/Guest";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
 import { subSourceMany } from "../Patron/PatronPool";
 import { SourceType, value } from "../Source/Source";
 import { ExtractTypesFromArray, sourceAll } from "../Source/SourceAll";
@@ -22,7 +22,7 @@ export const sourceCombined =
 
     value(
       sourceAll(sources),
-      patron((actualValues) => {
+      systemPatron((actualValues) => {
         source(result.give, ...actualValues);
       }),
     );

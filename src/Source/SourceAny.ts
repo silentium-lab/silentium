@@ -1,5 +1,5 @@
 import { firstVisit, GuestType } from "../Guest/Guest";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
 import { SourceType, value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 
@@ -14,7 +14,7 @@ export const sourceAny = <T>(sources: SourceType<T>[]) => {
 
   const visited = firstVisit(() => {
     sources.forEach((source) => {
-      value(source, patron(lastSrc));
+      value(source, systemPatron(lastSrc));
     });
   });
 

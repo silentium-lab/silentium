@@ -170,6 +170,13 @@ const guestExecutorApplied = (baseGuest, applier) => {
   return result;
 };
 
+const patronPriority = (g) => {
+  let priority = 100;
+  if ("priority" in g && typeof g.priority === "function") {
+    priority = g.priority();
+  }
+  return priority;
+};
 const isPatron = (guest) => typeof guest === "object" && guest !== null && guest?.introduction?.() === "patron";
 const introduction = () => "patron";
 const patron = (willBePatron) => {
@@ -188,6 +195,19 @@ const patron = (willBePatron) => {
     introduction
   };
   return result;
+};
+const systemPatron = (willBePatron) => {
+  const p = patron(willBePatron);
+  return {
+    ...p,
+    priority: () => 200
+  };
+};
+const withPriority = (patron2, priority) => {
+  return {
+    ...patron2,
+    priority: () => priority
+  };
 };
 
 const patronOnce = (baseGuest) => {
@@ -214,6 +234,116 @@ const patronOnce = (baseGuest) => {
   };
   return result;
 };
+
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
+class PrioritySet {
+  constructor() {
+    __publicField$1(this, "items");
+    __publicField$1(this, "sortedItems");
+    this.items = /* @__PURE__ */ new Map();
+    this.sortedItems = [];
+  }
+  findInsertPosition(priority) {
+    let left = 0;
+    let right = this.sortedItems.length;
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (this.sortedItems[mid].priority > priority) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+  findItemIndex(value) {
+    return this.sortedItems.findIndex((item) => item.value === value);
+  }
+  add(value, priority = 100) {
+    const existingItem = this.items.get(value);
+    if (existingItem) {
+      if (existingItem.priority !== priority) {
+        const oldIndex = this.findItemIndex(value);
+        if (oldIndex !== -1) {
+          this.sortedItems.splice(oldIndex, 1);
+        }
+        existingItem.priority = priority;
+        const newIndex = this.findInsertPosition(priority);
+        this.sortedItems.splice(newIndex, 0, existingItem);
+      }
+    } else {
+      const newItem = { value, priority };
+      this.items.set(value, newItem);
+      const insertIndex = this.findInsertPosition(priority);
+      this.sortedItems.splice(insertIndex, 0, newItem);
+    }
+    return this;
+  }
+  delete(value) {
+    const item = this.items.get(value);
+    if (!item) {
+      return false;
+    }
+    this.items.delete(value);
+    const index = this.findItemIndex(value);
+    if (index !== -1) {
+      this.sortedItems.splice(index, 1);
+    }
+    return true;
+  }
+  has(value) {
+    return this.items.has(value);
+  }
+  get size() {
+    return this.items.size;
+  }
+  clear() {
+    this.items.clear();
+    this.sortedItems = [];
+  }
+  getPriority(value) {
+    const item = this.items.get(value);
+    return item?.priority;
+  }
+  setPriority(value, priority) {
+    if (this.items.has(value)) {
+      this.add(value, priority);
+      return true;
+    }
+    return false;
+  }
+  forEach(callback) {
+    this.sortedItems.forEach((item) => {
+      callback(item.value, item.priority, this);
+    });
+  }
+  values() {
+    const values = this.sortedItems.map((item) => item.value);
+    return values[Symbol.iterator]();
+  }
+  entries() {
+    const entries = this.sortedItems.map(
+      (item) => [item.value, item.priority]
+    );
+    return entries[Symbol.iterator]();
+  }
+  [Symbol.iterator]() {
+    return this.values();
+  }
+  toArray() {
+    return this.sortedItems.map((item) => item.value);
+  }
+  toArrayWithPriorities() {
+    return [...this.sortedItems];
+  }
+  debug() {
+    console.log("Map size:", this.items.size);
+    console.log("Sorted array length:", this.sortedItems.length);
+    console.log("Sorted items:", this.sortedItems);
+  }
+}
 
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
@@ -306,7 +436,7 @@ class PatronPool {
     this.initiator = initiator;
     __publicField(this, "patrons");
     __publicField(this, "give");
-    this.patrons = /* @__PURE__ */ new Set();
+    this.patrons = new PrioritySet();
     poolSets.set(this, this.patrons);
     poolsOfInitiators.set(this.initiator, this);
     const doReceive = (value) => {
@@ -324,11 +454,11 @@ class PatronPool {
     return this.patrons.size;
   }
   add(shouldBePatron) {
-    if (!shouldBePatron) {
+    if (shouldBePatron === void 0) {
       throw new Error("PatronPool add method received nothing!");
     }
     if (typeof shouldBePatron !== "function" && shouldBePatron.introduction && shouldBePatron.introduction() === "patron") {
-      this.patrons.add(shouldBePatron);
+      this.patrons.add(shouldBePatron, patronPriority(shouldBePatron));
     }
     notifyPoolsChange();
     return this;
@@ -394,7 +524,7 @@ const patronExecutorApplied = (baseGuest, applier) => {
 
 const sourceSync = (baseSource, defaultValue) => {
   const syncGuest = guestSync(defaultValue);
-  value(baseSource, patron(syncGuest));
+  value(baseSource, systemPatron(syncGuest));
   const result = {
     value(guest) {
       value(baseSource, guest);
@@ -477,7 +607,7 @@ const sourceAll = (sources) => {
     Object.entries(sources).forEach(([key, source]) => {
       subSource(theAll, source);
       keysKnown.add(key);
-      const keyPatron = patron((v) => {
+      const keyPatron = systemPatron((v) => {
         theAll.value(
           guest((all) => {
             keysFilled.add(key);
@@ -505,8 +635,8 @@ const sourceAll = (sources) => {
       theAll.value(mbPatron);
     },
     destroy() {
-      patrons.forEach((patron2) => {
-        removePatronFromPools(patron2);
+      patrons.forEach((patron) => {
+        removePatronFromPools(patron);
       });
     }
   };
@@ -576,7 +706,7 @@ const sourceMap = (baseSource, targetSource) => {
   const visited = firstVisit(() => {
     value(
       baseSource,
-      patron((theValue) => {
+      systemPatron((theValue) => {
         const sources = [];
         theValue.forEach((val) => {
           const source = targetSource.get(val);
@@ -630,7 +760,7 @@ const sourceChain = (...sources) => {
     const nextSource = sources[index + 1];
     value(
       source,
-      patron((v) => {
+      systemPatron((v) => {
         let sourceKey = source;
         if ((typeof source !== "object" || source === null) && typeof source !== "function" && !Array.isArray(source)) {
           sourceKey = { source };
@@ -739,7 +869,7 @@ const sourceCombined = (...sources) => (source) => {
   subSourceMany(result, sources);
   value(
     sourceAll(sources),
-    patron((actualValues) => {
+    systemPatron((actualValues) => {
       source(result.give, ...actualValues);
     })
   );
@@ -751,11 +881,11 @@ const sourceResettable = (baseSrc, resettableSrc) => {
   const visited = firstVisit(() => {
     value(
       resettableSrc,
-      patron(() => {
+      systemPatron(() => {
         give(null, result);
       })
     );
-    value(baseSrc, patron(result));
+    value(baseSrc, systemPatron(result));
     subSource(result, baseSrc);
   });
   return sourceDynamic(result.give, (g) => {
@@ -768,7 +898,7 @@ const sourceAny = (sources) => {
   const lastSrc = sourceOf();
   const visited = firstVisit(() => {
     sources.forEach((source) => {
-      value(source, patron(lastSrc));
+      value(source, systemPatron(lastSrc));
     });
   });
   return (g) => {
@@ -789,10 +919,10 @@ const sourceLazy = (lazySrc, args, destroySrc) => {
     wasInstantiated = true;
     value(
       sourceAll(args),
-      patron(() => {
+      systemPatron(() => {
         if (!instance) {
           instance = lazySrc.get(...args);
-          value(instance, patron(result));
+          value(instance, systemPatron(result));
         }
       })
     );
@@ -800,7 +930,7 @@ const sourceLazy = (lazySrc, args, destroySrc) => {
   if (destroySrc) {
     value(
       destroySrc,
-      patron(() => {
+      systemPatron(() => {
         destroy(instance);
         instance = null;
       })
@@ -877,6 +1007,7 @@ exports.patronExecutorApplied = patronExecutorApplied;
 exports.patronOnce = patronOnce;
 exports.patronPools = patronPools;
 exports.patronPoolsStatistic = patronPoolsStatistic;
+exports.patronPriority = patronPriority;
 exports.removePatronFromPools = removePatronFromPools;
 exports.source = source;
 exports.sourceAll = sourceAll;
@@ -899,5 +1030,7 @@ exports.sourceSequence = sourceSequence;
 exports.sourceSync = sourceSync;
 exports.subSource = subSource;
 exports.subSourceMany = subSourceMany;
+exports.systemPatron = systemPatron;
 exports.value = value;
+exports.withPriority = withPriority;
 //# sourceMappingURL=silentium.cjs.map

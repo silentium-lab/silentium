@@ -1,7 +1,7 @@
-import { subSource } from "../Patron/PatronPool";
 import { GuestType } from "../Guest/Guest";
 import { guestSync } from "../Guest/GuestSync";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
+import { subSource } from "../Patron/PatronPool";
 import { SourceObjectType, SourceType, value } from "../Source/Source";
 
 /**
@@ -15,7 +15,7 @@ export const sourceSync = <T>(
   defaultValue?: unknown,
 ): SourceObjectType<T> & { syncValue(): T } => {
   const syncGuest = guestSync<T>(defaultValue as T);
-  value(baseSource, patron(syncGuest));
+  value(baseSource, systemPatron(syncGuest));
 
   const result = {
     value(guest: GuestType<T>) {

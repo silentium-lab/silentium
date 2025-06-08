@@ -1,6 +1,6 @@
 import { GuestType } from "src/Guest/Guest";
 import { LazyType } from "../Lazy/Lazy";
-import { patron } from "../Patron/Patron";
+import { systemPatron } from "../Patron/Patron";
 import { destroy } from "../Patron/PatronPool";
 import { SourceType, value } from "../Source/Source";
 import { sourceAll } from "../Source/SourceAll";
@@ -30,10 +30,10 @@ export const sourceLazy = <T>(
     wasInstantiated = true;
     value(
       sourceAll(args),
-      patron(() => {
+      systemPatron(() => {
         if (!instance) {
           instance = lazySrc.get(...args);
-          value(instance, patron(result));
+          value(instance, systemPatron(result));
         }
       }),
     );
@@ -42,7 +42,7 @@ export const sourceLazy = <T>(
   if (destroySrc) {
     value(
       destroySrc,
-      patron(() => {
+      systemPatron(() => {
         destroy(instance);
         instance = null;
       }),
