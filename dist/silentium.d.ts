@@ -359,4 +359,12 @@ interface Prototyped<T> {
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withPriority };
+type NamedType = {
+    name: string;
+};
+/**
+ * Helps to bind name to object or function
+ */
+declare const withName: <T>(obj: T, name: string) => T & NamedType;
+
+export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, type NamedType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };

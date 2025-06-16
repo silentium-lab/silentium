@@ -250,7 +250,7 @@ class PrioritySet {
     let right = this.sortedItems.length;
     while (left < right) {
       const mid = Math.floor((left + right) / 2);
-      if (this.sortedItems[mid].priority > priority) {
+      if (this.sortedItems[mid].priority >= priority) {
         left = mid + 1;
       } else {
         right = mid;
@@ -983,6 +983,17 @@ const lazy = (buildingFn) => {
   };
 };
 
+const withName = (obj, name) => {
+  return new Proxy(obj, {
+    get(target, field) {
+      if (field === "name") {
+        return name;
+      }
+      return target[field];
+    }
+  });
+};
+
 exports.PatronPool = PatronPool;
 exports.destroy = destroy;
 exports.firstVisit = firstVisit;
@@ -1032,5 +1043,6 @@ exports.subSource = subSource;
 exports.subSourceMany = subSourceMany;
 exports.systemPatron = systemPatron;
 exports.value = value;
+exports.withName = withName;
 exports.withPriority = withPriority;
 //# sourceMappingURL=silentium.cjs.map

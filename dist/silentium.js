@@ -248,7 +248,7 @@ class PrioritySet {
     let right = this.sortedItems.length;
     while (left < right) {
       const mid = Math.floor((left + right) / 2);
-      if (this.sortedItems[mid].priority > priority) {
+      if (this.sortedItems[mid].priority >= priority) {
         left = mid + 1;
       } else {
         right = mid;
@@ -981,5 +981,16 @@ const lazy = (buildingFn) => {
   };
 };
 
-export { PatronPool, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withPriority };
+const withName = (obj, name) => {
+  return new Proxy(obj, {
+    get(target, field) {
+      if (field === "name") {
+        return name;
+      }
+      return target[field];
+    }
+  });
+};
+
+export { PatronPool, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
 //# sourceMappingURL=silentium.js.map

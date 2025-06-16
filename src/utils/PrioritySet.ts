@@ -18,7 +18,7 @@ class PrioritySet<T> {
 
     while (left < right) {
       const mid = Math.floor((left + right) / 2);
-      if (this.sortedItems[mid].priority > priority) {
+      if (this.sortedItems[mid].priority >= priority) {
         left = mid + 1;
       } else {
         right = mid;
