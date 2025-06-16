@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://github.com/silentium-lab/silentium/compare/v0.0.45...v0.0.46) (2025-06-16)
+
+
+### Features
+
+* **main:** correct priority set when priorities are equal ([64c7fd8](https://github.com/silentium-lab/silentium/commit/64c7fd819f6cbeb79d6d3ebc482f82f29bc8b39d))
+
 ### [0.0.45](https://github.com/silentium-lab/silentium/compare/v0.0.44...v0.0.45) (2025-06-08)
 
 
