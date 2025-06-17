@@ -2,8 +2,11 @@ import { expect, test } from "vitest";
 import { sourceOf } from "./SourceChangeable";
 import { patron } from "../Patron/Patron";
 import { withName } from "../utils/Nameable";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceChangeable._sequence.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const source = sourceOf<number>(1);
   const sequence: string[] = [];
   const subSource1 = sourceOf();

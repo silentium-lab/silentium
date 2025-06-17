@@ -3,8 +3,10 @@ import { expect, test } from "vitest";
 import { sourceSync } from "../Source/SourceSync";
 import { sourceOf } from "./SourceChangeable";
 import { patron } from "../Patron/Patron";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceChain.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const triggerSrc = sourceOf();
   const valueSrc = sourceOf<string>("the-value");
 

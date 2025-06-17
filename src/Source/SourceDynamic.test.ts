@@ -1,8 +1,11 @@
 import { expect, test, vitest } from "vitest";
 import { give, guest } from "../Guest/Guest";
 import { sourceDynamic } from "./SourceDynamic";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceDynamic", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   let theValue = 1;
   const sd = sourceDynamic(
     guest((value: number) => {

@@ -1,8 +1,11 @@
 import { sourceDynamic } from "./SourceDynamic";
 import { sourceOf } from "./SourceChangeable";
 import { expect, test, vitest } from "vitest";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceDynamic._ofSource.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const source = sourceOf(1);
   const sd = sourceDynamic<number>(source, source);
 

@@ -5,6 +5,8 @@ import { guestSync } from "../Guest/GuestSync";
 import { lazyClass } from "../Lazy/LazyClass";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}
@@ -21,6 +23,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const srcMapped = sourceMap([1, 2, 3, 9], lazyClass(X2));
   const guest = guestSync([]);
 

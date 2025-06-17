@@ -1,8 +1,11 @@
 import { expect, test, vitest } from "vitest";
 import { value } from "./Source";
 import { sourceFiltered } from "./SourceFiltered";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceFiltered.defaultValue.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const source = sourceFiltered(11, (v) => v === 11);
 
   const g1 = vitest.fn();

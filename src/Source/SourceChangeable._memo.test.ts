@@ -1,8 +1,11 @@
 import { patron } from "../Patron/Patron";
 import { expect, test } from "vitest";
 import { sourceMemoOf } from "./SourceChangeable";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceChangeable._memo.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const source = sourceMemoOf();
   let calledTimes = 0;
   source.value(

@@ -7,6 +7,8 @@ import { lazy } from "../Lazy/Lazy";
 import { source, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceMap } from "./SourceMap";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -30,6 +32,7 @@ function x2(baseNumber: SourceType<number>) {
 }
 
 test("SourceMap._deferred.test", async () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const srcDeferred = (val: number) =>
     source(async (guest) => {
       await wait(5);

@@ -2,6 +2,8 @@ import { value } from "../Source/Source";
 import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
 import { sourceOf } from "./SourceChangeable";
 import { sourceRace } from "./SourceRace";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -12,6 +14,7 @@ afterEach(() => {
 });
 
 test("SourceRace.test", async () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const sBuild = (result: number, delay: number) => {
     const s = sourceOf();
 

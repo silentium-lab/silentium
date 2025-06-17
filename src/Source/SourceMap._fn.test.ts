@@ -4,6 +4,8 @@ import { guestCast } from "../Guest/GuestCast";
 import { lazy } from "../Lazy/Lazy";
 import { source, SourceType, value } from "./Source";
 import { sourceMap } from "./SourceMap";
+import { sourceSync } from "../Source/SourceSync";
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 
 function x2(baseNumber: SourceType<number>) {
   return (guest: GuestType<number>) => {
@@ -18,6 +20,7 @@ function x2(baseNumber: SourceType<number>) {
 }
 
 test("SourceMap._fn.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const src = source([1, 2, 3, 9]);
   const srcMapped = sourceMap(src, lazy(x2));
   const g = vitest.fn();

@@ -7,7 +7,11 @@ import {
 } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { systemPatron } from "../Patron/Patron";
-import { removePatronFromPools, subSource } from "../Patron/PatronPool";
+import {
+  destroy,
+  removePatronFromPools,
+  subSource,
+} from "../Patron/PatronPool";
 import { DestroyableType } from "../Source/SourceDestroyable";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
@@ -67,6 +71,7 @@ export const sourceAll = <const T extends SourceType[]>(
       theAll.value(mbPatron);
     },
     destroy() {
+      destroy(theAll);
       patrons.forEach((patron) => {
         removePatronFromPools(patron);
       });

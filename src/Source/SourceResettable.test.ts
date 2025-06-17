@@ -1,3 +1,4 @@
+import { patronPoolsStatistic } from "../Patron/PatronPool";
 import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
@@ -5,6 +6,7 @@ import { sourceSync } from "../Source/SourceSync";
 import { expect, test, vi } from "vitest";
 
 test("SourceFiltered.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const resetSrc = sourceOf();
   const baseSrc = sourceOf<number>(1);
   const resettable = sourceResettable(baseSrc, resetSrc);

@@ -1,3 +1,4 @@
+import { destroy } from "../Patron/PatronPool";
 import { GuestType } from "../Guest/Guest";
 import { SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
@@ -21,6 +22,9 @@ export const sourceOnce = <T>(initialValue?: SourceType<T>) => {
         isFilled = true;
       }
       return this;
+    },
+    destroy() {
+      destroy(source);
     },
   };
 };
