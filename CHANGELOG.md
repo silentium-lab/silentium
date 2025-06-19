@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.47](https://github.com/silentium-lab/silentium/compare/v0.0.46...v0.0.47) (2025-06-19)
+
+
+### Features
+
+* **41-need-to-create-destroyable-test-for-every-component:** all destructuring tests done ([7059326](https://github.com/silentium-lab/silentium/commit/70593263e6fcb09bce82de02a3e05c2f78437966))
+* **41-need-to-create-destroyable-test-for-every-component:** work on destroying ([a957085](https://github.com/silentium-lab/silentium/commit/a95708573ff14995476f525ff74ee56faec948e1))
+* **41-need-to-create-destroyable-test-for-every-component:** work on destructuring and leaking detection ([709ce46](https://github.com/silentium-lab/silentium/commit/709ce46fcd07298fd9993f9beeb10052cb422333))
+
 ### [0.0.46](https://github.com/silentium-lab/silentium/compare/v0.0.45...v0.0.46) (2025-06-16)
 
 
