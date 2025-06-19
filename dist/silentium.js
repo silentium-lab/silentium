@@ -349,6 +349,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 const poolSets = /* @__PURE__ */ new Map();
 const poolsOfInitiators = /* @__PURE__ */ new Map();
 const subSources = /* @__PURE__ */ new Map();
+const subSourcesReverse = /* @__PURE__ */ new Map();
 const poolsChangeFns = [];
 const notifyPoolsChange = () => {
   poolsChangeFns.forEach((fn) => fn());
@@ -373,7 +374,11 @@ const subSource = (subSource2, source2) => {
   if (!subSources.has(source2)) {
     subSources.set(source2, []);
   }
+  if (!subSourcesReverse.has(subSource2)) {
+    subSourcesReverse.set(subSource2, []);
+  }
   subSources.get(source2)?.push(subSource2);
+  subSourcesReverse.get(subSource2)?.push(source2);
   return subSource2;
 };
 const subSourceMany = (subSourceSrc, sourcesSrc) => {
@@ -396,6 +401,15 @@ const destroy = (...initiators) => {
     subSources.delete(initiator);
     if (foundSubSources) {
       destroy(...foundSubSources);
+    }
+  });
+};
+const destroyFromSubSource = (...initiators) => {
+  initiators.forEach((initiator) => {
+    destroy(initiator);
+    const foundSources = subSourcesReverse.get(initiator);
+    if (foundSources) {
+      destroyFromSubSource(...foundSources);
     }
   });
 };
@@ -428,6 +442,13 @@ const isPatronInPools = (patron) => {
     }
   });
   return inPool;
+};
+const allPatrons = () => {
+  let patrons = [];
+  poolSets.forEach((pool) => {
+    patrons = patrons.concat(Array.from(pool.values()));
+  });
+  return patrons;
 };
 class PatronPool {
   constructor(initiator) {
@@ -520,6 +541,17 @@ const patronExecutorApplied = (baseGuest, applier) => {
   return result;
 };
 
+const withName = (obj, name) => {
+  return new Proxy(obj, {
+    get(target, field) {
+      if (field === "name") {
+        return name;
+      }
+      return target[field];
+    }
+  });
+};
+
 const sourceSync = (baseSource, defaultValue) => {
   const syncGuest = guestSync(defaultValue);
   value(baseSource, systemPatron(syncGuest));
@@ -590,6 +622,14 @@ const sourceMemoOf = (source) => {
       return resultMemo;
     }
   };
+  if (source) {
+    subSource(resultMemo, source);
+    subSource(baseSrcSync, source);
+    subSource(result, source);
+  } else {
+    subSource(result, resultMemo);
+    subSource(baseSrcSync, resultMemo);
+  }
   return resultMemo;
 };
 
@@ -605,18 +645,21 @@ const sourceAll = (sources) => {
     Object.entries(sources).forEach(([key, source]) => {
       subSource(theAll, source);
       keysKnown.add(key);
-      const keyPatron = systemPatron((v) => {
-        theAll.value(
-          guest((all) => {
-            keysFilled.add(key);
-            const lastAll = {
-              ...all,
-              [key]: v
-            };
-            theAll.give(lastAll);
-          })
-        );
-      });
+      const keyPatron = withName(
+        systemPatron((v) => {
+          theAll.value(
+            guest((all) => {
+              keysFilled.add(key);
+              const lastAll = {
+                ...all,
+                [key]: v
+              };
+              theAll.give(lastAll);
+            })
+          );
+        }),
+        "all_key-patron"
+      );
       patrons.push(keyPatron);
       value(source, keyPatron);
     });
@@ -624,11 +667,14 @@ const sourceAll = (sources) => {
   return {
     value(guest2) {
       visited();
-      const mbPatron = guestCast(guest2, (value2) => {
-        if (isAllFilled()) {
-          give(Object.values(value2), guest2);
-        }
-      });
+      const mbPatron = withName(
+        guestCast(guest2, (value2) => {
+          if (isAllFilled()) {
+            give(Object.values(value2), guest2);
+          }
+        }),
+        "mb-patron"
+      );
       patrons.push(mbPatron);
       theAll.value(mbPatron);
     },
@@ -636,6 +682,7 @@ const sourceAll = (sources) => {
       patrons.forEach((patron) => {
         removePatronFromPools(patron);
       });
+      destroy(theAll);
     }
   };
 };
@@ -647,16 +694,19 @@ const sourceSequence = (baseSource, targetSource) => {
   if (targetSource === void 0) {
     throw new Error("SourceSequence didn't receive targetSource argument");
   }
-  return (guest) => {
+  const src = (guest) => {
     const sequenceSource = sourceOf();
     const source = targetSource.get(sequenceSource);
+    subSource(sequenceSource, baseSource);
     value(
       baseSource,
       guestCast(guest, (theValue) => {
         let index = 0;
         const sources = [];
         theValue.forEach(() => {
-          sources.push(sourceOf());
+          const newSrc = sourceOf();
+          sources.push(newSrc);
+          subSource(newSrc, baseSource);
         });
         const nextItemHandle = () => {
           if (theValue[index + 1] !== void 0) {
@@ -691,6 +741,8 @@ const sourceSequence = (baseSource, targetSource) => {
       })
     );
   };
+  subSource(src, baseSource);
+  return src;
 };
 
 const sourceMap = (baseSource, targetSource) => {
@@ -721,10 +773,12 @@ const sourceMap = (baseSource, targetSource) => {
       })
     );
   });
-  return (g) => {
+  const src = (g) => {
     visited();
     result.value(g);
   };
+  subSource(result, src);
+  return src;
 };
 
 const sourceRace = (sources) => {
@@ -778,10 +832,13 @@ const sourceChain = (...sources) => {
   const visited = firstVisit(() => {
     handleSource(0);
   });
-  return (g) => {
+  const src = (g) => {
     visited();
     resultSrc.value(g);
   };
+  subSourceMany(src, sources);
+  subSourceMany(resultSrc, sources);
+  return src;
 };
 
 const sourceDynamic = (baseGuest, baseSource) => {
@@ -805,7 +862,7 @@ const sourceDynamic = (baseGuest, baseSource) => {
 };
 
 const sourceApplied = (baseSource, applier) => {
-  return (guest) => {
+  const src = (guest) => {
     value(
       baseSource,
       guestCast(guest, (v) => {
@@ -813,6 +870,8 @@ const sourceApplied = (baseSource, applier) => {
       })
     );
   };
+  subSource(src, baseSource);
+  return src;
 };
 
 const sourceExecutorApplied = (source, applier) => {
@@ -858,6 +917,9 @@ const sourceOnce = (initialValue) => {
         isFilled = true;
       }
       return this;
+    },
+    destroy() {
+      destroy(source);
     }
   };
 };
@@ -897,12 +959,15 @@ const sourceAny = (sources) => {
   const visited = firstVisit(() => {
     sources.forEach((source) => {
       value(source, systemPatron(lastSrc));
+      subSource(lastSrc, source);
     });
   });
-  return (g) => {
+  const src = (g) => {
     visited();
     lastSrc.value(g);
   };
+  subSourceMany(src, sources);
+  return src;
 };
 
 const sourceLazy = (lazySrc, args, destroySrc) => {
@@ -910,7 +975,7 @@ const sourceLazy = (lazySrc, args, destroySrc) => {
   const result = sourceOf();
   const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
   let wasInstantiated = false;
-  const instantiate = () => {
+  const instantiate = (srcInstance) => {
     if (wasInstantiated) {
       return;
     }
@@ -921,6 +986,8 @@ const sourceLazy = (lazySrc, args, destroySrc) => {
         if (!instance) {
           instance = lazySrc.get(...args);
           value(instance, systemPatron(result));
+          subSource(result, srcInstance);
+          subSource(resultResettable, srcInstance);
         }
       })
     );
@@ -934,15 +1001,16 @@ const sourceLazy = (lazySrc, args, destroySrc) => {
       })
     );
   }
-  return (g) => {
-    instantiate();
+  const src = (g) => {
+    instantiate(src);
     value(resultResettable, g);
   };
+  return src;
 };
 
 const sourceDestroyable = (source) => {
   let destructor = null;
-  return {
+  const result = {
     value(g) {
       destructor = source(g);
       return this;
@@ -954,6 +1022,8 @@ const sourceDestroyable = (source) => {
       return this;
     }
   };
+  subSource(result, source);
+  return result;
 };
 
 const lazyClass = (constructorFn, modules = {}) => {
@@ -981,16 +1051,5 @@ const lazy = (buildingFn) => {
   };
 };
 
-const withName = (obj, name) => {
-  return new Proxy(obj, {
-    get(target, field) {
-      if (field === "name") {
-        return name;
-      }
-      return target[field];
-    }
-  });
-};
-
-export { PatronPool, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
+export { PatronPool, allPatrons, destroy, destroyFromSubSource, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
 //# sourceMappingURL=silentium.js.map

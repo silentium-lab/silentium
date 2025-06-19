@@ -1,4 +1,4 @@
-import { GuestType as GuestType$1 } from 'src/Guest/Guest';
+import { DestroyableType as DestroyableType$1, DestructorType as DestructorType$1 } from 'src/types';
 
 type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
 interface SourceObjectType<T> {
@@ -134,16 +134,6 @@ declare const withPriority: <T extends PatronType<unknown>>(patron: T, priority:
  */
 declare const patronOnce: <T>(baseGuest: GuestType<T>) => GuestDisposableType<T>;
 
-type DestructorType = () => void;
-interface DestroyableType {
-    destroy: DestructorType;
-}
-/**
- * Ability to create sources that support special destruction logic
- * @url https://silentium-lab.github.io/silentium/#/source/source-destroyable
- */
-declare const sourceDestroyable: <T>(source: SourceExecutorType<T, DestructorType>) => SourceObjectType<T> & DestroyableType;
-
 /**
  * Helps debug the application and detect issues with frozen pools
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
@@ -166,12 +156,18 @@ declare const subSourceMany: <T>(subSourceSrc: SourceType<T>, sourcesSrc: Source
  * Helps to check what given source is destroyable
  * @url https://silentium-lab.github.io/silentium/#/utils/is-destroyable
  */
-declare const isDestroyable: (s: unknown) => s is DestroyableType;
+declare const isDestroyable: (s: unknown) => s is DestroyableType$1;
 /**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
  */
 declare const destroy: (...initiators: SourceType[]) => void;
+/**
+ * Allows destruction of the source chain starting from a subsource
+ * and moving up to the main source. This behavior is useful when you need
+ * to destroy the entire chain while having only a reference to the subsource.
+ */
+declare const destroyFromSubSource: (...initiators: SourceType[]) => void;
 /**
  * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
@@ -187,6 +183,11 @@ declare const removePatronFromPools: (patron: GuestObjectType) => void;
  * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
  */
 declare const isPatronInPools: (patron: GuestObjectType) => boolean;
+/**
+ * Returns an array of all patrons in any pool
+ * @url https://silentium-lab.github.io/silentium/#/utils/all-patrons
+ */
+declare const allPatrons: () => GuestType[];
 interface PoolType<T = any> extends GuestObjectType<T> {
     add(guest: GuestObjectType<T>): this;
     distribute(receiving: T, possiblePatron: GuestObjectType<T>): this;
@@ -237,7 +238,7 @@ type ExtractTypesFromArray<T extends SourceType<any>[]> = {
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
-declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType;
+declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType$1;
 
 interface LazyType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
@@ -316,6 +317,7 @@ declare const sourceFiltered: <T>(baseSource: SourceType<T>, predicate: (v: T) =
 declare const sourceOnce: <T>(initialValue?: SourceType<T>) => {
     value(guest: GuestType<T>): any;
     give(value: T): any;
+    destroy(): void;
 };
 
 /**
@@ -352,7 +354,13 @@ declare const sourceAny: <T>(sources: SourceType<T>[]) => (g: GuestType<T>) => v
  * and only after some guest visit source
  * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
  */
-declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], destroySrc?: SourceType<unknown>) => (g: GuestType$1<T>) => void;
+declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], destroySrc?: SourceType<unknown>) => (g: GuestType<T>) => void;
+
+/**
+ * Ability to create sources that support special destruction logic
+ * @url https://silentium-lab.github.io/silentium/#/source/source-destroyable
+ */
+declare const sourceDestroyable: <T>(source: SourceExecutorType<T, DestructorType$1>) => SourceObjectType<T> & DestroyableType$1;
 
 interface Prototyped<T> {
     prototype: T;
@@ -364,7 +372,14 @@ type NamedType = {
 };
 /**
  * Helps to bind name to object or function
+ * Be careful when wrapping sources with this function
+ * it may affect the destruction chain
  */
 declare const withName: <T>(obj: T, name: string) => T & NamedType;
 
-export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, type NamedType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, destroy, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
+type DestructorType = () => void;
+interface DestroyableType {
+    destroy: DestructorType;
+}
+
+export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, type NamedType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, allPatrons, destroy, destroyFromSubSource, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
