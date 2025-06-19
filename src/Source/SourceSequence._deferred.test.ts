@@ -8,7 +8,10 @@ import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -56,4 +59,8 @@ test("SourceSequence._deferred.test", async () => {
   await wait(51);
   expect(callFn).toBeCalled();
   expect(callFn).toBeCalledWith("2,4,6,18");
+
+  destroyFromSubSource(src, sequence, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

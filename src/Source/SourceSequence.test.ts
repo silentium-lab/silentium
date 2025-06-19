@@ -5,7 +5,10 @@ import { lazyClass } from "../Lazy/LazyClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceSequence } from "./SourceSequence";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}
@@ -28,4 +31,8 @@ test("SourceSequence.test", () => {
   const g = vitest.fn();
   value(srcMapped, g);
   expect(g).toBeCalledWith([2, 4, 6, 18]);
+
+  destroyFromSubSource(src, srcMapped, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

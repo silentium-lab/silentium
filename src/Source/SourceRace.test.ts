@@ -3,7 +3,10 @@ import { afterEach, beforeEach, expect, test, vi, vitest } from "vitest";
 import { sourceOf } from "./SourceChangeable";
 import { sourceRace } from "./SourceRace";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -47,4 +50,8 @@ test("SourceRace.test", async () => {
   value(sAny, g2);
   // ignores second value
   expect(g2).toBeCalledWith(3);
+
+  destroyFromSubSource(s1, s2, sAny, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

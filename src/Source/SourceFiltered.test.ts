@@ -2,7 +2,7 @@ import { expect, test, vitest } from "vitest";
 import { value } from "../Source/Source";
 import { sourceFiltered } from "../Source/SourceFiltered";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
 
 test("SourceFiltered.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -17,4 +17,8 @@ test("SourceFiltered.test", () => {
   const g2 = vitest.fn();
   value(source2, g2);
   expect(g2).not.toHaveBeenCalled();
+
+  destroy(source, source2, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

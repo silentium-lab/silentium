@@ -2,7 +2,11 @@ import { patron } from "../Patron/Patron";
 import { expect, test } from "vitest";
 import { sourceMemoOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroy,
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceChangeable._memo.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -25,4 +29,9 @@ test("SourceChangeable._memo.test", () => {
   source.give(2);
 
   expect(calledTimes).toBe(2);
+
+  destroy(source);
+  destroyFromSubSource(source, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

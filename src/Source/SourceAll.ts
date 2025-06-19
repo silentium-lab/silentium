@@ -1,3 +1,4 @@
+import { withName } from "../utils/Nameable";
 import {
   firstVisit,
   give,
@@ -12,9 +13,9 @@ import {
   removePatronFromPools,
   subSource,
 } from "../Patron/PatronPool";
-import { DestroyableType } from "../Source/SourceDestroyable";
 import { SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
+import { DestroyableType } from "src/types";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 
@@ -42,18 +43,21 @@ export const sourceAll = <const T extends SourceType[]>(
     Object.entries(sources).forEach(([key, source]) => {
       subSource(theAll, source);
       keysKnown.add(key);
-      const keyPatron = systemPatron((v) => {
-        theAll.value(
-          guest((all: Record<string, unknown>) => {
-            keysFilled.add(key);
-            const lastAll = {
-              ...all,
-              [key]: v,
-            };
-            theAll.give(lastAll);
-          }),
-        );
-      });
+      const keyPatron = withName(
+        systemPatron((v) => {
+          theAll.value(
+            guest((all: Record<string, unknown>) => {
+              keysFilled.add(key);
+              const lastAll = {
+                ...all,
+                [key]: v,
+              };
+              theAll.give(lastAll);
+            }),
+          );
+        }),
+        "all_key-patron",
+      );
       patrons.push(keyPatron);
       value(source, keyPatron);
     });
@@ -62,19 +66,22 @@ export const sourceAll = <const T extends SourceType[]>(
   return {
     value(guest: GuestType<ExtractTypesFromArray<T>>) {
       visited();
-      const mbPatron = guestCast(guest, (value: T) => {
-        if (isAllFilled()) {
-          give(Object.values(value) as ExtractTypesFromArray<T>, guest);
-        }
-      });
+      const mbPatron = withName(
+        guestCast(guest, (value: T) => {
+          if (isAllFilled()) {
+            give(Object.values(value) as ExtractTypesFromArray<T>, guest);
+          }
+        }),
+        "mb-patron",
+      );
       patrons.push(mbPatron);
       theAll.value(mbPatron);
     },
     destroy() {
-      destroy(theAll);
       patrons.forEach((patron) => {
         removePatronFromPools(patron);
       });
+      destroy(theAll);
     },
   };
 };

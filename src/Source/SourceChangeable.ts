@@ -2,7 +2,7 @@ import { sourceSync } from "../Source/SourceSync";
 import { give, guest, GuestObjectType, GuestType } from "../Guest/Guest";
 import { isPatron } from "../Patron/Patron";
 import { patronOnce } from "../Patron/PatronOnce";
-import { PatronPool } from "../Patron/PatronPool";
+import { PatronPool, subSource } from "../Patron/PatronPool";
 import {
   isSource,
   SourceDataType,
@@ -86,6 +86,15 @@ export const sourceMemoOf = <T>(
       return resultMemo;
     },
   };
+
+  if (source) {
+    subSource(resultMemo, source);
+    subSource(baseSrcSync, source);
+    subSource(result, source);
+  } else {
+    subSource(result, resultMemo);
+    subSource(baseSrcSync, resultMemo);
+  }
 
   return resultMemo;
 };

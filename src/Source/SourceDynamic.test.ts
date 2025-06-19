@@ -2,7 +2,10 @@ import { expect, test, vitest } from "vitest";
 import { give, guest } from "../Guest/Guest";
 import { sourceDynamic } from "./SourceDynamic";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceDynamic", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -23,4 +26,8 @@ test("SourceDynamic", () => {
   const g2 = vitest.fn();
   sd.value(g2);
   expect(g2).toBeCalledWith(2);
+
+  destroyFromSubSource(sd, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

@@ -1,13 +1,14 @@
 import { source, SourceType } from "../Source/Source";
 import { give, GuestObjectType, GuestType } from "../Guest/Guest";
 import { GuestDisposableType } from "../Guest/GuestDisposable";
-import { DestroyableType } from "../Source/SourceDestroyable";
 import PrioritySet from "../utils/PrioritySet";
 import { patronPriority } from "../Patron/Patron";
+import { DestroyableType } from "src/types";
 
 const poolSets = new Map<PoolType, PrioritySet<GuestObjectType>>();
 const poolsOfInitiators = new Map<SourceType, PoolType>();
 const subSources = new Map<SourceType, SourceType[]>();
+const subSourcesReverse = new Map<SourceType, SourceType[]>();
 
 const poolsChangeFns: (() => void)[] = [];
 const notifyPoolsChange = () => {
@@ -51,7 +52,12 @@ export const subSource = <T>(
     subSources.set(source, []);
   }
 
+  if (!subSourcesReverse.has(subSource)) {
+    subSourcesReverse.set(subSource, []);
+  }
+
   subSources.get(source)?.push(subSource);
+  subSourcesReverse.get(subSource)?.push(source);
 
   return subSource;
 };
@@ -102,6 +108,21 @@ export const destroy = (...initiators: SourceType[]) => {
 };
 
 /**
+ * Allows destruction of the source chain starting from a subsource
+ * and moving up to the main source. This behavior is useful when you need
+ * to destroy the entire chain while having only a reference to the subsource.
+ */
+export const destroyFromSubSource = (...initiators: SourceType[]) => {
+  initiators.forEach((initiator) => {
+    destroy(initiator);
+    const foundSources = subSourcesReverse.get(initiator);
+    if (foundSources) {
+      destroyFromSubSource(...foundSources);
+    }
+  });
+};
+
+/**
  * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
  */
@@ -144,6 +165,18 @@ export const isPatronInPools = (patron: GuestObjectType) => {
     }
   });
   return inPool;
+};
+
+/**
+ * Returns an array of all patrons in any pool
+ * @url https://silentium-lab.github.io/silentium/#/utils/all-patrons
+ */
+export const allPatrons = () => {
+  let patrons: GuestType[] = [];
+  poolSets.forEach((pool) => {
+    patrons = patrons.concat(Array.from(pool.values()));
+  });
+  return patrons;
 };
 
 export interface PoolType<T = any> extends GuestObjectType<T> {

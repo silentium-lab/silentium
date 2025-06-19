@@ -3,7 +3,10 @@ import { expect, test } from "vitest";
 import { sourceSync } from "../Source/SourceSync";
 import { sourceOf } from "./SourceChangeable";
 import { patron } from "../Patron/Patron";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceChain.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -36,4 +39,8 @@ test("SourceChain.test", () => {
   expect(valueAfterTrigger.syncValue()).toBe("new-value");
 
   expect(callsCounter).toBe(",the-value,new-value,new-value");
+
+  destroyFromSubSource(triggerSrc, valueSrc, valueAfterTrigger, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

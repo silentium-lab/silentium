@@ -1,3 +1,4 @@
+import { subSource, subSourceMany } from "../Patron/PatronPool";
 import { firstVisit, GuestType } from "../Guest/Guest";
 import { systemPatron } from "../Patron/Patron";
 import { SourceType, value } from "../Source/Source";
@@ -15,11 +16,15 @@ export const sourceAny = <T>(sources: SourceType<T>[]) => {
   const visited = firstVisit(() => {
     sources.forEach((source) => {
       value(source, systemPatron(lastSrc));
+      subSource(lastSrc, source);
     });
   });
 
-  return (g: GuestType<T>) => {
+  const src = (g: GuestType<T>) => {
     visited();
     lastSrc.value(g);
   };
+  subSourceMany(src, sources);
+
+  return src;
 };

@@ -45,8 +45,11 @@ export const sourceMap = <T, TG>(
     );
   });
 
-  return (g: GuestType<TG[]>) => {
+  const src = (g: GuestType<TG[]>) => {
     visited();
     result.value(g);
   };
+  subSource(result, src);
+
+  return src;
 };

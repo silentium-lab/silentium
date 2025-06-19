@@ -4,7 +4,10 @@ import { patron } from "../Patron/Patron";
 import { sourceExecutorApplied } from "../Source/SourceExecutorApplied";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceExecutorApplied.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -31,4 +34,8 @@ test("SourceExecutorApplied.test", () => {
   source.give(1);
 
   expect(counter).toBe(1);
+
+  destroyFromSubSource(source, sourceDebounced, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

@@ -3,7 +3,10 @@ import { sourceOf } from "./SourceChangeable";
 import { patron } from "../Patron/Patron";
 import { withName } from "../utils/Nameable";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceChangeable._sequence.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -41,4 +44,8 @@ test("SourceChangeable._sequence.test", () => {
     "one_3",
     "two_3",
   ]);
+
+  destroyFromSubSource(source, subSource1, subSource2, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

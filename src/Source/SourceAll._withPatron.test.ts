@@ -4,7 +4,10 @@ import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceAll._withPatron.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);
@@ -24,4 +27,8 @@ test("SourceAll._withPatron.test", () => {
   );
 
   expect(g).toBeCalledWith(2);
+
+  destroyFromSubSource(one, two, all, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

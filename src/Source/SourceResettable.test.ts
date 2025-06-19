@@ -1,4 +1,7 @@
-import { patronPoolsStatistic } from "../Patron/PatronPool";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
@@ -24,4 +27,8 @@ test("SourceFiltered.test", () => {
   const g2 = vi.fn();
   value(resettable, g2);
   expect(g2).toBeCalledWith(2);
+
+  destroyFromSubSource(resetSrc, baseSrc, resettable, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });
