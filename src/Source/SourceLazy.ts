@@ -1,7 +1,7 @@
-import { GuestType } from "src/Guest/Guest";
+import { GuestType } from "../Guest/Guest";
 import { LazyType } from "../Lazy/Lazy";
 import { systemPatron } from "../Patron/Patron";
-import { destroy } from "../Patron/PatronPool";
+import { destroy, subSource } from "../Patron/PatronPool";
 import { SourceType, value } from "../Source/Source";
 import { sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
@@ -22,7 +22,7 @@ export const sourceLazy = <T>(
   const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
   let wasInstantiated = false;
 
-  const instantiate = () => {
+  const instantiate = (srcInstance: SourceType<T>) => {
     if (wasInstantiated) {
       return;
     }
@@ -34,6 +34,8 @@ export const sourceLazy = <T>(
         if (!instance) {
           instance = lazySrc.get(...args);
           value(instance, systemPatron(result));
+          subSource(result, srcInstance);
+          subSource(resultResettable, srcInstance);
         }
       }),
     );
@@ -49,8 +51,10 @@ export const sourceLazy = <T>(
     );
   }
 
-  return (g: GuestType<T>) => {
-    instantiate();
+  const src = (g: GuestType<T>) => {
+    instantiate(src);
     value(resultResettable, g);
   };
+
+  return src;
 };

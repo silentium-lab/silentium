@@ -2,9 +2,14 @@ import { sourceDestroyable } from "../Source/SourceDestroyable";
 import { expect, test } from "vitest";
 import { give } from "../Guest/Guest";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy } from "../Patron/PatronPool";
+import {
+  destroy,
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceDestroyable.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   let isDestroyed = false;
   const src = sourceDestroyable<number>((g) => {
     give(123, g);
@@ -19,4 +24,8 @@ test("SourceDestroyable.test", () => {
   destroy(src);
 
   expect(isDestroyed).toBe(true);
+
+  destroyFromSubSource(src, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

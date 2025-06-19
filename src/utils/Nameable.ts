@@ -4,6 +4,8 @@ export type NamedType = {
 
 /**
  * Helps to bind name to object or function
+ * Be careful when wrapping sources with this function
+ * it may affect the destruction chain
  */
 export const withName = <T>(obj: T, name: string): T & NamedType => {
   return new Proxy(obj as any, {

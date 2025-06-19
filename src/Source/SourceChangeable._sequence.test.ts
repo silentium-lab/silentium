@@ -2,8 +2,14 @@ import { expect, test } from "vitest";
 import { sourceOf } from "./SourceChangeable";
 import { patron } from "../Patron/Patron";
 import { withName } from "../utils/Nameable";
+import { sourceSync } from "../Source/SourceSync";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 test("SourceChangeable._sequence.test", () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const source = sourceOf<number>(1);
   const sequence: string[] = [];
   const subSource1 = sourceOf();
@@ -38,4 +44,8 @@ test("SourceChangeable._sequence.test", () => {
     "one_3",
     "two_3",
   ]);
+
+  destroyFromSubSource(source, subSource1, subSource2, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

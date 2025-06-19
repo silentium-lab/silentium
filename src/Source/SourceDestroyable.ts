@@ -1,10 +1,7 @@
+import { GuestType } from "src/Guest/Guest";
+import { subSource } from "../Patron/PatronPool";
 import { SourceExecutorType, SourceObjectType } from "./Source";
-
-export type DestructorType = () => void;
-
-export interface DestroyableType {
-  destroy: DestructorType;
-}
+import { DestroyableType, DestructorType } from "src/types";
 
 /**
  * Ability to create sources that support special destruction logic
@@ -14,8 +11,8 @@ export const sourceDestroyable = <T>(
   source: SourceExecutorType<T, DestructorType>,
 ): SourceObjectType<T> & DestroyableType => {
   let destructor: DestructorType | null = null;
-  return {
-    value(g) {
+  const result = {
+    value(g: GuestType<T>) {
       destructor = source(g);
       return this;
     },
@@ -26,4 +23,7 @@ export const sourceDestroyable = <T>(
       return this;
     },
   };
+  subSource(result, source);
+
+  return result;
 };

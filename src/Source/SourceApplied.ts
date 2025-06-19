@@ -1,3 +1,4 @@
+import { subSource } from "../Patron/PatronPool";
 import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { SourceType, value } from "../Source/Source";
@@ -10,7 +11,7 @@ export const sourceApplied = <T, R>(
   baseSource: SourceType<T>,
   applier: (v: T) => R,
 ) => {
-  return (guest: GuestType<R>) => {
+  const src = (guest: GuestType<R>) => {
     value(
       baseSource,
       guestCast(guest, (v) => {
@@ -18,4 +19,7 @@ export const sourceApplied = <T, R>(
       }),
     );
   };
+  subSource(src, baseSource);
+
+  return src;
 };

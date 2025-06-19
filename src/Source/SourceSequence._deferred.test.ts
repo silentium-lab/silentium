@@ -7,6 +7,11 @@ import { lazyClass } from "../Lazy/LazyClass";
 import { source, SourceObjectType, SourceType, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";
+import { sourceSync } from "../Source/SourceSync";
+import {
+  destroyFromSubSource,
+  patronPoolsStatistic,
+} from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -32,6 +37,7 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceSequence._deferred.test", async () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const srcDeferred = (val: number) =>
     source((guest) => {
       setTimeout(() => {
@@ -53,4 +59,8 @@ test("SourceSequence._deferred.test", async () => {
   await wait(51);
   expect(callFn).toBeCalled();
   expect(callFn).toBeCalledWith("2,4,6,18");
+
+  destroyFromSubSource(src, sequence, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

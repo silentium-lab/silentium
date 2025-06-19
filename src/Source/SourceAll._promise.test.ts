@@ -3,6 +3,8 @@ import { patron } from "../Patron/Patron";
 import { sourceOf } from "../Source/SourceChangeable";
 import { value } from "./Source";
 import { sourceAll } from "./SourceAll";
+import { sourceSync } from "../Source/SourceSync";
+import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -13,6 +15,7 @@ afterEach(() => {
 });
 
 test("SourceAll._primitivesArray.test", async () => {
+  const statistic: any = sourceSync(patronPoolsStatistic);
   const one = 1;
   const two = sourceOf<number>();
 
@@ -25,4 +28,8 @@ test("SourceAll._primitivesArray.test", async () => {
   value(all, patron(g));
 
   expect(g).toBeCalledWith([1, 2]);
+
+  destroy(two, all, statistic);
+  expect(statistic.syncValue().patronsCount).toBe(0);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });

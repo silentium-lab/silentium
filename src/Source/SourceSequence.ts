@@ -5,6 +5,7 @@ import { LazyType } from "../Lazy/Lazy";
 import { isSource, SourceType, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 import { sourceOf, SourceChangeableType } from "./SourceChangeable";
+import { subSource } from "../Patron/PatronPool";
 
 /**
  * Ability to apply source to source of array values sequentially
@@ -21,9 +22,10 @@ export const sourceSequence = <T, TG>(
     throw new Error("SourceSequence didn't receive targetSource argument");
   }
 
-  return (guest: GuestType<TG[]>) => {
+  const src = (guest: GuestType<TG[]>) => {
     const sequenceSource = sourceOf();
     const source = targetSource.get(sequenceSource);
+    subSource(sequenceSource, baseSource);
 
     value(
       baseSource,
@@ -32,7 +34,9 @@ export const sourceSequence = <T, TG>(
 
         const sources: SourceChangeableType[] = [];
         theValue.forEach(() => {
-          sources.push(sourceOf());
+          const newSrc = sourceOf();
+          sources.push(newSrc);
+          subSource(newSrc, baseSource);
         });
 
         const nextItemHandle = () => {
@@ -70,4 +74,7 @@ export const sourceSequence = <T, TG>(
       }),
     );
   };
+  subSource(src, baseSource);
+
+  return src;
 };

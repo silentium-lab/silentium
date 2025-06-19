@@ -1,3 +1,4 @@
+import { subSourceMany } from "../Patron/PatronPool";
 import { firstVisit, GuestType } from "../Guest/Guest";
 import { systemPatron } from "../Patron/Patron";
 import { SourceType, value } from "../Source/Source";
@@ -56,8 +57,12 @@ export const sourceChain = <T extends SourceType[]>(
     handleSource(0);
   });
 
-  return (g: GuestType<Last<T>>) => {
+  const src = (g: GuestType<Last<T>>) => {
     visited();
     resultSrc.value(g);
   };
+  subSourceMany(src, sources);
+  subSourceMany(resultSrc, sources);
+
+  return src;
 };

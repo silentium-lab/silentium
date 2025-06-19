@@ -3,11 +3,11 @@ import { give, GuestType } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { guestSync } from "../Guest/GuestSync";
 import { lazyClass } from "../Lazy/LazyClass";
-import { SourceObjectType, SourceType, value } from "./Source";
-import { sourceMap } from "./SourceMap";
-import { sourceSync } from "../Source/SourceSync";
 import { destroy, patronPoolsStatistic, subSource } from "../Patron/PatronPool";
 import { sourceOf } from "../Source/SourceChangeable";
+import { sourceSync } from "../Source/SourceSync";
+import { SourceObjectType, SourceType, value } from "./Source";
+import { sourceMap } from "./SourceMap";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {
@@ -39,5 +39,5 @@ test("SourceMap._destroy.test", () => {
   destroy(...sources);
 
   expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(1);
+  expect(statistic.syncValue().poolsCount).toBe(0);
 });
