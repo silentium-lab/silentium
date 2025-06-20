@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { debounce } from "../../test-utils/debounce";
 import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
-import { patron } from "../Patron/Patron";
+import { patron } from "./Patron";
 import { sourceOf } from "../Source/SourceChangeable";
 
 test("GuestExecutorApplied.test", () => {

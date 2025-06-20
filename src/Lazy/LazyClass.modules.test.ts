@@ -1,9 +1,10 @@
-import { SourceObjectType } from "../Source/Source";
 import { expect, test, vitest } from "vitest";
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { SourceChangeableType } from "../Source/SourceChangeable";
-import { LazyType } from "./Lazy";
 import { lazyClass } from "./LazyClass";
+import { LazyType } from "../types/LazyType";
+import { GuestType } from "../types/GuestType";
+import { SourceObjectType } from "../types/SourceType";
 
 class TestClass {
   private source: SourceChangeableType;

@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 import { sourceOf } from "./SourceChangeable";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { withName } from "../utils/Nameable";
 import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceChangeable._sequence.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

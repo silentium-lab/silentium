@@ -1,4 +1,4 @@
-import { patronApplied } from "../Patron/PatronApplied";
+import { patronApplied } from "./PatronApplied";
 import { value } from "../Source/Source";
 import { expect, test, vi } from "vitest";
 import { sourceOf } from "../Source/SourceChangeable";

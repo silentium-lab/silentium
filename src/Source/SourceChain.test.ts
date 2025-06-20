@@ -2,11 +2,11 @@ import { sourceChain } from "../Source/SourceChain";
 import { expect, test } from "vitest";
 import { sourceSync } from "../Source/SourceSync";
 import { sourceOf } from "./SourceChangeable";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceChain.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

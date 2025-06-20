@@ -1,6 +1,6 @@
-import { introduction } from "../Patron/Patron";
-import { GuestObjectType, GuestType } from "../Guest/Guest";
-import { guestApplied } from "../Guest/GuestApplied";
+import { introduction } from "./Patron";
+import { guestApplied } from "./GuestApplied";
+import { GuestObjectType, GuestType } from "../types/GuestType";
 
 /**
  * Helps to apply function to patron

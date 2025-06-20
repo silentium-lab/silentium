@@ -1,12 +1,13 @@
 import { expect, test } from "vitest";
 import { sourceOf } from "./SourceChangeable";
 import { sourceCombined } from "../Source/SourceCombined";
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
+import { GuestType } from "../types/GuestType";
 
 test("SourceCombined.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

@@ -1,8 +1,10 @@
-import { subSourceMany } from "../Patron/PatronPool";
-import { firstVisit, GuestType } from "../Guest/Guest";
-import { systemPatron } from "../Patron/Patron";
-import { SourceType, value } from "../Source/Source";
+import { subSourceMany } from "../Guest/PatronPool";
+import { firstVisit } from "../Guest/Guest";
+import { systemPatron } from "../Guest/Patron";
 import { sourceOf } from "../Source/SourceChangeable";
+import { SourceType } from "../types/SourceType";
+import { value } from "../Source/Source";
+import { GuestType } from "../types/GuestType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;

@@ -1,6 +1,8 @@
-import { give, GuestType } from "../Guest/Guest";
-import { SourceType, value } from "./Source";
+import { GuestType } from "../types/GuestType";
+import { give } from "../Guest/Guest";
+import { value } from "./Source";
 import { SourceChangeableType } from "./SourceChangeable";
+import { SourceType } from "../types/SourceType";
 
 /**
  * Ability to build common changeable source from different guest and source

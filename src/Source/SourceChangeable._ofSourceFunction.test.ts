@@ -5,7 +5,7 @@ import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceChangeable._ofSourceFunction.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

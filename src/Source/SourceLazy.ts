@@ -1,11 +1,12 @@
-import { GuestType } from "../Guest/Guest";
-import { LazyType } from "../Lazy/Lazy";
-import { systemPatron } from "../Patron/Patron";
-import { destroy, subSource } from "../Patron/PatronPool";
-import { SourceType, value } from "../Source/Source";
+import { LazyType } from "../types/LazyType";
+import { systemPatron } from "../Guest/Patron";
+import { destroy, subSource } from "../Guest/PatronPool";
+import { value } from "../Source/Source";
 import { sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
+import { SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Helps to build source only when all sources will give its values
@@ -19,7 +20,10 @@ export const sourceLazy = <T>(
 ) => {
   let instance: SourceType<T> | null = null;
   const result = sourceOf<T>();
-  const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
+  const resultResettable = sourceResettable<T>(
+    result,
+    destroySrc ?? sourceOf(),
+  );
   let wasInstantiated = false;
 
   const instantiate = (srcInstance: SourceType<T>) => {

@@ -1,11 +1,13 @@
-import { firstVisit, give, GuestType } from "../Guest/Guest";
-import { LazyType } from "../Lazy/Lazy";
-import { systemPatron } from "../Patron/Patron";
-import { patronOnce } from "../Patron/PatronOnce";
-import { destroy, subSource } from "../Patron/PatronPool";
+import { SourceType } from "../types/SourceType";
+import { firstVisit, give } from "../Guest/Guest";
+import { systemPatron } from "../Guest/Patron";
+import { patronOnce } from "../Guest/PatronOnce";
+import { destroy, subSource } from "../Guest/PatronPool";
 import { sourceOf } from "../Source/SourceChangeable";
-import { SourceType, value } from "./Source";
+import { value } from "./Source";
 import { sourceAll } from "./SourceAll";
+import { LazyType } from "../types/LazyType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Helps to modify many sources with one private source

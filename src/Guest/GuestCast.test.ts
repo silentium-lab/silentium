@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { patron } from "../Patron/Patron";
+import { patron } from "./Patron";
 import { sourceOf } from "../Source/SourceChangeable";
 import { give, guest } from "./Guest";
 import { guestCast } from "./GuestCast";

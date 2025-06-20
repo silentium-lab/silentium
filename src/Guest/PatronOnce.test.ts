@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { sourceOf } from "../Source/SourceChangeable";
-import { wait } from "./../../test-utils/wait";
+import { wait } from "../../test-utils/wait";
 import { patronOnce } from "./PatronOnce";
 
 beforeEach(() => {

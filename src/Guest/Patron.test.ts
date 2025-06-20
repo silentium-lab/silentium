@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { sourceOf } from "../Source/SourceChangeable";
-import { patron } from "../Patron/Patron";
+import { patron } from "./Patron";
 
 test("Patron.test", () => {
   const one = sourceOf<number>(1);

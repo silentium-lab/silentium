@@ -1,7 +1,7 @@
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";

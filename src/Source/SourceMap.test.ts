@@ -1,15 +1,17 @@
 import { expect, test } from "vitest";
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { guestSync } from "../Guest/GuestSync";
 import { lazyClass } from "../Lazy/LazyClass";
-import { SourceObjectType, SourceType, value } from "./Source";
+import { value } from "./Source";
 import { sourceMap } from "./SourceMap";
 import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
+import { SourceObjectType, SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}

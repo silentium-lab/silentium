@@ -1,7 +1,8 @@
-import { destroy } from "../Patron/PatronPool";
-import { GuestType } from "../Guest/Guest";
-import { SourceType, value } from "./Source";
+import { SourceType } from "../types/SourceType";
+import { destroy } from "../Guest/PatronPool";
 import { sourceOf } from "./SourceChangeable";
+import { GuestType } from "../types/GuestType";
+import { value } from "../Source/Source";
 
 /**
  * Ability set the value only once

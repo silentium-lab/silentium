@@ -1,6 +1,6 @@
 import { value } from "../Source/Source";
 import { expect, test } from "vitest";
-import { patron, systemPatron } from "../Patron/Patron";
+import { patron, systemPatron } from "./Patron";
 import { sourceOf } from "../Source/SourceChangeable";
 
 test("Patron._system.test", () => {

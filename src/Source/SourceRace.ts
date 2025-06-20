@@ -1,6 +1,8 @@
-import { give, GuestType } from "../Guest/Guest";
+import { SourceType } from "src/types/SourceType";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { SourceType, value } from "./Source";
+import { value } from "./Source";
+import { GuestType } from "src/types/GuestType";
 
 /**
  * Connects guest with source what give response faster than others

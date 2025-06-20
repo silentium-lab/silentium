@@ -1,6 +1,6 @@
 import { sourceOf } from "../Source/SourceChangeable";
 import { expect, test } from "vitest";
-import { patron } from "../Patron/Patron";
+import { patron } from "./Patron";
 import { value } from "../Source/Source";
 import { sourceSync } from "../Source/SourceSync";
 import { destroy, patronPoolsStatistic, subSource } from "./PatronPool";

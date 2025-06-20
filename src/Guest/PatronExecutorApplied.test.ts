@@ -1,4 +1,4 @@
-import { patronExecutorApplied } from "../Patron/PatronExecutorApplied";
+import { patronExecutorApplied } from "./PatronExecutorApplied";
 import { expect, test, vi } from "vitest";
 import { sourceOf } from "../Source/SourceChangeable";
 import { debounce } from "../../test-utils/debounce";

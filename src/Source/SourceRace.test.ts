@@ -6,7 +6,7 @@ import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers();

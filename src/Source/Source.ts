@@ -1,20 +1,6 @@
-import { give, GuestType } from "../Guest/Guest";
-
-export type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
-
-export interface SourceObjectType<T> {
-  value: SourceExecutorType<T>;
-}
-
-export type SourceDataType<T> = Extract<
-  T,
-  string | number | boolean | Date | object | Array<unknown> | symbol
->;
-
-export type SourceType<T = any> =
-  | SourceExecutorType<T>
-  | SourceObjectType<T>
-  | SourceDataType<T>;
+import { SourceExecutorType, SourceType } from "../types/SourceType";
+import { give } from "../Guest/Guest";
+import { GuestType } from "../types/GuestType";
 
 const valueExact = <T>(source: SourceType<T>, guest: GuestType<T>) => {
   if (source === undefined || source === null) {

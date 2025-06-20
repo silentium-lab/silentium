@@ -1,6 +1,8 @@
-import { give, GuestType } from "../Guest/Guest";
+import { SourceType } from "../types/SourceType";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { SourceType, value } from "../Source/Source";
+import { value } from "../Source/Source";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Helps not to respond with information what checked by predicate function

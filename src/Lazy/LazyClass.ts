@@ -1,4 +1,4 @@
-import { LazyType } from "./Lazy";
+import { LazyType } from "../types/LazyType";
 
 interface Constructable<T> {
   new (...args: unknown[]): T;

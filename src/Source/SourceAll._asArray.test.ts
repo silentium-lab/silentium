@@ -1,11 +1,11 @@
 import { expect, test, vitest } from "vitest";
 import { guestSync } from "../Guest/GuestSync";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 
 test("SourceAll._asArray.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

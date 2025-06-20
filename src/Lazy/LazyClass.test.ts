@@ -1,7 +1,8 @@
-import { give, GuestType } from "../Guest/Guest";
-import { SourceObjectType } from "../Source/Source";
+import { give } from "../Guest/Guest";
 import { expect, test, vitest } from "vitest";
 import { lazyClass } from "./LazyClass";
+import { SourceObjectType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 class SourceChangeable implements SourceObjectType<number> {
   public constructor(private v: number) {}

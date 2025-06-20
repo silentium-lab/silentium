@@ -1,4 +1,5 @@
-import { give, GuestObjectType, GuestType } from "../Guest/Guest";
+import { GuestObjectType, GuestType } from "../types/GuestType";
+import { give } from "../Guest/Guest";
 
 /**
  * Helps to apply function to value before baseGuest will receive it

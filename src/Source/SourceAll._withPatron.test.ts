@@ -1,5 +1,5 @@
 import { expect, test, vitest } from "vitest";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { value } from "../Source/Source";
 import { sourceAll } from "./SourceAll";
 import { sourceOf } from "./SourceChangeable";
@@ -7,7 +7,7 @@ import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceAll._withPatron.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

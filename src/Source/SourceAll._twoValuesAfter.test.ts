@@ -3,7 +3,7 @@ import { expect, test, vitest } from "vitest";
 import { sourceAll } from "./SourceAll";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 
 test("SourceAll._twoValuesAfter.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

@@ -1,9 +1,10 @@
-import { GuestType } from "../Guest/Guest";
-import { systemPatron } from "../Patron/Patron";
-import { subSourceMany } from "../Patron/PatronPool";
-import { SourceType, value } from "../Source/Source";
+import { SourceType } from "../types/SourceType";
+import { systemPatron } from "../Guest/Patron";
+import { subSourceMany } from "../Guest/PatronPool";
+import { value } from "../Source/Source";
 import { ExtractTypesFromArray, sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Simplifies sources combination, when we need to create value depending on many sources

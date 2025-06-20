@@ -3,12 +3,12 @@ import { lazy } from "../Lazy/Lazy";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
-import { SourceType } from "../Source/Source";
+} from "../Guest/PatronPool";
 import { sourceApplied } from "../Source/SourceApplied";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceLazy } from "../Source/SourceLazy";
 import { sourceSync } from "../Source/SourceSync";
+import { SourceType } from "../types/SourceType";
 
 test("SourceLazy.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

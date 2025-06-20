@@ -1,14 +1,16 @@
 import { expect, test, vitest } from "vitest";
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { lazy } from "../Lazy/Lazy";
-import { source, SourceType, value } from "./Source";
+import { source, value } from "./Source";
 import { sourceMap } from "./SourceMap";
 import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
+import { SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 function x2(baseNumber: SourceType<number>) {
   return (guest: GuestType<number>) => {

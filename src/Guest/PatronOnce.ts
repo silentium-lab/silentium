@@ -1,5 +1,6 @@
-import { introduction } from "../Patron/Patron";
-import { give, GuestType } from "../Guest/Guest";
+import { introduction } from "./Patron";
+import { give } from "./Guest";
+import { GuestType } from "../types/GuestType";
 import {
   GuestDisposableType,
   MaybeDisposableType,

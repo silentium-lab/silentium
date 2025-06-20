@@ -1,7 +1,7 @@
-import { GuestType } from "src/Guest/Guest";
-import { subSource } from "../Patron/PatronPool";
-import { SourceExecutorType, SourceObjectType } from "./Source";
-import { DestroyableType, DestructorType } from "src/types";
+import { SourceExecutorType, SourceObjectType } from "../types/SourceType";
+import { subSource } from "../Guest/PatronPool";
+import { DestroyableType, DestructorType } from "../types";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Ability to create sources that support special destruction logic

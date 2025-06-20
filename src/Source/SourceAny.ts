@@ -1,8 +1,10 @@
-import { subSource, subSourceMany } from "../Patron/PatronPool";
-import { firstVisit, GuestType } from "../Guest/Guest";
-import { systemPatron } from "../Patron/Patron";
-import { SourceType, value } from "../Source/Source";
+import { subSource, subSourceMany } from "../Guest/PatronPool";
+import { firstVisit } from "../Guest/Guest";
+import { systemPatron } from "../Guest/Patron";
+import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
+import { SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Present source of value what was last appeared in any

@@ -5,7 +5,7 @@ import { sourceAny } from "../Source/SourceAny";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceAny.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

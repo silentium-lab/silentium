@@ -6,7 +6,7 @@ import {
   destroy,
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceDestroyable.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

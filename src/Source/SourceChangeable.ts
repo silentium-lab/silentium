@@ -1,15 +1,15 @@
 import { sourceSync } from "../Source/SourceSync";
-import { give, guest, GuestObjectType, GuestType } from "../Guest/Guest";
-import { isPatron } from "../Patron/Patron";
-import { patronOnce } from "../Patron/PatronOnce";
-import { PatronPool, subSource } from "../Patron/PatronPool";
+import { give, guest } from "../Guest/Guest";
+import { isPatron } from "../Guest/Patron";
+import { patronOnce } from "../Guest/PatronOnce";
+import { PatronPool, subSource } from "../Guest/PatronPool";
+import { isSource, value } from "./Source";
 import {
-  isSource,
   SourceDataType,
   SourceObjectType,
   SourceType,
-  value,
-} from "./Source";
+} from "../types/SourceType";
+import { GuestObjectType, GuestType } from "../types/GuestType";
 
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;

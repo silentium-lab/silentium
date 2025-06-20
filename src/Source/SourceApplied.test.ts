@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 import { sourceApplied } from "../Source/SourceApplied";
 import { sourceSync } from "../Source/SourceSync";
 import { sourceOf } from "./SourceChangeable";

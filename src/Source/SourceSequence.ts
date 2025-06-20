@@ -1,11 +1,13 @@
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { patronOnce } from "../Patron/PatronOnce";
-import { LazyType } from "../Lazy/Lazy";
-import { isSource, SourceType, value } from "./Source";
+import { patronOnce } from "../Guest/PatronOnce";
+import { isSource, value } from "./Source";
 import { sourceAll } from "./SourceAll";
 import { sourceOf, SourceChangeableType } from "./SourceChangeable";
-import { subSource } from "../Patron/PatronPool";
+import { subSource } from "../Guest/PatronPool";
+import { SourceType } from "../types/SourceType";
+import { LazyType } from "../types/LazyType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Ability to apply source to source of array values sequentially

@@ -1,4 +1,5 @@
-import { give, GuestType } from "./Guest";
+import { GuestType } from "../types/GuestType";
+import { give } from "./Guest";
 import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 
 /**

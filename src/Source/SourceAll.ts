@@ -1,21 +1,14 @@
 import { withName } from "../utils/Nameable";
-import {
-  firstVisit,
-  give,
-  guest,
-  GuestObjectType,
-  GuestType,
-} from "../Guest/Guest";
+import { firstVisit, give, guest } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { systemPatron } from "../Patron/Patron";
-import {
-  destroy,
-  removePatronFromPools,
-  subSource,
-} from "../Patron/PatronPool";
-import { SourceObjectType, SourceType, value } from "./Source";
+import { systemPatron } from "../Guest/Patron";
+import { destroy, removePatronFromPools, subSource } from "../Guest/PatronPool";
+import { value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
-import { DestroyableType } from "src/types";
+import { DestroyableType } from "../types";
+import { SourceObjectType, SourceType } from "../types/SourceType";
+import { GuestObjectType } from "../types/GuestType";
+import { GuestType } from "../types/GuestType";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
 

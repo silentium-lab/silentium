@@ -1,4 +1,4 @@
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { expect, test } from "vitest";
 import { sourceMemoOf } from "./SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";
@@ -6,7 +6,7 @@ import {
   destroy,
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
 
 test("SourceChangeable._memo.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

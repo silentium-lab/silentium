@@ -1,17 +1,19 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { wait } from "../../test-utils/wait";
-import { give, GuestType } from "../Guest/Guest";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { lazy } from "../Lazy/Lazy";
-import { source, SourceType, value } from "./Source";
+import { source, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceMap } from "./SourceMap";
 import { sourceSync } from "../Source/SourceSync";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,
-} from "../Patron/PatronPool";
+} from "../Guest/PatronPool";
+import { SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });

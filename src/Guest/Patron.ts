@@ -1,5 +1,6 @@
-import { give, GuestType } from "../Guest/Guest";
-import { GuestDisposableType } from "../Guest/GuestDisposable";
+import { GuestType } from "../types/GuestType";
+import { give } from "./Guest";
+import { GuestDisposableType } from "./GuestDisposable";
 
 export type PatronType<T> = GuestDisposableType<T> & {
   introduction(): "patron";

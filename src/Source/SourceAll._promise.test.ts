@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { patron } from "../Patron/Patron";
+import { patron } from "../Guest/Patron";
 import { sourceOf } from "../Source/SourceChangeable";
 import { value } from "./Source";
 import { sourceAll } from "./SourceAll";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 
 beforeEach(() => {
   vi.useFakeTimers();

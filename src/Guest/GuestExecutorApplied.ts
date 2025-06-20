@@ -1,9 +1,9 @@
 import {
-  give,
   GuestExecutorType,
   GuestObjectType,
   GuestType,
-} from "../Guest/Guest";
+} from "../types/GuestType";
+import { give } from "../Guest/Guest";
 
 /**
  * Apply function to guest function of receiving value, useful for debouncing or throttling

@@ -1,7 +1,9 @@
-import { subSource } from "../Patron/PatronPool";
-import { give, GuestType } from "../Guest/Guest";
+import { subSource } from "../Guest/PatronPool";
+import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { SourceType, value } from "../Source/Source";
+import { value } from "../Source/Source";
+import { SourceType } from "../types/SourceType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Gives ability to apply function to source value

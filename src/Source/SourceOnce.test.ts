@@ -1,5 +1,5 @@
 import { expect, test, vitest } from "vitest";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 import { sourceSync } from "../Source/SourceSync";
 import { sourceOnce } from "./SourceOnce";
 

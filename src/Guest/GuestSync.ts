@@ -1,4 +1,4 @@
-import { GuestObjectType } from "./Guest";
+import { GuestObjectType } from "../types/GuestType";
 
 export interface GuestValueType<T = any> extends GuestObjectType<T> {
   value(): T;

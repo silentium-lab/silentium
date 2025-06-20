@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 import { sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";

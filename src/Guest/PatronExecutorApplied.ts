@@ -1,6 +1,6 @@
-import { introduction } from "../Patron/Patron";
-import { GuestExecutorType, GuestType } from "../Guest/Guest";
-import { guestExecutorApplied } from "../Guest/GuestExecutorApplied";
+import { introduction } from "./Patron";
+import { guestExecutorApplied } from "./GuestExecutorApplied";
+import { GuestExecutorType, GuestType } from "../types/GuestType";
 
 /**
  * Helps to apply function to patrons executor

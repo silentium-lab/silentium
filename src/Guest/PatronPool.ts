@@ -1,9 +1,11 @@
-import { source, SourceType } from "../Source/Source";
-import { give, GuestObjectType, GuestType } from "../Guest/Guest";
-import { GuestDisposableType } from "../Guest/GuestDisposable";
+import { source } from "../Source/Source";
+import { give } from "./Guest";
+import { GuestDisposableType } from "./GuestDisposable";
 import PrioritySet from "../utils/PrioritySet";
-import { patronPriority } from "../Patron/Patron";
-import { DestroyableType } from "src/types";
+import { patronPriority } from "./Patron";
+import { DestroyableType } from "../types";
+import { GuestObjectType, GuestType } from "../types/GuestType";
+import { SourceType } from "../types/SourceType";
 
 const poolSets = new Map<PoolType, PrioritySet<GuestObjectType>>();
 const poolsOfInitiators = new Map<SourceType, PoolType>();

@@ -1,15 +1,6 @@
-import { source, SourceExecutorType, SourceType } from "../Source/Source";
-
-type GuestIntroduction = "guest" | "patron";
-
-export type GuestExecutorType<T = any, This = void> = (value: T) => This;
-
-export interface GuestObjectType<T = any> {
-  give(value: T): this;
-  introduction?(): GuestIntroduction;
-}
-
-export type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
+import { GuestExecutorType, GuestType } from "../types/GuestType";
+import { source } from "../Source/Source";
+import { SourceExecutorType, SourceType } from "../types/SourceType";
 
 /**
  * Helps to give data to guest, guests can be of different shapes
@@ -40,7 +31,7 @@ export const give = <T>(
  */
 export const isGuest = (mbGuest: any): mbGuest is GuestType => {
   if (mbGuest === undefined) {
-    throw new Error("isGuest didnt receive mbGuest argument");
+    throw new Error("isGuest didn't receive mbGuest argument");
   }
   return typeof mbGuest === "function" || typeof mbGuest?.give === "function";
 };

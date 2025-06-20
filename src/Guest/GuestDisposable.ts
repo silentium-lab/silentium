@@ -1,4 +1,5 @@
-import { give, GuestObjectType, GuestType } from "./Guest";
+import { GuestObjectType, GuestType } from "../types/GuestType";
+import { give } from "./Guest";
 
 export interface GuestDisposableType<T = any> extends GuestObjectType<T> {
   disposed(value: T | null): boolean;

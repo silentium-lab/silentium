@@ -1,7 +1,7 @@
 import { expect, test, vitest } from "vitest";
 import { source, value } from "./Source";
 import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Patron/PatronPool";
+import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
 
 test("Source.test", () => {
   const statistic: any = sourceSync(patronPoolsStatistic);

@@ -1,8 +1,9 @@
-import { GuestType } from "../Guest/Guest";
+import { SourceObjectType, SourceType } from "../types/SourceType";
 import { guestSync } from "../Guest/GuestSync";
-import { systemPatron } from "../Patron/Patron";
-import { subSource } from "../Patron/PatronPool";
-import { SourceObjectType, SourceType, value } from "../Source/Source";
+import { systemPatron } from "../Guest/Patron";
+import { subSource } from "../Guest/PatronPool";
+import { value } from "../Source/Source";
+import { GuestType } from "../types/GuestType";
 
 /**
  * Helps to represent source value as sync value, what can be returned
