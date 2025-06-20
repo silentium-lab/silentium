@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { lazy } from "../Lazy/Lazy";
+import { lazy } from "../utils/Lazy";
 import {
   destroyFromSubSource,
   patronPoolsStatistic,

@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { guestSync } from "../Guest/GuestSync";
-import { lazyClass } from "../Lazy/LazyClass";
+import { lazyClass } from "../utils/LazyClass";
 import { destroy, patronPoolsStatistic, subSource } from "../Guest/PatronPool";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceSync } from "../Source/SourceSync";

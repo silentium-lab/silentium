@@ -3,7 +3,7 @@ import { wait } from "../../test-utils/wait";
 import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { patron } from "../Guest/Patron";
-import { lazyClass } from "../Lazy/LazyClass";
+import { lazyClass } from "../utils/LazyClass";
 import { source, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { sourceSequence } from "./SourceSequence";

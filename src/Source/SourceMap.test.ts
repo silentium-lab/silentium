@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { guestSync } from "../Guest/GuestSync";
-import { lazyClass } from "../Lazy/LazyClass";
+import { lazyClass } from "../utils/LazyClass";
 import { value } from "./Source";
 import { sourceMap } from "./SourceMap";
 import { sourceSync } from "../Source/SourceSync";
