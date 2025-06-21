@@ -11,6 +11,8 @@ export const give = <T>(
   data: T,
   guest?: GuestType<T>,
 ): GuestType<T> | SourceExecutorType<T> => {
+  // TODO if guest was disposed no need to set value
+  // TODO also need to add errors and complete methods to object guest
   if (data === undefined) {
     throw new Error("give didn't receive data argument");
   }
@@ -60,6 +62,7 @@ export const guest = <T>(receiver: GuestExecutorType<T>) => {
  * @url https://silentium-lab.github.io/silentium/#/utils/first-visit
  */
 export const firstVisit = (afterFirstVisit: () => void) => {
+  // TODO remove no need
   let isVisited = false;
   return () => {
     if (!isVisited) {
@@ -68,3 +71,30 @@ export const firstVisit = (afterFirstVisit: () => void) => {
     isVisited = true;
   };
 };
+
+export class Guest<T> {
+  public constructor(
+    private guestFn: GuestExecutorType<T>,
+    private errorFn?: (cause: unknown) => void,
+    private disposedFn?: () => boolean,
+  ) {}
+
+  public give(value: T) {
+    if (!this.disposed()) {
+      this.guestFn(value);
+    }
+    return this;
+  }
+
+  public error(cause: unknown) {
+    if (this.errorFn !== undefined) {
+      this.errorFn(cause);
+    }
+
+    return this;
+  }
+
+  public disposed() {
+    return this.disposedFn !== undefined ? this.disposedFn() : false;
+  }
+}

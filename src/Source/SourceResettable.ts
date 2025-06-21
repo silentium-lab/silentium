@@ -1,11 +1,11 @@
-import { SourceType } from "src/types/SourceType";
+import { SourceType } from "../types/SourceType";
 import { firstVisit, give } from "../Guest/Guest";
 import { systemPatron } from "../Guest/Patron";
 import { subSource } from "../Guest/PatronPool";
 import { value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceDynamic } from "../Source/SourceDynamic";
-import { GuestType } from "src/types/GuestType";
+import { GuestType } from "../types/GuestType";
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
