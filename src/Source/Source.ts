@@ -87,7 +87,7 @@ export const source = <T>(source: SourceType<T>): SourceExecutorType<T> => {
   };
 };
 
-type SrcExecutorType<T> = (g: Guest<T>) => () => void | undefined;
+type SrcExecutorType<T> = (g: Guest<T>) => (() => void | undefined) | void;
 type SrcObjectType<T> = {
   value: SrcExecutorType<T>;
 };
@@ -112,19 +112,9 @@ export class Source<T> {
   /**
    * Следующее значение источника
    */
-  public next(value: T) {
+  private next(value: T) {
     if (this.guest !== undefined) {
       this.guest.give(value);
-    }
-    return this;
-  }
-
-  /**
-   * Ошибка в источнике
-   */
-  public error(cause: unknown) {
-    if (this.guest !== undefined) {
-      this.guest.error(cause);
     }
     return this;
   }

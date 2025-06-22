@@ -3,18 +3,18 @@ import { Guest } from "../Guest";
 import { of } from "../Source/Of";
 
 test("Of.test", () => {
-  const src = of<number>();
+  const [ofs, ofg] = of<number>();
 
   const g = vi.fn();
-  src.value(new Guest(g));
+  ofs.value(new Guest(g));
 
   expect(g).not.toHaveBeenCalled();
 
-  src.next(1);
+  ofg.give(1);
 
   expect(g).toHaveBeenCalledWith(1);
 
-  src.next(2);
+  ofg.give(2);
 
   expect(g).toHaveBeenCalledWith(2);
 });
