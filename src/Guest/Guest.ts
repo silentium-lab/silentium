@@ -98,3 +98,5 @@ export class Guest<T> {
     return this.disposedFn !== undefined ? this.disposedFn() : false;
   }
 }
+
+export const G = <T>(guestFn: GuestExecutorType<T>) => new Guest(guestFn);

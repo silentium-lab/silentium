@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Guest } from "../Guest";
+import { G } from "../Guest";
 import { of } from "../Source/Of";
 import { pool } from "../Source/Pool";
 
@@ -9,12 +9,12 @@ test("Pool.test", () => {
   const responses: string[] = [];
 
   p.value(
-    new Guest((v) => {
+    G((v) => {
       responses.push(`g1_${v}`);
     }),
   );
   p.value(
-    new Guest((v) => {
+    G((v) => {
       responses.push(`g2_${v}`);
     }),
   );

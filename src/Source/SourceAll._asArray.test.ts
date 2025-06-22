@@ -1,32 +1,15 @@
-import { expect, test, vitest } from "vitest";
-import { guestSync } from "../Guest/GuestSync";
-import { patron } from "../Guest/Patron";
-import { value } from "../Source/Source";
-import { sourceAll } from "./SourceAll";
-import { sourceOf } from "./SourceChangeable";
-import { sourceSync } from "../Source/SourceSync";
-import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
+import { expect, test, vi } from "vitest";
+import { S } from "../Source/Source";
+import { all } from "../Source/SourceAll";
+import { G } from "../Guest";
 
 test("SourceAll._asArray.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const one = sourceOf<number>(1);
-  const two = sourceOf<number>(2);
-  const all = sourceAll([one.value, two.value]);
+  const one = S(1);
+  const two = S(2);
+  const a = all([one, two]);
 
-  const guest = vitest.fn();
-  value(
-    all,
-    patron((value) => {
-      guest(JSON.stringify(value));
-    }),
-  );
+  const g = vi.fn();
+  a.value(G(g));
 
-  const gs = guestSync<[number, number]>();
-  value(all, gs);
-
-  expect(guest).toBeCalledWith("[1,2]");
-
-  destroy(one, two, all, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(g).toBeCalledWith([1, 2]);
 });

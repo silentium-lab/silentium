@@ -1,12 +1,12 @@
 import { expect, test, vi } from "vitest";
-import { Guest } from "../Guest";
+import { G } from "../Guest";
 import { of } from "../Source/Of";
 
 test("Of.test", () => {
   const [ofs, ofg] = of<number>();
 
   const g = vi.fn();
-  ofs.value(new Guest(g));
+  ofs.value(G(g));
 
   expect(g).not.toHaveBeenCalled();
 

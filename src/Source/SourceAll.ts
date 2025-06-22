@@ -1,9 +1,9 @@
 import { withName } from "../utils/Nameable";
-import { firstVisit, give, guest } from "../Guest/Guest";
+import { firstVisit, give, Guest, guest } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
 import { systemPatron } from "../Guest/Patron";
 import { destroy, removePatronFromPools, subSource } from "../Guest/PatronPool";
-import { value } from "./Source";
+import { Source, value } from "./Source";
 import { sourceOf } from "./SourceChangeable";
 import { DestroyableType } from "../types";
 import { SourceObjectType, SourceType } from "../types/SourceType";
@@ -21,6 +21,7 @@ export type ExtractTypesFromArray<T extends SourceType<any>[]> = {
  * when all sources will gets it's values
  * @url https://silentium-lab.github.io/silentium/#/source/source-all
  */
+// TODO remove after refactoring
 export const sourceAll = <const T extends SourceType[]>(
   sources: T,
 ): SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType => {
@@ -77,4 +78,34 @@ export const sourceAll = <const T extends SourceType[]>(
       destroy(theAll);
     },
   };
+};
+
+/**
+ * Новая версия all компонента
+ */
+export const all = <const T extends Source[]>(sources: T) => {
+  const src = new Source<ExtractTypesFromArray<T>>((g) => {
+    const keysKnown = new Set<string>(Object.keys(sources));
+    const keysFilled = new Set();
+    const isAllFilled = () => {
+      return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
+    };
+    const result: Record<string, unknown> = {};
+
+    Object.entries(sources).forEach(([key, source]) => {
+      src.subSource(source);
+      keysKnown.add(key);
+      source.value(
+        new Guest((v) => {
+          keysFilled.add(key);
+          result[key] = v;
+          if (isAllFilled()) {
+            g.give(Object.values(result) as ExtractTypesFromArray<T>);
+          }
+        }),
+      );
+    });
+  });
+
+  return src;
 };

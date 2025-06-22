@@ -99,7 +99,7 @@ type SrcObjectType<T> = {
 /**
  * Main information source view
  */
-export class Source<T> {
+export class Source<T = any> {
   private static sourcesCounter = 0;
   private theSubSources: Source<unknown>[] = [];
   private destructor?: () => void;
@@ -215,3 +215,9 @@ export class Source<T> {
     return !!this.guest;
   }
 }
+
+export const S = <T>(
+  src?: SrcObjectType<T> | SrcExecutorType<T> | SourceDataType<T>,
+  theName = "unknown",
+  onlyOneGuest = true,
+) => new Source(src, theName, onlyOneGuest);
