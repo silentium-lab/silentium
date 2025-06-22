@@ -5,7 +5,7 @@ import { pool } from "../Source/Pool";
 
 test("Pool.test", () => {
   const [os, og] = of<number>(1);
-  const p = pool(os);
+  const [p, pp] = pool(os);
   const responses: string[] = [];
 
   p.value(
@@ -33,4 +33,7 @@ test("Pool.test", () => {
     "g1_4",
     "g2_4",
   ]);
+
+  p.destroy();
+  expect(pp.size()).toBe(0);
 });

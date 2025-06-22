@@ -1,16 +1,16 @@
-import { expect, test } from "vitest";
-import { source } from "../Source/Source";
-import { sourceSync } from "./SourceSync";
-import { destroy, patronPoolsStatistic } from "../Guest/PatronPool";
+import { Guest } from "../Guest";
+import { expect, test, vi } from "vitest";
+import { Source } from "../Source/Source";
 
 test("Source._object.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const src = sourceSync({
-    value: source(111),
+  const src = new Source({
+    value(g) {
+      g.give(111);
+    },
   });
-  expect(src.syncValue()).toBe(111);
 
-  destroy(src);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  const g = vi.fn();
+  src.value(new Guest(g));
+
+  expect(g).toHaveBeenCalledWith(111);
 });

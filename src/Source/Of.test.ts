@@ -17,4 +17,7 @@ test("Of.test", () => {
   ofg.give(2);
 
   expect(g).toHaveBeenCalledWith(2);
+
+  ofs.destroy();
+  expect(ofs.hasGuest()).toBe(false);
 });

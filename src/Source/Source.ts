@@ -6,6 +6,7 @@ import {
 import { give, Guest } from "../Guest/Guest";
 import { GuestType } from "../types/GuestType";
 
+// TODO remove after refactoring
 const valueExact = <T>(source: SourceType<T>, guest: GuestType<T>) => {
   if (source === undefined || source === null) {
     throw new Error("value didn't receive source argument");
@@ -33,6 +34,7 @@ const valueExact = <T>(source: SourceType<T>, guest: GuestType<T>) => {
  * helpful because we don't know what shape of source do we have, it can be function or object or primitive
  * @url https://silentium-lab.github.io/silentium/#/utils/value
  */
+// TODO remove after refactoring
 export const value = <T>(
   source: SourceType<T>,
   guest: GuestType<T> | GuestType<T>[],
@@ -59,6 +61,7 @@ export const value = <T>(
  * Helps to check what some information is of source shape
  * @url https://silentium-lab.github.io/silentium/#/utils/is-source
  */
+// TODO remove after refactoring
 export const isSource = <T>(
   mbSource: T | SourceType<T>,
 ): mbSource is SourceType<T> => {
@@ -77,6 +80,7 @@ export const isSource = <T>(
  * Represents source as function
  * @url https://silentium-lab.github.io/silentium/#/source
  */
+// TODO remove after refactoring
 export const source = <T>(source: SourceType<T>): SourceExecutorType<T> => {
   if (source === undefined) {
     throw new Error("Source constructor didn't receive executor function");
@@ -102,7 +106,6 @@ export class Source<T> {
   private guest?: Guest<T>;
   private executedCbs?: (() => void)[];
   private alreadyExecuted = false;
-  private connectedGuest?: Guest<T>;
 
   public constructor(
     private src?: SrcObjectType<T> | SrcExecutorType<T> | SourceDataType<T>,
@@ -126,11 +129,10 @@ export class Source<T> {
    * Возможность гостю получить информацию от источника
    */
   public value(guest: Guest<T>) {
-    if (this.onlyOneGuest && this.connectedGuest !== undefined) {
+    if (this.onlyOneGuest && this.guest !== undefined) {
       throw new Error(`Guest already connected to source ${this.name()}`);
     }
 
-    this.connectedGuest = guest;
     if (this.executedCbs !== undefined && !this.alreadyExecuted) {
       this.executedCbs.forEach((cb) => cb());
       this.alreadyExecuted = true;
@@ -144,6 +146,7 @@ export class Source<T> {
     if (typeof this.src === "function") {
       const mbDestructor = this.src(guest);
       if (
+        this.destructor === undefined &&
         mbDestructor !== undefined &&
         this.src !== mbDestructor &&
         typeof mbDestructor === "function"
@@ -175,6 +178,9 @@ export class Source<T> {
     if (this.destructor) {
       this.destructor();
     }
+    this.guest = undefined;
+    this.executedCbs = undefined;
+    this.destructor = undefined;
     return this;
   }
 
@@ -203,5 +209,9 @@ export class Source<T> {
       cb();
     }
     return this;
+  }
+
+  public hasGuest(): boolean {
+    return !!this.guest;
   }
 }

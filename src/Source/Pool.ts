@@ -3,10 +3,10 @@ import { Source } from "../Source/Source";
 import { GuestPool } from "../utils/GuestPool";
 
 /**
- * Источник информации который помогает нескольким гостям обратиться
- * к одному источнику информации
+ * An information source that helps multiple guests access
+ * a single information source
  */
-export const pool = <T>(baseSrc: Source<T>): Source<T> => {
+export const pool = <T>(baseSrc: Source<T>) => {
   const guestsPool = new GuestPool<T>();
   let lastValue: T | undefined;
 
@@ -19,13 +19,12 @@ export const pool = <T>(baseSrc: Source<T>): Source<T> => {
 
       return () => {
         guestsPool.destroy();
-        src.destroy();
       };
     },
     "pool",
     false,
   );
-  baseSrc.subSource(src);
+  src.subSource(baseSrc);
 
   src.executed(() => {
     const gp = guestsPool.guest();
@@ -37,5 +36,5 @@ export const pool = <T>(baseSrc: Source<T>): Source<T> => {
     );
   });
 
-  return src;
+  return [src, guestsPool] as const;
 };

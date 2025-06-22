@@ -1,7 +1,12 @@
-import { expect, test } from "vitest";
-import { guestSync } from "../Guest/GuestSync";
+import { Guest } from "../Guest";
+import { Source } from "../Source/Source";
+import { expect, test, vi } from "vitest";
 
 test("Source._value.test", () => {
-  const g = guestSync(111);
-  expect(g.value()).toBe(111);
+  const src = new Source(111);
+
+  const g = vi.fn();
+  src.value(new Guest(g));
+
+  expect(g).toHaveBeenCalledWith(111);
 });
