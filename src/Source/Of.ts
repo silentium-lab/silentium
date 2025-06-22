@@ -17,7 +17,7 @@ export const of = <T>(incomeSource?: SourceDataType<T>) => {
     if (sharedValue !== undefined && sharedValue !== null) {
       notifyGuest();
     }
-  });
+  }, "of");
 
   return [
     source,

@@ -9,20 +9,22 @@ import { GuestPool } from "../utils/GuestPool";
 export const pool = <T>(baseSrc: Source<T>): Source<T> => {
   const guestsPool = new GuestPool<T>();
   let lastValue: T | undefined;
-  let firstVisit = true;
 
-  const src = new Source<T>((g) => {
-    if (!firstVisit && lastValue !== undefined && !guestsPool.has(g)) {
-      g.give(lastValue);
-    }
-    firstVisit = false;
-    guestsPool.add(g);
+  const src = new Source<T>(
+    (g) => {
+      if (lastValue !== undefined && !guestsPool.has(g)) {
+        g.give(lastValue);
+      }
+      guestsPool.add(g);
 
-    return () => {
-      guestsPool.destroy();
-      src.destroy();
-    };
-  }, "pool");
+      return () => {
+        guestsPool.destroy();
+        src.destroy();
+      };
+    },
+    "pool",
+    false,
+  );
   baseSrc.subSource(src);
 
   src.executed(() => {

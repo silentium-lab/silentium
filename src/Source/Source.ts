@@ -100,11 +100,14 @@ export class Source<T> {
   private theSubSources: Source<unknown>[] = [];
   private destructor?: () => void;
   private guest?: Guest<T>;
-  private executedCb?: () => void;
+  private executedCbs?: (() => void)[];
+  private alreadyExecuted = false;
+  private connectedGuest?: Guest<T>;
 
   public constructor(
     private src?: SrcObjectType<T> | SrcExecutorType<T> | SourceDataType<T>,
     private theName = "unknown",
+    private onlyOneGuest = true,
   ) {
     Source.sourcesCounter += 1;
   }
@@ -123,8 +126,14 @@ export class Source<T> {
    * Возможность гостю получить информацию от источника
    */
   public value(guest: Guest<T>) {
-    if (this.executedCb) {
-      this.executedCb();
+    if (this.onlyOneGuest && this.connectedGuest !== undefined) {
+      throw new Error(`Guest already connected to source ${this.name()}`);
+    }
+
+    this.connectedGuest = guest;
+    if (this.executedCbs !== undefined && !this.alreadyExecuted) {
+      this.executedCbs.forEach((cb) => cb());
+      this.alreadyExecuted = true;
     }
     this.guest = guest;
 
@@ -186,7 +195,13 @@ export class Source<T> {
   }
 
   public executed(cb: () => void) {
-    this.executedCb = cb;
+    if (!this.executedCbs) {
+      this.executedCbs = [];
+    }
+    this.executedCbs.push(cb);
+    if (this.alreadyExecuted) {
+      cb();
+    }
     return this;
   }
 }

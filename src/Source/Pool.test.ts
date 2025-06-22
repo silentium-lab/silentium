@@ -4,8 +4,8 @@ import { of } from "../Source/Of";
 import { pool } from "../Source/Pool";
 
 test("Pool.test", () => {
-  const o = of<number>(1);
-  const p = pool(o);
+  const [os, og] = of<number>(1);
+  const p = pool(os);
   const responses: string[] = [];
 
   p.value(
@@ -19,9 +19,9 @@ test("Pool.test", () => {
     }),
   );
 
-  o.next(2);
-  o.next(3);
-  o.next(4);
+  og.give(2);
+  og.give(3);
+  og.give(4);
 
   expect(responses).toStrictEqual([
     "g1_1",
