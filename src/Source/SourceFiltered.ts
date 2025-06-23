@@ -1,7 +1,7 @@
 import { SourceType } from "../types/SourceType";
-import { give } from "../Guest/Guest";
+import { G, give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { value } from "../Source/Source";
+import { Source, value } from "../Source/Source";
 import { GuestType } from "../types/GuestType";
 
 /**
@@ -25,4 +25,22 @@ export const sourceFiltered = <T>(
       }),
     );
   };
+};
+
+export const filtered = <T>(
+  baseSource: Source<T>,
+  predicate: (v: T) => boolean,
+  defaultValue?: T,
+) => {
+  return new Source<T>((g) => {
+    baseSource.value(
+      G((v) => {
+        if (predicate(v)) {
+          g.give(v);
+        } else if (defaultValue !== undefined) {
+          g.give(defaultValue);
+        }
+      }),
+    );
+  }).subSource(baseSource);
 };
