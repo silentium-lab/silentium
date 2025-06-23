@@ -17,3 +17,5 @@ export const guestApplied = <T, R>(
   };
   return result;
 };
+
+// TODO appliedG

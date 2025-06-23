@@ -19,3 +19,5 @@ export const guestExecutorApplied = <T>(
 
   return result as GuestObjectType<T>;
 };
+
+// TODO executorAppliedG

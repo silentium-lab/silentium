@@ -11,6 +11,7 @@ export type MaybeDisposableType<T = any> = Partial<GuestDisposableType<T>>;
  * Connects to guest logic what can tell PatronPool
  * what guest don't need to receive new values
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-disposable
+ * @deprecated removing
  */
 export const guestDisposable = <T>(
   guest: GuestType,

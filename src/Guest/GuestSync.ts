@@ -6,6 +6,7 @@ export interface GuestValueType<T = any> extends GuestObjectType<T> {
 
 /**
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
+ * @deprecated removing
  */
 export const guestSync = <T>(theValue?: T): GuestValueType<T> => {
   const result = {

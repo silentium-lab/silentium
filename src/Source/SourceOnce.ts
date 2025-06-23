@@ -2,7 +2,8 @@ import { SourceType } from "../types/SourceType";
 import { destroy } from "../Guest/PatronPool";
 import { sourceOf } from "./SourceChangeable";
 import { GuestType } from "../types/GuestType";
-import { value } from "../Source/Source";
+import { Source, value } from "../Source/Source";
+import { G } from "../Guest";
 
 /**
  * Ability set the value only once
@@ -28,4 +29,21 @@ export const sourceOnce = <T>(initialValue?: SourceType<T>) => {
       destroy(source);
     },
   };
+};
+
+export const once = <T>(baseSrc: Source<T>) => {
+  const src = new Source<T>((g) => {
+    let isFilled = false;
+    baseSrc.value(
+      G((v) => {
+        if (!isFilled) {
+          isFilled = true;
+          g.give(v);
+        }
+      }),
+    );
+  });
+  src.subSource(baseSrc);
+
+  return src;
 };

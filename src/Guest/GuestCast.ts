@@ -5,6 +5,7 @@ import { GuestDisposableType, MaybeDisposableType } from "./GuestDisposable";
 /**
  * Helps to inherit guest behavior, its introduction and dispose settings
  * @url https://silentium-lab.github.io/silentium/#/guest/guest-cast
+ * @deprecated removing
  */
 export const guestCast = <T>(
   sourceGuest: GuestType<any>,

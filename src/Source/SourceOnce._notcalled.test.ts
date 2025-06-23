@@ -1,23 +1,15 @@
-import { expect, test, vi, vitest } from "vitest";
-import { sourceOnce } from "./SourceOnce";
-import { sourceSync } from "../Source/SourceSync";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
+import { G } from "../Guest";
+import { of } from "../Source/Of";
+import { expect, test, vitest } from "vitest";
+import { once } from "./SourceOnce";
 
 test("SourceOnce._notcalled.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const source = sourceOnce();
-  const guestNotCalled = vi.fn();
-  source.value(guestNotCalled);
-  expect(guestNotCalled).not.toHaveBeenCalled();
-  source.give(111);
+  const [ofs, ofg] = of<number>();
+  const source = once(ofs);
   const g = vitest.fn();
-  source.value(g);
-  expect(g).toBeCalledWith(111);
+  source.value(G(g));
 
-  destroyFromSubSource(source, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(g).not.toHaveBeenCalled();
+  ofg.give(111);
+  expect(g).toBeCalledWith(111);
 });

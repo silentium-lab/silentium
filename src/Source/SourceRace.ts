@@ -7,6 +7,7 @@ import { GuestType } from "../types/GuestType";
 /**
  * Connects guest with source what give response faster than others
  * @url https://silentium-lab.github.io/silentium/#/source/source-race
+ * @deprecated removing
  */
 export const sourceRace = <T>(sources: SourceType<T>[]) => {
   if (sources === undefined) {

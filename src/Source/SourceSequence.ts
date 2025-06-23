@@ -12,6 +12,7 @@ import { GuestType } from "../types/GuestType";
 /**
  * Ability to apply source to source of array values sequentially
  * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
+ * @deprecated removing
  */
 export const sourceSequence = <T, TG>(
   baseSource: SourceType<T[]>,

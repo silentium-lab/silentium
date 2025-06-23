@@ -6,6 +6,7 @@ import { SourceExecutorType, SourceType } from "../types/SourceType";
  * Helps to give data to guest, guests can be of different shapes
  * function guest or object guest
  * @url https://silentium-lab.github.io/silentium/#/utils/give
+ * @deprecated removing
  */
 export const give = <T>(
   data: T,
@@ -30,6 +31,7 @@ export const give = <T>(
 /**
  * Helps to check if mbGuest can be used to retrieve value
  * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
+ * @deprecated removing
  */
 export const isGuest = (mbGuest: any): mbGuest is GuestType => {
   if (mbGuest === undefined) {
@@ -41,6 +43,7 @@ export const isGuest = (mbGuest: any): mbGuest is GuestType => {
 /**
  * Helps to create guest of object type
  * @url https://silentium-lab.github.io/silentium/#/guest
+ * @deprecated removing
  */
 export const guest = <T>(receiver: GuestExecutorType<T>) => {
   if (!receiver) {
@@ -60,6 +63,7 @@ export const guest = <T>(receiver: GuestExecutorType<T>) => {
  * This function is important because code of source must executes
  * only after guest visited source, sources are lazy!
  * @url https://silentium-lab.github.io/silentium/#/utils/first-visit
+ * @deprecated removing
  */
 export const firstVisit = (afterFirstVisit: () => void) => {
   // TODO remove no need
