@@ -83,7 +83,7 @@ export const sourceAll = <const T extends SourceType[]>(
 /**
  * Новая версия all компонента
  */
-export const all = <const T extends Source[]>(sources: T) => {
+export const all = <const T extends Source[]>(...sources: T) => {
   const src = new Source<ExtractTypesFromArray<T>>((g) => {
     const keysKnown = new Set<string>(Object.keys(sources));
     const keysFilled = new Set();

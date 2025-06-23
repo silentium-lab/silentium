@@ -8,7 +8,7 @@ test("SourceAny.test", () => {
   const [laterSrc, laterG] = of<number>();
   const defaultSrc = S("default");
 
-  const anySrc = any<any>([laterSrc, defaultSrc]);
+  const anySrc = any<any>(laterSrc, defaultSrc);
 
   const g = vi.fn();
   anySrc.value(G(g));

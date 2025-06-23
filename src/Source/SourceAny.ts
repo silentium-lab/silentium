@@ -32,7 +32,7 @@ export const sourceAny = <T>(sources: SourceType<T>[]) => {
   return src;
 };
 
-export const any = <T>(sources: Source<T>[]) => {
+export const any = <T>(...sources: Source<T>[]) => {
   const src = S((g) => {
     sources.forEach((source) => {
       source.value(g);

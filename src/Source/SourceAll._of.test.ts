@@ -6,7 +6,7 @@ import { all } from "../Source/SourceAll";
 test("SourceAll._of.test", () => {
   const [os, og] = of<number>(1);
   const [ts, tg] = of<number>(2);
-  const a = all([os, ts]);
+  const a = all(os, ts);
 
   const g = vi.fn();
   a.value(G(g));

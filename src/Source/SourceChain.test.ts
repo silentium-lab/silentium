@@ -1,46 +1,26 @@
-import { sourceChain } from "../Source/SourceChain";
+import { of } from "../Source/Of";
 import { expect, test } from "vitest";
-import { sourceSync } from "../Source/SourceSync";
-import { sourceOf } from "./SourceChangeable";
-import { patron } from "../Guest/Patron";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
+import { diagram } from "../../test-utils/diagram";
+import { chain } from "../Source/SourceChain";
 
 test("SourceChain.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const triggerSrc = sourceOf();
-  const valueSrc = sourceOf<string>("the-value");
+  const [d, dG] = diagram();
+  const [triggerSrc, triggerG] = of();
+  const [valueSrc, valueG] = of<string>("the_value");
 
-  const valueAfterTrigger = sourceSync(
-    sourceChain(triggerSrc, valueSrc),
-    "no-value",
-  );
-  let callsCounter = "";
-  valueAfterTrigger.value(
-    patron((v) => {
-      callsCounter += "," + v;
-    }),
-  );
+  const valueAfterTrigger = chain(triggerSrc, valueSrc);
+  valueAfterTrigger.value(dG);
 
-  expect(valueAfterTrigger.syncValue()).toBe("no-value");
-  expect(callsCounter).toBe("");
+  expect(d()).toBe("");
 
-  triggerSrc.give("done");
+  triggerG.give("done");
 
-  expect(valueAfterTrigger.syncValue()).toBe("the-value");
-  expect(callsCounter).toBe(",the-value");
+  expect(d()).toBe("the_value");
 
-  valueSrc.give("new-value");
-  expect(callsCounter).toBe(",the-value,new-value");
-  triggerSrc.give("done2");
+  valueG.give("new_value");
+  expect(d()).toBe("the_value|new_value");
 
-  expect(valueAfterTrigger.syncValue()).toBe("new-value");
+  triggerG.give("done2");
 
-  expect(callsCounter).toBe(",the-value,new-value,new-value");
-
-  destroyFromSubSource(triggerSrc, valueSrc, valueAfterTrigger, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(d()).toBe("the_value|new_value|new_value");
 });
