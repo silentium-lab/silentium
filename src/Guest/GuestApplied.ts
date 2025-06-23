@@ -1,5 +1,5 @@
 import { GuestObjectType, GuestType } from "../types/GuestType";
-import { give } from "../Guest/Guest";
+import { give, Guest } from "../Guest/Guest";
 
 /**
  * Helps to apply function to value before baseGuest will receive it
@@ -18,4 +18,17 @@ export const guestApplied = <T, R>(
   return result;
 };
 
-// TODO appliedG
+export const appliedG = <T, R>(
+  baseGuest: Guest<R>,
+  applier: (value: T) => R,
+) => {
+  return new Guest<T>(
+    (v) => {
+      baseGuest.give(applier(v));
+    },
+    (cause) => {
+      baseGuest.error(cause);
+    },
+    () => baseGuest.disposed(),
+  );
+};

@@ -3,7 +3,7 @@ import {
   GuestObjectType,
   GuestType,
 } from "../types/GuestType";
-import { give } from "../Guest/Guest";
+import { give, Guest } from "../Guest/Guest";
 
 /**
  * Apply function to guest function of receiving value, useful for debouncing or throttling
@@ -20,4 +20,12 @@ export const guestExecutorApplied = <T>(
   return result as GuestObjectType<T>;
 };
 
-// TODO executorAppliedG
+export const executorAppliedG = <T>(
+  baseGuest: Guest<T>,
+  applier: (ge: (v: T) => void) => (v: T) => void,
+) => {
+  const executor = applier((v) => baseGuest.give(v));
+  return new Guest<T>((v) => {
+    executor(v);
+  });
+};
