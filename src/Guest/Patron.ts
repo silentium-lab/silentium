@@ -57,7 +57,8 @@ export const introduction = () => "patron" as const; // TODO remove
  */
 export const patron = <T>(
   willBePatron: GuestType<T>,
-): GuestDisposableType<T> => { // TODO remove
+): GuestDisposableType<T> => {
+  // TODO remove
   if (willBePatron === undefined) {
     throw new Error("Patron didn't receive willBePatron argument");
   }
@@ -83,7 +84,8 @@ export const patron = <T>(
  */
 export const systemPatron = <T>(
   willBePatron: GuestType<T>,
-): GuestDisposableType<T> & PatronWithPriority => { // TODO remove
+): GuestDisposableType<T> & PatronWithPriority => {
+  // TODO remove
   const p = patron(willBePatron);
 
   return {
