@@ -9,6 +9,7 @@ import { GuestType } from "../types/GuestType";
 /**
  * Simplifies sources combination, when we need to create value depending on many sources
  * @url https://silentium-lab.github.io/silentium/#/source/source-combined
+ * @deprecated will be removed
  */
 export const sourceCombined =
   <const T extends SourceType[]>(...sources: T) =>

@@ -1,41 +1,28 @@
+import { of } from "../Source/Of";
 import { expect, test } from "vitest";
-import { give } from "../Guest/Guest";
-import { patron } from "../Guest/Patron";
-import { sourceExecutorApplied } from "../Source/SourceExecutorApplied";
-import { sourceOf } from "./SourceChangeable";
-import { sourceSync } from "../Source/SourceSync";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
+import { diagram } from "../../test-utils/diagram";
+import { Guest } from "../Guest/Guest";
+import { executorApplied } from "../Source/SourceExecutorApplied";
 
 test("SourceExecutorApplied.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const source = sourceOf<number>();
-  let applierWasCalled = false;
-  const sourceDebounced = sourceExecutorApplied(source, (guest) => {
-    return (v) => {
-      if (!applierWasCalled) {
-        give(v, guest);
+  const [d, dG] = diagram();
+  const [source, guest] = of<number>(1);
+
+  let applierWasCalled = 0;
+  const sourceDebounced = executorApplied(source, (guest) => {
+    return new Guest((v) => {
+      if (applierWasCalled < 2) {
+        guest.give(v);
       }
-      applierWasCalled = true;
-    };
+      applierWasCalled += 1;
+    });
   });
 
-  let counter = 0;
-  sourceDebounced(
-    patron((v) => {
-      counter += v;
-    }),
-  );
+  sourceDebounced.value(dG);
 
-  source.give(1);
-  source.give(1);
-  source.give(1);
+  guest.give(2);
+  guest.give(3);
+  guest.give(4);
 
-  expect(counter).toBe(1);
-
-  destroyFromSubSource(source, sourceDebounced, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(d()).toBe("1|2");
 });

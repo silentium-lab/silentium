@@ -11,6 +11,9 @@ import {
 } from "../types/SourceType";
 import { GuestObjectType, GuestType } from "../types/GuestType";
 
+/**
+ * @deprecated will be removed
+ */
 export type SourceChangeableType<T = any> = SourceObjectType<T> &
   GuestObjectType<T>;
 
@@ -20,6 +23,7 @@ const sourceIsEmpty = (source: unknown) =>
 /**
  * Ability to create source what can be changed later
  * @url https://silentium-lab.github.io/silentium/#/source/source-of
+ * @deprecated will be removed
  */
 export const sourceOf = <T>(source?: SourceType<T>) => {
   const createdSource = {} as SourceChangeableType<T>;
@@ -70,6 +74,7 @@ export const sourceOf = <T>(source?: SourceType<T>) => {
 /**
  * Changeable source what can be changed only once with specified value
  * @url https://silentium-lab.github.io/silentium/#/source/source-memo-of
+ * @deprecated will be removed
  */
 export const sourceMemoOf = <T>(
   source?: SourceType<T>,

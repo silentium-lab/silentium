@@ -7,6 +7,7 @@ import { SourceType } from "../types/SourceType";
 /**
  * Ability to build common changeable source from different guest and source
  * @url https://silentium-lab.github.io/silentium/#/source/source-dynamic
+ * @deprecated will be removed
  */
 export const sourceDynamic = <T>(
   baseGuest: GuestType<T>,

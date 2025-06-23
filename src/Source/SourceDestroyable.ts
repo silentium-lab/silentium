@@ -1,11 +1,12 @@
-import { SourceExecutorType, SourceObjectType } from "../types/SourceType";
 import { subSource } from "../Guest/PatronPool";
 import { DestroyableType, DestructorType } from "../types";
 import { GuestType } from "../types/GuestType";
+import { SourceExecutorType, SourceObjectType } from "../types/SourceType";
 
 /**
  * Ability to create sources that support special destruction logic
  * @url https://silentium-lab.github.io/silentium/#/source/source-destroyable
+ * @deprecated will be removed
  */
 export const sourceDestroyable = <T>(
   source: SourceExecutorType<T, DestructorType>,
