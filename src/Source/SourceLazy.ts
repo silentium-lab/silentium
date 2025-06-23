@@ -1,13 +1,13 @@
-import { LazyType } from "../types/LazyType";
+import { G } from "../Guest";
 import { systemPatron } from "../Guest/Patron";
 import { destroy, subSource } from "../Guest/PatronPool";
 import { Source, value } from "../Source/Source";
-import { all, sourceAll } from "../Source/SourceAll";
+import { sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
-import { SourceType } from "../types/SourceType";
 import { GuestType } from "../types/GuestType";
-import { G } from "../Guest";
+import { LazyType } from "../types/LazyType";
+import { SourceType } from "../types/SourceType";
 
 /**
  * Helps to build source only when all sources will give its values
