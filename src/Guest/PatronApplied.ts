@@ -5,8 +5,9 @@ import { GuestObjectType, GuestType } from "../types/GuestType";
 /**
  * Helps to apply function to patron
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-applied
+ * @deprecated will be removed
  */
-export const patronApplied = <T, R>(
+export const patronApplied = <T, R>( // TODO remove
   baseGuest: GuestType<R>,
   applier: (value: T) => R,
 ): GuestObjectType<T> => {

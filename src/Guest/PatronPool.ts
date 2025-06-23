@@ -24,6 +24,7 @@ const lastPatronPoolsStatistic = {
 /**
  * Helps debug the application and detect issues with frozen pools
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
+ * @deprecated will be removed
  */
 export const patronPoolsStatistic = source<{
   poolsCount: number;
@@ -45,6 +46,7 @@ export const patronPoolsStatistic = source<{
  * Helps to connect source and subsource, needed to destroy all sub sources
  * when base source will be destroyed
  * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
+ * @deprecated will be removed
  */
 export const subSource = <T>(
   subSource: SourceType,
@@ -66,6 +68,7 @@ export const subSource = <T>(
 
 /**
  * Helps to define many sources of one sub source
+ * @deprecated will be removed
  */
 export const subSourceMany = <T>(
   subSourceSrc: SourceType<T>,
@@ -80,6 +83,7 @@ export const subSourceMany = <T>(
 /**
  * Helps to check what given source is destroyable
  * @url https://silentium-lab.github.io/silentium/#/utils/is-destroyable
+ * @deprecated will be removed
  */
 export const isDestroyable = (s: unknown): s is DestroyableType => {
   return (
@@ -93,6 +97,7 @@ export const isDestroyable = (s: unknown): s is DestroyableType => {
 /**
  * Helps to remove all pools of related initiators
  * @url https://silentium-lab.github.io/silentium/#/utils/destroy
+ * @deprecated will be removed
  */
 export const destroy = (...initiators: SourceType[]) => {
   initiators.forEach((initiator) => {
@@ -113,6 +118,7 @@ export const destroy = (...initiators: SourceType[]) => {
  * Allows destruction of the source chain starting from a subsource
  * and moving up to the main source. This behavior is useful when you need
  * to destroy the entire chain while having only a reference to the subsource.
+ * @deprecated will be removed
  */
 export const destroyFromSubSource = (...initiators: SourceType[]) => {
   initiators.forEach((initiator) => {
@@ -127,6 +133,7 @@ export const destroyFromSubSource = (...initiators: SourceType[]) => {
 /**
  * Returns all pools related to one patron
  * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
+ * @deprecated will be removed
  */
 export const patronPools = (patron: GuestObjectType) => {
   const pools: PoolType[] = [];
@@ -141,6 +148,7 @@ export const patronPools = (patron: GuestObjectType) => {
 /**
  * Removes patron from all existed pools
  * @url https://silentium-lab.github.io/silentium/#/utils/remove-patron-from-pools
+ * @deprecated will be removed
  */
 export const removePatronFromPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
@@ -155,6 +163,7 @@ export const removePatronFromPools = (patron: GuestObjectType) => {
 /**
  * Checks what patron is connected with any pool
  * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
+ * @deprecated will be removed
  */
 export const isPatronInPools = (patron: GuestObjectType) => {
   if (patron === undefined) {
@@ -172,6 +181,7 @@ export const isPatronInPools = (patron: GuestObjectType) => {
 /**
  * Returns an array of all patrons in any pool
  * @url https://silentium-lab.github.io/silentium/#/utils/all-patrons
+ * @deprecated will be removed
  */
 export const allPatrons = () => {
   let patrons: GuestType[] = [];
@@ -181,6 +191,9 @@ export const allPatrons = () => {
   return patrons;
 };
 
+/**
+ * @deprecated will be removed
+ */
 export interface PoolType<T = any> extends GuestObjectType<T> {
   add(guest: GuestObjectType<T>): this;
   distribute(receiving: T, possiblePatron: GuestObjectType<T>): this;
@@ -193,8 +206,10 @@ export interface PoolType<T = any> extends GuestObjectType<T> {
  * Pool class helps to implement dispatching for patron about new values
  * what may appear in sources
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
+ * @deprecated will be removed
  */
 export class PatronPool<T> implements PoolType<T> {
+  // TODO remove
   private patrons: PrioritySet<GuestObjectType<T>>;
 
   public give: (value: T) => this;

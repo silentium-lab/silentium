@@ -1,19 +1,14 @@
-import { expect, test } from "vitest";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
-import { sourceApplied } from "../Source/SourceApplied";
-import { sourceSync } from "../Source/SourceSync";
-import { sourceOf } from "./SourceChangeable";
+import { G } from "../Guest";
+import { S } from "../Source/Source";
+import { expect, test, vi } from "vitest";
+import { applied } from "../Source/SourceApplied";
 
 test("SourceApplied.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const source = sourceOf(1);
-  const sourceDouble = sourceSync(sourceApplied(source, (x) => x * 2));
-  expect(sourceDouble.syncValue()).toBe(2);
+  const source = S(1);
+  const sourceDouble = applied(source, (x) => x * 2);
 
-  destroyFromSubSource(source, sourceDouble, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  const g = vi.fn();
+  sourceDouble.value(G(g));
+
+  expect(g).toBeCalledWith(2);
 });

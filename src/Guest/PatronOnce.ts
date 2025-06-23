@@ -10,10 +10,12 @@ import {
  * Helps to call patron only once, this will be helpful when you
  * need value but you know what value can not be existed at a time of requesting
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-once
+ * @deprecated will be removed
  */
 export const patronOnce = <T>(
   baseGuest: GuestType<T>,
 ): GuestDisposableType<T> => {
+  // TODO remove
   if (baseGuest === undefined) {
     throw new Error("PatronOnce didn't receive baseGuest argument");
   }

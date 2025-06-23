@@ -1,10 +1,10 @@
-import { subSource, subSourceMany } from "../Guest/PatronPool";
 import { firstVisit } from "../Guest/Guest";
 import { systemPatron } from "../Guest/Patron";
-import { value } from "../Source/Source";
+import { subSource, subSourceMany } from "../Guest/PatronPool";
+import { S, Source, value } from "../Source/Source";
 import { sourceOf } from "../Source/SourceChangeable";
-import { SourceType } from "../types/SourceType";
 import { GuestType } from "../types/GuestType";
+import { SourceType } from "../types/SourceType";
 
 /**
  * Present source of value what was last appeared in any
@@ -12,6 +12,7 @@ import { GuestType } from "../types/GuestType";
  * don't respond
  * @url https://silentium-lab.github.io/silentium/#/source/source-any
  */
+// TODO remove after refactoring
 export const sourceAny = <T>(sources: SourceType<T>[]) => {
   const lastSrc = sourceOf<T>();
 
@@ -27,6 +28,17 @@ export const sourceAny = <T>(sources: SourceType<T>[]) => {
     lastSrc.value(g);
   };
   subSourceMany(src, sources);
+
+  return src;
+};
+
+export const any = <T>(sources: Source<T>[]) => {
+  const src = S((g) => {
+    sources.forEach((source) => {
+      source.value(g);
+      src.subSource(source);
+    });
+  });
 
   return src;
 };

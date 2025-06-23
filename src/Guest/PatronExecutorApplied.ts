@@ -5,11 +5,13 @@ import { GuestExecutorType, GuestType } from "../types/GuestType";
 /**
  * Helps to apply function to patrons executor
  * @url https://silentium-lab.github.io/silentium/#/patron/patron-executor-applied
+ * @deprecated will be removed
  */
 export const patronExecutorApplied = <T>(
   baseGuest: GuestType<T>,
   applier: (executor: GuestExecutorType) => GuestExecutorType,
 ) => {
+  // TODO remove
   const guestApplied = guestExecutorApplied(baseGuest, applier);
 
   const result = {
