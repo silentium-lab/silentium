@@ -1,12 +1,13 @@
 import { LazyType } from "../types/LazyType";
 import { systemPatron } from "../Guest/Patron";
 import { destroy, subSource } from "../Guest/PatronPool";
-import { value } from "../Source/Source";
-import { sourceAll } from "../Source/SourceAll";
+import { Source, value } from "../Source/Source";
+import { all, sourceAll } from "../Source/SourceAll";
 import { sourceOf } from "../Source/SourceChangeable";
 import { sourceResettable } from "../Source/SourceResettable";
 import { SourceType } from "../types/SourceType";
 import { GuestType } from "../types/GuestType";
+import { G } from "../Guest";
 
 /**
  * Helps to build source only when all sources will give its values
@@ -60,6 +61,28 @@ export const sourceLazy = <T>(
     instantiate(src);
     value(resultResettable, g);
   };
+
+  return src;
+};
+
+export const lazyS = <T>(
+  lazySrc: LazyType<Source<T>>,
+  destroySrc?: Source<unknown>,
+) => {
+  const src = new Source<T>((g) => {
+    const instance = lazySrc.get();
+    src.subSource(instance);
+    instance.value(g);
+  });
+
+  if (destroySrc) {
+    src.subSource(destroySrc);
+    destroySrc.value(
+      G(() => {
+        src.destroy();
+      }),
+    );
+  }
 
   return src;
 };

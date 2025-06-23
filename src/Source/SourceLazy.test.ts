@@ -1,42 +1,26 @@
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
+import { of } from "../Source/Of";
+import { applied } from "../Source/SourceApplied";
+import { lazyS } from "../Source/SourceLazy";
+import { sync } from "../Source/SourceSync";
 import { lazy } from "../utils/Lazy";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
-import { sourceApplied } from "../Source/SourceApplied";
-import { sourceOf } from "../Source/SourceChangeable";
-import { sourceLazy } from "../Source/SourceLazy";
-import { sourceSync } from "../Source/SourceSync";
-import { SourceType } from "../types/SourceType";
 
 test("SourceLazy.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const resetSrc = sourceOf();
-  const lazySrc = lazy((baseSrc: SourceType<number>) =>
-    sourceApplied(baseSrc, (x) => x * 2),
-  );
+  const [resetSrc, resetG] = of();
 
-  const valueSrc = sourceOf<number>(2);
-  const twiceSrc = sourceSync(sourceLazy(lazySrc, [valueSrc], resetSrc));
+  const [valueSrc, valueG] = of<number>(2);
+  const lazySrc = lazy(() => applied(valueSrc, (x) => x * 2));
 
-  expect(twiceSrc.syncValue()).toBe(4);
+  const twice = lazyS(lazySrc, resetSrc);
+  const twiceSync = sync(twice);
 
-  valueSrc.give(6);
+  expect(twiceSync.syncValue()).toBe(4);
 
-  expect(twiceSrc.syncValue()).toBe(12);
+  valueG.give(6);
 
-  resetSrc.give(1);
+  expect(twiceSync.syncValue()).toBe(12);
 
-  const g = vi.fn();
-  twiceSrc.value(g);
-  expect(g).not.toHaveBeenCalled();
-
-  valueSrc.give(3);
-  twiceSrc.value(g);
-  expect(g).toHaveBeenCalledWith(6);
-
-  destroyFromSubSource(resetSrc, lazySrc, valueSrc, twiceSrc, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(twice.subSources().length).toBe(2);
+  resetG.give(1);
+  expect(twice.subSources().length).toBe(0);
 });

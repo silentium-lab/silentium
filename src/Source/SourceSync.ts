@@ -2,14 +2,16 @@ import { SourceObjectType, SourceType } from "../types/SourceType";
 import { guestSync } from "../Guest/GuestSync";
 import { systemPatron } from "../Guest/Patron";
 import { subSource } from "../Guest/PatronPool";
-import { value } from "../Source/Source";
+import { Source, value } from "../Source/Source";
 import { GuestType } from "../types/GuestType";
+import { G } from "../Guest";
 
 /**
  * Helps to represent source value as sync value, what can be returned
  * useful for example in tests
  * This source is not lazy! When we create it patron visit baseSource
  * @url https://silentium-lab.github.io/silentium/#/source/source-sync
+ * @deprecated removing
  */
 export const sourceSync = <T>(
   baseSource: SourceType<T>,
@@ -34,4 +36,30 @@ export const sourceSync = <T>(
   subSource(result, baseSource);
 
   return result;
+};
+
+export interface SourceSync<T> {
+  syncValue(): T;
+}
+
+export const sync = <T>(
+  baseSource: Source<T>,
+  defaultValue?: T,
+): SourceSync<T> => {
+  let lastValue: T | undefined;
+
+  baseSource.value(
+    G((v) => {
+      lastValue = v;
+    }),
+  );
+
+  return {
+    syncValue() {
+      if (lastValue === undefined && defaultValue === undefined) {
+        throw new Error("Source sync is empty");
+      }
+      return (lastValue || defaultValue) as T;
+    },
+  };
 };

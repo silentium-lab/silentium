@@ -1,18 +1,9 @@
+import { S } from "../Source/Source";
 import { expect, test } from "vitest";
-import { sourceSync } from "../Source/SourceSync";
-import { sourceOf } from "./SourceChangeable";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
+import { sync } from "../Source/SourceSync";
 
 test("SourceSync.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const source = sourceOf("hello");
-  const syncSource = sourceSync(source);
+  const source = S("hello");
+  const syncSource = sync(source);
   expect(syncSource.syncValue()).toBe("hello");
-
-  destroyFromSubSource(syncSource, source, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
 });
