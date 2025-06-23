@@ -1,17 +1,12 @@
 import { expect, test } from "vitest";
+import { diagram } from "../../test-utils/diagram";
 import { give } from "../Guest/Guest";
 import { guestCast } from "../Guest/GuestCast";
-import { guestSync } from "../Guest/GuestSync";
-import { lazyClass } from "../utils/LazyClass";
-import { value } from "./Source";
-import { sourceMap } from "./SourceMap";
-import { sourceSync } from "../Source/SourceSync";
-import {
-  destroyFromSubSource,
-  patronPoolsStatistic,
-} from "../Guest/PatronPool";
-import { SourceObjectType, SourceType } from "../types/SourceType";
 import { GuestType } from "../types/GuestType";
+import { SourceObjectType, SourceType } from "../types/SourceType";
+import { lazyClass } from "../utils/LazyClass";
+import { S, value } from "./Source";
+import { map } from "./SourceMap";
 
 class X2 implements SourceObjectType<number> {
   public constructor(private baseNumber: SourceType<number>) {}
@@ -28,15 +23,10 @@ class X2 implements SourceObjectType<number> {
 }
 
 test("SourceMap.test", () => {
-  const statistic: any = sourceSync(patronPoolsStatistic);
-  const srcMapped = sourceMap([1, 2, 3, 9], lazyClass(X2));
-  const guest = guestSync([]);
+  const [d, dG] = diagram();
+  const srcMapped = map(S([1, 2, 3, 9]), lazyClass(X2));
 
-  value(srcMapped, guest);
+  srcMapped.value(dG);
 
-  expect(guest.value().join()).toBe("2,4,6,18");
-
-  destroyFromSubSource(srcMapped, statistic);
-  expect(statistic.syncValue().patronsCount).toBe(0);
-  expect(statistic.syncValue().poolsCount).toBe(0);
+  expect(d()).toBe("2,4,6,18");
 });

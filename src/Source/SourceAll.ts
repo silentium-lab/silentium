@@ -11,9 +11,14 @@ import { GuestObjectType } from "../types/GuestType";
 import { GuestType } from "../types/GuestType";
 
 type ExtractType<T> = T extends SourceType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends Source<infer U> ? U : never;
 
 export type ExtractTypesFromArray<T extends SourceType<any>[]> = {
   [K in keyof T]: ExtractType<T[K]>;
+};
+
+export type ExtractTypesFromArrayS<T extends Source<any>[]> = {
+  [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
 /**
@@ -84,7 +89,7 @@ export const sourceAll = <const T extends SourceType[]>(
  * Новая версия all компонента
  */
 export const all = <const T extends Source[]>(...sources: T) => {
-  const src = new Source<ExtractTypesFromArray<T>>((g) => {
+  const src = new Source<ExtractTypesFromArrayS<T>>((g) => {
     const keysKnown = new Set<string>(Object.keys(sources));
     const keysFilled = new Set();
     const isAllFilled = () => {
@@ -100,7 +105,7 @@ export const all = <const T extends Source[]>(...sources: T) => {
           keysFilled.add(key);
           result[key] = v;
           if (isAllFilled()) {
-            g.give(Object.values(result) as ExtractTypesFromArray<T>);
+            g.give(Object.values(result) as ExtractTypesFromArrayS<T>);
           }
         }),
       );

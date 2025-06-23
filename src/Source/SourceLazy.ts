@@ -12,6 +12,7 @@ import { GuestType } from "../types/GuestType";
  * Helps to build source only when all sources will give its values
  * and only after some guest visit source
  * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
+ * @deprecated will be removed
  */
 export const sourceLazy = <T>(
   lazySrc: LazyType<SourceType<T>>,
