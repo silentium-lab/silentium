@@ -1,24 +1,22 @@
-import { give } from "../Guest/Guest";
+import { O, Owner } from "../Owner";
 import { expect, test, vitest } from "vitest";
 import { lazyClass } from "./LazyClass";
-import { SourceObjectType } from "../types/SourceType";
-import { GuestType } from "../types/GuestType";
 
-class SourceChangeable implements SourceObjectType<number> {
+class infoChangeable {
   public constructor(private v: number) {}
 
-  public value(g: GuestType<number>) {
-    give(this.v, g);
+  public value(g: Owner<number>) {
+    g.give(this.v);
     return this;
   }
 }
 
 test("LazyClass.test", () => {
-  const sourcePrivate = lazyClass(SourceChangeable);
-  const source = sourcePrivate.get(42);
+  const infoPrivate = lazyClass(infoChangeable);
+  const info = infoPrivate.get(42);
 
-  const guest = vitest.fn();
-  source.value(guest);
+  const owner = vitest.fn();
+  info.value(O(owner));
 
-  expect(guest).toBeCalledWith(42);
+  expect(owner).toBeCalledWith(42);
 });

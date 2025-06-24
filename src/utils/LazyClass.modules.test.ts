@@ -1,47 +1,45 @@
 import { expect, test, vitest } from "vitest";
-import { give } from "../Guest/Guest";
-import { SourceChangeableType } from "../Source/SourceChangeable";
-import { lazyClass } from "./LazyClass";
+import { Information } from "../Information";
+import { O, Owner } from "../Owner";
 import { LazyType } from "../types/LazyType";
-import { GuestType } from "../types/GuestType";
-import { SourceObjectType } from "../types/SourceType";
+import { lazyClass } from "./LazyClass";
 
 class TestClass {
-  private source: SourceChangeableType;
+  private info: Information;
 
   public constructor(
     baseNum: number,
-    modules: { main: LazyType<SourceChangeableType> },
+    modules: { main: LazyType<Information> },
   ) {
-    this.source = modules.main.get(baseNum + 55);
+    this.info = modules.main.get(baseNum + 55);
   }
 
-  public value(guest: GuestType) {
-    this.source.value(guest);
+  public value(owner: Owner) {
+    this.info.value(owner);
     return this;
   }
 }
 
-class SourceChangeable implements SourceObjectType<number> {
+class infoChangeable {
   public constructor(private v: number) {}
 
-  public value(g: GuestType<number>) {
-    give(this.v, g);
+  public value(g: Owner<number>) {
+    g.give(this.v);
     return this;
   }
 }
 
 test("LazyClass.modules.test", () => {
-  const main = lazyClass(SourceChangeable);
-  const testSource = lazyClass(TestClass, {
+  const main = lazyClass(infoChangeable);
+  const testinfo = lazyClass(TestClass, {
     main,
   });
 
-  const source = testSource.get(42);
+  const info = testinfo.get(42);
 
-  const guest = vitest.fn();
-  source.value(guest);
+  const owner = vitest.fn();
+  info.value(O(owner));
 
-  expect(guest).toBeCalled();
-  expect(guest).toBeCalledWith(97);
+  expect(owner).toBeCalled();
+  expect(owner).toBeCalledWith(97);
 });

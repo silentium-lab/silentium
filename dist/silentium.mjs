@@ -1,1029 +1,412 @@
-const valueExact = (source2, guest) => {
-  if (source2 === void 0 || source2 === null) {
-    throw new Error("value didn't receive source argument");
-  }
-  if (guest === void 0 || source2 === null) {
-    throw new Error("value didn't receive guest argument");
-  }
-  if (typeof source2 === "function") {
-    source2(guest);
-  } else if (typeof source2 === "object" && "value" in source2 && typeof source2.value === "function") {
-    source2.value(guest);
-  } else {
-    give(source2, guest);
-  }
-  return source2;
-};
-const value = (source2, guest) => {
-  if (source2 === void 0 || source2 === null) {
-    throw new Error("value didn't receive source argument");
-  }
-  if (guest === void 0 || source2 === null) {
-    throw new Error("value didn't receive guest argument");
-  }
-  if (Array.isArray(guest)) {
-    guest.forEach((currentGuest) => {
-      valueExact(source2, currentGuest);
-    });
-  } else {
-    valueExact(source2, guest);
-  }
-  return source2;
-};
-const isSource = (mbSource) => {
-  if (mbSource !== null && typeof mbSource === "object" && "value" in mbSource && typeof mbSource.value === "function") {
-    return true;
-  }
-  return mbSource !== null && mbSource !== void 0;
-};
-const source = (source2) => {
-  if (source2 === void 0) {
-    throw new Error("Source constructor didn't receive executor function");
-  }
-  return (guest) => {
-    value(source2, guest);
-  };
-};
-
-const give = (data, guest2) => {
-  if (data === void 0) {
-    throw new Error("give didn't receive data argument");
-  }
-  if (guest2 === void 0) {
-    return source(data);
-  }
-  if (typeof guest2 === "function") {
-    guest2(data);
-  } else {
-    guest2.give(data);
-  }
-  return guest2;
-};
-const isGuest = (mbGuest) => {
-  if (mbGuest === void 0) {
-    throw new Error("isGuest didnt receive mbGuest argument");
-  }
-  return typeof mbGuest === "function" || typeof mbGuest?.give === "function";
-};
-const guest = (receiver) => {
-  if (!receiver) {
-    throw new Error("receiver function was not passed to Guest constructor");
-  }
-  const result = {
-    give(value) {
-      receiver(value);
-      return result;
-    }
-  };
-  return result;
-};
-const firstVisit = (afterFirstVisit) => {
-  let isVisited = false;
-  return () => {
-    if (!isVisited) {
-      afterFirstVisit();
-    }
-    isVisited = true;
-  };
-};
-
-const guestCast = (sourceGuest, targetGuest) => {
-  if (sourceGuest === void 0) {
-    throw new Error("GuestCast didn't receive sourceGuest argument");
-  }
-  if (targetGuest === void 0) {
-    throw new Error("GuestCast didn't receive targetGuest argument");
-  }
-  const result = {
-    disposed(value) {
-      const maybeDisposable = sourceGuest;
-      return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
-    },
-    give(value) {
-      give(value, targetGuest);
-      return result;
-    },
-    introduction() {
-      if (typeof sourceGuest === "function") {
-        return "guest";
-      }
-      if (!sourceGuest.introduction) {
-        return "guest";
-      }
-      return sourceGuest.introduction();
-    }
-  };
-  return result;
-};
-
-const guestSync = (theValue) => {
-  const result = {
-    give(value) {
-      theValue = value;
-      return result;
-    },
-    value() {
-      if (theValue === void 0) {
-        throw new Error("no value in GuestSync!");
-      }
-      return theValue;
-    }
-  };
-  return result;
-};
-
-const guestDisposable = (guest, disposeCheck) => {
-  if (guest === void 0) {
-    throw new Error("GuestDisposable didn't receive guest argument");
-  }
-  if (disposeCheck === void 0) {
-    throw new Error("GuestDisposable didn't receive disposeCheck argument");
-  }
-  const result = {
-    disposed(value) {
-      return disposeCheck(value);
-    },
-    give(value) {
-      give(value, guest);
-      return result;
-    }
-  };
-  return result;
-};
-
-const guestApplied = (baseGuest, applier) => {
-  const result = {
-    give(value) {
-      give(applier(value), baseGuest);
-      return result;
-    }
-  };
-  return result;
-};
-
-const guestExecutorApplied = (baseGuest, applier) => {
-  const result = {
-    give: applier((v) => give(v, baseGuest))
-  };
-  return result;
-};
-
-const patronPriority = (g) => {
-  let priority = 100;
-  if ("priority" in g && typeof g.priority === "function") {
-    priority = g.priority();
-  }
-  return priority;
-};
-const isPatron = (guest) => typeof guest === "object" && guest !== null && guest?.introduction?.() === "patron";
-const introduction = () => "patron";
-const patron = (willBePatron) => {
-  if (willBePatron === void 0) {
-    throw new Error("Patron didn't receive willBePatron argument");
-  }
-  const result = {
-    give(value) {
-      give(value, willBePatron);
-      return result;
-    },
-    disposed(value) {
-      const maybeDisposable = willBePatron;
-      return maybeDisposable?.disposed?.(value) || false;
-    },
-    introduction
-  };
-  return result;
-};
-const systemPatron = (willBePatron) => {
-  const p = patron(willBePatron);
-  return {
-    ...p,
-    priority: () => 200
-  };
-};
-const withPriority = (patron2, priority) => {
-  return {
-    ...patron2,
-    priority: () => priority
-  };
-};
-
-const patronOnce = (baseGuest) => {
-  if (baseGuest === void 0) {
-    throw new Error("PatronOnce didn't receive baseGuest argument");
-  }
-  let received = false;
-  const result = {
-    give(value) {
-      if (!received) {
-        received = true;
-        give(value, baseGuest);
-      }
-      return result;
-    },
-    disposed(value) {
-      if (received) {
-        return true;
-      }
-      const maybeDisposable = baseGuest;
-      return maybeDisposable.disposed ? maybeDisposable.disposed(value) : false;
-    },
-    introduction
-  };
-  return result;
-};
-
 var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
-class PrioritySet {
-  constructor() {
-    __publicField$1(this, "items");
-    __publicField$1(this, "sortedItems");
-    this.items = /* @__PURE__ */ new Map();
-    this.sortedItems = [];
+const _Information = class _Information {
+  constructor(info, theName = "unknown", onlyOneOwner = true) {
+    this.info = info;
+    this.theName = theName;
+    this.onlyOneOwner = onlyOneOwner;
+    __publicField$1(this, "theSubInfos", []);
+    __publicField$1(this, "destructor");
+    __publicField$1(this, "owner");
+    __publicField$1(this, "executedCbs");
+    __publicField$1(this, "alreadyExecuted", false);
+    _Information.instances += 1;
   }
-  findInsertPosition(priority) {
-    let left = 0;
-    let right = this.sortedItems.length;
-    while (left < right) {
-      const mid = Math.floor((left + right) / 2);
-      if (this.sortedItems[mid].priority >= priority) {
-        left = mid + 1;
-      } else {
-        right = mid;
-      }
-    }
-    return left;
-  }
-  findItemIndex(value) {
-    return this.sortedItems.findIndex((item) => item.value === value);
-  }
-  add(value, priority = 100) {
-    const existingItem = this.items.get(value);
-    if (existingItem) {
-      if (existingItem.priority !== priority) {
-        const oldIndex = this.findItemIndex(value);
-        if (oldIndex !== -1) {
-          this.sortedItems.splice(oldIndex, 1);
-        }
-        existingItem.priority = priority;
-        const newIndex = this.findInsertPosition(priority);
-        this.sortedItems.splice(newIndex, 0, existingItem);
-      }
-    } else {
-      const newItem = { value, priority };
-      this.items.set(value, newItem);
-      const insertIndex = this.findInsertPosition(priority);
-      this.sortedItems.splice(insertIndex, 0, newItem);
+  /**
+   * Следующее значение источника
+   */
+  next(value) {
+    if (this.owner !== void 0) {
+      this.owner.give(value);
     }
     return this;
   }
-  delete(value) {
-    const item = this.items.get(value);
-    if (!item) {
-      return false;
+  /**
+   * Возможность гостю получить информацию от источника
+   */
+  value(owner) {
+    if (this.onlyOneOwner && this.owner !== void 0) {
+      throw new Error(`owner already connected to info ${this.name()}`);
     }
-    this.items.delete(value);
-    const index = this.findItemIndex(value);
-    if (index !== -1) {
-      this.sortedItems.splice(index, 1);
+    this.owner = owner;
+    if (this.executedCbs !== void 0 && !this.alreadyExecuted) {
+      this.executedCbs.forEach((cb) => cb(owner));
+      this.alreadyExecuted = true;
     }
-    return true;
-  }
-  has(value) {
-    return this.items.has(value);
-  }
-  get size() {
-    return this.items.size;
-  }
-  clear() {
-    this.items.clear();
-    this.sortedItems = [];
-  }
-  getPriority(value) {
-    const item = this.items.get(value);
-    return item?.priority;
-  }
-  setPriority(value, priority) {
-    if (this.items.has(value)) {
-      this.add(value, priority);
-      return true;
+    if (this.info === void 0) {
+      return this;
     }
-    return false;
+    if (typeof this.info === "function") {
+      const mbDestructor = this.info(owner);
+      if (this.destructor === void 0 && mbDestructor !== void 0 && this.info !== mbDestructor && typeof mbDestructor === "function") {
+        this.destructor = mbDestructor;
+      }
+    } else if (typeof this.info === "object" && this.info !== null && "value" in this.info && typeof this.info.value === "function") {
+      this.info.value(owner);
+    } else {
+      this.next(this.info);
+    }
+    return this;
   }
-  forEach(callback) {
-    this.sortedItems.forEach((item) => {
-      callback(item.value, item.priority, this);
-    });
+  /**
+   * Ability to destroy the information info
+   */
+  destroy() {
+    while (this.theSubInfos.length > 0) {
+      const subInfo = this.theSubInfos.shift();
+      subInfo?.destroy();
+    }
+    if (this.destructor) {
+      this.destructor();
+    }
+    this.owner = void 0;
+    this.executedCbs = void 0;
+    this.destructor = void 0;
+    return this;
   }
-  values() {
-    const values = this.sortedItems.map((item) => item.value);
-    return values[Symbol.iterator]();
+  /**
+   * The ability to link another info to the current info
+   */
+  subInfo(info) {
+    this.theSubInfos.push(info);
+    return this;
   }
-  entries() {
-    const entries = this.sortedItems.map(
-      (item) => [item.value, item.priority]
-    );
-    return entries[Symbol.iterator]();
+  subInfos() {
+    return this.theSubInfos;
   }
-  [Symbol.iterator]() {
-    return this.values();
+  name() {
+    return `#info_${this.theName}_${_Information.instances}`;
   }
-  toArray() {
-    return this.sortedItems.map((item) => item.value);
+  executed(cb) {
+    if (!this.executedCbs) {
+      this.executedCbs = [];
+    }
+    this.executedCbs.push(cb);
+    if (this.alreadyExecuted && this.owner !== void 0) {
+      cb(this.owner);
+    }
+    return this;
   }
-  toArrayWithPriorities() {
-    return [...this.sortedItems];
+  hasOwner() {
+    return !!this.owner;
   }
-  debug() {
-    console.log("Map size:", this.items.size);
-    console.log("Sorted array length:", this.sortedItems.length);
-    console.log("Sorted items:", this.sortedItems);
+};
+__publicField$1(_Information, "instances", 0);
+let Information = _Information;
+const I = (info, theName = "unknown", onlyOneOwner = true) => new Information(info, theName, onlyOneOwner);
+
+class Owner {
+  constructor(ownerFn, errorFn, disposedFn) {
+    this.ownerFn = ownerFn;
+    this.errorFn = errorFn;
+    this.disposedFn = disposedFn;
+  }
+  give(value) {
+    if (!this.disposed()) {
+      this.ownerFn(value);
+    }
+    return this;
+  }
+  error(cause) {
+    if (this.errorFn !== void 0) {
+      this.errorFn(cause);
+    }
+    return this;
+  }
+  disposed() {
+    return this.disposedFn !== void 0 ? this.disposedFn() : false;
   }
 }
+const O = (ownerFn) => new Owner(ownerFn);
+
+const all = (...infos) => {
+  const i = new Information((g) => {
+    const keysKnown = new Set(Object.keys(infos));
+    const keysFilled = /* @__PURE__ */ new Set();
+    const isAllFilled = () => {
+      return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
+    };
+    const result = {};
+    Object.entries(infos).forEach(([key, info]) => {
+      i.subInfo(info);
+      keysKnown.add(key);
+      info.value(
+        new Owner((v) => {
+          keysFilled.add(key);
+          result[key] = v;
+          if (isAllFilled()) {
+            g.give(Object.values(result));
+          }
+        })
+      );
+    });
+  });
+  return i;
+};
+
+const any = (...infos) => {
+  const info = I((g) => {
+    infos.forEach((info2) => {
+      info2.value(g);
+      info2.subInfo(info2);
+    });
+  });
+  return info;
+};
+
+const chain = (...infos) => {
+  let theOwner;
+  let lastValue;
+  const respondedI = /* @__PURE__ */ new WeakMap();
+  const handleI = (index) => {
+    const info2 = infos[index];
+    const nextI = infos[index + 1];
+    info2.value(
+      O((v) => {
+        if (!nextI) {
+          lastValue = v;
+          theOwner?.give(v);
+        }
+        if (nextI && lastValue !== void 0 && theOwner !== void 0) {
+          theOwner.give(lastValue);
+        }
+        if (nextI && !respondedI.has(info2)) {
+          handleI(index + 1);
+        }
+        respondedI.set(info2, 1);
+      })
+    );
+  };
+  const info = I((g) => {
+    theOwner = g;
+  });
+  info.executed(() => {
+    handleI(0);
+  });
+  return info;
+};
+
+const executorApplied = (base, applier) => {
+  const i = new Information((g) => {
+    base.value(applier(g));
+  });
+  i.subInfo(base);
+  return i;
+};
+
+const filtered = (base, predicate, defaultValue) => {
+  return new Information((g) => {
+    base.value(
+      O((v) => {
+        if (predicate(v)) {
+          g.give(v);
+        } else if (defaultValue !== void 0) {
+          g.give(defaultValue);
+        }
+      })
+    );
+  }).subInfo(base);
+};
+
+const ownerApplied = (baseowner, applier) => {
+  return new Owner(
+    (v) => {
+      baseowner.give(applier(v));
+    },
+    (cause) => {
+      baseowner.error(cause);
+    },
+    () => baseowner.disposed()
+  );
+};
+
+const ownerExecutorApplied = (baseowner, applier) => {
+  const executor = applier((v) => baseowner.give(v));
+  return new Owner((v) => {
+    executor(v);
+  });
+};
+
+const ownerSync = (baseinfo, defaultValue) => {
+  let lastValue;
+  baseinfo.value(
+    O((v) => {
+      lastValue = v;
+    })
+  );
+  return {
+    syncValue() {
+      if (lastValue === void 0 && defaultValue === void 0) {
+        throw new Error("info sync is empty");
+      }
+      return lastValue || defaultValue;
+    }
+  };
+};
+
+const lazyS = (lazyI, destroyI) => {
+  const info = new Information((g) => {
+    const instance = lazyI.get();
+    info.subInfo(instance);
+    instance.value(g);
+  });
+  if (destroyI) {
+    info.subInfo(destroyI);
+    destroyI.value(
+      O(() => {
+        info.destroy();
+      })
+    );
+  }
+  return info;
+};
+
+const map = (base, targetI) => {
+  const i = new Information((g) => {
+    base.value(
+      O((v) => {
+        const infos = [];
+        v.forEach((val) => {
+          let valInfo = val;
+          if (!(valInfo instanceof Information)) {
+            valInfo = I(val);
+          }
+          const info = targetI.get(valInfo);
+          infos.push(info);
+        });
+        const allI = all(...infos).value(g);
+        i.subInfo(allI);
+      })
+    );
+  });
+  i.subInfo(base);
+  return i;
+};
+
+const of = (incomeI) => {
+  let sharedValue = incomeI;
+  let relatedO;
+  const notifyO = () => {
+    if (relatedO !== void 0) {
+      relatedO.give(sharedValue);
+    }
+  };
+  const info = new Information((g) => {
+    relatedO = g;
+    if (sharedValue !== void 0 && sharedValue !== null) {
+      notifyO();
+    }
+  }, "of");
+  return [
+    info,
+    new Owner((v) => {
+      sharedValue = v;
+      notifyO();
+    })
+  ];
+};
+
+const once = (base) => {
+  const info = new Information((g) => {
+    let isFilled = false;
+    base.value(
+      O((v) => {
+        if (!isFilled) {
+          isFilled = true;
+          g.give(v);
+        }
+      })
+    );
+  });
+  info.subInfo(base);
+  return info;
+};
 
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-const poolSets = /* @__PURE__ */ new Map();
-const poolsOfInitiators = /* @__PURE__ */ new Map();
-const subSources = /* @__PURE__ */ new Map();
-const subSourcesReverse = /* @__PURE__ */ new Map();
-const poolsChangeFns = [];
-const notifyPoolsChange = () => {
-  poolsChangeFns.forEach((fn) => fn());
-};
-const lastPatronPoolsStatistic = {
-  poolsCount: 0,
-  patronsCount: 0
-};
-const patronPoolsStatistic = source((g) => {
-  give(lastPatronPoolsStatistic, g);
-  poolsChangeFns.push(() => {
-    let patronsCount = 0;
-    poolSets.forEach((set) => {
-      patronsCount += set.size;
-    });
-    lastPatronPoolsStatistic.poolsCount = poolSets.size;
-    lastPatronPoolsStatistic.patronsCount = patronsCount;
-    give(lastPatronPoolsStatistic, g);
-  });
-});
-const subSource = (subSource2, source2) => {
-  if (!subSources.has(source2)) {
-    subSources.set(source2, []);
+class OwnerPool {
+  constructor() {
+    __publicField(this, "owners");
+    __publicField(this, "innerOwner");
+    this.owners = /* @__PURE__ */ new Set();
+    this.innerOwner = new Owner(
+      (v) => {
+        this.owners.forEach((g) => {
+          g.give(v);
+        });
+      },
+      (cause) => {
+        this.owners.forEach((g) => {
+          g.error(cause);
+        });
+      }
+    );
   }
-  if (!subSourcesReverse.has(subSource2)) {
-    subSourcesReverse.set(subSource2, []);
-  }
-  subSources.get(source2)?.push(subSource2);
-  subSourcesReverse.get(subSource2)?.push(source2);
-  return subSource2;
-};
-const subSourceMany = (subSourceSrc, sourcesSrc) => {
-  sourcesSrc.forEach((source2) => {
-    subSource(subSourceSrc, source2);
-  });
-  return subSourceSrc;
-};
-const isDestroyable = (s) => {
-  return typeof s === "object" && s !== null && "destroy" in s && typeof s.destroy === "function";
-};
-const destroy = (...initiators) => {
-  initiators.forEach((initiator) => {
-    if (isDestroyable(initiator)) {
-      initiator.destroy();
-    }
-    const pool = poolsOfInitiators.get(initiator);
-    pool?.destroy();
-    const foundSubSources = subSources.get(initiator);
-    subSources.delete(initiator);
-    if (foundSubSources) {
-      destroy(...foundSubSources);
-    }
-  });
-};
-const destroyFromSubSource = (...initiators) => {
-  initiators.forEach((initiator) => {
-    destroy(initiator);
-    const foundSources = subSourcesReverse.get(initiator);
-    if (foundSources) {
-      destroyFromSubSource(...foundSources);
-    }
-  });
-};
-const patronPools = (patron) => {
-  const pools = [];
-  poolSets.forEach((pool, poolInstance) => {
-    if (pool.has(patron)) {
-      pools.push(poolInstance);
-    }
-  });
-  return pools;
-};
-const removePatronFromPools = (patron) => {
-  if (patron === void 0) {
-    throw new Error("removePatronFromPools didn't receive patron argument");
-  }
-  poolSets.forEach((pool) => {
-    pool.delete(patron);
-  });
-  notifyPoolsChange();
-};
-const isPatronInPools = (patron) => {
-  if (patron === void 0) {
-    throw new Error("isPatronInPools didn't receive patron argument");
-  }
-  let inPool = false;
-  poolSets.forEach((pool) => {
-    if (!inPool) {
-      inPool = pool.has(patron);
-    }
-  });
-  return inPool;
-};
-const allPatrons = () => {
-  let patrons = [];
-  poolSets.forEach((pool) => {
-    patrons = patrons.concat(Array.from(pool.values()));
-  });
-  return patrons;
-};
-class PatronPool {
-  constructor(initiator) {
-    this.initiator = initiator;
-    __publicField(this, "patrons");
-    __publicField(this, "give");
-    this.patrons = new PrioritySet();
-    poolSets.set(this, this.patrons);
-    poolsOfInitiators.set(this.initiator, this);
-    const doReceive = (value) => {
-      this.patrons.forEach((target) => {
-        this.sendValueToGuest(value, target);
-      });
-    };
-    this.give = (value) => {
-      doReceive(value);
-      return this;
-    };
-    notifyPoolsChange();
+  owner() {
+    return this.innerOwner;
   }
   size() {
-    return this.patrons.size;
+    return this.owners.size;
+  }
+  has(owner) {
+    return this.owners.has(owner);
   }
   add(shouldBePatron) {
-    if (shouldBePatron === void 0) {
-      throw new Error("PatronPool add method received nothing!");
-    }
-    if (typeof shouldBePatron !== "function" && shouldBePatron.introduction && shouldBePatron.introduction() === "patron") {
-      this.patrons.add(shouldBePatron, patronPriority(shouldBePatron));
-    }
-    notifyPoolsChange();
+    this.owners.add(shouldBePatron);
     return this;
   }
-  remove(patron) {
-    this.patrons.delete(patron);
-    notifyPoolsChange();
-    return this;
-  }
-  distribute(receiving, possiblePatron) {
-    this.add(possiblePatron);
-    this.sendValueToGuest(receiving, possiblePatron);
+  remove(g) {
+    this.owners.delete(g);
     return this;
   }
   destroy() {
-    this.patrons.forEach((patron) => {
-      this.remove(patron);
+    this.owners.forEach((g) => {
+      this.remove(g);
     });
-    poolSets.delete(this);
-    poolsOfInitiators.delete(this.initiator);
-    notifyPoolsChange();
     return this;
-  }
-  sendValueToGuest(value, guest) {
-    const isDisposed = this.guestDisposed(value, guest);
-    if (!isDisposed) {
-      give(value, guest);
-    }
-    return this;
-  }
-  guestDisposed(value, guest) {
-    if (guest.disposed?.(value)) {
-      this.remove(guest);
-      return true;
-    }
-    return false;
   }
 }
 
-const patronApplied = (baseGuest, applier) => {
-  const applied = guestApplied(baseGuest, applier);
-  const result = {
-    give(value) {
-      applied.give(value);
-      return result;
-    },
-    introduction
-  };
-  return result;
-};
-
-const patronExecutorApplied = (baseGuest, applier) => {
-  const guestApplied = guestExecutorApplied(baseGuest, applier);
-  const result = {
-    give(value) {
-      guestApplied.give(value);
-      return result;
-    },
-    introduction
-  };
-  return result;
-};
-
-const withName = (obj, name) => {
-  return new Proxy(obj, {
-    get(target, field) {
-      if (field === "name") {
-        return name;
+const pool = (base) => {
+  const ownersPool = new OwnerPool();
+  let lastValue;
+  const i = new Information(
+    (g) => {
+      if (lastValue !== void 0 && !ownersPool.has(g)) {
+        g.give(lastValue);
       }
-      return target[field];
-    }
-  });
-};
-
-const sourceSync = (baseSource, defaultValue) => {
-  const syncGuest = guestSync(defaultValue);
-  value(baseSource, systemPatron(syncGuest));
-  const result = {
-    value(guest) {
-      value(baseSource, guest);
-      return this;
+      ownersPool.add(g);
+      return () => {
+        ownersPool.destroy();
+      };
     },
-    syncValue() {
-      try {
-        return syncGuest.value();
-      } catch {
-        throw new Error("No value in SourceSync");
-      }
-    }
-  };
-  subSource(result, baseSource);
-  return result;
-};
-
-const sourceIsEmpty = (source) => source === void 0 || source === null;
-const sourceOf = (source) => {
-  const createdSource = {};
-  const thePool = new PatronPool(createdSource);
-  let isEmpty = sourceIsEmpty(source);
-  if (!isEmpty && isSource(source)) {
-    value(
-      source,
-      patronOnce((unwrappedSourceDocument) => {
-        isEmpty = sourceIsEmpty(unwrappedSourceDocument);
-        source = unwrappedSourceDocument;
-      })
-    );
-  }
-  createdSource.value = (g) => {
-    if (isEmpty) {
-      if (isPatron(g)) {
-        thePool.add(g);
-      }
-      return createdSource;
-    }
-    if (typeof g === "function") {
-      thePool.distribute(source, guest(g));
-    } else {
-      thePool.distribute(source, g);
-    }
-    return createdSource;
-  };
-  createdSource.give = (value2) => {
-    isEmpty = sourceIsEmpty(value2);
-    source = value2;
-    if (!isEmpty) {
-      thePool.give(source);
-    }
-    return createdSource;
-  };
-  return createdSource;
-};
-const sourceMemoOf = (source) => {
-  const result = sourceOf(source);
-  const baseSrcSync = sourceSync(result, null);
-  const resultMemo = {
-    value: result.value,
-    give(value2) {
-      if (baseSrcSync.syncValue() !== value2) {
-        give(value2, result.give);
-      }
-      return resultMemo;
-    }
-  };
-  if (source) {
-    subSource(resultMemo, source);
-    subSource(baseSrcSync, source);
-    subSource(result, source);
-  } else {
-    subSource(result, resultMemo);
-    subSource(baseSrcSync, resultMemo);
-  }
-  return resultMemo;
-};
-
-const sourceAll = (sources) => {
-  const keysKnown = new Set(Object.keys(sources));
-  const keysFilled = /* @__PURE__ */ new Set();
-  const isAllFilled = () => {
-    return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
-  };
-  const theAll = sourceOf({});
-  const patrons = [];
-  const visited = firstVisit(() => {
-    Object.entries(sources).forEach(([key, source]) => {
-      subSource(theAll, source);
-      keysKnown.add(key);
-      const keyPatron = withName(
-        systemPatron((v) => {
-          theAll.value(
-            guest((all) => {
-              keysFilled.add(key);
-              const lastAll = {
-                ...all,
-                [key]: v
-              };
-              theAll.give(lastAll);
-            })
-          );
-        }),
-        "all_key-patron"
-      );
-      patrons.push(keyPatron);
-      value(source, keyPatron);
-    });
-  });
-  return {
-    value(guest2) {
-      visited();
-      const mbPatron = withName(
-        guestCast(guest2, (value2) => {
-          if (isAllFilled()) {
-            give(Object.values(value2), guest2);
-          }
-        }),
-        "mb-patron"
-      );
-      patrons.push(mbPatron);
-      theAll.value(mbPatron);
-    },
-    destroy() {
-      patrons.forEach((patron) => {
-        removePatronFromPools(patron);
-      });
-      destroy(theAll);
-    }
-  };
-};
-
-const sourceSequence = (baseSource, targetSource) => {
-  if (baseSource === void 0) {
-    throw new Error("SourceSequence didn't receive baseSource argument");
-  }
-  if (targetSource === void 0) {
-    throw new Error("SourceSequence didn't receive targetSource argument");
-  }
-  const src = (guest) => {
-    const sequenceSource = sourceOf();
-    const source = targetSource.get(sequenceSource);
-    subSource(sequenceSource, baseSource);
-    value(
-      baseSource,
-      guestCast(guest, (theValue) => {
-        let index = 0;
-        const sources = [];
-        theValue.forEach(() => {
-          const newSrc = sourceOf();
-          sources.push(newSrc);
-          subSource(newSrc, baseSource);
-        });
-        const nextItemHandle = () => {
-          if (theValue[index + 1] !== void 0) {
-            index = index + 1;
-            handle();
-          }
-        };
-        function handle() {
-          const currentSource = sources[index];
-          const nextValue = theValue[index];
-          if (isSource(nextValue)) {
-            value(
-              nextValue,
-              patronOnce((theNextValue) => {
-                sequenceSource.give(theNextValue);
-                value(source, currentSource);
-                nextItemHandle();
-              })
-            );
-          } else {
-            sequenceSource.give(nextValue);
-            value(source, currentSource);
-            nextItemHandle();
-          }
-        }
-        if (theValue[index] !== void 0) {
-          handle();
-          value(sourceAll(sources), guest);
-        } else {
-          give([], guest);
-        }
-      })
-    );
-  };
-  subSource(src, baseSource);
-  return src;
-};
-
-const sourceMap = (baseSource, targetSource) => {
-  if (baseSource === void 0) {
-    throw new Error("SourceMap didn't receive baseSource argument");
-  }
-  if (targetSource === void 0) {
-    throw new Error("SourceMap didn't receive targetSource argument");
-  }
-  const result = sourceOf();
-  const visited = firstVisit(() => {
-    value(
-      baseSource,
-      systemPatron((theValue) => {
-        const sources = [];
-        theValue.forEach((val) => {
-          const source = targetSource.get(val);
-          subSource(source, baseSource);
-          sources.push(source);
-        });
-        value(
-          sourceAll(sources),
-          patronOnce((v) => {
-            destroy(...sources);
-            give(v, result);
-          })
-        );
-      })
-    );
-  });
-  const src = (g) => {
-    visited();
-    result.value(g);
-  };
-  subSource(result, src);
-  return src;
-};
-
-const sourceRace = (sources) => {
-  if (sources === void 0) {
-    throw new Error("SourceRace didnt receive sources argument");
-  }
-  return (guest) => {
-    let connectedWithSource = null;
-    sources.forEach((source) => {
-      value(
-        source,
-        guestCast(guest, (value2) => {
-          if (!connectedWithSource || connectedWithSource === source) {
-            give(value2, guest);
-            connectedWithSource = source;
-          }
-        })
-      );
-    });
-  };
-};
-
-const sourceChain = (...sources) => {
-  const resultSrc = sourceOf();
-  const respondedSources = /* @__PURE__ */ new WeakMap();
-  const repeatValue = () => {
-    value(resultSrc, resultSrc);
-  };
-  const handleSource = (index) => {
-    const source = sources[index];
-    const nextSource = sources[index + 1];
-    value(
-      source,
-      systemPatron((v) => {
-        let sourceKey = source;
-        if ((typeof source !== "object" || source === null) && typeof source !== "function" && !Array.isArray(source)) {
-          sourceKey = { source };
-        }
-        if (nextSource) {
-          repeatValue();
-        }
-        if (!nextSource) {
-          resultSrc.give(v);
-        } else if (!respondedSources.has(sourceKey)) {
-          handleSource(index + 1);
-        }
-        respondedSources.set(sourceKey, 1);
-      })
-    );
-  };
-  const visited = firstVisit(() => {
-    handleSource(0);
-  });
-  const src = (g) => {
-    visited();
-    resultSrc.value(g);
-  };
-  subSourceMany(src, sources);
-  subSourceMany(resultSrc, sources);
-  return src;
-};
-
-const sourceDynamic = (baseGuest, baseSource) => {
-  if (baseGuest === void 0) {
-    throw new Error("SourceDynamic didn't receive baseGuest argument");
-  }
-  if (baseSource === void 0) {
-    throw new Error("SourceDynamic didn't receive baseSource argument");
-  }
-  const sourceObject = {
-    value(guest) {
-      value(baseSource, guest);
-      return sourceObject;
-    },
-    give(value2) {
-      give(value2, baseGuest);
-      return this;
-    }
-  };
-  return sourceObject;
-};
-
-const sourceApplied = (baseSource, applier) => {
-  const src = (guest) => {
-    value(
-      baseSource,
-      guestCast(guest, (v) => {
-        give(applier(v), guest);
-      })
-    );
-  };
-  subSource(src, baseSource);
-  return src;
-};
-
-const sourceExecutorApplied = (source, applier) => {
-  return (g) => {
-    value(
-      source,
-      guestCast(
-        g,
-        applier((v) => {
-          give(v, g);
-        })
-      )
-    );
-  };
-};
-
-const sourceFiltered = (baseSource, predicate, defaultValue) => {
-  return (g) => {
-    value(
-      baseSource,
-      guestCast(g, (v) => {
-        if (predicate(v) === true) {
-          give(v, g);
-        } else if (defaultValue !== void 0) {
-          give(defaultValue, g);
-        }
-      })
-    );
-  };
-};
-
-const sourceOnce = (initialValue) => {
-  let isFilled = initialValue !== void 0;
-  const source = sourceOf(initialValue);
-  return {
-    value(guest) {
-      value(source, guest);
-      return this;
-    },
-    give(value2) {
-      if (!isFilled) {
-        source.give(value2);
-        isFilled = true;
-      }
-      return this;
-    },
-    destroy() {
-      destroy(source);
-    }
-  };
-};
-
-const sourceCombined = (...sources) => (source) => {
-  const result = sourceOf();
-  subSourceMany(result, sources);
-  value(
-    sourceAll(sources),
-    systemPatron((actualValues) => {
-      source(result.give, ...actualValues);
-    })
+    "pool",
+    false
   );
-  return result.value;
-};
-
-const sourceResettable = (baseSrc, resettableSrc) => {
-  const result = sourceOf();
-  const visited = firstVisit(() => {
-    value(
-      resettableSrc,
-      systemPatron(() => {
-        give(null, result);
+  i.subInfo(base);
+  i.executed(() => {
+    const gp = ownersPool.owner();
+    base.value(
+      new Owner((v) => {
+        gp.give(v);
+        lastValue = v;
       })
     );
-    value(baseSrc, systemPatron(result));
-    subSource(result, baseSrc);
   });
-  return sourceDynamic(result.give, (g) => {
-    visited();
-    result.value(g);
-  });
+  return [i, ownersPool];
 };
 
-const sourceAny = (sources) => {
-  const lastSrc = sourceOf();
-  const visited = firstVisit(() => {
-    sources.forEach((source) => {
-      value(source, systemPatron(lastSrc));
-      subSource(lastSrc, source);
-    });
-  });
-  const src = (g) => {
-    visited();
-    lastSrc.value(g);
-  };
-  subSourceMany(src, sources);
-  return src;
-};
-
-const sourceLazy = (lazySrc, args, destroySrc) => {
-  let instance = null;
-  const result = sourceOf();
-  const resultResettable = sourceResettable(result, destroySrc ?? sourceOf());
-  let wasInstantiated = false;
-  const instantiate = (srcInstance) => {
-    if (wasInstantiated) {
-      return;
-    }
-    wasInstantiated = true;
-    value(
-      sourceAll(args),
-      systemPatron(() => {
-        if (!instance) {
-          instance = lazySrc.get(...args);
-          value(instance, systemPatron(result));
-          subSource(result, srcInstance);
-          subSource(resultResettable, srcInstance);
-        }
-      })
-    );
-  };
-  if (destroySrc) {
-    value(
-      destroySrc,
-      systemPatron(() => {
-        destroy(instance);
-        instance = null;
-      })
-    );
+const lazy = (buildingFn) => {
+  if (buildingFn === void 0) {
+    throw new Error("lazy didn't receive buildingFn argument");
   }
-  const src = (g) => {
-    instantiate(src);
-    value(resultResettable, g);
-  };
-  return src;
-};
-
-const sourceDestroyable = (source) => {
-  let destructor = null;
-  const result = {
-    value(g) {
-      destructor = source(g);
-      return this;
-    },
-    destroy() {
-      if (destructor !== null && typeof destructor === "function") {
-        destructor();
-      }
-      return this;
+  return {
+    get(...args) {
+      return buildingFn(...args);
     }
   };
-  subSource(result, source);
-  return result;
 };
 
 const lazyClass = (constructorFn, modules = {}) => {
@@ -1040,16 +423,5 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
-const lazy = (buildingFn) => {
-  if (buildingFn === void 0) {
-    throw new Error("lazy didn't receive buildingFn argument");
-  }
-  return {
-    get(...args) {
-      return buildingFn(...args);
-    }
-  };
-};
-
-export { PatronPool, allPatrons, destroy, destroyFromSubSource, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
+export { I, Information, O, Owner, OwnerPool, all, any, chain, executorApplied, filtered, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool };
 //# sourceMappingURL=silentium.mjs.map
