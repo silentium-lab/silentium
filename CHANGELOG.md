@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.48](https://github.com/silentium-lab/silentium/compare/v0.0.47...v0.0.48) (2025-06-25)
+
+
+### Features
+
+* **63-need-to-get-rid-of-patron:** all component refactored ([f322dc9](https://github.com/silentium-lab/silentium/commit/f322dc96f57262f7ae16574ada6e515383088948))
+* **63-need-to-get-rid-of-patron:** correct pool and executed method ([303d211](https://github.com/silentium-lab/silentium/commit/303d2117a45cc7080df53d898f9ca025e77e169d))
+* **63-need-to-get-rid-of-patron:** descr and new components ([26b6dc7](https://github.com/silentium-lab/silentium/commit/26b6dc78a89232e472370008acabca19fa3b009b))
+* **63-need-to-get-rid-of-patron:** executor applied ([4b2b655](https://github.com/silentium-lab/silentium/commit/4b2b655b99abd7d629083e5adfd5b07dbdb07c47))
+* **63-need-to-get-rid-of-patron:** filtered component ([3a96b18](https://github.com/silentium-lab/silentium/commit/3a96b186cb29f1243348b4443fe84b50832dada3))
+* **63-need-to-get-rid-of-patron:** get rid of next and error methods ([c3686a7](https://github.com/silentium-lab/silentium/commit/c3686a73201b634e1ef3db313dbc827b75d35c39))
+* **63-need-to-get-rid-of-patron:** guest executor applied ([3b23971](https://github.com/silentium-lab/silentium/commit/3b23971f844d613aa9b57eb9964718785a162dd3))
+* **63-need-to-get-rid-of-patron:** lazy component ([c2bd747](https://github.com/silentium-lab/silentium/commit/c2bd747f522a095e87e3cf7fb0fe62487fe3e964))
+* **63-need-to-get-rid-of-patron:** lazy fix ([fc466e5](https://github.com/silentium-lab/silentium/commit/fc466e5c34054d4eebb7cb3d20ca22bd09499d30))
+* **63-need-to-get-rid-of-patron:** move lazy into utils ([09fbebf](https://github.com/silentium-lab/silentium/commit/09fbebf6bbe5a061d5dc9be9e3228953b2bbc25f))
+* **63-need-to-get-rid-of-patron:** once component and plans for refactoring ([0d71a2b](https://github.com/silentium-lab/silentium/commit/0d71a2b01f0a8ec0c92c80649a51ea7247bca856))
+* **63-need-to-get-rid-of-patron:** refactoring move types to separate modules ([a14a8df](https://github.com/silentium-lab/silentium/commit/a14a8df6b9198f408d4197723c7127cc73fec473))
+* **63-need-to-get-rid-of-patron:** remove marks ([83f152a](https://github.com/silentium-lab/silentium/commit/83f152ae2f91b53b8212640c5aa40c37bdf3732d))
+* **63-need-to-get-rid-of-patron:** remove marks ([0c5f09c](https://github.com/silentium-lab/silentium/commit/0c5f09c136cf2608bb3e822de335695928fee1ac))
+* **63-need-to-get-rid-of-patron:** renaming source to info and guest to owner ([80a7862](https://github.com/silentium-lab/silentium/commit/80a78625e966b0f14ffea07127d0b5d6e254fbf4))
+* **63-need-to-get-rid-of-patron:** source chain new version ([866cde7](https://github.com/silentium-lab/silentium/commit/866cde7276a2810eaec0c836c9d23722c561cf5a))
+* **63-need-to-get-rid-of-patron:** source map updated ([e56c163](https://github.com/silentium-lab/silentium/commit/e56c16363bae47128b51609c175e7800332f5fe4))
+* **63-need-to-get-rid-of-patron:** source tests updated ([79cbe1a](https://github.com/silentium-lab/silentium/commit/79cbe1a600daf2e875467ba0c193989168f03674))
+* **63-need-to-get-rid-of-patron:** work on new patron remove ([1d9e085](https://github.com/silentium-lab/silentium/commit/1d9e0857193de822b6d5877659ca690676a4eed4))
+
 ### [0.0.47](https://github.com/silentium-lab/silentium/compare/v0.0.46...v0.0.47) (2025-06-19)
 
 
