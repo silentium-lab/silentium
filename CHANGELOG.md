@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.49](https://github.com/silentium-lab/silentium/compare/v0.0.48...v0.0.49) (2025-06-25)
+
+
+### Bug Fixes
+
+* **main:** owner sync fix ([deeece4](https://github.com/silentium-lab/silentium/commit/deeece45c4aac171768022886cf9a217e469b9ff))
+
 ### [0.0.48](https://github.com/silentium-lab/silentium/compare/v0.0.47...v0.0.48) (2025-06-25)
 
 
