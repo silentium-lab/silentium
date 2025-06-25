@@ -209,28 +209,28 @@ const filtered = (base, predicate, defaultValue) => {
   }).subInfo(base);
 };
 
-const ownerApplied = (baseowner, applier) => {
+const ownerApplied = (base, applier) => {
   return new Owner(
     (v) => {
-      baseowner.give(applier(v));
+      base.give(applier(v));
     },
     (cause) => {
-      baseowner.error(cause);
+      base.error(cause);
     },
-    () => baseowner.disposed()
+    () => base.disposed()
   );
 };
 
-const ownerExecutorApplied = (baseowner, applier) => {
-  const executor = applier((v) => baseowner.give(v));
+const ownerExecutorApplied = (base, applier) => {
+  const executor = applier((v) => base.give(v));
   return new Owner((v) => {
     executor(v);
   });
 };
 
-const ownerSync = (baseinfo, defaultValue) => {
+const ownerSync = (base, defaultValue) => {
   let lastValue;
-  baseinfo.value(
+  base.value(
     O((v) => {
       lastValue = v;
     })
@@ -398,6 +398,65 @@ const pool = (base) => {
   return [i, ownersPool];
 };
 
+const sequence = (base) => {
+  const i = I((o) => {
+    const result = [];
+    base.value(
+      O((v) => {
+        result.push(v);
+        o.give(result);
+      })
+    );
+  });
+  i.subInfo(base);
+  return i;
+};
+
+const stream = (base) => {
+  const i = I((o) => {
+    base.value(
+      O((v) => {
+        v.forEach((cv) => {
+          o.give(cv);
+        });
+      })
+    );
+  });
+  return i;
+};
+
+const fromCallback = (waitForCb) => {
+  return I((o) => {
+    waitForCb((v) => {
+      o.give(v);
+    });
+  });
+};
+
+const fromEvent = (emitter, eventName, subscribeMethod, unsubscribeMethod) => {
+  return I((o) => {
+    const handler = (...args) => {
+      o.give(args);
+    };
+    emitter[subscribeMethod](eventName, handler);
+    return () => {
+      if (unsubscribeMethod !== void 0) {
+        emitter[unsubscribeMethod](eventName, handler);
+      }
+    };
+  });
+};
+
+const fromPromise = (p) => {
+  return I((o) => {
+    p.then((v) => {
+      o.give(v);
+    }).catch((e) => {
+      o.error(e);
+    });
+  });
+};
+
 const lazy = (buildingFn) => {
   if (buildingFn === void 0) {
     throw new Error("lazy didn't receive buildingFn argument");
@@ -423,5 +482,5 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
-export { I, Information, O, Owner, OwnerPool, all, any, chain, executorApplied, filtered, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool };
+export { I, Information, O, Owner, OwnerPool, all, any, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
 //# sourceMappingURL=silentium.js.map
