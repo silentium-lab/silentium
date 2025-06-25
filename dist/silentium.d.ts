@@ -1,385 +1,145 @@
-import { DestroyableType as DestroyableType$1, DestructorType as DestructorType$1 } from 'src/types';
-
-type SourceExecutorType<T, R = unknown> = (guest: GuestType<T>) => R;
-interface SourceObjectType<T> {
-    value: SourceExecutorType<T>;
-}
-type SourceDataType<T> = Extract<T, string | number | boolean | Date | object | Array<unknown> | symbol>;
-type SourceType<T = any> = SourceExecutorType<T> | SourceObjectType<T> | SourceDataType<T>;
-/**
- * Helps to connect source and guest, if you need to get value in guest from source
- * helpful because we don't know what shape of source do we have, it can be function or object or primitive
- * @url https://silentium-lab.github.io/silentium/#/utils/value
- */
-declare const value: <T>(source: SourceType<T>, guest: GuestType<T> | GuestType<T>[]) => SourceType<T>;
-/**
- * Helps to check what some information is of source shape
- * @url https://silentium-lab.github.io/silentium/#/utils/is-source
- */
-declare const isSource: <T>(mbSource: T | SourceType<T>) => mbSource is SourceType<T>;
-/**
- * Represents source as function
- * @url https://silentium-lab.github.io/silentium/#/source
- */
-declare const source: <T>(source: SourceType<T>) => SourceExecutorType<T>;
-
-type GuestIntroduction = "guest" | "patron";
-type GuestExecutorType<T = any, This = void> = (value: T) => This;
-interface GuestObjectType<T = any> {
+type ownerIntroduction = "owner" | "patron";
+type OwnerExecutorType<T = any, This = void> = (value: T) => This;
+interface OwnerObjectType<T = any> {
     give(value: T): this;
-    introduction?(): GuestIntroduction;
+    introduction?(): ownerIntroduction;
 }
-type GuestType<T = any> = GuestExecutorType<T> | GuestObjectType<T>;
+type OwnerType<T = any> = OwnerExecutorType<T> | OwnerObjectType<T>;
+
 /**
- * Helps to give data to guest, guests can be of different shapes
- * function guest or object guest
- * @url https://silentium-lab.github.io/silentium/#/utils/give
+ * Information owner, if information
+ * has owner than information executed
  */
-declare const give: <T>(data: T, guest?: GuestType<T>) => GuestType<T> | SourceExecutorType<T>;
-/**
- * Helps to check if mbGuest can be used to retrieve value
- * @url https://silentium-lab.github.io/silentium/#/utils/is-guest
- */
-declare const isGuest: (mbGuest: any) => mbGuest is GuestType;
-/**
- * Helps to create guest of object type
- * @url https://silentium-lab.github.io/silentium/#/guest
- */
-declare const guest: <T>(receiver: GuestExecutorType<T>) => {
-    give(value: T): any;
+declare class Owner<T = any> {
+    private ownerFn;
+    private errorFn?;
+    private disposedFn?;
+    constructor(ownerFn: OwnerExecutorType<T>, errorFn?: ((cause: unknown) => void) | undefined, disposedFn?: (() => boolean) | undefined);
+    give(value: T): this;
+    error(cause: unknown): this;
+    disposed(): boolean;
+}
+declare const O: <T>(ownerFn: OwnerExecutorType<T>) => Owner<T>;
+
+type InformationExecutorType<T, R = unknown> = (owner: OwnerType<T>) => R;
+interface InformationObjectType<T> {
+    value: InformationExecutorType<T>;
+}
+type InformationDataType<T> = Extract<T, string | number | boolean | Date | object | Array<unknown> | symbol>;
+type InformationType<T = any> = InformationExecutorType<T> | InformationObjectType<T> | InformationDataType<T>;
+
+type InfoExecutorType<T> = (g: Owner<T>) => (() => void | undefined) | void;
+type InfoObjectType<T> = {
+    value: InfoExecutorType<T>;
 };
+type InformationExecutedCb<T> = (g: Owner<T>) => void;
 /**
- * First visit of source, useful for detached sources
- * This function is important because code of source must executes
- * only after guest visited source, sources are lazy!
- * @url https://silentium-lab.github.io/silentium/#/utils/first-visit
+ * Main information representation
  */
-declare const firstVisit: (afterFirstVisit: () => void) => () => void;
-
-interface GuestDisposableType<T = any> extends GuestObjectType<T> {
-    disposed(value: T | null): boolean;
-}
-type MaybeDisposableType<T = any> = Partial<GuestDisposableType<T>>;
-/**
- * Connects to guest logic what can tell PatronPool
- * what guest don't need to receive new values
- * @url https://silentium-lab.github.io/silentium/#/guest/guest-disposable
- */
-declare const guestDisposable: <T>(guest: GuestType, disposeCheck: (value: T | null) => boolean) => GuestDisposableType<T>;
-
-/**
- * Helps to inherit guest behavior, its introduction and dispose settings
- * @url https://silentium-lab.github.io/silentium/#/guest/guest-cast
- */
-declare const guestCast: <T>(sourceGuest: GuestType<any>, targetGuest: GuestType<T>) => GuestDisposableType<T>;
-
-interface GuestValueType<T = any> extends GuestObjectType<T> {
-    value(): T;
-}
-/**
- * @url https://silentium-lab.github.io/silentium/#/guest/guest-sync
- */
-declare const guestSync: <T>(theValue?: T) => GuestValueType<T>;
-
-/**
- * Helps to apply function to value before baseGuest will receive it
- * @url https://silentium-lab.github.io/silentium/#/guest/guest-applied
- */
-declare const guestApplied: <T, R>(baseGuest: GuestType<R>, applier: (value: T) => R) => GuestObjectType<T>;
-
-/**
- * Apply function to guest function of receiving value, useful for debouncing or throttling
- * @url https://silentium-lab.github.io/silentium/#/guest/guest-executor-applied
- */
-declare const guestExecutorApplied: <T>(baseGuest: GuestType<T>, applier: (executor: GuestExecutorType<T>) => GuestExecutorType<T>) => GuestObjectType<T>;
-
-type PatronType<T> = GuestDisposableType<T> & {
-    introduction(): "patron";
-};
-/**
- * Patron may have priority information
- * @url https://silentium-lab.github.io/silentium/#/en/terminology/priority
- */
-interface PatronWithPriority {
-    priority(): number;
-}
-/**
- * @url https://silentium-lab.github.io/silentium/#/en/utils/patron-priority
- */
-declare const patronPriority: (g: GuestType | PatronWithPriority) => number;
-/**
- * Helps to check what incoming object is patron
- * @url https://silentium-lab.github.io/silentium/#/utils/is-patron
- */
-declare const isPatron: (guest: GuestType) => guest is PatronType<unknown>;
-declare const introduction: () => "patron";
-/**
- * Help to turn existed guest intro patron
- * @url https://silentium-lab.github.io/silentium/#/patron
- */
-declare const patron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T>;
-/**
- * System patron with higher priority than regular patron
- */
-declare const systemPatron: <T>(willBePatron: GuestType<T>) => GuestDisposableType<T> & PatronWithPriority;
-/**
- * Set priority on existed patron
- */
-declare const withPriority: <T extends PatronType<unknown>>(patron: T, priority: number) => T & PatronWithPriority;
-
-/**
- * Helps to call patron only once, this will be helpful when you
- * need value but you know what value can not be existed at a time of requesting
- * @url https://silentium-lab.github.io/silentium/#/patron/patron-once
- */
-declare const patronOnce: <T>(baseGuest: GuestType<T>) => GuestDisposableType<T>;
-
-/**
- * Helps debug the application and detect issues with frozen pools
- * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools-statistic
- */
-declare const patronPoolsStatistic: SourceExecutorType<{
-    poolsCount: number;
-    patronsCount: number;
-}, unknown>;
-/**
- * Helps to connect source and subsource, needed to destroy all sub sources
- * when base source will be destroyed
- * @url https://silentium-lab.github.io/silentium/#/utils/sub-source
- */
-declare const subSource: <T>(subSource: SourceType, source: SourceType<T>) => SourceType<T>;
-/**
- * Helps to define many sources of one sub source
- */
-declare const subSourceMany: <T>(subSourceSrc: SourceType<T>, sourcesSrc: SourceType[]) => SourceType<T>;
-/**
- * Helps to check what given source is destroyable
- * @url https://silentium-lab.github.io/silentium/#/utils/is-destroyable
- */
-declare const isDestroyable: (s: unknown) => s is DestroyableType$1;
-/**
- * Helps to remove all pools of related initiators
- * @url https://silentium-lab.github.io/silentium/#/utils/destroy
- */
-declare const destroy: (...initiators: SourceType[]) => void;
-/**
- * Allows destruction of the source chain starting from a subsource
- * and moving up to the main source. This behavior is useful when you need
- * to destroy the entire chain while having only a reference to the subsource.
- */
-declare const destroyFromSubSource: (...initiators: SourceType[]) => void;
-/**
- * Returns all pools related to one patron
- * @url https://silentium-lab.github.io/silentium/#/utils/patron-pools
- */
-declare const patronPools: (patron: GuestObjectType) => PoolType<any>[];
-/**
- * Removes patron from all existed pools
- * @url https://silentium-lab.github.io/silentium/#/utils/remove-patron-from-pools
- */
-declare const removePatronFromPools: (patron: GuestObjectType) => void;
-/**
- * Checks what patron is connected with any pool
- * @url https://silentium-lab.github.io/silentium/#/utils/is-patron-in-pools
- */
-declare const isPatronInPools: (patron: GuestObjectType) => boolean;
-/**
- * Returns an array of all patrons in any pool
- * @url https://silentium-lab.github.io/silentium/#/utils/all-patrons
- */
-declare const allPatrons: () => GuestType[];
-interface PoolType<T = any> extends GuestObjectType<T> {
-    add(guest: GuestObjectType<T>): this;
-    distribute(receiving: T, possiblePatron: GuestObjectType<T>): this;
-    remove(patron: GuestObjectType<T>): this;
-    size(): number;
-    destroy(): void;
-}
-/**
- * Pool class helps to implement dispatching for patron about new values
- * what may appear in sources
- * @url https://silentium-lab.github.io/silentium/#/patron/patron-pool
- */
-declare class PatronPool<T> implements PoolType<T> {
-    private initiator;
-    private patrons;
-    give: (value: T) => this;
-    constructor(initiator: SourceType);
-    size(): number;
-    add(shouldBePatron: GuestType<T>): this;
-    remove(patron: GuestObjectType<T>): this;
-    distribute(receiving: T, possiblePatron: GuestType<T>): this;
+declare class Information<T = any> {
+    private info?;
+    private theName;
+    private onlyOneOwner;
+    private static instances;
+    private theSubInfos;
+    private destructor?;
+    private owner?;
+    private executedCbs?;
+    private alreadyExecuted;
+    constructor(info?: (InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>) | undefined, theName?: string, onlyOneOwner?: boolean);
+    /**
+     * Следующее значение источника
+     */
+    private next;
+    /**
+     * Возможность гостю получить информацию от источника
+     */
+    value(owner: Owner<T>): this;
+    /**
+     * Ability to destroy the information info
+     */
     destroy(): this;
-    private sendValueToGuest;
-    private guestDisposed;
+    /**
+     * The ability to link another info to the current info
+     */
+    subInfo(info: Information<any>): this;
+    subInfos(): Information<unknown>[];
+    name(): string;
+    executed(cb: InformationExecutedCb<T>): this;
+    hasOwner(): boolean;
 }
+declare const I: <T>(info?: InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>, theName?: string, onlyOneOwner?: boolean) => Information<T>;
 
-/**
- * Helps to apply function to patron
- * @url https://silentium-lab.github.io/silentium/#/patron/patron-applied
- */
-declare const patronApplied: <T, R>(baseGuest: GuestType<R>, applier: (value: T) => R) => GuestObjectType<T>;
-
-/**
- * Helps to apply function to patrons executor
- * @url https://silentium-lab.github.io/silentium/#/patron/patron-executor-applied
- */
-declare const patronExecutorApplied: <T>(baseGuest: GuestType<T>, applier: (executor: GuestExecutorType) => GuestExecutorType) => {
-    give(value: T): any;
-    introduction: () => "patron";
-};
-
-type ExtractType<T> = T extends SourceType<infer U> ? U : never;
-type ExtractTypesFromArray<T extends SourceType<any>[]> = {
+type ExtractType<T> = T extends InformationType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends Information<infer U> ? U : never;
+type ExtractTypesFromArray<T extends InformationType<any>[]> = {
     [K in keyof T]: ExtractType<T[K]>;
 };
+type ExtractTypesFromArrayS<T extends Information<any>[]> = {
+    [K in keyof T]: ExtractTypeS<T[K]>;
+};
 /**
- * Represents common value as Array of bunch of sources,
- * when all sources will gets it's values
- * @url https://silentium-lab.github.io/silentium/#/source/source-all
+ * Новая версия all компонента
  */
-declare const sourceAll: <const T extends SourceType[]>(sources: T) => SourceObjectType<ExtractTypesFromArray<T>> & DestroyableType$1;
+declare const all: <const T extends Information[]>(...infos: T) => Information<ExtractTypesFromArrayS<T>>;
+
+declare const any: <T>(...infos: Information<T>[]) => Information<unknown>;
+
+type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
+declare const chain: <T extends Information[]>(...infos: T) => Information<Last<T>>;
+
+declare const executorApplied: <T>(base: Information<T>, applier: (executor: Owner<T>) => Owner<T>) => Information<T>;
+
+declare const filtered: <T>(base: Information<T>, predicate: (v: T) => boolean, defaultValue?: T) => Information<T>;
 
 interface LazyType<T> {
     get<R extends unknown[], CT = null>(...args: R): CT extends null ? T : CT;
 }
+
+declare const lazyS: <T>(lazyI: LazyType<Information<T>>, destroyI?: Information<unknown>) => Information<T>;
+
+declare const map: <T, TG>(base: Information<T[]>, targetI: LazyType<Information<TG>>) => Information<TG[]>;
+
+declare const ownerApplied: <T, R>(baseowner: Owner<R>, applier: (value: T) => R) => Owner<T>;
+
+declare const ownerExecutorApplied: <T>(baseowner: Owner<T>, applier: (ge: (v: T) => void) => (v: T) => void) => Owner<T>;
+
+interface infoSync<T> {
+    syncValue(): T;
+}
+declare const ownerSync: <T>(baseinfo: Information<T>, defaultValue?: T) => infoSync<T>;
+
+declare const of: <T>(incomeI?: InformationDataType<T>) => readonly [Information<T>, Owner<T>];
+
+declare const once: <T>(base: Information<T>) => Information<T>;
+
+declare class OwnerPool<T> {
+    private owners;
+    private innerOwner;
+    constructor();
+    owner(): Owner<T>;
+    size(): number;
+    has(owner: Owner<T>): boolean;
+    add(shouldBePatron: Owner<T>): this;
+    remove(g: Owner<T>): this;
+    destroy(): this;
+}
+
+/**
+ * An information info that helps multiple owners access
+ * a single information info
+ */
+declare const pool: <T>(base: Information<T>) => readonly [Information<T>, OwnerPool<T>];
+
 /**
  * Helps to get lazy instance of dependency
  * @url https://silentium-lab.github.io/silentium/#/utils/lazy
  */
 declare const lazy: <T>(buildingFn: (...args: any[]) => T) => LazyType<T>;
 
-/**
- * Ability to apply source to source of array values sequentially
- * @url https://silentium-lab.github.io/silentium/#/source/source-sequence
- */
-declare const sourceSequence: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (guest: GuestType<TG[]>) => void;
-
-/**
- * Helps to modify many sources with one private source
- * @url https://silentium-lab.github.io/silentium/#/source/source-map
- */
-declare const sourceMap: <T, TG>(baseSource: SourceType<T[]>, targetSource: LazyType<SourceType<TG>>) => (g: GuestType<TG[]>) => void;
-
-/**
- * Connects guest with source what give response faster than others
- * @url https://silentium-lab.github.io/silentium/#/source/source-race
- */
-declare const sourceRace: <T>(sources: SourceType<T>[]) => (guest: GuestType<T>) => void;
-
-type SourceChangeableType<T = any> = SourceObjectType<T> & GuestObjectType<T>;
-/**
- * Ability to create source what can be changed later
- * @url https://silentium-lab.github.io/silentium/#/source/source-of
- */
-declare const sourceOf: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
-/**
- * Changeable source what can be changed only once with specified value
- * @url https://silentium-lab.github.io/silentium/#/source/source-memo-of
- */
-declare const sourceMemoOf: <T>(source?: SourceType<T>) => SourceChangeableType<T>;
-
-type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
-/**
- * Returns value of some source when all sources before it gives their response
- * @url https://silentium-lab.github.io/silentium/#/source/source-chain
- */
-declare const sourceChain: <T extends SourceType[]>(...sources: T) => SourceType<Last<T>>;
-
-/**
- * Ability to build common changeable source from different guest and source
- * @url https://silentium-lab.github.io/silentium/#/source/source-dynamic
- */
-declare const sourceDynamic: <T>(baseGuest: GuestType<T>, baseSource: SourceType<T>) => SourceChangeableType<T>;
-
-/**
- * Gives ability to apply function to source value
- * @url https://silentium-lab.github.io/silentium/#/source/source-applied
- */
-declare const sourceApplied: <T, R>(baseSource: SourceType<T>, applier: (v: T) => R) => (guest: GuestType<R>) => void;
-
-/**
- * Ability to apply function to source executor, helpful when need to apply throttling or debounce
- * @url https://silentium-lab.github.io/silentium/#/source/source-executor-applied
- */
-declare const sourceExecutorApplied: <T>(source: SourceType<T>, applier: (executor: GuestType<T>) => GuestType<T>) => (g: GuestType<T>) => void;
-
-/**
- * Helps not to respond with information what checked by predicate function
- * @url https://silentium-lab.github.io/silentium/#/source/source-filtered
- */
-declare const sourceFiltered: <T>(baseSource: SourceType<T>, predicate: (v: T) => boolean, defaultValue?: T) => (g: GuestType<T>) => void;
-
-/**
- * Ability set the value only once
- * @url https://silentium-lab.github.io/silentium/#/source/source-once
- */
-declare const sourceOnce: <T>(initialValue?: SourceType<T>) => {
-    value(guest: GuestType<T>): any;
-    give(value: T): any;
-    destroy(): void;
-};
-
-/**
- * Helps to represent source value as sync value, what can be returned
- * useful for example in tests
- * This source is not lazy! When we create it patron visit baseSource
- * @url https://silentium-lab.github.io/silentium/#/source/source-sync
- */
-declare const sourceSync: <T>(baseSource: SourceType<T>, defaultValue?: unknown) => SourceObjectType<T> & {
-    syncValue(): T;
-};
-
-/**
- * Simplifies sources combination, when we need to create value depending on many sources
- * @url https://silentium-lab.github.io/silentium/#/source/source-combined
- */
-declare const sourceCombined: <const T extends SourceType[]>(...sources: T) => <R>(source: (guest: GuestType<R>, ...sourcesValues: ExtractTypesFromArray<T>) => void) => SourceType<R>;
-
-/**
- * @url https://silentium-lab.github.io/silentium/#/source/source-resettable
- */
-declare const sourceResettable: <T>(baseSrc: SourceType<T>, resettableSrc: SourceType<unknown>) => SourceChangeableType<T>;
-
-/**
- * Present source of value what was last appeared in any
- * of given sources, can be used as default value, when some source
- * don't respond
- * @url https://silentium-lab.github.io/silentium/#/source/source-any
- */
-declare const sourceAny: <T>(sources: SourceType<T>[]) => (g: GuestType<T>) => void;
-
-/**
- * Helps to build source only when all sources will give its values
- * and only after some guest visit source
- * @url https://silentium-lab.github.io/silentium/#/source/source-lazy
- */
-declare const sourceLazy: <T>(lazySrc: LazyType<SourceType<T>>, args: SourceType[], destroySrc?: SourceType<unknown>) => (g: GuestType<T>) => void;
-
-/**
- * Ability to create sources that support special destruction logic
- * @url https://silentium-lab.github.io/silentium/#/source/source-destroyable
- */
-declare const sourceDestroyable: <T>(source: SourceExecutorType<T, DestructorType$1>) => SourceObjectType<T> & DestroyableType$1;
-
 interface Prototyped<T> {
     prototype: T;
 }
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-type NamedType = {
-    name: string;
-};
-/**
- * Helps to bind name to object or function
- * Be careful when wrapping sources with this function
- * it may affect the destruction chain
- */
-declare const withName: <T>(obj: T, name: string) => T & NamedType;
-
-type DestructorType = () => void;
-interface DestroyableType {
-    destroy: DestructorType;
-}
-
-export { type DestroyableType, type DestructorType, type ExtractTypesFromArray, type GuestDisposableType, type GuestExecutorType, type GuestObjectType, type GuestType, type GuestValueType, type LazyType, type MaybeDisposableType, type NamedType, PatronPool, type PatronType, type PatronWithPriority, type PoolType, type SourceChangeableType, type SourceDataType, type SourceExecutorType, type SourceObjectType, type SourceType, allPatrons, destroy, destroyFromSubSource, firstVisit, give, guest, guestApplied, guestCast, guestDisposable, guestExecutorApplied, guestSync, introduction, isDestroyable, isGuest, isPatron, isPatronInPools, isSource, lazy, lazyClass, patron, patronApplied, patronExecutorApplied, patronOnce, patronPools, patronPoolsStatistic, patronPriority, removePatronFromPools, source, sourceAll, sourceAny, sourceApplied, sourceChain, sourceCombined, sourceDestroyable, sourceDynamic, sourceExecutorApplied, sourceFiltered, sourceLazy, sourceMap, sourceMemoOf, sourceOf, sourceOnce, sourceRace, sourceResettable, sourceSequence, sourceSync, subSource, subSourceMany, systemPatron, value, withName, withPriority };
+export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, chain, executorApplied, filtered, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool };
