@@ -240,7 +240,7 @@ const ownerSync = (base, defaultValue) => {
       if (lastValue === void 0 && defaultValue === void 0) {
         throw new Error("info sync is empty");
       }
-      return lastValue || defaultValue;
+      return lastValue ?? defaultValue;
     }
   };
 };
