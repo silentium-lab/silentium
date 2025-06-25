@@ -3,8 +3,9 @@ import { Information } from "./Information";
 import { OwnerPool } from "../utils/OwnerPool";
 
 /**
- * An information info that helps multiple owners access
- * a single information info
+ * An information object that helps multiple owners access
+ * a single another information object
+ * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
 export const pool = <T>(base: Information<T>) => {
   const ownersPool = new OwnerPool<T>();

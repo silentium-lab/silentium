@@ -14,7 +14,9 @@ export type ExtractTypesFromArrayS<T extends Information<any>[]> = {
 };
 
 /**
- * Новая версия all компонента
+ * Combines multiple information sources into a single unified source
+ * represented as an array containing values from all sources
+ * https://silentium-lab.github.io/silentium/#/en/information/all
  */
 export const all = <const T extends Information[]>(...infos: T) => {
   const i = new Information<ExtractTypesFromArrayS<T>>((g) => {

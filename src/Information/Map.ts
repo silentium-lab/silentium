@@ -4,6 +4,11 @@ import { LazyType } from "../types/LazyType";
 import { all } from "./All";
 import { I, Information } from "./Information";
 
+/**
+ * Component that applies an info object constructor to each data item,
+ * producing an information source with new values
+ * https://silentium-lab.github.io/silentium/#/en/information/map
+ */
 export const map = <T, TG>(
   base: Information<T[]>,
   targetI: LazyType<Information<TG>>,

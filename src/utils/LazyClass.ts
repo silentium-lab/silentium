@@ -8,6 +8,10 @@ interface Prototyped<T> {
   prototype: T;
 }
 
+/**
+ * Helps create an object from a class
+ * https://silentium-lab.github.io/silentium/#/en/utils/lazy-class
+ */
 export const lazyClass = <T>(
   constructorFn: Prototyped<T>,
   modules: Record<string, unknown> = {},

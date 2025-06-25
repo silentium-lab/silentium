@@ -1,16 +1,21 @@
 import { Owner } from "./Owner";
 
+/**
+ * Owner to which a function is applied that modifies the incoming
+ * value it receives
+ * https://silentium-lab.github.io/silentium/#/en/owner/applied
+ */
 export const ownerApplied = <T, R>(
-  baseowner: Owner<R>,
+  base: Owner<R>,
   applier: (value: T) => R,
 ) => {
   return new Owner<T>(
     (v) => {
-      baseowner.give(applier(v));
+      base.give(applier(v));
     },
     (cause) => {
-      baseowner.error(cause);
+      base.error(cause);
     },
-    () => baseowner.disposed(),
+    () => base.disposed(),
   );
 };

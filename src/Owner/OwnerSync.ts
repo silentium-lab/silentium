@@ -5,13 +5,19 @@ export interface infoSync<T> {
   syncValue(): T;
 }
 
+/**
+ * Owner that can return a synchronous value
+ * from the information passed to it. If there is no value and no
+ * defaultValue, an error will occur
+ * https://silentium-lab.github.io/silentium/#/en/owner/sync
+ */
 export const ownerSync = <T>(
-  baseinfo: Information<T>,
+  base: Information<T>,
   defaultValue?: T,
 ): infoSync<T> => {
   let lastValue: T | undefined;
 
-  baseinfo.value(
+  base.value(
     O((v) => {
       lastValue = v;
     }),

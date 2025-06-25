@@ -10,3 +10,8 @@ export * from "./Map";
 export * from "./Of";
 export * from "./Once";
 export * from "./Pool";
+export * from "./Sequence";
+export * from "./Stream";
+export * from "./FromCallback";
+export * from "./FromEvent";
+export * from "./FromPromise";

@@ -10,6 +10,7 @@ type InformationExecutedCb<T> = (g: Owner<T>) => void;
 
 /**
  * Main information representation
+ * https://silentium-lab.github.io/silentium/#/en/information
  */
 export class Information<T = any> {
   private static instances = 0;

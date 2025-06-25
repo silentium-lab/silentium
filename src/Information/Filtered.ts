@@ -1,6 +1,12 @@
 import { O } from "../Owner/Owner";
 import { Information } from "./Information";
 
+/**
+ * Information whose value is being validated
+ * via a predicate; if the predicate returns true, the value
+ * can be passed to the output
+ * https://silentium-lab.github.io/silentium/#/en/information/filtered
+ */
 export const filtered = <T>(
   base: Information<T>,
   predicate: (v: T) => boolean,

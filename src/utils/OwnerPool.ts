@@ -1,5 +1,10 @@
 import { Owner } from "../Owner";
 
+/**
+ * Helps maintain an owner list allowing different
+ * owners to get information from a common source
+ * https://silentium-lab.github.io/silentium/#/en/utils/owner-pool
+ */
 export class OwnerPool<T> {
   private owners: Set<Owner<T>>;
   private innerOwner: Owner<T>;

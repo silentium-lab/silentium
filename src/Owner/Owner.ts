@@ -3,6 +3,7 @@ import { OwnerExecutorType } from "../types/OwnerType";
 /**
  * Information owner, if information
  * has owner than information executed
+ * https://silentium-lab.github.io/silentium/#/en/owner
  */
 export class Owner<T = any> {
   public constructor(
