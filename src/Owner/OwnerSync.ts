@@ -28,7 +28,7 @@ export const ownerSync = <T>(
       if (lastValue === undefined && defaultValue === undefined) {
         throw new Error("info sync is empty");
       }
-      return (lastValue || defaultValue) as T;
+      return (lastValue ?? defaultValue) as T;
     },
   };
 };
