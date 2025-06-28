@@ -1,1 +1,2 @@
 npm run build-doc;
+node check-reexports.js

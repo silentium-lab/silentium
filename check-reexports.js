@@ -26,7 +26,7 @@ function checkReexports(indexFilePath) {
     );
 
     if (!hasExport) {
-      console.error(`Missing re-export for module: ${moduleName}`);
+      console.error(`!!! - Missing re-export for module: ${moduleName}`);
       process.exit(1);
     }
   });
