@@ -195,6 +195,18 @@ const executorApplied = (base, applier) => {
   return i;
 };
 
+const applied = (base, applier) => {
+  const info = I((g) => {
+    base.value(
+      O((v) => {
+        g.give(applier(v));
+      })
+    );
+  });
+  info.subInfo(base);
+  return info;
+};
+
 const filtered = (base, predicate, defaultValue) => {
   return new Information((g) => {
     base.value(
@@ -482,5 +494,5 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
-export { I, Information, O, Owner, OwnerPool, all, any, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
+export { I, Information, O, Owner, OwnerPool, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
 //# sourceMappingURL=silentium.js.map

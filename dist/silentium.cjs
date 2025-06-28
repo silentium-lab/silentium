@@ -197,6 +197,18 @@ const executorApplied = (base, applier) => {
   return i;
 };
 
+const applied = (base, applier) => {
+  const info = I((g) => {
+    base.value(
+      O((v) => {
+        g.give(applier(v));
+      })
+    );
+  });
+  info.subInfo(base);
+  return info;
+};
+
 const filtered = (base, predicate, defaultValue) => {
   return new Information((g) => {
     base.value(
@@ -491,6 +503,7 @@ exports.Owner = Owner;
 exports.OwnerPool = OwnerPool;
 exports.all = all;
 exports.any = any;
+exports.applied = applied;
 exports.chain = chain;
 exports.executorApplied = executorApplied;
 exports.filtered = filtered;

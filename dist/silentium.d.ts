@@ -111,6 +111,12 @@ declare const chain: <T extends Information[]>(...infos: T) => Information<Last<
 declare const executorApplied: <T>(base: Information<T>, applier: (executor: Owner<T>) => Owner<T>) => Information<T>;
 
 /**
+ * Information to which the function was applied to change the value
+ * https://silentium-lab.github.io/silentium/#/en/information/applied
+ */
+declare const applied: <T, R>(base: Information<T>, applier: (v: T) => R) => Information<unknown>;
+
+/**
  * Information whose value is being validated
  * via a predicate; if the predicate returns true, the value
  * can be passed to the output
@@ -251,4 +257,4 @@ interface Prototyped<T> {
  */
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
+export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
