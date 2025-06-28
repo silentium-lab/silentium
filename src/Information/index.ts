@@ -3,6 +3,7 @@ export * from "./All";
 export * from "./Any";
 export * from "./Chain";
 export * from "./ExecutorApplied";
+export * from "./Applied";
 export * from "./Filtered";
 export * from "./Lazy";
 export * from "./Information";

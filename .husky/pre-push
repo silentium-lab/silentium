@@ -1,2 +1,3 @@
 npm test -- --run;
 npm run lint;
+node check-reexports.js
