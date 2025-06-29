@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.51](https://github.com/silentium-lab/silentium/compare/v0.0.50...v0.0.51) (2025-06-29)
+
+
+### Features
+
+* **main:** pool without state added ([5f9274b](https://github.com/silentium-lab/silentium/commit/5f9274b664f4965fc759ac140a76f46f91f72020))
+
 ### [0.0.50](https://github.com/silentium-lab/silentium/compare/v0.0.49...v0.0.50) (2025-06-28)
 
 
