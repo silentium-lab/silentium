@@ -39,3 +39,31 @@ export const pool = <T>(base: Information<T>) => {
 
   return [i, ownersPool] as const;
 };
+
+export const poolStateless = <T>(base: Information<T>) => {
+  const ownersPool = new OwnerPool<T>();
+
+  const i = new Information<T>(
+    (g) => {
+      ownersPool.add(g);
+
+      return () => {
+        ownersPool.destroy();
+      };
+    },
+    "pool",
+    false,
+  );
+  i.subInfo(base);
+
+  i.executed(() => {
+    const gp = ownersPool.owner();
+    base.value(
+      new Owner((v) => {
+        gp.give(v);
+      }),
+    );
+  });
+
+  return [i, ownersPool] as const;
+};
