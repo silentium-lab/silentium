@@ -409,6 +409,29 @@ const pool = (base) => {
   });
   return [i, ownersPool];
 };
+const poolStateless = (base) => {
+  const ownersPool = new OwnerPool();
+  const i = new Information(
+    (g) => {
+      ownersPool.add(g);
+      return () => {
+        ownersPool.destroy();
+      };
+    },
+    "pool",
+    false
+  );
+  i.subInfo(base);
+  i.executed(() => {
+    const gp = ownersPool.owner();
+    base.value(
+      new Owner((v) => {
+        gp.give(v);
+      })
+    );
+  });
+  return [i, ownersPool];
+};
 
 const sequence = (base) => {
   const i = I((o) => {
@@ -494,5 +517,5 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
-export { I, Information, O, Owner, OwnerPool, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
+export { I, Information, O, Owner, OwnerPool, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
 //# sourceMappingURL=silentium.js.map

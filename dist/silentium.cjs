@@ -411,6 +411,29 @@ const pool = (base) => {
   });
   return [i, ownersPool];
 };
+const poolStateless = (base) => {
+  const ownersPool = new OwnerPool();
+  const i = new Information(
+    (g) => {
+      ownersPool.add(g);
+      return () => {
+        ownersPool.destroy();
+      };
+    },
+    "pool",
+    false
+  );
+  i.subInfo(base);
+  i.executed(() => {
+    const gp = ownersPool.owner();
+    base.value(
+      new Owner((v) => {
+        gp.give(v);
+      })
+    );
+  });
+  return [i, ownersPool];
+};
 
 const sequence = (base) => {
   const i = I((o) => {
@@ -520,6 +543,7 @@ exports.ownerApplied = ownerApplied;
 exports.ownerExecutorApplied = ownerExecutorApplied;
 exports.ownerSync = ownerSync;
 exports.pool = pool;
+exports.poolStateless = poolStateless;
 exports.sequence = sequence;
 exports.stream = stream;
 //# sourceMappingURL=silentium.cjs.map

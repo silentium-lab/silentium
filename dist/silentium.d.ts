@@ -207,6 +207,7 @@ declare class OwnerPool<T> {
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
 declare const pool: <T>(base: Information<T>) => readonly [Information<T>, OwnerPool<T>];
+declare const poolStateless: <T>(base: Information<T>) => readonly [Information<T>, OwnerPool<T>];
 
 /**
  * A component that takes one value at a time and returns an array
@@ -257,4 +258,4 @@ interface Prototyped<T> {
  */
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, sequence, stream };
+export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
