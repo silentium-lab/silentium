@@ -424,13 +424,9 @@ const poolStateless = (base) => {
     false
   );
   i.subInfo(base);
-  i.executed(() => {
-    const gp = ownersPool.owner();
-    base.value(
-      new Owner((v) => {
-        gp.give(v);
-      })
-    );
+  i.executed((g) => {
+    ownersPool.add(g);
+    base.value(ownersPool.owner());
   });
   return [i, ownersPool];
 };
