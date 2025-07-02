@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://github.com/silentium-lab/silentium/compare/v0.0.51...v0.0.52) (2025-07-02)
+
+
+### Bug Fixes
+
+* **main:** fix pool stateless ([36db965](https://github.com/silentium-lab/silentium/commit/36db9652d7103d5e80471536739b5e84a05eae83))
+
 ### [0.0.51](https://github.com/silentium-lab/silentium/compare/v0.0.50...v0.0.51) (2025-06-29)
 
 
