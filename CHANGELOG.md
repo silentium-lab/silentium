@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://github.com/silentium-lab/silentium/compare/v0.0.52...v0.0.53) (2025-07-03)
+
+
+### Features
+
+* **main:** ownerSync filled method ([06df6c0](https://github.com/silentium-lab/silentium/commit/06df6c02b50d979936e7b86b1b3a127057b176d7))
+
 ### [0.0.52](https://github.com/silentium-lab/silentium/compare/v0.0.51...v0.0.52) (2025-07-02)
 
 
