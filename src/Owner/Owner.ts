@@ -1,6 +1,5 @@
+import { DebugCbType } from "src/types";
 import { OwnerExecutorType } from "../types/OwnerType";
-
-type OwnerDebugCB = (...data: unknown[]) => void;
 
 /**
  * Information owner, if information
@@ -8,7 +7,7 @@ type OwnerDebugCB = (...data: unknown[]) => void;
  * https://silentium-lab.github.io/silentium/#/en/owner
  */
 export class Owner<T = any> {
-  private cbs: OwnerDebugCB[] = [];
+  private debugCbs: DebugCbType[] = [];
 
   public constructor(
     private ownerFn: OwnerExecutorType<T>,
@@ -36,13 +35,13 @@ export class Owner<T = any> {
     return this.disposedFn !== undefined ? this.disposedFn() : false;
   }
 
-  public debug(cb: OwnerDebugCB) {
-    this.cbs.push(cb);
+  public debug(cb: DebugCbType) {
+    this.debugCbs.push(cb);
     return this;
   }
 
   private doDebug(...data: unknown[]) {
-    this.cbs.forEach((cb) => cb(...data));
+    this.debugCbs.forEach((cb) => cb(...data));
   }
 }
 

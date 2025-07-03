@@ -45,7 +45,8 @@ export const chain = <T extends Information[]>(
     theOwner = g;
   });
 
-  info.executed(() => {
+  info.executed((g) => {
+    theOwner = g;
     handleI(0);
   });
 

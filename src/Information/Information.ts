@@ -1,3 +1,4 @@
+import { DebugCbType } from "src/types";
 import { Owner } from "../Owner/Owner";
 import { InformationDataType } from "../types/InformationType";
 
@@ -19,6 +20,7 @@ export class Information<T = any> {
   private owner?: Owner<T>;
   private executedCbs?: InformationExecutedCb<T>[];
   private alreadyExecuted = false;
+  private debugCbs: DebugCbType[] = [];
 
   public constructor(
     private info?:
@@ -37,6 +39,7 @@ export class Information<T = any> {
   private next(value: T) {
     if (this.owner !== undefined) {
       this.owner.give(value);
+      this.doDebug("next value", value);
     }
     return this;
   }
@@ -97,6 +100,7 @@ export class Information<T = any> {
     this.owner = undefined;
     this.executedCbs = undefined;
     this.destructor = undefined;
+    this.doDebug("destroyed");
     return this;
   }
 
@@ -117,6 +121,7 @@ export class Information<T = any> {
   }
 
   public executed(cb: InformationExecutedCb<T>) {
+    this.doDebug("executed");
     if (!this.executedCbs) {
       this.executedCbs = [];
     }
@@ -129,6 +134,15 @@ export class Information<T = any> {
 
   public hasOwner(): boolean {
     return !!this.owner;
+  }
+
+  public debug(cb: DebugCbType) {
+    this.debugCbs.push(cb);
+    return this;
+  }
+
+  private doDebug(...data: unknown[]) {
+    this.debugCbs.forEach((cb) => cb(...data));
   }
 }
 
