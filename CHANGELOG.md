@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/silentium-lab/silentium/compare/v0.0.55...v0.0.56) (2025-07-03)
+
+
+### Bug Fixes
+
+* **main:** chain fix ([3402552](https://github.com/silentium-lab/silentium/commit/340255232c855fbe1d8ae0e44b33e0844b183b24))
+* **main:** cz script didnt commit all files ([7fa6745](https://github.com/silentium-lab/silentium/commit/7fa6745e438a1d16738d46499175446c4a26e279))
+
 ### [0.0.55](https://github.com/silentium-lab/silentium/compare/v0.0.54...v0.0.55) (2025-07-03)
 
 
