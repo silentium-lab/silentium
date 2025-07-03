@@ -70,7 +70,7 @@ declare class Information<T = any> {
     executed(cb: InformationExecutedCb<T>): this;
     hasOwner(): boolean;
 }
-declare const I: <T>(info?: InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>, theName?: string, onlyOneOwner?: boolean) => Information<T>;
+declare const I: <T>(info?: Information<T> | InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>, theName?: string, onlyOneOwner?: boolean) => Information<T>;
 
 type ExtractType<T> = T extends InformationType<infer U> ? U : never;
 type ExtractTypeS<T> = T extends Information<infer U> ? U : never;

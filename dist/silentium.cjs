@@ -96,7 +96,7 @@ const _Information = class _Information {
 };
 __publicField$1(_Information, "instances", 0);
 let Information = _Information;
-const I = (info, theName = "unknown", onlyOneOwner = true) => new Information(info, theName, onlyOneOwner);
+const I = (info, theName = "unknown", onlyOneOwner = true) => info instanceof Information ? info : new Information(info, theName, onlyOneOwner);
 
 class Owner {
   constructor(ownerFn, errorFn, disposedFn) {
