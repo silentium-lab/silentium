@@ -157,8 +157,9 @@ declare const ownerApplied: <T, R>(base: Owner<R>, applier: (value: T) => R) => 
  */
 declare const ownerExecutorApplied: <T>(base: Owner<T>, applier: (ge: (v: T) => void) => (v: T) => void) => Owner<T>;
 
-interface infoSync<T> {
+interface InfoSync<T> {
     syncValue(): T;
+    filled(): boolean;
 }
 /**
  * Owner that can return a synchronous value
@@ -166,7 +167,7 @@ interface infoSync<T> {
  * defaultValue, an error will occur
  * https://silentium-lab.github.io/silentium/#/en/owner/sync
  */
-declare const ownerSync: <T>(base: Information<T>, defaultValue?: T) => infoSync<T>;
+declare const ownerSync: <T>(base: Information<T>, defaultValue?: T) => InfoSync<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -258,4 +259,4 @@ interface Prototyped<T> {
  */
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, type infoSync, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
+export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, type InfoSync, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
