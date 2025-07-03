@@ -133,7 +133,14 @@ export class Information<T = any> {
 }
 
 export const I = <T>(
-  info?: InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>,
+  info?:
+    | Information<T>
+    | InfoObjectType<T>
+    | InfoExecutorType<T>
+    | InformationDataType<T>,
   theName = "unknown",
   onlyOneOwner = true,
-) => new Information(info, theName, onlyOneOwner);
+) =>
+  info instanceof Information
+    ? info
+    : new Information(info, theName, onlyOneOwner);
