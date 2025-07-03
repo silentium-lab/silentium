@@ -1,18 +1,18 @@
 'use strict';
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 const _Information = class _Information {
   constructor(info, theName = "unknown", onlyOneOwner = true) {
     this.info = info;
     this.theName = theName;
     this.onlyOneOwner = onlyOneOwner;
-    __publicField$1(this, "theSubInfos", []);
-    __publicField$1(this, "destructor");
-    __publicField$1(this, "owner");
-    __publicField$1(this, "executedCbs");
-    __publicField$1(this, "alreadyExecuted", false);
+    __publicField$2(this, "theSubInfos", []);
+    __publicField$2(this, "destructor");
+    __publicField$2(this, "owner");
+    __publicField$2(this, "executedCbs");
+    __publicField$2(this, "alreadyExecuted", false);
     _Information.instances += 1;
   }
   /**
@@ -94,23 +94,29 @@ const _Information = class _Information {
     return !!this.owner;
   }
 };
-__publicField$1(_Information, "instances", 0);
+__publicField$2(_Information, "instances", 0);
 let Information = _Information;
 const I = (info, theName = "unknown", onlyOneOwner = true) => info instanceof Information ? info : new Information(info, theName, onlyOneOwner);
 
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
 class Owner {
   constructor(ownerFn, errorFn, disposedFn) {
     this.ownerFn = ownerFn;
     this.errorFn = errorFn;
     this.disposedFn = disposedFn;
+    __publicField$1(this, "cbs", []);
   }
   give(value) {
+    this.doDebug("value", value);
     if (!this.disposed()) {
       this.ownerFn(value);
     }
     return this;
   }
   error(cause) {
+    this.doDebug("error", cause);
     if (this.errorFn !== void 0) {
       this.errorFn(cause);
     }
@@ -118,6 +124,13 @@ class Owner {
   }
   disposed() {
     return this.disposedFn !== void 0 ? this.disposedFn() : false;
+  }
+  debug(cb) {
+    this.cbs.push(cb);
+    return this;
+  }
+  doDebug(...data) {
+    this.cbs.forEach((cb) => cb(...data));
   }
 }
 const O = (ownerFn) => new Owner(ownerFn);

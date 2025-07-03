@@ -6,6 +6,7 @@ interface OwnerObjectType<T = any> {
 }
 type OwnerType<T = any> = OwnerExecutorType<T> | OwnerObjectType<T>;
 
+type OwnerDebugCB = (...data: unknown[]) => void;
 /**
  * Information owner, if information
  * has owner than information executed
@@ -15,10 +16,13 @@ declare class Owner<T = any> {
     private ownerFn;
     private errorFn?;
     private disposedFn?;
+    private cbs;
     constructor(ownerFn: OwnerExecutorType<T>, errorFn?: ((cause: unknown) => void) | undefined, disposedFn?: (() => boolean) | undefined);
     give(value: T): this;
     error(cause: unknown): this;
     disposed(): boolean;
+    debug(cb: OwnerDebugCB): this;
+    private doDebug;
 }
 declare const O: <T>(ownerFn: OwnerExecutorType<T>) => Owner<T>;
 
