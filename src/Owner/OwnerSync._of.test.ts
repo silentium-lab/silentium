@@ -6,4 +6,5 @@ test("OwnerSync._of.test", () => {
   const [p] = poolStateless(I(1));
   const o = ownerSync(p);
   expect(o.syncValue()).toBe(1);
+  expect(o.filled()).toBe(true);
 });

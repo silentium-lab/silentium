@@ -1,8 +1,9 @@
 import { Information } from "../Information";
 import { O } from ".";
 
-export interface infoSync<T> {
+export interface InfoSync<T> {
   syncValue(): T;
+  filled(): boolean;
 }
 
 /**
@@ -14,7 +15,7 @@ export interface infoSync<T> {
 export const ownerSync = <T>(
   base: Information<T>,
   defaultValue?: T,
-): infoSync<T> => {
+): InfoSync<T> => {
   let lastValue: T | undefined;
 
   base.value(
@@ -29,6 +30,9 @@ export const ownerSync = <T>(
         throw new Error("info sync is empty");
       }
       return (lastValue ?? defaultValue) as T;
+    },
+    filled() {
+      return lastValue !== undefined;
     },
   };
 };

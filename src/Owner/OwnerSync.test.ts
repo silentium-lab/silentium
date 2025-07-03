@@ -6,4 +6,5 @@ test("OwnerSync.test", () => {
   const i = I("hello");
   const o = ownerSync(i);
   expect(o.syncValue()).toBe("hello");
+  expect(o.filled()).toBe(true);
 });
