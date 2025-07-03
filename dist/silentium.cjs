@@ -13,6 +13,7 @@ const _Information = class _Information {
     __publicField$2(this, "owner");
     __publicField$2(this, "executedCbs");
     __publicField$2(this, "alreadyExecuted", false);
+    __publicField$2(this, "debugCbs", []);
     _Information.instances += 1;
   }
   /**
@@ -21,6 +22,7 @@ const _Information = class _Information {
   next(value) {
     if (this.owner !== void 0) {
       this.owner.give(value);
+      this.doDebug("next value", value);
     }
     return this;
   }
@@ -65,6 +67,7 @@ const _Information = class _Information {
     this.owner = void 0;
     this.executedCbs = void 0;
     this.destructor = void 0;
+    this.doDebug("destroyed");
     return this;
   }
   /**
@@ -81,6 +84,7 @@ const _Information = class _Information {
     return `#info_${this.theName}_${_Information.instances}`;
   }
   executed(cb) {
+    this.doDebug("executed");
     if (!this.executedCbs) {
       this.executedCbs = [];
     }
@@ -92,6 +96,13 @@ const _Information = class _Information {
   }
   hasOwner() {
     return !!this.owner;
+  }
+  debug(cb) {
+    this.debugCbs.push(cb);
+    return this;
+  }
+  doDebug(...data) {
+    this.debugCbs.forEach((cb) => cb(...data));
   }
 };
 __publicField$2(_Information, "instances", 0);
@@ -106,7 +117,7 @@ class Owner {
     this.ownerFn = ownerFn;
     this.errorFn = errorFn;
     this.disposedFn = disposedFn;
-    __publicField$1(this, "cbs", []);
+    __publicField$1(this, "debugCbs", []);
   }
   give(value) {
     this.doDebug("value", value);
@@ -126,11 +137,11 @@ class Owner {
     return this.disposedFn !== void 0 ? this.disposedFn() : false;
   }
   debug(cb) {
-    this.cbs.push(cb);
+    this.debugCbs.push(cb);
     return this;
   }
   doDebug(...data) {
-    this.cbs.forEach((cb) => cb(...data));
+    this.debugCbs.forEach((cb) => cb(...data));
   }
 }
 const O = (ownerFn) => new Owner(ownerFn);
@@ -196,7 +207,8 @@ const chain = (...infos) => {
   const info = I((g) => {
     theOwner = g;
   });
-  info.executed(() => {
+  info.executed((g) => {
+    theOwner = g;
     handleI(0);
   });
   return info;

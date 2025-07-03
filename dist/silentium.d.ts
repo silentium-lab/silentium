@@ -1,3 +1,5 @@
+import { DebugCbType as DebugCbType$1 } from 'src/types';
+
 type ownerIntroduction = "owner" | "patron";
 type OwnerExecutorType<T = any, This = void> = (value: T) => This;
 interface OwnerObjectType<T = any> {
@@ -6,7 +8,6 @@ interface OwnerObjectType<T = any> {
 }
 type OwnerType<T = any> = OwnerExecutorType<T> | OwnerObjectType<T>;
 
-type OwnerDebugCB = (...data: unknown[]) => void;
 /**
  * Information owner, if information
  * has owner than information executed
@@ -16,12 +17,12 @@ declare class Owner<T = any> {
     private ownerFn;
     private errorFn?;
     private disposedFn?;
-    private cbs;
+    private debugCbs;
     constructor(ownerFn: OwnerExecutorType<T>, errorFn?: ((cause: unknown) => void) | undefined, disposedFn?: (() => boolean) | undefined);
     give(value: T): this;
     error(cause: unknown): this;
     disposed(): boolean;
-    debug(cb: OwnerDebugCB): this;
+    debug(cb: DebugCbType$1): this;
     private doDebug;
 }
 declare const O: <T>(ownerFn: OwnerExecutorType<T>) => Owner<T>;
@@ -52,6 +53,7 @@ declare class Information<T = any> {
     private owner?;
     private executedCbs?;
     private alreadyExecuted;
+    private debugCbs;
     constructor(info?: (InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>) | undefined, theName?: string, onlyOneOwner?: boolean);
     /**
      * Следующее значение источника
@@ -73,6 +75,8 @@ declare class Information<T = any> {
     name(): string;
     executed(cb: InformationExecutedCb<T>): this;
     hasOwner(): boolean;
+    debug(cb: DebugCbType$1): this;
+    private doDebug;
 }
 declare const I: <T>(info?: Information<T> | InfoObjectType<T> | InfoExecutorType<T> | InformationDataType<T>, theName?: string, onlyOneOwner?: boolean) => Information<T>;
 
@@ -248,6 +252,8 @@ declare const fromEvent: <T extends []>(emitter: any, eventName: string, subscri
  */
 declare const fromPromise: <T>(p: Promise<T>) => Information<T>;
 
+type DebugCbType = (...data: unknown[]) => void;
+
 /**
  * Helps to get lazy instance of dependency
  * @url https://silentium-lab.github.io/silentium/#/utils/lazy
@@ -263,4 +269,4 @@ interface Prototyped<T> {
  */
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, type InfoSync, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
+export { type DebugCbType, type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, type InfoSync, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
