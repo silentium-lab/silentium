@@ -541,5 +541,13 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
-export { I, Information, O, Owner, OwnerPool, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
+const ap = (fn, ...args) => {
+  return fn(
+    ...args.map((arg) => {
+      return arg instanceof Information ? arg : I(arg);
+    })
+  );
+};
+
+export { I, Information, O, Owner, OwnerPool, all, any, ap, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
 //# sourceMappingURL=silentium.js.map

@@ -269,4 +269,6 @@ interface Prototyped<T> {
  */
 declare const lazyClass: <T>(constructorFn: Prototyped<T>, modules?: Record<string, unknown>) => LazyType<T>;
 
-export { type DebugCbType, type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, type InfoSync, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };
+declare const ap: <T>(fn: (...args: Information[]) => Information<T>, ...args: unknown[]) => Information<T>;
+
+export { type DebugCbType, type ExtractTypesFromArray, type ExtractTypesFromArrayS, I, type InfoSync, Information, type InformationDataType, type InformationExecutorType, type InformationObjectType, type InformationType, type LazyType, O, Owner, type OwnerExecutorType, type OwnerObjectType, OwnerPool, type OwnerType, all, any, ap, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, lazy, lazyClass, lazyS, map, of, once, ownerApplied, ownerExecutorApplied, ownerSync, pool, poolStateless, sequence, stream };

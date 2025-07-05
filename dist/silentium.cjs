@@ -543,6 +543,14 @@ const lazyClass = (constructorFn, modules = {}) => {
   };
 };
 
+const ap = (fn, ...args) => {
+  return fn(
+    ...args.map((arg) => {
+      return arg instanceof Information ? arg : I(arg);
+    })
+  );
+};
+
 exports.I = I;
 exports.Information = Information;
 exports.O = O;
@@ -550,6 +558,7 @@ exports.Owner = Owner;
 exports.OwnerPool = OwnerPool;
 exports.all = all;
 exports.any = any;
+exports.ap = ap;
 exports.applied = applied;
 exports.chain = chain;
 exports.executorApplied = executorApplied;
