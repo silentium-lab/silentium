@@ -1,146 +1,28 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+      content="width=device-width, initial-scale=1.0"
     />
-    <meta
-      http-equiv="X-UA-Compatible"
-      content="ie=edge"
-    />
-    <title>Идет загрузка...</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.9.0/highlightjs-line-numbers.min.js"></script>
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-    <meta
-      name="msapplication-TileColor"
-      content="#ffffff"
-    />
-    <meta
-      name="theme-color"
-      content="#ffffff"
-    />
-    <link
-      rel="stylesheet"
-      href="./assets/css/base.css"
-    />
-    <script type="importmap">
-      {
-        "imports": {
-          "silentium": "https://cdn.jsdelivr.net/npm/silentium@0.0.35/dist/silentium.min.mjs",
-          "silentium-web-api": "https://cdn.jsdelivr.net/npm/silentium-web-api@0.0.7/dist/silentium-web-api.min.mjs",
-          "silentium-components": "https://cdn.jsdelivr.net/npm/silentium-components@0.0.20/dist/silentium-components.min.mjs"
+    <title>PatronSchemeEditor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/patron-scheme-editor/dist/style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      window.content = 'eyJjdXJyZW50Ijp7InByb2dyZXNzIjowLCJzZXR0aW5ncyI6eyJjb2xvcmVkIjpmYWxzZSwidGl0bGUiOiJTaWxlbnRpdW0g0JTQvtC60YPQvNC10L3RgtCw0YbQuNGPIn0sIm9iamVjdHMiOnsiMTc1MTgyNDg4MjI2NCI6eyJhZGRpdGlvbmFsTmFtZSI6IjxwPtCS0L3Rg9GC0YDRjDwvcD4iLCJhcnJvd3MiOltdLCJkZXNjcmlwdGlvbiI6IiIsImluTWVudSI6ZmFsc2UsImxhc3RDbGljayI6MTc1MTgyNDg4MjI2NCwibGlua2VkIjp0cnVlLCJtZW51T3JkZXIiOjAsIm5hbWUiOiIiLCJvdXRsaW5rIjoiL2N1cnJlbnQvcGhpbG9zb3BoeSIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ4ODIyNjQiLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ4ODIyNjQsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTMyMzAwOSwicG9zaXRpb24iOlsxMzUsMTUwXSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+0KTQuNC70L7RgdC+0YTQuNGPPC9wPiJ9fSwiMTc1MTgyNDkxNTk2MyI6eyJhZGRpdGlvbmFsTmFtZSI6IjxwPtCS0L3Rg9GC0YDRjDwvcD4iLCJhcnJvd3MiOltdLCJkZXNjcmlwdGlvbiI6IiIsImluTWVudSI6ZmFsc2UsImxhc3RDbGljayI6MTc1MTgyNDkxNTk2MywibGlua2VkIjp0cnVlLCJtZW51T3JkZXIiOjAsIm5hbWUiOiIiLCJvdXRsaW5rIjoiL2N1cnJlbnQvdGVybWlubG9neSIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ5MTU5NjMiLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ5MTU5NjMsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTMwNzg2MiwicG9zaXRpb24iOlszOTAsMTUwXSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+0KLQtdGA0LzQuNC90Ys8L3A+In19LCIxNzUxODI0OTU2NDYyIjp7ImFkZGl0aW9uYWxOYW1lIjoiPHA+0JLQvdGD0YLRgNGMPC9wPiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI0OTU2NDYyLCJsaW5rZWQiOnRydWUsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC9pbmZvcm1hdGlvbiIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ5NTY0NjIiLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ5NTY0NjIsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTMwMDY0NCwicG9zaXRpb24iOlsxMzUsMjU1XSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+SW5mb3JtYXRpb248L3A+In19LCIxNzUxODI0OTY1NDUzIjp7ImFkZGl0aW9uYWxOYW1lIjoiPHA+0JLQvdGD0YLRgNGMPC9wPiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI0OTY1NDUzLCJsaW5rZWQiOnRydWUsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC9vd25lciIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ5NjU0NTMiLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ5NjU0NTMsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTMwMzM2MSwicG9zaXRpb24iOlszOTAsMjU1XSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+T3duZXI8L3A+In19LCIxNzUxODI0OTc2MTY3Ijp7ImFkZGl0aW9uYWxOYW1lIjoiPHA+0JLQvdGD0YLRgNGMPC9wPiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI0OTc2MTY3LCJsaW5rZWQiOnRydWUsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC90eXBlcyIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ5NzYxNjciLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ5NzYxNjcsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTI5ODQ3NSwicG9zaXRpb24iOlsxMzUsMzYwXSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+VHlwZXM8L3A+In19LCIxNzUxODI0OTgzNjE3Ijp7ImFkZGl0aW9uYWxOYW1lIjoiPHA+0JLQvdGD0YLRgNGMPC9wPiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI0OTgzNjE3LCJsaW5rZWQiOnRydWUsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC91dGlscyIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjE5MCwiaGVpZ2h0IjozOCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjQ5ODM2MTciLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjQ5ODM2MTcsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTI5NTY2MywicG9zaXRpb24iOlszOTAsMzYwXSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+VXRpbHM8L3A+In19LCIxNzUxODI1MzEyMjMzIjp7ImFkZGl0aW9uYWxOYW1lIjoiPHA+0JLQvdGD0YLRgNGMPC9wPiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI1MzEyMjMzLCJsaW5rZWQiOnRydWUsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC9nZXR0aW5nLXN0YXJ0ZWQiLCJ0YXJnZXRCbGFuayI6ZmFsc2UsInR5cGUiOiLQkdC70L7QuiIsIndpZHRoIjoxOTAsImhlaWdodCI6MzgsInppbmRleCI6MCwiaWQiOiIxNzUxODI1MzEyMjMzIiwiY3JlYXRlVGltZXN0YW1wIjoxNzUxODI1MzEyMjMzLCJjaGFuZ2VUaW1lc3RhbXAiOjE3NTE4MjU0MzkxNDYsInBvc2l0aW9uIjpbMjYwLDY0XSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+0JHRi9GB0YLRgNGL0Lkg0YHRgtCw0YDRgjwvcD4ifX19LCJ0eXBlcyI6eyLQkdC70L7QuiI6eyJuYW1lIjoi0JHQu9C+0LoiLCJzdmciOiI8c3R5bGU+LnN2Zy10eXBlLXRvZG97ZGlzcGxheTpibG9jaztjb2xvcjpibGFjaztvdmVyZmxvdzphdXRvO3BhZGRpbmc6OXB4O2JvcmRlcjpzb2xpZCAycHggI2NjYztiYWNrZ3JvdW5kOiNmZmVlZWU7d2lkdGg6YXV0bzt9PC9zdHlsZT48ZGl2IGNsYXNzPVwic3ZnLXR5cGUtdG9kb1wiIHN0eWxlPVwid2lkdGg6JHt3aWR0aH1weFwiPiR7dGV4dH08L2Rpdj4iLCJ3aWR0aCI6IjE5MCIsImhlaWdodCI6NDB9fSwidXJsIjoiL2N1cnJlbnQiLCJwYXJlbnQiOiIifSwiX2N1cnJlbnRfcGhpbG9zb3BoeSI6eyJwcm9ncmVzcyI6MCwic2V0dGluZ3MiOnsiY29sb3JlZCI6ZmFsc2UsInRpdGxlIjoi0KTQuNC70L7RgdC+0YTQuNGPIn0sIm9iamVjdHMiOnt9LCJ0eXBlcyI6eyLQkdC70L7QuiI6eyJuYW1lIjoi0JHQu9C+0LoiLCJzdmciOiI8c3R5bGU+LnN2Zy10eXBlLXRvZG97ZGlzcGxheTpibG9jaztjb2xvcjpibGFjaztvdmVyZmxvdzphdXRvO3BhZGRpbmc6OXB4O2JvcmRlcjpzb2xpZCAycHggI2NjYztiYWNrZ3JvdW5kOiNmZmVlZWU7d2lkdGg6YXV0bzt9PC9zdHlsZT48ZGl2IGNsYXNzPVwic3ZnLXR5cGUtdG9kb1wiIHN0eWxlPVwid2lkdGg6JHt3aWR0aH1weFwiPiR7dGV4dH08L2Rpdj4iLCJ3aWR0aCI6IjE5MCIsImhlaWdodCI6NDB9fSwidXJsIjoiL2N1cnJlbnQiLCJwYXJlbnQiOiIifSwiX2N1cnJlbnRfZ2V0dGluZy1zdGFydGVkIjp7InByb2dyZXNzIjowLCJzZXR0aW5ncyI6eyJjb2xvcmVkIjpmYWxzZSwidGl0bGUiOiLQkdGL0YHRgtGA0YvQuSDRgdGC0LDRgNGCIn0sIm9iamVjdHMiOnsiMTc1MTgyNTM2MDM3NSI6eyJhZGRpdGlvbmFsTmFtZSI6IiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI1MzYwMzc1LCJsaW5rZWQiOmZhbHNlLCJtZW51T3JkZXIiOjAsIm5hbWUiOiIiLCJvdXRsaW5rIjoiL2N1cnJlbnQvZ2V0dGluZy1zdGFydGVkIiwidGFyZ2V0QmxhbmsiOmZhbHNlLCJ0eXBlIjoi0JHQu9C+0LoiLCJ3aWR0aCI6MTkwLCJoZWlnaHQiOjM4LCJ6aW5kZXgiOjAsImlkIjoiMTc1MTgyNTM2MDM3NSIsImNyZWF0ZVRpbWVzdGFtcCI6MTc1MTgyNTM2MDM3NSwiY2hhbmdlVGltZXN0YW1wIjoxNzUxODI1NDIxMzgyLCJwb3NpdGlvbiI6WzE1MCw2MF0sImFkZGl0aW9uYWxGaWVsZHMiOnsidGV4dCI6IjxoMT48c3Ryb25nPlNpbGVudGl1bSA9IHNpbGVuY2U8L3N0cm9uZz48L2gxPiJ9fSwiMTc1MTgyNTQ5NDEzMyI6eyJhZGRpdGlvbmFsTmFtZSI6IiIsImFycm93cyI6W10sImRlc2NyaXB0aW9uIjoiIiwiaW5NZW51IjpmYWxzZSwibGFzdENsaWNrIjoxNzUxODI1NDk0MTMzLCJsaW5rZWQiOmZhbHNlLCJtZW51T3JkZXIiOjAsIm5hbWUiOiIiLCJvdXRsaW5rIjoiL2N1cnJlbnQvZ2V0dGluZy1zdGFydGVkIiwidGFyZ2V0QmxhbmsiOmZhbHNlLCJ0eXBlIjoi0JHQu9C+0LoiLCJ3aWR0aCI6MzAwLCJoZWlnaHQiOjE5OCwiemluZGV4IjowLCJpZCI6IjE3NTE4MjU0OTQxMzMiLCJjcmVhdGVUaW1lc3RhbXAiOjE3NTE4MjU0OTQxMzMsImNoYW5nZVRpbWVzdGFtcCI6MTc1MTgyNTUwNTExNywicG9zaXRpb24iOlsxMDUsMTIwXSwiYWRkaXRpb25hbEZpZWxkcyI6eyJ0ZXh0IjoiPHA+RnJvbSBMYXRpbiBzaWxlbnRpdW0gaXMgdHJhbnNsYXRlZCBhcyBzaWxlbmNlLiBUaGUgbWFpbiBmZWF0dXJlIG9mIHRoZSBzaWxlbnRpdW0gbGlicmFyeSBpcyB0aGF0IGFuIG9iamVjdCwgaWYgaXQgZG9lcyBub3QgaGF2ZSBhIGdvb2QgYW5zd2VyIHRvIGEgcXVlc3Rpb24sIG1heSBub3QgZ2l2ZSBhIGJhZCBhbnN3ZXIsIGZvciBleGFtcGxlIC0gbnVsbC4gVGhpcyBhcHByb2FjaCBhbGxvd3Mgb2JqZWN0cyB0byBiZXR0ZXIgY29udHJvbCB0aGVpciBwYXJ0IG9mIHRoZSB3b3JrLCBhbmQgYWxsb3dzIHRob3NlIG9iamVjdHMgdGhhdCByZWx5IG9uIHRoZSB3b3JrIG9mIG90aGVyIG9iamVjdHMgdG8gdHJ1c3QgdGhlIHJlY2VpdmVkIHZhbHVlcywgd2l0aG91dCBzcHJlYWRpbmcgYSBsb3Qgb2YgY29uZGl0aW9ucyBmb3IgY2hlY2tpbmcgdmFsdWVzIOKAi+KAi3Rocm91Z2hvdXQgdGhlIGFwcGxpY2F0aW9uLjwvcD4ifX0sIjE3NTE4MjU1MzI5NjkiOnsiYWRkaXRpb25hbE5hbWUiOiIiLCJhcnJvd3MiOltdLCJkZXNjcmlwdGlvbiI6IiIsImluTWVudSI6ZmFsc2UsImxhc3RDbGljayI6MTc1MTgyNTUzMjk2OSwibGlua2VkIjpmYWxzZSwibWVudU9yZGVyIjowLCJuYW1lIjoiIiwib3V0bGluayI6Ii9jdXJyZW50L2dldHRpbmctc3RhcnRlZCIsInRhcmdldEJsYW5rIjpmYWxzZSwidHlwZSI6ItCR0LvQvtC6Iiwid2lkdGgiOjMwMCwiaGVpZ2h0IjoxMzQsInppbmRleCI6MCwiaWQiOiIxNzUxODI1NTMyOTY5IiwiY3JlYXRlVGltZXN0YW1wIjoxNzUxODI1NTMyOTY5LCJjaGFuZ2VUaW1lc3RhbXAiOjE3NTE4MjU3NDU3NTgsInBvc2l0aW9uIjpbMTA1LDM0NV0sImFkZGl0aW9uYWxGaWVsZHMiOnsidGV4dCI6IjxwPlRoZSBjb3JlIG9mIHRoZSBpbXBsZW1lbnRhdGlvbiBpcyB0aGF0IG9iamVjdHMgYXJlIGRpdmlkZWQgaW50byB0d28gY2F0ZWdvcmllczogSW5mb3JtYXRpb24gYW5kIE93bmVyLjxicj48c3Ryb25nPkluZm9ybWF0aW9uPC9zdHJvbmc+IGlzIGFuIG9iamVjdCBvd25lZCBieSBhbiA8c3Ryb25nPk93bmVyPC9zdHJvbmc+LCBhbmQgd2hlbiBhbiBPd25lciByZXF1ZXN0cyBkYXRhIGZyb20gdGhlIGluZm9ybWF0aW9uLCB0aGUgbG9naWMgcmVzcG9uc2libGUgZm9yIHJldHJpZXZpbmcgdGhhdCBkYXRhIGlzIHRyaWdnZXJlZC48L3A+In19LCIxNzUxODI1NzgyMzc3Ijp7ImFkZGl0aW9uYWxOYW1lIjoiIiwiYXJyb3dzIjpbXSwiZGVzY3JpcHRpb24iOiIiLCJpbk1lbnUiOmZhbHNlLCJsYXN0Q2xpY2siOjE3NTE4MjU3ODIzNzcsImxpbmtlZCI6ZmFsc2UsIm1lbnVPcmRlciI6MCwibmFtZSI6IiIsIm91dGxpbmsiOiIvY3VycmVudC9nZXR0aW5nLXN0YXJ0ZWQiLCJ0YXJnZXRCbGFuayI6ZmFsc2UsInR5cGUiOiLQkdC70L7QuiIsIndpZHRoIjozMDAsImhlaWdodCI6MTMxLCJ6aW5kZXgiOjAsImlkIjoiMTc1MTgyNTc4MjM3NyIsImNyZWF0ZVRpbWVzdGFtcCI6MTc1MTgyNTc4MjM3NywiY2hhbmdlVGltZXN0YW1wIjoxNzUxODI1ODU1MDkzLCJwb3NpdGlvbiI6WzEwNSw1MTBdLCJhZGRpdGlvbmFsRmllbGRzIjp7InRleHQiOiI8aDE+PHN0cm9uZz5HZXR0aW5nIFN0YXJ0ZWQ8L3N0cm9uZz48L2gxPjxwPjwvcD48cD5UbyBpbnN0YWxsIHRoZSBsaWJyYXJ5LCB1c2UgdGhlIG5wbSBwYWNrYWdlIG1hbmFnZXIgb3IgYW5vdGhlciBvbmUgdGhhdCBpcyBtb3JlIHByZWZlcmFibGUgZm9yIHlvdXIgYXBwbGljYXRpb24uPC9wPjxwPjwvcD48cD5cbjxjb2RlPlxuJCBucG0gaW5zdGFsbCBzaWxlbnRpdW1cbjwvY29kZT5cbjwvcD4ifX19LCJ0eXBlcyI6eyLQkdC70L7QuiI6eyJuYW1lIjoi0JHQu9C+0LoiLCJzdmciOiI8c3R5bGU+LnN2Zy10eXBlLXRvZG97ZGlzcGxheTpibG9jaztjb2xvcjpibGFjaztvdmVyZmxvdzphdXRvO3BhZGRpbmc6OXB4O2JvcmRlcjpzb2xpZCAycHggI2NjYztiYWNrZ3JvdW5kOiNmZmVlZWU7d2lkdGg6YXV0bzt9PC9zdHlsZT48ZGl2IGNsYXNzPVwic3ZnLXR5cGUtdG9kb1wiIHN0eWxlPVwid2lkdGg6JHt3aWR0aH1weFwiPiR7dGV4dH08L2Rpdj4iLCJ3aWR0aCI6IjE5MCIsImhlaWdodCI6NDB9fSwidXJsIjoiL2N1cnJlbnQiLCJwYXJlbnQiOiIifX0=';
+      window.content = fromBase64(window.content);
+      function fromBase64(binstr) {
+        const safeStr = atob(binstr);
+        const arr = new Uint8Array(safeStr.length);
+        for (let i = 0; i < safeStr.length; i += 1) {
+          arr[i] = safeStr.charCodeAt(i);
         }
+        return new TextDecoder().decode(arr);
       }
     </script>
-  </head>
-
-  <body class="flex flex-col h-full global-body body-loading">
-    <header class="text-gray-600 body-font">
-      <div
-        class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center menu"
-      >
-        <div
-          class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
-        >
-          <a
-            href="#/"
-            class="ml-3 text-xl flex gap-2 items-center dynamic-navigation"
-          >
-            <img
-              src="./assets/img/logo.svg"
-              width="40"
-              height="44"
-            />
-            Silentium
-          </a>
-        </div>
-        <nav
-          class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center"
-        >
-          <div class="chunk" data-url="common/header.html">
-            Menu loading...
-          </div>
-        </nav>
-        <select class="lang mr-1 py-1 px-1 block lang-select" onchange="window.langSrc.give(this.value)">
-          <option value="ru">RU</option>
-          <option value="en">EN</option>
-        </select>
-        <button
-          onclick="location.href='https://github.com/silentium-lab/silentium'"
-          class="inline-flex gap-1 items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 ml-1 md:mt-0"
-        >
-          <img
-            src="./assets/img/github_16.jpg"
-            width="16"
-            height="16"
-          />
-          GitHub
-          <svg
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            class="w-4 h-4 ml-1"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </button>
-      </div>
-    </header>
-    <article class="container mx-auto p-5">
-      <div class="loader">
-        <div class="w-full flex justify-center">
-          <div
-            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-indigo-500 motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          >
-            <span
-              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-              >Loading...</span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="page-area"></div>
-    </article>
-    <footer class="text-gray-600 body-font mt-auto">
-      <div class="chunk" data-url="common/footer.html">
-        Footer loading...
-      </div>
-      <div class="bg-gray-100">
-        <div
-          class="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row"
-        >
-          <p class="text-gray-500 text-sm">
-            © 2025 Silentium —
-            <a
-              href="https://github.com/silentium-lab/silentium"
-              class="text-gray-600 ml-1"
-              target="_blank"
-              rel="noopener noreferrer"
-              >@silentium</a
-            >
-          </p>
-          <span
-            class="sm:ml-auto sm:mt-0 mt-2 sm:w-auto w-full sm:text-left text-center text-gray-500 text-sm"
-          >
-            for responsible objects
-          </span>
-        </div>
-      </div>
-    </footer>
-    <script
-      src="./assets/js/index.mjs"
-      type="module"
-    ></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/patron-scheme-editor/dist-embedable/assets/index.js"></script>
   </body>
 </html>
