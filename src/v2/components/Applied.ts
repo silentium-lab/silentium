@@ -7,12 +7,10 @@ import { InformationType, OwnerType } from "../types";
 export const applied = <T, R>(
   base: InformationType<T>,
   applier: (v: T) => R,
-) => {
-  const info = (g: OwnerType<R>) => {
+): InformationType<R> => {
+  return (g: OwnerType<R>) => {
     base((v) => {
       g(applier(v));
     });
   };
-
-  return info as InformationType<R>;
 };

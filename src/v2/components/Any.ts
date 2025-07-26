@@ -5,12 +5,10 @@ import { InformationType } from "../types/InformationType";
  * a common response from any source for a single owner
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
-export const any = <T>(...infos: InformationType<T>[]) => {
-  const info = <InformationType<T>>((o) => {
+export const any = <T>(...infos: InformationType<T>[]): InformationType<T> => {
+  return (o) => {
     infos.forEach((info) => {
       info(o);
     });
-  });
-
-  return info;
+  };
 };

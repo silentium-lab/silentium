@@ -11,8 +11,10 @@ export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export const all = <const T extends InformationType[]>(...infos: T) => {
-  const i = <InformationType<ExtractTypesFromArrayS<T>>>((g) => {
+export const all = <const T extends InformationType[]>(
+  ...infos: T
+): InformationType<ExtractTypesFromArrayS<T>> => {
+  return (g) => {
     const keysKnown = new Set<string>(Object.keys(infos));
     const keysFilled = new Set();
     const isAllFilled = () => {
@@ -35,7 +37,5 @@ export const all = <const T extends InformationType[]>(...infos: T) => {
       keysKnown.clear();
       keysFilled.clear();
     };
-  });
-
-  return i;
+  };
 };
