@@ -2,6 +2,7 @@
   "name": "silentium",
   "version": "0.0.57",
   "description": "",
+  "license": "MIT",
   "type": "module",
   "main": "dist/silentium.js",
   "module": "dist/silentium.mjs",
@@ -12,14 +13,12 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "build-doc": "./docs/build.sh",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "cz": "git cz",
     "push-head": "git push origin HEAD",
-    "test-debug": "env DEBUG=app:* vitest",
     "release": "./beforeRelease.sh && npm run build && git add . && (git commit -m 'build: before release' || echo 'commit failed') && standard-version --no-verify && git push --follow-tags && npm publish",
     "poor-release": "standard-version --no-verify",
     "prepare": "husky"
