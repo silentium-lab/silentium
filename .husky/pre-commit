@@ -1,1 +1,1 @@
-node check-reexports.js
+node check-reexports.mjs

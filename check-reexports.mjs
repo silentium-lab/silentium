@@ -33,7 +33,6 @@ function checkReexports(indexFilePath) {
 }
 
 // Использование:
-checkReexports("./src/Information/index.ts");
-checkReexports("./src/Owner/index.ts");
+checkReexports("./src/components/index.ts");
 checkReexports("./src/types/index.ts");
-checkReexports("./src/utils/index.ts");
+checkReexports("./src/helpers/index.ts");

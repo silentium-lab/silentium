@@ -1,5 +1,6 @@
 export * from "./All";
 export * from "./Any";
+export * from "./Applied";
 export * from "./Chain";
 export * from "./ExecutorApplied";
 export * from "./Filtered";
