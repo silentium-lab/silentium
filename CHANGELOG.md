@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.58](https://github.com/silentium-lab/silentium/compare/v0.0.57...v0.0.58) (2025-07-27)
+
+
+### Bug Fixes
+
+* **69:** getting started described in docs ([25398a7](https://github.com/silentium-lab/silentium/commit/25398a70c15fa87d132e7491d6e78415110b716a))
+* **69:** philosophy copied as is ([f3d3410](https://github.com/silentium-lab/silentium/commit/f3d3410a576e687827c6acf3a1175dac003c0fee))
+* **69:** philosophy done ([bb39ca7](https://github.com/silentium-lab/silentium/commit/bb39ca761f65189816cf82af9abe3dc41faf790b))
+* **71:** terminology documentation ([a0bd5c3](https://github.com/silentium-lab/silentium/commit/a0bd5c34e636afa158f54ab2b4c77e2073c3b352))
+* **72:** all component docs done ([3af4432](https://github.com/silentium-lab/silentium/commit/3af4432f940a4b096e811a10815c81fb4bca8cec))
+* **72:** work on all component ([fb19b4d](https://github.com/silentium-lab/silentium/commit/fb19b4db7652b97b269f976c3ab0337b9182b455))
+* **main:** fix docs ([3eeaeb4](https://github.com/silentium-lab/silentium/commit/3eeaeb4d6ce9ff1b5c774b1c3f56c574c35de818))
+
 ### [0.0.57](https://github.com/silentium-lab/silentium/compare/v0.0.56...v0.0.57) (2025-07-05)
 
 
