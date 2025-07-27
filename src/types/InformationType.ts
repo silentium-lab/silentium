@@ -1,19 +1,17 @@
 import { OwnerType } from "./OwnerType";
 
-export type InformationExecutorType<T, R = unknown> = (
+/**
+ * Main type what destroys information resources
+ */
+export type DesctructionType = () => void;
+
+/**
+ * Main type what represents information
+ * Information related to one owner, if we
+ * need to create shared information then we need
+ * to do it explicitly. When owner comes to information
+ * it executes information code.
+ */
+export type InformationType<T = unknown> = (
   owner: OwnerType<T>,
-) => R;
-
-export interface InformationObjectType<T> {
-  value: InformationExecutorType<T>;
-}
-
-export type InformationDataType<T> = Extract<
-  T,
-  string | number | boolean | Date | object | Array<unknown> | symbol
->;
-
-export type InformationType<T = any> =
-  | InformationExecutorType<T>
-  | InformationObjectType<T>
-  | InformationDataType<T>;
+) => DesctructionType | void;
