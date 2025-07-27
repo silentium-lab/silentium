@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.59](https://github.com/silentium-lab/silentium/compare/v0.0.58...v0.0.59) (2025-07-27)
+
+
+### Features
+
+* **pure:** added chain, lazyChain component and types around it ([4004309](https://github.com/silentium-lab/silentium/commit/4004309a9574b851e2347d8bae9717fa28342cac))
+* **pure:** executorApplied component ([3a76113](https://github.com/silentium-lab/silentium/commit/3a76113a2be6cf5385f61476b989e2b73c93a441))
+* **pure:** filter component ([a699c1c](https://github.com/silentium-lab/silentium/commit/a699c1cf5677ab3c058d5fb3d14e7e3eac6c1b01))
+* **pure:** fromCallback component ([a512a01](https://github.com/silentium-lab/silentium/commit/a512a0162a7fb0b9bb5225b1f13b54030488188a))
+* **pure:** fromEvent component done ([7464721](https://github.com/silentium-lab/silentium/commit/7464721a101e865b567baab77de5d122b3dfc0f3))
+* **pure:** fromPromise component ([3806b3c](https://github.com/silentium-lab/silentium/commit/3806b3cee55a846d6c3b807c2b943040bcc55028))
+* **pure:** map component ([342ffb5](https://github.com/silentium-lab/silentium/commit/342ffb58a76ebc4fec532a02d064813d6aa0a9c1))
+* **pure:** once comopnents ([d30ae4b](https://github.com/silentium-lab/silentium/commit/d30ae4b1ff58c4ea6d51aee3c35ff48f42043aef))
+* **pure:** sequence component ([c04657e](https://github.com/silentium-lab/silentium/commit/c04657e92fe0169f1c8cb2f34b997f0ba373b075))
+
+
+### Bug Fixes
+
+* **pure:** any and of components done ([c8390ee](https://github.com/silentium-lab/silentium/commit/c8390eec53639f9daebe1d9bd7331bf906d2cbf8))
+* **pure:** applied component ([86979ed](https://github.com/silentium-lab/silentium/commit/86979edff3ae3f638bb5432682aa539613f8576f))
+* **pure:** code style fixes ([385ffc8](https://github.com/silentium-lab/silentium/commit/385ffc85eabc5a773eaf66ce2b8780526fec047b))
+* **pure:** configuration for pre hooks ([6c360f0](https://github.com/silentium-lab/silentium/commit/6c360f02b353ffc0b064baafa27fe9927b96b96b))
+* **pure:** move components from v2 to src ([c82b06e](https://github.com/silentium-lab/silentium/commit/c82b06e8b401c5ec2c83aa6caa736f2d0c4c949d))
+* **pure:** shared component done ([9b84894](https://github.com/silentium-lab/silentium/commit/9b848947db5ec323d855947b9023a9ff3cc4daff))
+* **pure:** stream component ([c470b18](https://github.com/silentium-lab/silentium/commit/c470b1842dac55d60e18c39d4b0ccf73f60ba07e))
+
 ### [0.0.58](https://github.com/silentium-lab/silentium/compare/v0.0.57...v0.0.58) (2025-07-27)
 
 
