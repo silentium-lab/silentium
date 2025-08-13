@@ -25,7 +25,7 @@ export const shared = <T>(base: InformationType<T>) => {
     }
     ownersPool.add(g);
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
 
@@ -42,9 +42,11 @@ export const sharedStateless = <T>(base: InformationType<T>) => {
 
   const i = (g: OwnerType<T>) => {
     executed(g);
-    ownersPool.add(g);
+    if (!ownersPool.has(g)) {
+      ownersPool.add(g);
+    }
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
 
