@@ -1,4 +1,4 @@
 /**
  * Main type what accepts data
  */
-export type OwnerType<T> = (v: T) => boolean | void;
+export type OwnerType<T = unknown> = (v: T) => boolean | void;
