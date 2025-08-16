@@ -3,7 +3,7 @@ import { OwnerType } from "./OwnerType";
 /**
  * Main type what destroys information resources
  */
-export type DesctructionType = () => void;
+export type DestructorType = () => void;
 
 /**
  * Main type what represents information
@@ -14,4 +14,4 @@ export type DesctructionType = () => void;
  */
 export type InformationType<T = unknown> = (
   owner: OwnerType<T>,
-) => DesctructionType | void;
+) => DestructorType | void;
