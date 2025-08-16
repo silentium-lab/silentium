@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * **main:** owner type unknown by default ([971fdc2](https://github.com/silentium-lab/silentium/commit/971fdc2c140939ce125e6af3c7d2ee4572625130))
+* **main:** better readme file ([a6d51b1](https://github.com/silentium-lab/silentium/commit/a6d51b192185e38c0745662b78fb0d86bbd989cf))
+* **main:** shared component fixes ([f463897](https://github.com/silentium-lab/silentium/commit/f463897d9a8cd7d0a14bb870c5229b2392d3b31c))
+* **main:** shared components destruction ([756b50c](https://github.com/silentium-lab/silentium/commit/756b50c66ff189acdef2681adaa84364597f3a10))
+* **main:** unknown for owner type ([5e1aabb](https://github.com/silentium-lab/silentium/commit/5e1aabbcdd794b09192c3337cf48efd8bae130f7))
 
 ### [0.0.59](https://github.com/silentium-lab/silentium/compare/v0.0.58...v0.0.59) (2025-07-27)
 

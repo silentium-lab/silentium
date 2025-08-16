@@ -6,7 +6,7 @@ type OwnerType<T = unknown> = (v: T) => boolean | void;
 /**
  * Main type what destroys information resources
  */
-type DesctructionType = () => void;
+type DestructorType = () => void;
 /**
  * Main type what represents information
  * Information related to one owner, if we
@@ -14,7 +14,7 @@ type DesctructionType = () => void;
  * to do it explicitly. When owner comes to information
  * it executes information code.
  */
-type InformationType<T = unknown> = (owner: OwnerType<T>) => DesctructionType | void;
+type InformationType<T = unknown> = (owner: OwnerType<T>) => DestructorType | void;
 
 /**
  * Lazy accepts any number of arguments and returns information
@@ -161,8 +161,8 @@ declare const onExecuted: (fn: (...args: any[]) => void) => (...args: unknown[])
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-declare const shared: <T>(base: InformationType<T>) => readonly [(g: OwnerType<T>) => () => void, OwnerPool<T>];
-declare const sharedStateless: <T>(base: InformationType<T>) => readonly [(g: OwnerType<T>) => () => void, OwnerPool<T>];
+declare const shared: <T>(base: InformationType<T>) => readonly [(g: OwnerType<T>) => () => void, () => void, OwnerPool<T>];
+declare const sharedStateless: <T>(base: InformationType<T>) => readonly [(g: OwnerType<T>) => () => void, () => void, OwnerPool<T>];
 
 /**
  * Component that receives a data array and yields values one by one
@@ -170,4 +170,4 @@ declare const sharedStateless: <T>(base: InformationType<T>) => readonly [(g: Ow
  */
 declare const stream: <T>(base: InformationType<T[]>) => InformationType<T>;
 
-export { type DesctructionType, type ExtractTypesFromArrayS, type InformationType, type LazyType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };
+export { type DestructorType, type ExtractTypesFromArrayS, type InformationType, type LazyType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };

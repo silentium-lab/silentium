@@ -1,5 +1,5 @@
 import { isFilled, onExecuted, OwnerPool } from "../helpers";
-import { InformationType, OwnerType } from "../types";
+import { DestructorType, InformationType, OwnerType } from "../types";
 
 /**
  * An information object that helps multiple owners access
@@ -9,10 +9,11 @@ import { InformationType, OwnerType } from "../types";
 export const shared = <T>(base: InformationType<T>) => {
   const ownersPool = new OwnerPool<T>();
   let lastValue: T | undefined;
+  let baseDestructor: DestructorType | void;
 
   const executed = onExecuted(() => {
     const gp = ownersPool.owner();
-    base((v) => {
+    baseDestructor = base((v) => {
       gp(v);
       lastValue = v;
     });
@@ -25,28 +26,45 @@ export const shared = <T>(base: InformationType<T>) => {
     }
     ownersPool.add(g);
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
 
-  return [i, ownersPool] as const;
+  return [
+    i,
+    () => {
+      ownersPool.destroy();
+      baseDestructor?.();
+    },
+    ownersPool,
+  ] as const;
 };
 
 export const sharedStateless = <T>(base: InformationType<T>) => {
   const ownersPool = new OwnerPool<T>();
+  let baseDestructor: DestructorType | void;
 
   const executed = onExecuted((g: OwnerType<T>) => {
     ownersPool.add(g);
-    base(ownersPool.owner());
+    baseDestructor = base(ownersPool.owner());
   });
 
   const i = (g: OwnerType<T>) => {
     executed(g);
-    ownersPool.add(g);
+    if (!ownersPool.has(g)) {
+      ownersPool.add(g);
+    }
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
 
-  return [i, ownersPool] as const;
+  return [
+    i,
+    () => {
+      ownersPool.destroy();
+      baseDestructor?.();
+    },
+    ownersPool,
+  ] as const;
 };
