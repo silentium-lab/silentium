@@ -262,9 +262,10 @@ const sequence = (base) => {
 const shared = (base) => {
   const ownersPool = new OwnerPool();
   let lastValue;
+  let baseDestructor;
   const executed = onExecuted(() => {
     const gp = ownersPool.owner();
-    base((v) => {
+    baseDestructor = base((v) => {
       gp(v);
       lastValue = v;
     });
@@ -276,25 +277,42 @@ const shared = (base) => {
     }
     ownersPool.add(g);
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
-  return [i, ownersPool];
+  return [
+    i,
+    () => {
+      ownersPool.destroy();
+      baseDestructor?.();
+    },
+    ownersPool
+  ];
 };
 const sharedStateless = (base) => {
   const ownersPool = new OwnerPool();
+  let baseDestructor;
   const executed = onExecuted((g) => {
     ownersPool.add(g);
-    base(ownersPool.owner());
+    baseDestructor = base(ownersPool.owner());
   });
   const i = (g) => {
     executed(g);
-    ownersPool.add(g);
+    if (!ownersPool.has(g)) {
+      ownersPool.add(g);
+    }
     return () => {
-      ownersPool.destroy();
+      ownersPool.remove(g);
     };
   };
-  return [i, ownersPool];
+  return [
+    i,
+    () => {
+      ownersPool.destroy();
+      baseDestructor?.();
+    },
+    ownersPool
+  ];
 };
 
 const stream = (base) => {
