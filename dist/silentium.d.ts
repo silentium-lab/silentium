@@ -1,7 +1,7 @@
 /**
  * Main type what accepts data
  */
-type OwnerType<T> = (v: T) => boolean | void;
+type OwnerType<T = unknown> = (v: T) => boolean | void;
 
 /**
  * Main type what destroys information resources
