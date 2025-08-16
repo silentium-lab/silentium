@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.60](https://github.com/silentium-lab/silentium/compare/v0.0.59...v0.0.60) (2025-08-16)
+
+
+### Bug Fixes
+
+* **main:** owner type unknown by default ([971fdc2](https://github.com/silentium-lab/silentium/commit/971fdc2c140939ce125e6af3c7d2ee4572625130))
+
 ### [0.0.59](https://github.com/silentium-lab/silentium/compare/v0.0.58...v0.0.59) (2025-07-27)
 
 
