@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.61](https://github.com/silentium-lab/silentium/compare/v0.0.60...v0.0.61) (2025-08-16)
+
+
+### Bug Fixes
+
+* **main:** better readme file ([a6d51b1](https://github.com/silentium-lab/silentium/commit/a6d51b192185e38c0745662b78fb0d86bbd989cf))
+* **main:** shared component fixes ([f463897](https://github.com/silentium-lab/silentium/commit/f463897d9a8cd7d0a14bb870c5229b2392d3b31c))
+* **main:** shared components destruction ([756b50c](https://github.com/silentium-lab/silentium/commit/756b50c66ff189acdef2681adaa84364597f3a10))
+* **main:** unknown for owner type ([5e1aabb](https://github.com/silentium-lab/silentium/commit/5e1aabbcdd794b09192c3337cf48efd8bae130f7))
+
 ### [0.0.60](https://github.com/silentium-lab/silentium/compare/v0.0.59...v0.0.60) (2025-08-16)
 
 
