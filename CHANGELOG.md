@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.62](https://github.com/silentium-lab/silentium/compare/v0.0.61...v0.0.62) (2025-08-19)
+
+
+### Bug Fixes
+
+* **main:** owner type returns destructor ([1b63fed](https://github.com/silentium-lab/silentium/commit/1b63fed3a997c21a6e7a25e0493e495a155cf737))
+
 ### [0.0.61](https://github.com/silentium-lab/silentium/compare/v0.0.60...v0.0.61) (2025-08-16)
 
 
