@@ -1,44 +1,3 @@
-const all = (...infos) => {
-  return (g) => {
-    const keysKnown = new Set(Object.keys(infos));
-    const keysFilled = /* @__PURE__ */ new Set();
-    const isAllFilled = () => {
-      return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
-    };
-    const result = {};
-    Object.entries(infos).forEach(([key, info]) => {
-      keysKnown.add(key);
-      info((v) => {
-        keysFilled.add(key);
-        result[key] = v;
-        if (isAllFilled()) {
-          g(Object.values(result));
-        }
-      });
-    });
-    return () => {
-      keysKnown.clear();
-      keysFilled.clear();
-    };
-  };
-};
-
-const any = (...infos) => {
-  return (o) => {
-    infos.forEach((info) => {
-      info(o);
-    });
-  };
-};
-
-const applied = (base, applier) => {
-  return (g) => {
-    base((v) => {
-      g(applier(v));
-    });
-  };
-};
-
 const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
@@ -92,20 +51,78 @@ const onExecuted = (fn) => {
   };
 };
 
+const destroyArr = (arr) => {
+  arr.forEach((item) => {
+    if (typeof item === "function") {
+      item();
+    }
+  });
+};
+
+const all = (...infos) => {
+  return (g) => {
+    const keysKnown = new Set(Object.keys(infos));
+    const keysFilled = /* @__PURE__ */ new Set();
+    const isAllFilled = () => {
+      return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
+    };
+    const result = {};
+    const destructors = [];
+    Object.entries(infos).forEach(([key, info]) => {
+      keysKnown.add(key);
+      destructors.push(
+        info((v) => {
+          keysFilled.add(key);
+          result[key] = v;
+          if (isAllFilled()) {
+            return g(Object.values(result));
+          }
+        })
+      );
+    });
+    return () => {
+      keysKnown.clear();
+      keysFilled.clear();
+      destroyArr(destructors);
+    };
+  };
+};
+
+const any = (...infos) => {
+  return (o) => {
+    const destructors = [];
+    infos.forEach((info) => {
+      destructors.push(info(o));
+    });
+    return () => {
+      destroyArr(destructors);
+    };
+  };
+};
+
+const applied = (base, applier) => {
+  return (g) => {
+    return base((v) => {
+      return g(applier(v));
+    });
+  };
+};
+
 const chain = (...infos) => {
   let theOwner;
   let lastValue;
   const respondedI = /* @__PURE__ */ new WeakMap();
+  const destructors = [];
   const handleI = (index) => {
     const info2 = infos[index];
     const nextI = infos[index + 1];
     info2((v) => {
       if (!nextI) {
         lastValue = v;
-        theOwner?.(v);
+        destructors.push(theOwner?.(v));
       }
       if (nextI && lastValue !== void 0 && theOwner !== void 0) {
-        theOwner?.(lastValue);
+        destructors.push(theOwner?.(lastValue));
       }
       if (nextI && !respondedI.has(info2)) {
         handleI(index + 1);
@@ -120,23 +137,26 @@ const chain = (...infos) => {
   const info = (g) => {
     executed(g);
     theOwner = g;
+    return () => {
+      destroyArr(destructors);
+    };
   };
   return info;
 };
 
 const executorApplied = (base, applier) => {
   return (owner) => {
-    base(applier(owner));
+    return base(applier(owner));
   };
 };
 
 const filtered = (base, predicate, defaultValue) => {
   return (owner) => {
-    base((v) => {
+    return base((v) => {
       if (predicate(v)) {
-        owner(v);
+        return owner(v);
       } else if (defaultValue !== void 0) {
-        owner(defaultValue);
+        return owner(defaultValue);
       }
     });
   };
@@ -171,18 +191,18 @@ const of = (sharedValue) => {
   let relatedO;
   const notifyO = () => {
     if (relatedO !== void 0 && isFilled(sharedValue)) {
-      relatedO(sharedValue);
+      return relatedO(sharedValue);
     }
   };
   const info = (o) => {
     relatedO = o;
-    notifyO();
+    return notifyO();
   };
   return [
     info,
     (v) => {
       sharedValue = v;
-      notifyO();
+      return notifyO();
     }
   ];
 };
@@ -202,7 +222,7 @@ const fromPromise = (p) => {
 };
 
 const i = (v) => (o) => {
-  o(v);
+  return o(v);
 };
 
 const lazyChain = (lazy, chainSrc) => {
@@ -272,12 +292,14 @@ const shared = (base) => {
   });
   const i = (g) => {
     executed();
+    let od;
     if (isFilled(lastValue) && !ownersPool.has(g)) {
-      g(lastValue);
+      od = g(lastValue);
     }
     ownersPool.add(g);
     return () => {
       ownersPool.remove(g);
+      od?.();
     };
   };
   return [
@@ -325,5 +347,5 @@ const stream = (base) => {
   };
 };
 
-export { OwnerPool, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };
+export { OwnerPool, all, any, applied, chain, destroyArr, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };
 //# sourceMappingURL=silentium.mjs.map

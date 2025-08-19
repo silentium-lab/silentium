@@ -1,12 +1,13 @@
 /**
- * Main type what accepts data
- */
-type OwnerType<T = unknown> = (v: T) => boolean | void;
-
-/**
  * Main type what destroys information resources
  */
 type DestructorType = () => void;
+
+/**
+ * Main type what accepts data
+ */
+type OwnerType<T = unknown> = (v: T) => DestructorType | void;
+
 /**
  * Main type what represents information
  * Information related to one owner, if we
@@ -114,7 +115,7 @@ declare const map: <T, TG>(base: InformationType<T[]>, targetI: LazyType<TG>) =>
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare const of: <T>(sharedValue?: T) => readonly [InformationType<T>, (v: T) => void];
+declare const of: <T>(sharedValue?: T) => readonly [InformationType<T>, (v: T) => void | DestructorType];
 
 /**
  * Limits the number of values from the information source
@@ -156,6 +157,8 @@ declare class OwnerPool<T> {
  */
 declare const onExecuted: (fn: (...args: any[]) => void) => (...args: unknown[]) => void;
 
+declare const destroyArr: (arr: unknown[]) => void;
+
 /**
  * An information object that helps multiple owners access
  * a single another information object
@@ -170,4 +173,4 @@ declare const sharedStateless: <T>(base: InformationType<T>) => readonly [(g: Ow
  */
 declare const stream: <T>(base: InformationType<T[]>) => InformationType<T>;
 
-export { type DestructorType, type ExtractTypesFromArrayS, type InformationType, type LazyType, OwnerPool, type OwnerType, all, any, applied, chain, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };
+export { type DestructorType, type ExtractTypesFromArrayS, type InformationType, type LazyType, OwnerPool, type OwnerType, all, any, applied, chain, destroyArr, executorApplied, filtered, fromCallback, fromEvent, fromPromise, i, isFilled, lazyChain, lazyClass, map, of, onExecuted, once, sequence, shared, sharedStateless, stream };
