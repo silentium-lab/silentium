@@ -12,11 +12,11 @@ export const filtered = <T>(
   defaultValue?: T,
 ): InformationType<T> => {
   return (owner) => {
-    base((v) => {
+    return base((v) => {
       if (predicate(v)) {
-        owner(v);
+        return owner(v);
       } else if (defaultValue !== undefined) {
-        owner(defaultValue);
+        return owner(defaultValue);
       }
     });
   };

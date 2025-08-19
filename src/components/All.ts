@@ -1,3 +1,4 @@
+import { destroyArr } from "../helpers";
 import { InformationType } from "../types";
 
 type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
@@ -21,21 +22,25 @@ export const all = <const T extends InformationType[]>(
       return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
     };
     const result: Record<string, unknown> = {};
+    const destructors: unknown[] = [];
 
     Object.entries(infos).forEach(([key, info]) => {
       keysKnown.add(key);
-      info((v) => {
-        keysFilled.add(key);
-        result[key] = v;
-        if (isAllFilled()) {
-          g(Object.values(result) as ExtractTypesFromArrayS<T>);
-        }
-      });
+      destructors.push(
+        info((v) => {
+          keysFilled.add(key);
+          result[key] = v;
+          if (isAllFilled()) {
+            return g(Object.values(result) as ExtractTypesFromArrayS<T>);
+          }
+        }),
+      );
     });
 
     return () => {
       keysKnown.clear();
       keysFilled.clear();
+      destroyArr(destructors);
     };
   };
 };

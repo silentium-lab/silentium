@@ -10,6 +10,6 @@ export const executorApplied = <T>(
   applier: (executor: OwnerType<T>) => OwnerType<T>,
 ): InformationType<T> => {
   return (owner) => {
-    base(applier(owner));
+    return base(applier(owner));
   };
 };

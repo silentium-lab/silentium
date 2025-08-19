@@ -9,8 +9,8 @@ export const applied = <T, R>(
   applier: (v: T) => R,
 ): InformationType<R> => {
   return (g: OwnerType<R>) => {
-    base((v) => {
-      g(applier(v));
+    return base((v) => {
+      return g(applier(v));
     });
   };
 };

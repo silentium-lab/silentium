@@ -1,4 +1,4 @@
-import { onExecuted } from "../helpers";
+import { destroyArr, onExecuted } from "../helpers";
 import { InformationType, OwnerType } from "../types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -14,6 +14,7 @@ export const chain = <T extends InformationType[]>(...infos: T): Last<T> => {
   let theOwner: OwnerType<Last<T>> | undefined;
   let lastValue: Last<T> | undefined;
   const respondedI = new WeakMap();
+  const destructors: unknown[] = [];
 
   const handleI = (index: number) => {
     const info = infos[index] as InformationType<Last<T>>;
@@ -22,11 +23,11 @@ export const chain = <T extends InformationType[]>(...infos: T): Last<T> => {
     info((v) => {
       if (!nextI) {
         lastValue = v;
-        theOwner?.(v);
+        destructors.push(theOwner?.(v));
       }
 
       if (nextI && lastValue !== undefined && theOwner !== undefined) {
-        theOwner?.(lastValue);
+        destructors.push(theOwner?.(lastValue));
       }
 
       if (nextI && !respondedI.has(info)) {
@@ -45,6 +46,9 @@ export const chain = <T extends InformationType[]>(...infos: T): Last<T> => {
   const info = <Last<T>>((g) => {
     executed(g);
     theOwner = g;
+    return () => {
+      destroyArr(destructors);
+    };
   });
 
   return info;

@@ -1,3 +1,4 @@
+import { destroyArr } from "../helpers";
 import { InformationType } from "../types";
 
 /**
@@ -7,8 +8,13 @@ import { InformationType } from "../types";
  */
 export const any = <T>(...infos: InformationType<T>[]): InformationType<T> => {
   return (o) => {
+    const destructors: unknown[] = [];
     infos.forEach((info) => {
-      info(o);
+      destructors.push(info(o));
     });
+
+    return () => {
+      destroyArr(destructors);
+    };
   };
 };

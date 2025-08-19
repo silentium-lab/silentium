@@ -1,9 +1,5 @@
+import { DestructorType } from "./DestructorType";
 import { OwnerType } from "./OwnerType";
-
-/**
- * Main type what destroys information resources
- */
-export type DestructorType = () => void;
 
 /**
  * Main type what represents information

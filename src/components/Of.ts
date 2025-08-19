@@ -12,20 +12,20 @@ export const of = <T>(sharedValue?: T) => {
 
   const notifyO = () => {
     if (relatedO !== undefined && isFilled(sharedValue)) {
-      relatedO(sharedValue);
+      return relatedO(sharedValue);
     }
   };
 
   const info = <InformationType<T>>((o) => {
     relatedO = o;
-    notifyO();
+    return notifyO();
   });
 
   return [
     info,
     (v: T) => {
       sharedValue = v;
-      notifyO();
+      return notifyO();
     },
   ] as const;
 };

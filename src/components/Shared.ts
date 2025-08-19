@@ -1,5 +1,6 @@
+import { DestructorType } from "../types/DestructorType";
 import { isFilled, onExecuted, OwnerPool } from "../helpers";
-import { DestructorType, InformationType, OwnerType } from "../types";
+import { InformationType, OwnerType } from "../types";
 
 /**
  * An information object that helps multiple owners access
@@ -21,12 +22,14 @@ export const shared = <T>(base: InformationType<T>) => {
 
   const i = (g: OwnerType<T>) => {
     executed();
+    let od: DestructorType | void;
     if (isFilled(lastValue) && !ownersPool.has(g)) {
-      g(lastValue);
+      od = g(lastValue);
     }
     ownersPool.add(g);
     return () => {
       ownersPool.remove(g);
+      od?.();
     };
   };
 
