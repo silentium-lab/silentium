@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { of } from "./Of";
+import { of } from "./Late";
 import { applied } from "./Applied";
 import { sequence } from "./Sequence";
 

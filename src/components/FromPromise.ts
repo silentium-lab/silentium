@@ -1,5 +1,5 @@
 import { InformationType } from "../types";
-import { of } from "./Of";
+import { of } from "./Late";
 
 /**
  * Component that gets a value from a promise and

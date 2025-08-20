@@ -1,4 +1,4 @@
-import { of } from "./Of";
+import { of } from "./Late";
 import { expect, test } from "vitest";
 import { executorApplied } from "./ExecutorApplied";
 import { diagram } from "../testing";

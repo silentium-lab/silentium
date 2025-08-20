@@ -1,20 +1,22 @@
-import { destroyArr } from "../helpers";
-import { InformationType } from "../types";
+import { TheInformation, TheOwner } from "../base";
 
 /**
  * From a set of information sources we get
  * a common response from any source for a single owner
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
-export const any = <T>(...infos: InformationType<T>[]): InformationType<T> => {
-  return (o) => {
-    const destructors: unknown[] = [];
-    infos.forEach((info) => {
-      destructors.push(info(o));
-    });
+export class Any<T> extends TheInformation<T> {
+  private infos: TheInformation<T>[];
 
-    return () => {
-      destroyArr(destructors);
-    };
-  };
-};
+  public constructor(...theInfos: TheInformation<T>[]) {
+    super(theInfos);
+    this.infos = theInfos;
+  }
+
+  public value(o: TheOwner<T>): this {
+    this.infos.forEach((info) => {
+      info.value(o);
+    });
+    return this;
+  }
+}

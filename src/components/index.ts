@@ -11,7 +11,7 @@ export * from "./Information";
 export * from "./LazyChain";
 export * from "./LazyClass";
 export * from "./Map";
-export * from "./Of";
+export * from "./Late";
 export * from "./Once";
 export * from "./Sequence";
 export * from "./Shared";

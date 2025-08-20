@@ -1,4 +1,4 @@
-import { of } from "./Of";
+import { of } from "./Late";
 import { expect, test, vitest } from "vitest";
 import { once } from "./Once";
 

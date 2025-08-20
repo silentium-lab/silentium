@@ -1,6 +1,6 @@
 import { diagram } from "../testing";
 import { expect, test } from "vitest";
-import { of } from "./Of";
+import { of } from "./Late";
 import { shared } from "./Shared";
 
 test("Shared.test", () => {

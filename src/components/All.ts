@@ -1,9 +1,8 @@
-import { destroyArr } from "../helpers";
-import { InformationType } from "../types";
+import { From, TheInformation, TheOwner } from "../base";
 
-type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends TheInformation<infer U> ? U : never;
 
-export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
+export type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
@@ -12,35 +11,40 @@ export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export const all = <const T extends InformationType[]>(
-  ...infos: T
-): InformationType<ExtractTypesFromArrayS<T>> => {
-  return (g) => {
-    const keysKnown = new Set<string>(Object.keys(infos));
-    const keysFilled = new Set();
-    const isAllFilled = () => {
-      return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
-    };
-    const result: Record<string, unknown> = {};
-    const destructors: unknown[] = [];
+export class All<const T extends TheInformation[]> extends TheInformation<
+  ExtractTypesFromArrayS<T>
+> {
+  private keysKnown: Set<string>;
+  private keysFilled = new Set();
+  private infos: T;
 
-    Object.entries(infos).forEach(([key, info]) => {
-      keysKnown.add(key);
-      destructors.push(
-        info((v) => {
-          keysFilled.add(key);
+  public constructor(...theInfos: T) {
+    super(theInfos);
+    this.infos = theInfos;
+    this.keysKnown = new Set<string>(Object.keys(theInfos));
+  }
+
+  public value(o: TheOwner<ExtractTypesFromArrayS<T>>): this {
+    const result: Record<string, unknown> = {};
+
+    Object.entries(this.infos).forEach(([key, info]) => {
+      this.keysKnown.add(key);
+      info.value(
+        new From((v) => {
+          this.keysFilled.add(key);
           result[key] = v;
-          if (isAllFilled()) {
-            return g(Object.values(result) as ExtractTypesFromArrayS<T>);
+          if (this.isAllFilled()) {
+            o.give(Object.values(result) as ExtractTypesFromArrayS<T>);
           }
         }),
       );
     });
+    return this;
+  }
 
-    return () => {
-      keysKnown.clear();
-      keysFilled.clear();
-      destroyArr(destructors);
-    };
-  };
-};
+  private isAllFilled() {
+    return (
+      this.keysFilled.size > 0 && this.keysFilled.size === this.keysKnown.size
+    );
+  }
+}

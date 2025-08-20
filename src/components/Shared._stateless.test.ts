@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { of } from "./Of";
+import { of } from "./Late";
 import { sharedStateless } from "./Shared";
 
 test("Shared._stateless.test", () => {

@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
 import { lazyChain } from "./LazyChain";
-import { of } from "./Of";
+import { of } from "./Late";
 import { i } from "./Information";
 
 test("LazyChain.test", () => {

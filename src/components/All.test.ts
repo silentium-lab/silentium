@@ -1,14 +1,12 @@
 import { expect, test, vi } from "vitest";
-import { i } from "./Information";
-import { all } from "./All";
+import { All } from "./All";
+import { From, Of } from "../base";
 
 test("All.test", () => {
-  const one = i(1);
-  const two = i(2);
-  const a = all(one, two);
+  const a = new All(new Of(1), new Of(2));
 
   const o = vi.fn();
-  a(o);
+  a.value(new From(o));
 
   expect(o).toBeCalledWith([1, 2]);
 });
