@@ -1,5 +1,4 @@
-import { destroyArr, onExecuted } from "../helpers";
-import { InformationType, OwnerType } from "../types";
+import { From, TheInformation, TheOwner } from "../base";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
@@ -10,46 +9,42 @@ type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-export const chain = <T extends InformationType[]>(...infos: T): Last<T> => {
-  let theOwner: OwnerType<Last<T>> | undefined;
-  let lastValue: Last<T> | undefined;
-  const respondedI = new WeakMap();
-  const destructors: unknown[] = [];
+export class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> {
+  private theInfos: T;
 
-  const handleI = (index: number) => {
-    const info = infos[index] as InformationType<Last<T>>;
-    const nextI = infos[index + 1] as InformationType<Last<T>> | undefined;
+  public constructor(...infos: T) {
+    super(infos);
+    this.theInfos = infos;
+  }
 
-    info((v) => {
-      if (!nextI) {
-        lastValue = v;
-        destructors.push(theOwner?.(v));
-      }
+  public value(o: TheOwner<Last<T>>) {
+    let lastValue: Last<T> | undefined;
 
-      if (nextI && lastValue !== undefined && theOwner !== undefined) {
-        destructors.push(theOwner?.(lastValue));
-      }
+    const handleI = (index: number) => {
+      const info = this.theInfos[index] as TheInformation<Last<T>>;
+      const nextI = this.theInfos[index + 1] as
+        | TheInformation<Last<T>>
+        | undefined;
 
-      if (nextI && !respondedI.has(info)) {
-        handleI(index + 1);
-      }
+      info.value(
+        new From((v) => {
+          if (!nextI) {
+            lastValue = v;
+          }
 
-      respondedI.set(info, 1);
-    });
-  };
+          if (nextI && !lastValue) {
+            handleI(index + 1);
+          }
 
-  const executed = onExecuted((g) => {
-    theOwner = g;
-    handleI(0);
-  });
-
-  const info = <Last<T>>((g) => {
-    executed(g);
-    theOwner = g;
-    return () => {
-      destroyArr(destructors);
+          if (lastValue) {
+            o.give(lastValue);
+          }
+        }),
+      );
     };
-  });
 
-  return info;
-};
+    handleI(0);
+
+    return this;
+  }
+}

@@ -1,26 +1,26 @@
-import { of } from "./Late";
 import { expect, test } from "vitest";
-import { diagram } from "../testing";
-import { chain } from "./Chain";
+import { Diagram } from "../testing";
+import { Chain } from "./Chain";
+import { Late } from "./Late";
 
 test("infoChain.test", () => {
-  const [d, dG] = diagram();
-  const [triggerI, triggerG] = of<string>("immediate");
-  const [valueI, valueG] = of<string>("the_value");
+  const d = new Diagram();
+  const triggerSrc = new Late<string>("immediate");
+  const valueSrc = new Late<string>("the_value");
 
-  const valueAfterTrigger = chain(triggerI, valueI);
-  valueAfterTrigger(dG);
+  const valueAfterTrigger = new Chain(triggerSrc, valueSrc);
+  valueAfterTrigger.value(d.owner());
 
-  expect(d()).toBe("the_value");
+  expect(d.toString()).toBe("the_value");
 
-  triggerG("done");
+  triggerSrc.owner().give("done");
 
-  expect(d()).toBe("the_value|the_value");
+  expect(d.toString()).toBe("the_value|the_value");
 
-  valueG("new_value");
-  expect(d()).toBe("the_value|the_value|new_value");
+  valueSrc.owner().give("new_value");
+  expect(d.toString()).toBe("the_value|the_value|new_value");
 
-  triggerG("done2");
+  triggerSrc.owner().give("done2");
 
-  expect(d()).toBe("the_value|the_value|new_value|new_value");
+  expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
 });
