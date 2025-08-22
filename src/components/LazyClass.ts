@@ -1,10 +1,11 @@
-import { OwnerType } from "../types";
+import { Lazy } from "../base";
 
-export const lazyClass =
-  (constrFn: any) =>
-  (...args: any[]) => {
-    const inst = new constrFn(...args);
-    return (o: OwnerType<any>) => {
-      inst.value(o);
-    };
-  };
+/**
+ * Lazy instance from class constructor
+ */
+export class LazyClass<T> extends Lazy<T> {
+  public constructor(constrFn: any) {
+    const buildFn = (...args: unknown[]) => new constrFn(...args);
+    super(buildFn);
+  }
+}
