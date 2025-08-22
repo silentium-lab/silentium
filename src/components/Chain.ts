@@ -32,12 +32,12 @@ export class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> {
             lastValue = v;
           }
 
-          if (nextI && !lastValue) {
-            handleI(index + 1);
-          }
-
           if (lastValue) {
             o.give(lastValue);
+          }
+
+          if (nextI && !lastValue) {
+            handleI(index + 1);
           }
         }),
       );
