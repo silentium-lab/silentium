@@ -1,3 +1,7 @@
+const isDestroyable = (dep: unknown): dep is Destroyable => {
+  return typeof dep === "object" && dep !== null && "destroy" in dep;
+};
+
 /**
  * Representation of Destroyable object
  */
@@ -6,7 +10,7 @@ export class Destroyable {
 
   public destroy() {
     this.deps?.forEach((dep) => {
-      if (dep instanceof Destroyable) {
+      if (isDestroyable(dep)) {
         dep.destroy();
       }
     });
