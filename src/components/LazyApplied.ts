@@ -1,4 +1,4 @@
-import { Lazy, TheInformation } from "src/base";
+import { Lazy, TheInformation } from "../base";
 
 /**
  * Lazy with applied function to its results

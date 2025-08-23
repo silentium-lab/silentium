@@ -1,7 +1,7 @@
 import { Late } from "./Late";
 import { expect, test, vitest } from "vitest";
 import { Once } from "./Once";
-import { From } from "src/base";
+import { From } from "../base";
 
 test("Once._main.test", () => {
   const l = new Late<number>(123);

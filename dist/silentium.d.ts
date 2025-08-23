@@ -1,5 +1,3 @@
-import { Lazy as Lazy$1, TheInformation as TheInformation$1 } from 'src/base';
-
 /**
  * Representation of Destroyable object
  */
@@ -212,11 +210,11 @@ declare class Late<T> extends TheInformation<T> {
 /**
  * Lazy with applied function to its results
  */
-declare class LazyApplied<T> extends Lazy$1<T> {
+declare class LazyApplied<T> extends Lazy<T> {
     private baseLazy;
     private applier;
-    constructor(baseLazy: Lazy$1, applier: (i: TheInformation$1) => TheInformation$1<T>);
-    get(...args: TheInformation$1[]): TheInformation$1<T>;
+    constructor(baseLazy: Lazy, applier: (i: TheInformation) => TheInformation<T>);
+    get(...args: TheInformation[]): TheInformation<T>;
 }
 
 /**

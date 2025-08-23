@@ -1,9 +1,5 @@
 'use strict';
 
-var helpers = require('src/helpers');
-var DestroyFunc$1 = require('src/base/DestroyFunc');
-var base = require('src/base');
-
 class Destroyable {
   constructor(deps) {
     this.deps = deps;
@@ -53,13 +49,56 @@ class From extends TheOwner {
 class TheInformation extends Destroyable {
 }
 
+const isFilled = (value) => {
+  return value !== void 0 && value !== null;
+};
+
+var __defProp$7 = Object.defineProperty;
+var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
+class OwnerPool {
+  constructor() {
+    __publicField$7(this, "owners");
+    __publicField$7(this, "innerOwner");
+    this.owners = /* @__PURE__ */ new Set();
+    this.innerOwner = new From((v) => {
+      this.owners.forEach((g) => {
+        g.give(v);
+      });
+    });
+  }
+  owner() {
+    return this.innerOwner;
+  }
+  size() {
+    return this.owners.size;
+  }
+  has(owner) {
+    return this.owners.has(owner);
+  }
+  add(owner) {
+    this.owners.add(owner);
+    return this;
+  }
+  remove(g) {
+    this.owners.delete(g);
+    return this;
+  }
+  destroy() {
+    this.owners.forEach((g) => {
+      this.remove(g);
+    });
+    return this;
+  }
+}
+
 class Of extends TheInformation {
   constructor(theValue) {
     super([theValue]);
     this.theValue = theValue;
   }
   value(o) {
-    if (helpers.isFilled(this.theValue)) {
+    if (isFilled(this.theValue)) {
       o.give(this.theValue);
     }
     return this;
@@ -79,14 +118,14 @@ class Lazy extends Destroyable {
   }
 }
 
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, key + "" , value);
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
 class OfFunc extends TheInformation {
   constructor(valueFn) {
     super([valueFn]);
     this.valueFn = valueFn;
-    __publicField$7(this, "mbDestructor");
+    __publicField$6(this, "mbDestructor");
   }
   value(o) {
     this.mbDestructor = this.valueFn(o);
@@ -99,15 +138,15 @@ class OfFunc extends TheInformation {
   }
 }
 
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 class All extends TheInformation {
   constructor(...theInfos) {
     super(theInfos);
-    __publicField$6(this, "keysKnown");
-    __publicField$6(this, "keysFilled", /* @__PURE__ */ new Set());
-    __publicField$6(this, "infos");
+    __publicField$5(this, "keysKnown");
+    __publicField$5(this, "keysFilled", /* @__PURE__ */ new Set());
+    __publicField$5(this, "infos");
     this.infos = theInfos;
     this.keysKnown = new Set(Object.keys(theInfos));
   }
@@ -132,13 +171,13 @@ class All extends TheInformation {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 class Any extends TheInformation {
   constructor(...theInfos) {
     super(theInfos);
-    __publicField$5(this, "infos");
+    __publicField$4(this, "infos");
     this.infos = theInfos;
   }
   value(o) {
@@ -165,13 +204,13 @@ class Applied extends TheInformation {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
 class Chain extends TheInformation {
   constructor(...infos) {
     super(infos);
-    __publicField$4(this, "theInfos");
+    __publicField$3(this, "theInfos");
     this.theInfos = infos;
   }
   value(o) {
@@ -237,14 +276,14 @@ class Filtered extends TheInformation {
   }
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
 class FromCallback extends TheInformation {
   constructor(waitForCb, ...args) {
     super([waitForCb]);
     this.waitForCb = waitForCb;
-    __publicField$3(this, "theArgs");
+    __publicField$2(this, "theArgs");
     this.theArgs = args;
   }
   value(o) {
@@ -280,7 +319,7 @@ class FromEvent extends TheInformation {
       new From(([emitter, eventName, subscribe, unsubscribe]) => {
         emitter[subscribe](eventName, handler);
         this.addDep(
-          new DestroyFunc$1.DestroyFunc(() => {
+          new DestroyFunc(() => {
             emitter[unsubscribe](eventName, handler);
           })
         );
@@ -301,49 +340,6 @@ class FromPromise extends TheInformation {
       o.give(v);
     }).catch((e) => {
       this.errorOwner?.give(e);
-    });
-    return this;
-  }
-}
-
-const isFilled = (value) => {
-  return value !== void 0 && value !== null;
-};
-
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
-class OwnerPool {
-  constructor() {
-    __publicField$2(this, "owners");
-    __publicField$2(this, "innerOwner");
-    this.owners = /* @__PURE__ */ new Set();
-    this.innerOwner = new From((v) => {
-      this.owners.forEach((g) => {
-        g.give(v);
-      });
-    });
-  }
-  owner() {
-    return this.innerOwner;
-  }
-  size() {
-    return this.owners.size;
-  }
-  has(owner) {
-    return this.owners.has(owner);
-  }
-  add(owner) {
-    this.owners.add(owner);
-    return this;
-  }
-  remove(g) {
-    this.owners.delete(g);
-    return this;
-  }
-  destroy() {
-    this.owners.forEach((g) => {
-      this.remove(g);
     });
     return this;
   }
@@ -383,7 +379,7 @@ class Late extends TheInformation {
   }
 }
 
-class LazyApplied extends base.Lazy {
+class LazyApplied extends Lazy {
   constructor(baseLazy, applier) {
     super();
     this.baseLazy = baseLazy;

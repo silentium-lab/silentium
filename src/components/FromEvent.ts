@@ -1,4 +1,4 @@
-import { DestroyFunc } from "src/base/DestroyFunc";
+import { DestroyFunc } from "../base/DestroyFunc";
 import { From, Of, TheInformation, TheOwner } from "../base";
 import { All } from "./All";
 

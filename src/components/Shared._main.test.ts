@@ -2,7 +2,7 @@ import { Diagram } from "../testing";
 import { expect, test } from "vitest";
 import { Late } from "./Late";
 import { Shared } from "./Shared";
-import { From } from "src/base";
+import { From } from "../base";
 
 test("Shared.test", () => {
   const d = new Diagram();

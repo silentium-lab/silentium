@@ -1,6 +1,6 @@
 import { TheOwner } from "./TheOwner";
 import { TheInformation } from "./TheInformation";
-import { isFilled } from "src/helpers";
+import { isFilled } from "../helpers";
 
 /**
  * Information from primitive value

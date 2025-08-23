@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
 import { FromEvent } from "./FromEvent";
-import { From, Of } from "src/base";
+import { From, Of } from "../base";
 
 test("FromEvent.test", () => {
   let unsubscribed = false;
