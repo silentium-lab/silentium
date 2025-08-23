@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.65](https://github.com/silentium-lab/silentium/compare/v0.0.64...v0.0.65) (2025-08-23)
+
+
+### Bug Fixes
+
+* **main:** fix imports src ([668f981](https://github.com/silentium-lab/silentium/commit/668f981e3cf45d9a83fcb23f429b938d984d1c97))
+
 ### [0.0.64](https://github.com/silentium-lab/silentium/compare/v0.0.63...v0.0.64) (2025-08-23)
 
 
