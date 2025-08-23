@@ -1,4 +1,4 @@
-import { OwnerType } from "../types";
+import { From, TheOwner } from "../base";
 
 /**
  * Helps maintain an owner list allowing different
@@ -6,16 +6,16 @@ import { OwnerType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/utils/owner-pool
  */
 export class OwnerPool<T> {
-  private owners: Set<OwnerType<T>>;
-  private innerOwner: OwnerType<T>;
+  private owners: Set<TheOwner<T>>;
+  private innerOwner: TheOwner<T>;
 
   public constructor() {
-    this.owners = new Set<OwnerType<T>>();
-    this.innerOwner = (v) => {
+    this.owners = new Set<TheOwner<T>>();
+    this.innerOwner = new From((v) => {
       this.owners.forEach((g) => {
-        g(v);
+        g.give(v);
       });
-    };
+    });
   }
 
   public owner() {
@@ -26,16 +26,16 @@ export class OwnerPool<T> {
     return this.owners.size;
   }
 
-  public has(owner: OwnerType<T>): boolean {
+  public has(owner: TheOwner<T>): boolean {
     return this.owners.has(owner);
   }
 
-  public add(shouldBePatron: OwnerType<T>) {
-    this.owners.add(shouldBePatron);
+  public add(owner: TheOwner<T>) {
+    this.owners.add(owner);
     return this;
   }
 
-  public remove(g: OwnerType<T>) {
+  public remove(g: TheOwner<T>) {
     this.owners.delete(g);
     return this;
   }

@@ -1,20 +1,21 @@
 import { expect, test, vi } from "vitest";
-import { of } from "./Of";
-import { applied } from "./Applied";
-import { sequence } from "./Sequence";
+import { Late } from "./Late";
+import { Applied } from "./Applied";
+import { Sequence } from "./Sequence";
+import { From } from "../base";
 
 test("Sequence.test", () => {
-  const [os, og] = of<number>();
-  const seq = applied(sequence(os), String);
+  const l = new Late<number>();
+  const seq = new Applied(new Sequence(l), String);
 
   const o = vi.fn();
-  seq(o);
+  seq.value(new From(o));
 
-  og(1);
-  og(2);
-  og(3);
-  og(4);
-  og(5);
+  l.owner().give(1);
+  l.owner().give(2);
+  l.owner().give(3);
+  l.owner().give(4);
+  l.owner().give(5);
 
   expect(o).toBeCalledWith("1,2,3,4,5");
 });

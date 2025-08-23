@@ -1,13 +1,13 @@
 import { expect, test, vi } from "vitest";
-import { applied } from "./Applied";
-import { i } from "./Information";
+import { Applied } from "./Applied";
+import { From, Of } from "../base";
 
 test("Applied.test", () => {
-  const info = i(2);
-  const infoDouble = applied(info, (x) => x * 2);
+  const info = new Of(2);
+  const infoDouble = new Applied(info, (x) => x * 2);
 
   const g = vi.fn();
-  infoDouble(g);
+  infoDouble.value(new From(g));
 
   expect(g).toBeCalledWith(4);
 });

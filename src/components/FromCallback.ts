@@ -1,4 +1,4 @@
-import { InformationType } from "../types";
+import { TheInformation, TheOwner } from "../base";
 
 /**
  * When receiving a reference to a function expecting a callback, the component
@@ -6,16 +6,24 @@ import { InformationType } from "../types";
  * will become the value of the information object
  * https://silentium-lab.github.io/silentium/#/en/information/from-callback
  */
-export const fromCallback = <T>(
-  waitForCb: (cb: (v: T) => any, ...args: unknown[]) => unknown,
-  ...args: unknown[]
-): InformationType<T> => {
-  return (o) => {
-    waitForCb(
+export class FromCallback<T> extends TheInformation<T> {
+  private theArgs: unknown[];
+
+  public constructor(
+    private waitForCb: (cb: (v: T) => any, ...args: unknown[]) => unknown,
+    ...args: unknown[]
+  ) {
+    super([waitForCb]);
+    this.theArgs = args;
+  }
+
+  public value(o: TheOwner<T>): this {
+    this.waitForCb(
       (v) => {
-        o(v);
+        o.give(v);
       },
-      ...args,
+      ...this.theArgs,
     );
-  };
-};
+    return this;
+  }
+}

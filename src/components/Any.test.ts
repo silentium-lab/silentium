@@ -1,20 +1,20 @@
 import { expect, test, vi } from "vitest";
-import { any } from "./Any";
-import { i } from "./Information";
-import { of } from "./Of";
+import { Any } from "./Any";
+import { Late } from "./Late";
+import { From, Of } from "../base";
 
 test("Any.test", () => {
-  const [laterI, laterO] = of<number>();
-  const defaultI = i("default");
+  const l = new Late<number>();
+  const d = new Of("default");
 
-  const anyI = any<any>(laterI, defaultI);
+  const anyI = new Any<any>(l, d);
 
   const o = vi.fn();
-  anyI(o);
+  anyI.value(new From(o));
 
   expect(o).toHaveBeenCalledWith("default");
 
-  laterO(999);
+  l.owner().give(999);
 
   expect(o).toBeCalledWith(999);
 });
