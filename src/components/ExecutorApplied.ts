@@ -10,7 +10,7 @@ export class ExecutorApplied<T> extends TheInformation<T> {
     private baseSrc: TheInformation<T>,
     private applier: (executor: (v: T) => void) => (v: T) => void,
   ) {
-    super([baseSrc]);
+    super(baseSrc);
   }
 
   public value(o: TheOwner<T>): this {

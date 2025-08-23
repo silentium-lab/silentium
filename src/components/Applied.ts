@@ -9,7 +9,7 @@ export class Applied<T, R> extends TheInformation<R> {
     private baseSrc: TheInformation<T>,
     private applier: (v: T) => R,
   ) {
-    super([baseSrc]);
+    super(baseSrc);
   }
 
   public value(o: TheOwner<R>): this {

@@ -12,7 +12,7 @@ export class Filtered<T> extends TheInformation<T> {
     private predicate: (v: T) => boolean,
     private defaultValue?: T,
   ) {
-    super([baseSrc]);
+    super(baseSrc);
   }
 
   public value(o: TheOwner<T>): this {

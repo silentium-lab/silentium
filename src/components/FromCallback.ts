@@ -13,7 +13,7 @@ export class FromCallback<T> extends TheInformation<T> {
     private waitForCb: (cb: (v: T) => any, ...args: unknown[]) => unknown,
     ...args: unknown[]
   ) {
-    super([waitForCb]);
+    super(waitForCb);
     this.theArgs = args;
   }
 

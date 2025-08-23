@@ -12,7 +12,7 @@ export class OfFunc<T> extends TheInformation<T> {
   public constructor(
     private valueFn: (o: TheOwner<T>) => DestructorFnType | undefined | void,
   ) {
-    super([valueFn]);
+    super(valueFn);
   }
 
   public value(o: TheOwner<T>): this {

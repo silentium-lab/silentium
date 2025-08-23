@@ -7,7 +7,7 @@ import { isFilled } from "../helpers";
  */
 export class Of<T> extends TheInformation<T> {
   public constructor(private theValue: T) {
-    super([theValue]);
+    super(theValue);
   }
 
   public value(o: TheOwner<T>): this {

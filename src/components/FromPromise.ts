@@ -10,7 +10,7 @@ export class FromPromise<T> extends TheInformation<T> {
     private p: Promise<T>,
     private errorOwner?: TheOwner,
   ) {
-    super([p]);
+    super(p);
   }
 
   public value(o: TheOwner<T>): this {

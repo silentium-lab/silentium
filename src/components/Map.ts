@@ -11,7 +11,7 @@ export class Map<T, TG> extends TheInformation<TG[]> {
     private baseSrc: TheInformation<T[]>,
     private targetSrc: Lazy<TG>,
   ) {
-    super([baseSrc, targetSrc]);
+    super(baseSrc, targetSrc);
   }
 
   public value(o: TheOwner<TG[]>) {

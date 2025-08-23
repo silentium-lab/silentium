@@ -6,10 +6,13 @@ const isDestroyable = (dep: unknown): dep is Destroyable => {
  * Representation of Destroyable object
  */
 export class Destroyable {
-  public constructor(private deps?: unknown[]) {}
+  private theDeps: unknown[];
+  public constructor(...deps: unknown[]) {
+    this.theDeps = deps ?? [];
+  }
 
   public destroy() {
-    this.deps?.forEach((dep) => {
+    this.theDeps?.forEach((dep) => {
       if (isDestroyable(dep)) {
         dep.destroy();
       }
@@ -21,7 +24,7 @@ export class Destroyable {
    * Add dependency what can be destroyed
    */
   public addDep(dep: unknown) {
-    this.deps?.push(dep);
+    this.theDeps?.push(dep);
     return this;
   }
 }

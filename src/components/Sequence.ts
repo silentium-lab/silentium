@@ -7,7 +7,7 @@ import { From, TheInformation, TheOwner } from "../base";
  */
 export class Sequence<T> extends TheInformation<T[]> {
   public constructor(private baseSrc: TheInformation<T>) {
-    super([baseSrc]);
+    super(baseSrc);
   }
 
   public value(o: TheOwner<T[]>): this {

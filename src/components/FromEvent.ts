@@ -14,7 +14,7 @@ export class FromEvent<T = unknown> extends TheInformation<T> {
     private subscribeMethodSrc: TheInformation<string>,
     private unsubscribeMethodSrc: TheInformation<string> = new Of(""),
   ) {
-    super([emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc]);
+    super(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc);
   }
 
   public value(o: TheOwner<T>): this {

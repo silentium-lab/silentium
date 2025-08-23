@@ -14,7 +14,7 @@ export class Shared<T> extends TheInformation<T> {
     private baseSrc: TheInformation<T>,
     private stateless = false,
   ) {
-    super([baseSrc]);
+    super(baseSrc);
     this.addDep(this.ownersPool);
     this.baseSrc.value(
       new From((v) => {
