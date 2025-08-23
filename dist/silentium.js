@@ -1,12 +1,16 @@
+var __defProp$8 = Object.defineProperty;
+var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
 const isDestroyable = (dep) => {
   return typeof dep === "object" && dep !== null && "destroy" in dep;
 };
 class Destroyable {
-  constructor(deps) {
-    this.deps = deps;
+  constructor(...deps) {
+    __publicField$8(this, "theDeps");
+    this.theDeps = deps ?? [];
   }
   destroy() {
-    this.deps?.forEach((dep) => {
+    this.theDeps?.forEach((dep) => {
       if (isDestroyable(dep)) {
         dep.destroy();
       }
@@ -17,7 +21,7 @@ class Destroyable {
    * Add dependency what can be destroyed
    */
   addDep(dep) {
-    this.deps?.push(dep);
+    this.theDeps?.push(dep);
     return this;
   }
 }
@@ -95,7 +99,7 @@ class OwnerPool {
 
 class Of extends TheInformation {
   constructor(theValue) {
-    super([theValue]);
+    super(theValue);
     this.theValue = theValue;
   }
   value(o) {
@@ -124,7 +128,7 @@ var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, 
 var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
 class OfFunc extends TheInformation {
   constructor(valueFn) {
-    super([valueFn]);
+    super(valueFn);
     this.valueFn = valueFn;
     __publicField$6(this, "mbDestructor");
   }
@@ -191,7 +195,7 @@ class Any extends TheInformation {
 
 class Applied extends TheInformation {
   constructor(baseSrc, applier) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
     this.applier = applier;
   }
@@ -240,7 +244,7 @@ class Chain extends TheInformation {
 
 class ExecutorApplied extends TheInformation {
   constructor(baseSrc, applier) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
     this.applier = applier;
   }
@@ -258,7 +262,7 @@ class ExecutorApplied extends TheInformation {
 
 class Filtered extends TheInformation {
   constructor(baseSrc, predicate, defaultValue) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
     this.predicate = predicate;
     this.defaultValue = defaultValue;
@@ -282,7 +286,7 @@ var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, 
 var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
 class FromCallback extends TheInformation {
   constructor(waitForCb, ...args) {
-    super([waitForCb]);
+    super(waitForCb);
     this.waitForCb = waitForCb;
     __publicField$2(this, "theArgs");
     this.theArgs = args;
@@ -300,7 +304,7 @@ class FromCallback extends TheInformation {
 
 class FromEvent extends TheInformation {
   constructor(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc = new Of("")) {
-    super([emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc]);
+    super(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc);
     this.emitterSrc = emitterSrc;
     this.eventNameSrc = eventNameSrc;
     this.subscribeMethodSrc = subscribeMethodSrc;
@@ -332,7 +336,7 @@ class FromEvent extends TheInformation {
 
 class FromPromise extends TheInformation {
   constructor(p, errorOwner) {
-    super([p]);
+    super(p);
     this.p = p;
     this.errorOwner = errorOwner;
   }
@@ -351,7 +355,7 @@ var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, 
 var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Late extends TheInformation {
   constructor(theValue) {
-    super([theValue]);
+    super(theValue);
     this.theValue = theValue;
     __publicField$1(this, "theOwner");
     __publicField$1(this, "lateOwner", new From((v) => {
@@ -400,7 +404,7 @@ class LazyClass extends Lazy {
 
 class Map extends TheInformation {
   constructor(baseSrc, targetSrc) {
-    super([baseSrc, targetSrc]);
+    super(baseSrc, targetSrc);
     this.baseSrc = baseSrc;
     this.targetSrc = targetSrc;
   }
@@ -445,7 +449,7 @@ class Once extends TheInformation {
 
 class Sequence extends TheInformation {
   constructor(baseSrc) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
   }
   value(o) {
@@ -465,7 +469,7 @@ var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { en
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Shared extends TheInformation {
   constructor(baseSrc, stateless = false) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
     this.stateless = stateless;
     __publicField(this, "lastValue");
@@ -499,7 +503,7 @@ class Shared extends TheInformation {
 
 class Stream extends TheInformation {
   constructor(baseSrc) {
-    super([baseSrc]);
+    super(baseSrc);
     this.baseSrc = baseSrc;
   }
   value(o) {

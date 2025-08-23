@@ -2,8 +2,8 @@
  * Representation of Destroyable object
  */
 declare class Destroyable {
-    private deps?;
-    constructor(deps?: unknown[] | undefined);
+    private theDeps;
+    constructor(...deps: unknown[]);
     destroy(): this;
     /**
      * Add dependency what can be destroyed
