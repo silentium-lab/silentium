@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
-import { diagram } from "../testing";
-import { stream } from "./Stream";
-import { i } from "./Information";
+import { Diagram } from "../testing";
+import { Stream } from "./Stream";
+import { Of } from "../base";
 
 test("Stream.test", () => {
-  const [d, dG] = diagram();
-  stream(i([1, 2, 3, 4, 5]))(dG);
+  const d = new Diagram();
+  new Stream(new Of([1, 2, 3, 4, 5])).value(d.owner());
 
-  expect(d()).toBe("1|2|3|4|5");
+  expect(d.toString()).toBe("1|2|3|4|5");
 });
