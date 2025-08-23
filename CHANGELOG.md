@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.67](https://github.com/silentium-lab/silentium/compare/v0.0.66...v0.0.67) (2025-08-23)
+
+
+### Bug Fixes
+
+* **main:** destroyable improovement ([ce942c8](https://github.com/silentium-lab/silentium/commit/ce942c811e19c9d37f0ecc93ad120fd89b5ab95e))
+
 ### [0.0.66](https://github.com/silentium-lab/silentium/compare/v0.0.65...v0.0.66) (2025-08-23)
 
 
