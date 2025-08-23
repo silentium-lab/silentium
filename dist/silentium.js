@@ -1,10 +1,13 @@
+const isDestroyable = (dep) => {
+  return typeof dep === "object" && dep !== null && "destroy" in dep;
+};
 class Destroyable {
   constructor(deps) {
     this.deps = deps;
   }
   destroy() {
     this.deps?.forEach((dep) => {
-      if (dep instanceof Destroyable) {
+      if (isDestroyable(dep)) {
         dep.destroy();
       }
     });
