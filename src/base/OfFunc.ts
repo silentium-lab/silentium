@@ -7,7 +7,7 @@ type DestructorFnType = () => void;
  * Information of function
  */
 export class OfFunc<T> extends TheInformation<T> {
-  private mbDestructor?: DestructorFnType;
+  private mbDestructor?: DestructorFnType | void;
 
   public constructor(
     private valueFn: (o: TheOwner<T>) => DestructorFnType | undefined | void,

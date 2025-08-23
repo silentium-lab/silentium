@@ -13,6 +13,9 @@ export class Lazy<T = unknown> extends Destroyable {
   }
 
   public get(...args: TheInformation[]) {
+    args.forEach((dep) => {
+      this.addDep(dep);
+    });
     return this.buildFn?.(...args) ?? (new Of(null) as TheInformation<T>);
   }
 }

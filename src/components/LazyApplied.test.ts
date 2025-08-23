@@ -6,11 +6,8 @@ import { Chain } from "./Chain";
 
 test("LazyApplied.test", () => {
   const l = new Late();
-  const lazyInf = new LazyApplied(
-    new Lazy((v) => new Of(v)),
-    (i) => new Chain(l, i),
-  );
-  const inf = lazyInf.get(1);
+  const lazyInf = new LazyApplied(new Lazy((v) => v), (i) => new Chain(l, i));
+  const inf = lazyInf.get(new Of(1));
 
   const g = vi.fn();
   inf.value(new From(g));

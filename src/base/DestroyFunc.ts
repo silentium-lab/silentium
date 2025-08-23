@@ -1,5 +1,8 @@
 import { Destroyable } from "./Destroyable";
 
+/**
+ * Representation of destructor function as object
+ */
 export class DestroyFunc extends Destroyable {
   public constructor(private destructor: () => void) {
     super();

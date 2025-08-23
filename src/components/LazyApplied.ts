@@ -11,7 +11,7 @@ export class LazyApplied<T> extends Lazy<T> {
     super();
   }
 
-  public get(...args: unknown[]): TheInformation<T> {
+  public get(...args: TheInformation[]): TheInformation<T> {
     return this.applier(this.baseLazy.get(...args));
   }
 }
