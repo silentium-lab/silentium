@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.64](https://github.com/silentium-lab/silentium/compare/v0.0.63...v0.0.64) (2025-08-23)
+
+
+### Bug Fixes
+
+* **back_to_oop:** applied and executor applied done ([f3d0f47](https://github.com/silentium-lab/silentium/commit/f3d0f47e74d6615ead7da0393975f2d2f2193e99))
+* **back_to_oop:** chain component done ([d54740d](https://github.com/silentium-lab/silentium/commit/d54740dc88424524bf21dca19da1c6889c37f47f))
+* **back_to_oop:** filtered component ([2787003](https://github.com/silentium-lab/silentium/commit/278700336fe2c4fe3bc78d898a2efe9f735b9423))
+* **back_to_oop:** from event component ([545aea7](https://github.com/silentium-lab/silentium/commit/545aea73e4db7f573c7fea6470a199c354bba01b))
+* **back_to_oop:** fromCallback ([ca6db6f](https://github.com/silentium-lab/silentium/commit/ca6db6f2fd277e1ba1628e1ebc4e8c83efc3a152))
+* **back_to_oop:** fromPromise component ([1acbcb8](https://github.com/silentium-lab/silentium/commit/1acbcb8f0784bf8a3538a95e98b5a7642d9838b8))
+* **back_to_oop:** lazy applied done ([17bc455](https://github.com/silentium-lab/silentium/commit/17bc45558fdae6b663d33c28c0cac1588fec35b7))
+* **back_to_oop:** map component done ([109d403](https://github.com/silentium-lab/silentium/commit/109d4034f0ee58bbe6ac3903459f58c2153939ac))
+* **back_to_oop:** once component done ([8df98cb](https://github.com/silentium-lab/silentium/commit/8df98cb36e515bc2814120a7bed223acf1df7d71))
+* **back_to_oop:** rebuilded: All, Any, Late ([a1ec348](https://github.com/silentium-lab/silentium/commit/a1ec348f551dbd45b1d0e9597e51270b61e8508f))
+* **back_to_oop:** sequence component ([79fc261](https://github.com/silentium-lab/silentium/commit/79fc26149fc0f8681eea958c2ea720bca0afad93))
+* **back_to_oop:** shared component ([1e4c38d](https://github.com/silentium-lab/silentium/commit/1e4c38d48e189d0bc2e0dc92911f66d0e4244675))
+* **back_to_oop:** stream done ([9dd1a95](https://github.com/silentium-lab/silentium/commit/9dd1a9586b51f99a9cd3e0dd442f7e5b3047e776))
+* **back_to_oop:** work on chain component ([a7eb373](https://github.com/silentium-lab/silentium/commit/a7eb3736521d0ea27afc33d4f0142398e750737d))
+
 ### [0.0.63](https://github.com/silentium-lab/silentium/compare/v0.0.62...v0.0.63) (2025-08-19)
 
 ### [0.0.62](https://github.com/silentium-lab/silentium/compare/v0.0.61...v0.0.62) (2025-08-19)
