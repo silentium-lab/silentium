@@ -1,73 +1,50 @@
-import { DestructorType } from "../types/DestructorType";
-import { isFilled, onExecuted, OwnerPool } from "../helpers";
-import { InformationType, OwnerType } from "../types";
+import { isFilled, OwnerPool } from "../helpers";
+import { From, OfFunc, TheInformation, TheOwner } from "../base";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export const shared = <T>(base: InformationType<T>) => {
-  const ownersPool = new OwnerPool<T>();
-  let lastValue: T | undefined;
-  let baseDestructor: DestructorType | void;
+export class Shared<T> extends TheInformation<T> {
+  private lastValue: T | undefined;
+  private ownersPool = new OwnerPool<T>();
 
-  const executed = onExecuted(() => {
-    const gp = ownersPool.owner();
-    baseDestructor = base((v) => {
-      gp(v);
-      lastValue = v;
+  public constructor(
+    private baseSrc: TheInformation<T>,
+    private stateless = false,
+  ) {
+    super([baseSrc]);
+    this.addDep(this.ownersPool);
+    this.baseSrc.value(
+      new From((v) => {
+        this.ownersPool.owner().give(v);
+        this.lastValue = v;
+      }),
+    );
+  }
+
+  public value(o: TheOwner<T>): this {
+    const i = new OfFunc((g: TheOwner<T>) => {
+      if (
+        !this.stateless &&
+        isFilled(this.lastValue) &&
+        !this.ownersPool.has(g)
+      ) {
+        g.give(this.lastValue);
+      }
+      this.ownersPool.add(g);
+      return () => {
+        this.ownersPool.remove(g);
+      };
     });
-  });
+    i.value(o);
+    this.addDep(i);
 
-  const i = (g: OwnerType<T>) => {
-    executed();
-    let od: DestructorType | void;
-    if (isFilled(lastValue) && !ownersPool.has(g)) {
-      od = g(lastValue);
-    }
-    ownersPool.add(g);
-    return () => {
-      ownersPool.remove(g);
-      od?.();
-    };
-  };
+    return this;
+  }
 
-  return [
-    i,
-    () => {
-      ownersPool.destroy();
-      baseDestructor?.();
-    },
-    ownersPool,
-  ] as const;
-};
-
-export const sharedStateless = <T>(base: InformationType<T>) => {
-  const ownersPool = new OwnerPool<T>();
-  let baseDestructor: DestructorType | void;
-
-  const executed = onExecuted((g: OwnerType<T>) => {
-    ownersPool.add(g);
-    baseDestructor = base(ownersPool.owner());
-  });
-
-  const i = (g: OwnerType<T>) => {
-    executed(g);
-    if (!ownersPool.has(g)) {
-      ownersPool.add(g);
-    }
-    return () => {
-      ownersPool.remove(g);
-    };
-  };
-
-  return [
-    i,
-    () => {
-      ownersPool.destroy();
-      baseDestructor?.();
-    },
-    ownersPool,
-  ] as const;
-};
+  public pool() {
+    return this.ownersPool;
+  }
+}
