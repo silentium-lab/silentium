@@ -7,12 +7,12 @@ import { TheInformation } from "./TheInformation";
  */
 export class Lazy<T = unknown> extends Destroyable {
   public constructor(
-    protected buildFn?: (...args: unknown[]) => TheInformation<T>,
+    protected buildFn?: (...args: TheInformation[]) => TheInformation<T>,
   ) {
     super();
   }
 
-  public get(...args: unknown[]) {
-    return this.buildFn?.(...args) ?? new Of(null);
+  public get(...args: TheInformation[]) {
+    return this.buildFn?.(...args) ?? (new Of(null) as TheInformation<T>);
   }
 }

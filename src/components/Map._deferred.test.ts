@@ -1,8 +1,7 @@
-import { wait } from "../testing";
-import { InformationType, OwnerType } from "../types";
-import { i } from "./Information";
-import { map } from "./Map";
+import { From, Lazy, Of, OfFunc, TheInformation, TheOwner } from "../base";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { wait } from "../testing";
+import { Map } from "./Map";
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -13,27 +12,32 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function x2(baseNumber: InformationType<number>) {
-  return (o: OwnerType<number>) => {
-    baseNumber((v) => {
-      o(v * 2);
-    });
-  };
+function x2(baseNumber: TheInformation<number>) {
+  return new OfFunc((o: TheOwner<number>) => {
+    baseNumber.value(
+      new From((v) => {
+        o.give(v * 2);
+      }),
+    );
+  });
 }
 
 test("Map._deferred.test", async () => {
-  const infoDeferred = (val: number) => (o: OwnerType<number>) => {
-    wait(5).then(() => {
-      o(val);
+  const infoDeferred = (val: number) =>
+    new OfFunc((o: TheOwner<number>) => {
+      wait(5).then(() => {
+        o.give(val);
+      });
     });
-  };
-  const info = i([1, 2, 3, 9].map(infoDeferred));
-  const infoMapped = map(info, x2);
-  const callFn = vi.fn();
+  const info = new Of([1, 2, 3, 9].map(infoDeferred));
+  const infoMapped = new Map(info, new Lazy(x2));
 
-  infoMapped((v) => {
-    callFn(v.join());
-  });
+  const callFn = vi.fn();
+  infoMapped.value(
+    new From((v) => {
+      callFn(v.join());
+    }),
+  );
 
   await wait(50);
   expect(callFn).toBeCalled();

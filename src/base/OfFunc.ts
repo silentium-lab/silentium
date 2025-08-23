@@ -10,7 +10,7 @@ export class OfFunc<T> extends TheInformation<T> {
   private mbDestructor?: DestructorFnType;
 
   public constructor(
-    private valueFn: (o: TheOwner<T>) => DestructorFnType | undefined,
+    private valueFn: (o: TheOwner<T>) => DestructorFnType | undefined | void,
   ) {
     super([valueFn]);
   }

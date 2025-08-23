@@ -1,5 +1,8 @@
 import { Lazy, TheInformation } from "src/base";
 
+/**
+ * Lazy with applied function to its results
+ */
 export class LazyApplied<T> extends Lazy<T> {
   public constructor(
     private baseLazy: Lazy,
