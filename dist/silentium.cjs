@@ -151,6 +151,13 @@ class Void extends TheOwner {
   }
 }
 
+class On extends Destroyable {
+  constructor(src, fn) {
+    super(src, fn);
+    src.value(fn ? new From(fn) : new Void());
+  }
+}
+
 var __defProp$5 = Object.defineProperty;
 var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
@@ -545,6 +552,7 @@ exports.LazyClass = LazyClass;
 exports.Map = Map;
 exports.Of = Of;
 exports.OfFunc = OfFunc;
+exports.On = On;
 exports.Once = Once;
 exports.OwnerPool = OwnerPool;
 exports.Sequence = Sequence;

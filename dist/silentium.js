@@ -149,6 +149,13 @@ class Void extends TheOwner {
   }
 }
 
+class On extends Destroyable {
+  constructor(src, fn) {
+    super(src, fn);
+    src.value(fn ? new From(fn) : new Void());
+  }
+}
+
 var __defProp$5 = Object.defineProperty;
 var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
@@ -524,5 +531,5 @@ class Stream extends TheInformation {
   }
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, On, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
 //# sourceMappingURL=silentium.js.map

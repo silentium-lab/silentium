@@ -80,6 +80,13 @@ declare class OfFunc<T> extends TheInformation<T> {
 }
 
 /**
+ * Run information with functional owner if needed
+ */
+declare class On<T = unknown> extends Destroyable {
+    constructor(src: InformationType<T>, fn?: (value: T) => void);
+}
+
+/**
  * Silent owner
  */
 declare class Void extends TheOwner {
@@ -316,4 +323,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
