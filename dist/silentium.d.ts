@@ -3,12 +3,12 @@
  */
 declare class Destroyable {
     private theDeps;
-    constructor(...deps: unknown[]);
+    constructor(...deps: any[]);
     destroy(): this;
     /**
      * Add dependency what can be destroyed
      */
-    addDep(dep: unknown): this;
+    addDep(dep: any): this;
 }
 
 /**
