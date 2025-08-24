@@ -20,10 +20,13 @@ declare class DestroyFunc extends Destroyable {
     destroy(): this;
 }
 
+interface OwnerType<T = unknown> {
+    give(value: T): this;
+}
 /**
  * Representation of Information Owner
  */
-declare abstract class TheOwner<T = unknown> {
+declare abstract class TheOwner<T = unknown> implements OwnerType<T> {
     abstract give(value: T): this;
 }
 
@@ -36,20 +39,23 @@ declare class From<T = unknown> extends TheOwner<T> {
     give(value: T): this;
 }
 
+interface InformationType<T = unknown> {
+    value(o: OwnerType<T>): this;
+}
 /**
  * Representation of Information
  */
-declare abstract class TheInformation<T = unknown> extends Destroyable {
-    abstract value(o: TheOwner<T>): this;
+declare abstract class TheInformation<T = unknown> extends Destroyable implements InformationType<T> {
+    abstract value(o: OwnerType<T>): this;
 }
 
 /**
  * Ability to create information after some event
  */
 declare class Lazy<T = unknown> extends Destroyable {
-    protected buildFn?: ((...args: TheInformation[]) => TheInformation<T>) | undefined;
-    constructor(buildFn?: ((...args: TheInformation[]) => TheInformation<T>) | undefined);
-    get(...args: TheInformation[]): TheInformation<T>;
+    protected buildFn?: ((...args: InformationType[]) => InformationType<T>) | undefined;
+    constructor(buildFn?: ((...args: InformationType[]) => InformationType<T>) | undefined);
+    get(...args: InformationType[]): InformationType<T>;
 }
 
 /**
@@ -58,7 +64,7 @@ declare class Lazy<T = unknown> extends Destroyable {
 declare class Of<T> extends TheInformation<T> {
     private theValue;
     constructor(theValue: T);
-    value(o: TheOwner<T>): this;
+    value(o: OwnerType<T>): this;
 }
 
 type DestructorFnType = () => void;
@@ -68,8 +74,8 @@ type DestructorFnType = () => void;
 declare class OfFunc<T> extends TheInformation<T> {
     private valueFn;
     private mbDestructor?;
-    constructor(valueFn: (o: TheOwner<T>) => DestructorFnType | undefined | void);
-    value(o: TheOwner<T>): this;
+    constructor(valueFn: (o: OwnerType<T>) => DestructorFnType | undefined | void);
+    value(o: OwnerType<T>): this;
     destroy(): this;
 }
 
@@ -80,8 +86,8 @@ declare class Void extends TheOwner {
     give(): this;
 }
 
-type ExtractTypeS<T> = T extends TheInformation<infer U> ? U : never;
-type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
+type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
+type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
 /**
@@ -89,12 +95,12 @@ type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-declare class All<const T extends TheInformation[]> extends TheInformation<ExtractTypesFromArrayS<T>> {
+declare class All<const T extends InformationType[]> extends TheInformation<ExtractTypesFromArrayS<T>> {
     private keysKnown;
     private keysFilled;
     private infos;
     constructor(...theInfos: T);
-    value(o: TheOwner<ExtractTypesFromArrayS<T>>): this;
+    value(o: OwnerType<ExtractTypesFromArrayS<T>>): this;
     private isAllFilled;
 }
 
@@ -105,8 +111,8 @@ declare class All<const T extends TheInformation[]> extends TheInformation<Extra
  */
 declare class Any<T> extends TheInformation<T> {
     private infos;
-    constructor(...theInfos: TheInformation<T>[]);
-    value(o: TheOwner<T>): this;
+    constructor(...theInfos: InformationType<T>[]);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -116,8 +122,8 @@ declare class Any<T> extends TheInformation<T> {
 declare class Applied<T, R> extends TheInformation<R> {
     private baseSrc;
     private applier;
-    constructor(baseSrc: TheInformation<T>, applier: (v: T) => R);
-    value(o: TheOwner<R>): this;
+    constructor(baseSrc: InformationType<T>, applier: (v: T) => R);
+    value(o: OwnerType<R>): this;
 }
 
 type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
@@ -127,10 +133,10 @@ type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> {
+declare class Chain<T extends InformationType[]> extends TheInformation<Last<T>> {
     private theInfos;
     constructor(...infos: T);
-    value(o: TheOwner<Last<T>>): this;
+    value(o: OwnerType<Last<T>>): this;
 }
 
 /**
@@ -141,8 +147,8 @@ declare class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> 
 declare class ExecutorApplied<T> extends TheInformation<T> {
     private baseSrc;
     private applier;
-    constructor(baseSrc: TheInformation<T>, applier: (executor: (v: T) => void) => (v: T) => void);
-    value(o: TheOwner<T>): this;
+    constructor(baseSrc: InformationType<T>, applier: (executor: (v: T) => void) => (v: T) => void);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -155,8 +161,8 @@ declare class Filtered<T> extends TheInformation<T> {
     private baseSrc;
     private predicate;
     private defaultValue?;
-    constructor(baseSrc: TheInformation<T>, predicate: (v: T) => boolean, defaultValue?: T | undefined);
-    value(o: TheOwner<T>): this;
+    constructor(baseSrc: InformationType<T>, predicate: (v: T) => boolean, defaultValue?: T | undefined);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -169,7 +175,7 @@ declare class FromCallback<T> extends TheInformation<T> {
     private waitForCb;
     private theArgs;
     constructor(waitForCb: (cb: (v: T) => any, ...args: unknown[]) => unknown, ...args: unknown[]);
-    value(o: TheOwner<T>): this;
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -182,8 +188,8 @@ declare class FromEvent<T = unknown> extends TheInformation<T> {
     private eventNameSrc;
     private subscribeMethodSrc;
     private unsubscribeMethodSrc;
-    constructor(emitterSrc: TheInformation<any>, eventNameSrc: TheInformation<string>, subscribeMethodSrc: TheInformation<string>, unsubscribeMethodSrc?: TheInformation<string>);
-    value(o: TheOwner<T>): this;
+    constructor(emitterSrc: InformationType<any>, eventNameSrc: InformationType<string>, subscribeMethodSrc: InformationType<string>, unsubscribeMethodSrc?: InformationType<string>);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -194,8 +200,8 @@ declare class FromEvent<T = unknown> extends TheInformation<T> {
 declare class FromPromise<T> extends TheInformation<T> {
     private p;
     private errorOwner?;
-    constructor(p: Promise<T>, errorOwner?: TheOwner | undefined);
-    value(o: TheOwner<T>): this;
+    constructor(p: Promise<T>, errorOwner?: OwnerType | undefined);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -209,7 +215,7 @@ declare class Late<T> extends TheInformation<T> {
     private theOwner?;
     private lateOwner;
     constructor(theValue?: T | undefined);
-    value(o: TheOwner<T>): this;
+    value(o: OwnerType<T>): this;
     owner(): From<T>;
     private notify;
 }
@@ -220,8 +226,8 @@ declare class Late<T> extends TheInformation<T> {
 declare class LazyApplied<T> extends Lazy<T> {
     private baseLazy;
     private applier;
-    constructor(baseLazy: Lazy, applier: (i: TheInformation) => TheInformation<T>);
-    get(...args: TheInformation[]): TheInformation<T>;
+    constructor(baseLazy: Lazy, applier: (i: InformationType) => InformationType<T>);
+    get(...args: InformationType[]): InformationType<T>;
 }
 
 /**
@@ -239,8 +245,8 @@ declare class LazyClass<T> extends Lazy<T> {
 declare class Map<T, TG> extends TheInformation<TG[]> {
     private baseSrc;
     private targetSrc;
-    constructor(baseSrc: TheInformation<T[]>, targetSrc: Lazy<TG>);
-    value(o: TheOwner<TG[]>): this;
+    constructor(baseSrc: InformationType<T[]>, targetSrc: Lazy<TG>);
+    value(o: OwnerType<TG[]>): this;
 }
 
 /**
@@ -251,8 +257,8 @@ declare class Map<T, TG> extends TheInformation<TG[]> {
  */
 declare class Once<T> extends TheInformation<T> {
     private baseSrc;
-    constructor(baseSrc: TheInformation<T>);
-    value(o: TheOwner<T>): this;
+    constructor(baseSrc: InformationType<T>);
+    value(o: OwnerType<T>): this;
 }
 
 /**
@@ -262,8 +268,8 @@ declare class Once<T> extends TheInformation<T> {
  */
 declare class Sequence<T> extends TheInformation<T[]> {
     private baseSrc;
-    constructor(baseSrc: TheInformation<T>);
-    value(o: TheOwner<T[]>): this;
+    constructor(baseSrc: InformationType<T>);
+    value(o: OwnerType<T[]>): this;
 }
 
 declare const isFilled: <T>(value?: T) => value is T;
@@ -277,11 +283,11 @@ declare class OwnerPool<T> {
     private owners;
     private innerOwner;
     constructor();
-    owner(): TheOwner<T>;
+    owner(): OwnerType<T>;
     size(): number;
-    has(owner: TheOwner<T>): boolean;
-    add(owner: TheOwner<T>): this;
-    remove(g: TheOwner<T>): this;
+    has(owner: OwnerType<T>): boolean;
+    add(owner: OwnerType<T>): this;
+    remove(g: OwnerType<T>): this;
     destroy(): this;
 }
 
@@ -295,8 +301,8 @@ declare class Shared<T> extends TheInformation<T> {
     private stateless;
     private lastValue;
     private ownersPool;
-    constructor(baseSrc: TheInformation<T>, stateless?: boolean);
-    value(o: TheOwner<T>): this;
+    constructor(baseSrc: InformationType<T>, stateless?: boolean);
+    value(o: OwnerType<T>): this;
     pool(): OwnerPool<T>;
 }
 
@@ -306,8 +312,8 @@ declare class Shared<T> extends TheInformation<T> {
  */
 declare class Stream<T> extends TheInformation<T> {
     private baseSrc;
-    constructor(baseSrc: TheInformation<T[]>);
-    value(o: TheOwner<T>): this;
+    constructor(baseSrc: InformationType<T[]>);
+    value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
