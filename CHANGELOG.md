@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.68](https://github.com/silentium-lab/silentium/compare/v0.0.67...v0.0.68) (2025-08-24)
+
+
+### Bug Fixes
+
+* **main:** void owner ([91aaff5](https://github.com/silentium-lab/silentium/commit/91aaff53ebce1c4f0cc5034ec6bbc4dfd13d8327))
+
 ### [0.0.67](https://github.com/silentium-lab/silentium/compare/v0.0.66...v0.0.67) (2025-08-23)
 
 
