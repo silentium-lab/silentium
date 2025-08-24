@@ -1,4 +1,4 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, InformationType, OwnerType, TheInformation } from "../base";
 
 /**
  * Information to which a function is applied in order
@@ -7,13 +7,13 @@ import { From, TheInformation, TheOwner } from "../base";
  */
 export class ExecutorApplied<T> extends TheInformation<T> {
   public constructor(
-    private baseSrc: TheInformation<T>,
+    private baseSrc: InformationType<T>,
     private applier: (executor: (v: T) => void) => (v: T) => void,
   ) {
     super(baseSrc);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.baseSrc.value(
       new From(
         this.applier((v) => {

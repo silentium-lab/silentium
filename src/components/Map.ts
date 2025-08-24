@@ -1,4 +1,11 @@
-import { From, Lazy, Of, TheInformation, TheOwner } from "../base";
+import {
+  From,
+  InformationType,
+  Lazy,
+  Of,
+  OwnerType,
+  TheInformation,
+} from "../base";
 import { All } from "./All";
 
 /**
@@ -8,18 +15,18 @@ import { All } from "./All";
  */
 export class Map<T, TG> extends TheInformation<TG[]> {
   public constructor(
-    private baseSrc: TheInformation<T[]>,
+    private baseSrc: InformationType<T[]>,
     private targetSrc: Lazy<TG>,
   ) {
     super(baseSrc, targetSrc);
   }
 
-  public value(o: TheOwner<TG[]>) {
+  public value(o: OwnerType<TG[]>) {
     this.baseSrc.value(
       new From((v) => {
-        const infos: TheInformation<TG>[] = [];
+        const infos: InformationType<TG>[] = [];
         v.forEach((val) => {
-          let valInfo: TheInformation<T> | T = val;
+          let valInfo: InformationType<T> | T = val;
           if (!(valInfo instanceof TheInformation)) {
             valInfo = new Of(valInfo);
           }

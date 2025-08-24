@@ -1,4 +1,4 @@
-import { TheInformation, TheOwner } from "../base";
+import { OwnerType, TheInformation } from "../base";
 
 /**
  * When receiving a reference to a function expecting a callback, the component
@@ -17,7 +17,7 @@ export class FromCallback<T> extends TheInformation<T> {
     this.theArgs = args;
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.waitForCb(
       (v) => {
         o.give(v);

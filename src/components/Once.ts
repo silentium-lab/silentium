@@ -1,4 +1,4 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, InformationType, OwnerType, TheInformation } from "../base";
 
 /**
  * Limits the number of values from the information source
@@ -7,11 +7,11 @@ import { From, TheInformation, TheOwner } from "../base";
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
 export class Once<T> extends TheInformation<T> {
-  public constructor(private baseSrc: TheInformation<T>) {
+  public constructor(private baseSrc: InformationType<T>) {
     super();
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     let isFilled = false;
     this.baseSrc.value(
       new From((v) => {

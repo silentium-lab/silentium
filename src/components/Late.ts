@@ -1,4 +1,4 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, OwnerType, TheInformation } from "../base";
 import { isFilled } from "../helpers";
 
 /**
@@ -8,7 +8,7 @@ import { isFilled } from "../helpers";
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
 export class Late<T> extends TheInformation<T> {
-  private theOwner?: TheOwner<T>;
+  private theOwner?: OwnerType<T>;
   private lateOwner = new From((v: T) => {
     this.theValue = v;
     this.notify();
@@ -18,7 +18,7 @@ export class Late<T> extends TheInformation<T> {
     super(theValue);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     if (this.theOwner) {
       throw new Error(
         "Late component gets new owner, when another was already connected!",

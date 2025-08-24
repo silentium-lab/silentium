@@ -1,4 +1,4 @@
-import { TheInformation, TheOwner } from "../base";
+import { OwnerType, TheInformation } from "../base";
 
 /**
  * Component that gets a value from a promise and
@@ -8,12 +8,12 @@ import { TheInformation, TheOwner } from "../base";
 export class FromPromise<T> extends TheInformation<T> {
   public constructor(
     private p: Promise<T>,
-    private errorOwner?: TheOwner,
+    private errorOwner?: OwnerType,
   ) {
     super(p);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.p
       .then((v) => {
         o.give(v);

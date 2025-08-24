@@ -1,5 +1,11 @@
 import { isFilled, OwnerPool } from "../helpers";
-import { From, OfFunc, TheInformation, TheOwner } from "../base";
+import {
+  From,
+  InformationType,
+  OfFunc,
+  OwnerType,
+  TheInformation,
+} from "../base";
 
 /**
  * An information object that helps multiple owners access
@@ -11,7 +17,7 @@ export class Shared<T> extends TheInformation<T> {
   private ownersPool = new OwnerPool<T>();
 
   public constructor(
-    private baseSrc: TheInformation<T>,
+    private baseSrc: InformationType<T>,
     private stateless = false,
   ) {
     super(baseSrc);
@@ -24,8 +30,8 @@ export class Shared<T> extends TheInformation<T> {
     );
   }
 
-  public value(o: TheOwner<T>): this {
-    const i = new OfFunc((g: TheOwner<T>) => {
+  public value(o: OwnerType<T>): this {
+    const i = new OfFunc((g: OwnerType<T>) => {
       if (
         !this.stateless &&
         isFilled(this.lastValue) &&

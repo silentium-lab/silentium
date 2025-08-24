@@ -1,4 +1,4 @@
-import { TheInformation, TheOwner } from "../base";
+import { InformationType, OwnerType, TheInformation } from "../base";
 
 /**
  * From a set of information sources we get
@@ -6,14 +6,14 @@ import { TheInformation, TheOwner } from "../base";
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
 export class Any<T> extends TheInformation<T> {
-  private infos: TheInformation<T>[];
+  private infos: InformationType<T>[];
 
-  public constructor(...theInfos: TheInformation<T>[]) {
+  public constructor(...theInfos: InformationType<T>[]) {
     super(theInfos);
     this.infos = theInfos;
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.infos.forEach((info) => {
       info.value(o);
     });

@@ -1,4 +1,4 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, InformationType, OwnerType, TheInformation } from "../base";
 
 /**
  * Information whose value is being validated
@@ -8,14 +8,14 @@ import { From, TheInformation, TheOwner } from "../base";
  */
 export class Filtered<T> extends TheInformation<T> {
   public constructor(
-    private baseSrc: TheInformation<T>,
+    private baseSrc: InformationType<T>,
     private predicate: (v: T) => boolean,
     private defaultValue?: T,
   ) {
     super(baseSrc);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.baseSrc.value(
       new From((v) => {
         if (this.predicate(v)) {

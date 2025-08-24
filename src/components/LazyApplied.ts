@@ -1,4 +1,4 @@
-import { Lazy, TheInformation } from "../base";
+import { InformationType, Lazy } from "../base";
 
 /**
  * Lazy with applied function to its results
@@ -6,12 +6,12 @@ import { Lazy, TheInformation } from "../base";
 export class LazyApplied<T> extends Lazy<T> {
   public constructor(
     private baseLazy: Lazy,
-    private applier: (i: TheInformation) => TheInformation<T>,
+    private applier: (i: InformationType) => InformationType<T>,
   ) {
     super();
   }
 
-  public get(...args: TheInformation[]): TheInformation<T> {
+  public get(...args: InformationType[]): InformationType<T> {
     return this.applier(this.baseLazy.get(...args));
   }
 }

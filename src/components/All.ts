@@ -1,8 +1,8 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, InformationType, OwnerType, TheInformation } from "../base";
 
-type ExtractTypeS<T> = T extends TheInformation<infer U> ? U : never;
+type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
 
-export type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
+export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
@@ -11,7 +11,7 @@ export type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export class All<const T extends TheInformation[]> extends TheInformation<
+export class All<const T extends InformationType[]> extends TheInformation<
   ExtractTypesFromArrayS<T>
 > {
   private keysKnown: Set<string>;
@@ -24,7 +24,7 @@ export class All<const T extends TheInformation[]> extends TheInformation<
     this.keysKnown = new Set<string>(Object.keys(theInfos));
   }
 
-  public value(o: TheOwner<ExtractTypesFromArrayS<T>>): this {
+  public value(o: OwnerType<ExtractTypesFromArrayS<T>>): this {
     const result: Record<string, unknown> = {};
 
     Object.entries(this.infos).forEach(([key, info]) => {

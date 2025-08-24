@@ -1,4 +1,4 @@
-import { TheOwner } from "./TheOwner";
+import { OwnerType } from "./TheOwner";
 import { TheInformation } from "./TheInformation";
 
 type DestructorFnType = () => void;
@@ -10,12 +10,12 @@ export class OfFunc<T> extends TheInformation<T> {
   private mbDestructor?: DestructorFnType | void;
 
   public constructor(
-    private valueFn: (o: TheOwner<T>) => DestructorFnType | undefined | void,
+    private valueFn: (o: OwnerType<T>) => DestructorFnType | undefined | void,
   ) {
     super(valueFn);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     this.mbDestructor = this.valueFn(o);
     return this;
   }

@@ -1,4 +1,4 @@
-import { TheOwner } from "./TheOwner";
+import { OwnerType } from "./TheOwner";
 import { TheInformation } from "./TheInformation";
 import { isFilled } from "../helpers";
 
@@ -10,7 +10,7 @@ export class Of<T> extends TheInformation<T> {
     super(theValue);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     if (isFilled(this.theValue)) {
       o.give(this.theValue);
     }

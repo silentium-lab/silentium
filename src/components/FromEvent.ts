@@ -1,5 +1,5 @@
 import { DestroyFunc } from "../base/DestroyFunc";
-import { From, Of, TheInformation, TheOwner } from "../base";
+import { From, InformationType, Of, OwnerType, TheInformation } from "../base";
 import { All } from "./All";
 
 /**
@@ -9,15 +9,15 @@ import { All } from "./All";
  */
 export class FromEvent<T = unknown> extends TheInformation<T> {
   public constructor(
-    private emitterSrc: TheInformation<any>,
-    private eventNameSrc: TheInformation<string>,
-    private subscribeMethodSrc: TheInformation<string>,
-    private unsubscribeMethodSrc: TheInformation<string> = new Of(""),
+    private emitterSrc: InformationType<any>,
+    private eventNameSrc: InformationType<string>,
+    private subscribeMethodSrc: InformationType<string>,
+    private unsubscribeMethodSrc: InformationType<string> = new Of(""),
   ) {
     super(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc);
   }
 
-  public value(o: TheOwner<T>): this {
+  public value(o: OwnerType<T>): this {
     const a = new All(
       this.emitterSrc,
       this.eventNameSrc,

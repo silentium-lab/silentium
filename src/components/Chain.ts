@@ -1,4 +1,4 @@
-import { From, TheInformation, TheOwner } from "../base";
+import { From, InformationType, OwnerType, TheInformation } from "../base";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
@@ -9,7 +9,9 @@ type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-export class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> {
+export class Chain<T extends InformationType[]> extends TheInformation<
+  Last<T>
+> {
   private theInfos: T;
 
   public constructor(...infos: T) {
@@ -17,7 +19,7 @@ export class Chain<T extends TheInformation[]> extends TheInformation<Last<T>> {
     this.theInfos = infos;
   }
 
-  public value(o: TheOwner<Last<T>>) {
+  public value(o: OwnerType<Last<T>>) {
     let lastValue: Last<T> | undefined;
 
     const handleI = (index: number) => {
