@@ -145,6 +145,12 @@ class OfFunc extends TheInformation {
   }
 }
 
+class Void extends TheOwner {
+  give() {
+    return this;
+  }
+}
+
 var __defProp$5 = Object.defineProperty;
 var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
@@ -546,5 +552,6 @@ exports.Shared = Shared;
 exports.Stream = Stream;
 exports.TheInformation = TheInformation;
 exports.TheOwner = TheOwner;
+exports.Void = Void;
 exports.isFilled = isFilled;
 //# sourceMappingURL=silentium.cjs.map

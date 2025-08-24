@@ -6,3 +6,4 @@ export * from "./Of";
 export * from "./OfFunc";
 export * from "./TheInformation";
 export * from "./TheOwner";
+export * from "./Void";

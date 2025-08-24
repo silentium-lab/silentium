@@ -73,6 +73,13 @@ declare class OfFunc<T> extends TheInformation<T> {
     destroy(): this;
 }
 
+/**
+ * Silent owner
+ */
+declare class Void extends TheOwner {
+    give(): this;
+}
+
 type ExtractTypeS<T> = T extends TheInformation<infer U> ? U : never;
 type ExtractTypesFromArrayS<T extends TheInformation<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
@@ -303,4 +310,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: TheOwner<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, Of, OfFunc, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
