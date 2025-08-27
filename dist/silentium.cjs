@@ -1,14 +1,14 @@
 'use strict';
 
-var __defProp$8 = Object.defineProperty;
-var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
+var __defProp$9 = Object.defineProperty;
+var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, key + "" , value);
 const isDestroyable = (dep) => {
   return typeof dep === "object" && dep !== null && "destroy" in dep;
 };
 class Destroyable {
   constructor(...deps) {
-    __publicField$8(this, "theDeps");
+    __publicField$9(this, "theDeps");
     this.theDeps = deps ?? [];
   }
   destroy() {
@@ -53,7 +53,22 @@ class From extends TheOwner {
   }
 }
 
+var __defProp$8 = Object.defineProperty;
+var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
 class TheInformation extends Destroyable {
+}
+class MaybeInformation extends TheInformation {
+  constructor(theInfo) {
+    const info = typeof theInfo === "object" && theInfo !== null && "value" in theInfo && typeof theInfo.value === "function" ? theInfo : new Of(theInfo);
+    super(info);
+    __publicField$8(this, "info");
+    this.info = info;
+  }
+  value(o) {
+    this.info.value(o);
+    return this;
+  }
 }
 
 const isFilled = (value) => {
@@ -550,6 +565,7 @@ exports.Lazy = Lazy;
 exports.LazyApplied = LazyApplied;
 exports.LazyClass = LazyClass;
 exports.Map = Map;
+exports.MaybeInformation = MaybeInformation;
 exports.Of = Of;
 exports.OfFunc = OfFunc;
 exports.On = On;
