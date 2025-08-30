@@ -14,4 +14,5 @@ export * from "./Map";
 export * from "./Once";
 export * from "./Sequence";
 export * from "./Shared";
+export * from "./SharedSource";
 export * from "./Stream";

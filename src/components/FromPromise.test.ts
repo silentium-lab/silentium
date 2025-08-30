@@ -15,7 +15,7 @@ test("FromPromise.test", async () => {
   expect(o).toBeCalledWith(345);
 
   const err = new Late();
-  const i2 = new FromPromise(Promise.reject(111), err.owner());
+  const i2 = new FromPromise(Promise.reject(111), err);
   const o2 = vi.fn();
   i2.value(new From(o2));
 

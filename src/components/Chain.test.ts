@@ -13,14 +13,14 @@ test("infoChain.test", () => {
 
   expect(d.toString()).toBe("the_value");
 
-  triggerSrc.owner().give("done");
+  triggerSrc.give("done");
 
   expect(d.toString()).toBe("the_value|the_value");
 
-  valueSrc.owner().give("new_value");
+  valueSrc.give("new_value");
   expect(d.toString()).toBe("the_value|the_value|new_value");
 
-  triggerSrc.owner().give("done2");
+  triggerSrc.give("done2");
 
   expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
 });

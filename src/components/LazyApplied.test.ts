@@ -14,7 +14,7 @@ test("LazyApplied.test", () => {
 
   expect(g).not.toHaveBeenCalled();
 
-  l.owner().give(1);
+  l.give(1);
 
   expect(g).toHaveBeenCalledTimes(1);
   expect(g).toBeCalledWith(1);

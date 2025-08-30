@@ -7,7 +7,7 @@ import { isFilled } from "../helpers";
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-export class Late<T> extends TheInformation<T> {
+export class Late<T> extends TheInformation<T> implements OwnerType<T> {
   private theOwner?: OwnerType<T>;
   private lateOwner = new From((v: T) => {
     this.theValue = v;
@@ -29,8 +29,9 @@ export class Late<T> extends TheInformation<T> {
     return this;
   }
 
-  public owner() {
-    return this.lateOwner;
+  public give(v: T) {
+    this.lateOwner.give(v);
+    return this;
   }
 
   private notify() {

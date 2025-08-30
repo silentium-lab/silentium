@@ -14,7 +14,7 @@ test("Any.test", () => {
 
   expect(o).toHaveBeenCalledWith("default");
 
-  l.owner().give(999);
+  l.give(999);
 
   expect(o).toBeCalledWith(999);
 });

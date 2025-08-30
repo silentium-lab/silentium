@@ -9,7 +9,7 @@ test("Once._main.test", () => {
   const g = vitest.fn();
   info.value(new From(g));
 
-  l.owner().give(321);
+  l.give(321);
 
   expect(g).toBeCalledWith(123);
 });

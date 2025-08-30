@@ -10,6 +10,6 @@ test("Once._notcalled.test", () => {
   info.value(new From(g));
 
   expect(g).not.toHaveBeenCalled();
-  l.owner().give(111);
+  l.give(111);
   expect(g).toBeCalledWith(111);
 });

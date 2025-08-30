@@ -19,9 +19,9 @@ test("infoExecutorApplied.test", () => {
 
   infoLimited.value(d.owner());
 
-  l.owner().give(2);
-  l.owner().give(3);
-  l.owner().give(4);
+  l.give(2);
+  l.give(3);
+  l.give(4);
 
   expect(d.toString()).toBe("1|2");
 });

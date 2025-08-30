@@ -10,11 +10,11 @@ test("Late.test", () => {
 
   expect(o).not.toHaveBeenCalled();
 
-  l.owner().give(1);
+  l.give(1);
 
   expect(o).toHaveBeenCalledWith(1);
 
-  l.owner().give(2);
+  l.give(2);
 
   expect(o).toHaveBeenCalledWith(2);
 });

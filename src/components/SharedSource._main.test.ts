@@ -1,15 +1,14 @@
 import { expect, test, vi } from "vitest";
 import { Late } from "./Late";
-import { Shared } from "./Shared";
 import { From } from "../base";
+import { SharedSource } from "../components/SharedSource";
 
-test("Shared._stateless.test", () => {
-  const l = new Late<number>(1);
-  const s = new Shared(l, true);
+test("SharedSource._main.test", () => {
+  const s = new SharedSource(new Late<number>(1), true);
 
   const g = vi.fn();
   s.value(new From(g));
-  l.give(1);
+  s.give(1);
 
   expect(g).toBeCalledWith(1);
 
@@ -17,7 +16,7 @@ test("Shared._stateless.test", () => {
   s.value(new From(g2));
   expect(g2).not.toHaveBeenCalled();
 
-  l.give(2);
+  s.give(2);
 
   expect(g).toBeCalledWith(2);
   expect(g2).toBeCalledWith(2);
