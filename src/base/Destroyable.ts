@@ -27,4 +27,9 @@ export class Destroyable {
     this.theDeps?.push(dep);
     return this;
   }
+
+  public dep(dep: any) {
+    this.addDep(dep);
+    return dep;
+  }
 }
