@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.74](https://github.com/silentium-lab/silentium/compare/v0.0.73...v0.0.74) (2025-08-30)
+
+
+### Bug Fixes
+
+* **main:** mbInfo shorter name ([9b5a321](https://github.com/silentium-lab/silentium/commit/9b5a321d007f610d1138f22e98024fbd2ff416fa))
+
 ### [0.0.73](https://github.com/silentium-lab/silentium/compare/v0.0.72...v0.0.73) (2025-08-30)
 
 
