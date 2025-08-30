@@ -50,7 +50,7 @@ type MaybeInformationType<T = unknown> = InformationType<T> | T;
 declare abstract class TheInformation<T = unknown> extends Destroyable implements InformationType<T> {
     abstract value(o: OwnerType<T>): this;
 }
-declare class MaybeInformation<T> extends TheInformation<T> {
+declare class MbInfo<T> extends TheInformation<T> {
     private info;
     constructor(theInfo: MaybeInformationType<T>);
     value(o: OwnerType<T>): this;
@@ -330,4 +330,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, MaybeInformation, type MaybeInformationType, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };

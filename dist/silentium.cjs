@@ -62,7 +62,7 @@ var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, 
 var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
 class TheInformation extends Destroyable {
 }
-class MaybeInformation extends TheInformation {
+class MbInfo extends TheInformation {
   constructor(theInfo) {
     const info = typeof theInfo === "object" && theInfo !== null && "value" in theInfo && typeof theInfo.value === "function" ? theInfo : new Of(theInfo);
     super(info);
@@ -569,7 +569,7 @@ exports.Lazy = Lazy;
 exports.LazyApplied = LazyApplied;
 exports.LazyClass = LazyClass;
 exports.Map = Map;
-exports.MaybeInformation = MaybeInformation;
+exports.MbInfo = MbInfo;
 exports.Of = Of;
 exports.OfFunc = OfFunc;
 exports.On = On;

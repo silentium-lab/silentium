@@ -60,7 +60,7 @@ var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, 
 var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
 class TheInformation extends Destroyable {
 }
-class MaybeInformation extends TheInformation {
+class MbInfo extends TheInformation {
   constructor(theInfo) {
     const info = typeof theInfo === "object" && theInfo !== null && "value" in theInfo && typeof theInfo.value === "function" ? theInfo : new Of(theInfo);
     super(info);
@@ -550,5 +550,5 @@ class Stream extends TheInformation {
   }
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, MaybeInformation, Of, OfFunc, On, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, MbInfo, Of, OfFunc, On, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
 //# sourceMappingURL=silentium.mjs.map
