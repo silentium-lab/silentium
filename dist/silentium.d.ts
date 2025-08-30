@@ -312,7 +312,7 @@ declare class OwnerPool<T> {
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-declare class Shared<T> extends TheInformation<T> {
+declare class Shared<T> extends TheInformation<T> implements OwnerType<T> {
     private baseSrc;
     private stateless;
     private lastValue;
@@ -320,12 +320,12 @@ declare class Shared<T> extends TheInformation<T> {
     constructor(baseSrc: InformationType<T>, stateless?: boolean);
     value(o: OwnerType<T>): this;
     pool(): OwnerPool<T>;
+    give(value: T): this;
 }
 
 declare class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
-    private baseSrc;
     private sharedSrc;
-    constructor(baseSrc: InformationType<T>, stateless?: boolean);
+    constructor(baseSrc: SourceType<T>, stateless?: boolean);
     value(o: OwnerType<T>): this;
     give(value: T): this;
 }

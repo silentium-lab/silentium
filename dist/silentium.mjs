@@ -533,6 +533,11 @@ class Shared extends TheInformation {
   pool() {
     return this.ownersPool;
   }
+  give(value) {
+    this.lastValue = value;
+    this.ownersPool.owner().give(value);
+    return this;
+  }
 }
 
 var __defProp = Object.defineProperty;
@@ -542,7 +547,6 @@ class SharedSource extends TheInformation {
   constructor(baseSrc, stateless = false) {
     const sharedSrc = new Shared(baseSrc, stateless);
     super(sharedSrc);
-    this.baseSrc = baseSrc;
     __publicField(this, "sharedSrc");
     this.sharedSrc = sharedSrc;
   }
@@ -551,7 +555,7 @@ class SharedSource extends TheInformation {
     return this;
   }
   give(value) {
-    this.sharedSrc.pool().owner().give(value);
+    this.sharedSrc.give(value);
     return this;
   }
 }
