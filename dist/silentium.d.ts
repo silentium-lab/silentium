@@ -9,6 +9,7 @@ declare class Destroyable {
      * Add dependency what can be destroyed
      */
     addDep(dep: any): this;
+    dep(dep: any): any;
 }
 
 /**

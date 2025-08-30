@@ -24,6 +24,10 @@ class Destroyable {
     this.theDeps?.push(dep);
     return this;
   }
+  dep(dep) {
+    this.addDep(dep);
+    return dep;
+  }
 }
 
 class DestroyFunc extends Destroyable {
