@@ -18,7 +18,7 @@ export abstract class TheInformation<T = unknown>
   public abstract value(o: OwnerType<T>): this;
 }
 
-export class MaybeInformation<T> extends TheInformation<T> {
+export class MbInfo<T> extends TheInformation<T> {
   private info: InformationType<T>;
 
   public constructor(theInfo: MaybeInformationType<T>) {
