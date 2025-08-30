@@ -408,6 +408,7 @@ class Late extends TheInformation {
     return this;
   }
   give(v) {
+    this.theValue = v;
     this.lateOwner.give(v);
     return this;
   }
