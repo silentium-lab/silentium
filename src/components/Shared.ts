@@ -12,7 +12,7 @@ import {
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export class Shared<T> extends TheInformation<T> {
+export class Shared<T> extends TheInformation<T> implements OwnerType<T> {
   private lastValue: T | undefined;
   private ownersPool = new OwnerPool<T>();
 
@@ -52,5 +52,11 @@ export class Shared<T> extends TheInformation<T> {
 
   public pool() {
     return this.ownersPool;
+  }
+
+  public give(value: T) {
+    this.lastValue = value;
+    this.ownersPool.owner().give(value);
+    return this;
   }
 }

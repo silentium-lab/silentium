@@ -1,13 +1,10 @@
 import { Shared } from "../components/Shared";
-import { InformationType, OwnerType, TheInformation } from "../base";
+import { OwnerType, SourceType, TheInformation } from "../base";
 
 export class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
   private sharedSrc: Shared<T>;
 
-  public constructor(
-    private baseSrc: InformationType<T>,
-    stateless = false,
-  ) {
+  public constructor(baseSrc: SourceType<T>, stateless = false) {
     const sharedSrc = new Shared(baseSrc, stateless);
     super(sharedSrc);
     this.sharedSrc = sharedSrc;
@@ -19,7 +16,7 @@ export class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
   }
 
   public give(value: T): this {
-    this.sharedSrc.pool().owner().give(value);
+    this.sharedSrc.give(value);
     return this;
   }
 }
