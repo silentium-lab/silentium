@@ -1,12 +1,12 @@
-var __defProp$9 = Object.defineProperty;
-var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, key + "" , value);
+var __defProp$a = Object.defineProperty;
+var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, key + "" , value);
 const isDestroyable = (dep) => {
   return typeof dep === "object" && dep !== null && "destroy" in dep;
 };
 class Destroyable {
   constructor(...deps) {
-    __publicField$9(this, "theDeps");
+    __publicField$a(this, "theDeps");
     this.theDeps = deps ?? [];
   }
   destroy() {
@@ -55,16 +55,16 @@ class From extends TheOwner {
   }
 }
 
-var __defProp$8 = Object.defineProperty;
-var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
+var __defProp$9 = Object.defineProperty;
+var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, key + "" , value);
 class TheInformation extends Destroyable {
 }
 class MbInfo extends TheInformation {
   constructor(theInfo) {
     const info = typeof theInfo === "object" && theInfo !== null && "value" in theInfo && typeof theInfo.value === "function" ? theInfo : new Of(theInfo);
     super(info);
-    __publicField$8(this, "info");
+    __publicField$9(this, "info");
     this.info = info;
   }
   value(o) {
@@ -77,13 +77,13 @@ const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
 
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$8 = Object.defineProperty;
+var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, typeof key !== "symbol" ? key + "" : key, value);
 class OwnerPool {
   constructor() {
-    __publicField$7(this, "owners");
-    __publicField$7(this, "innerOwner");
+    __publicField$8(this, "owners");
+    __publicField$8(this, "innerOwner");
     this.owners = /* @__PURE__ */ new Set();
     this.innerOwner = new From((v) => {
       this.owners.forEach((g) => {
@@ -142,14 +142,14 @@ class Lazy extends Destroyable {
   }
 }
 
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
+var __defProp$7 = Object.defineProperty;
+var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, key + "" , value);
 class OfFunc extends TheInformation {
   constructor(valueFn) {
     super(valueFn);
     this.valueFn = valueFn;
-    __publicField$6(this, "mbDestructor");
+    __publicField$7(this, "mbDestructor");
   }
   value(o) {
     this.mbDestructor = this.valueFn(o);
@@ -175,15 +175,15 @@ class On extends Destroyable {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
 class All extends TheInformation {
   constructor(...theInfos) {
     super(theInfos);
-    __publicField$5(this, "keysKnown");
-    __publicField$5(this, "keysFilled", /* @__PURE__ */ new Set());
-    __publicField$5(this, "infos");
+    __publicField$6(this, "keysKnown");
+    __publicField$6(this, "keysFilled", /* @__PURE__ */ new Set());
+    __publicField$6(this, "infos");
     this.infos = theInfos;
     this.keysKnown = new Set(Object.keys(theInfos));
   }
@@ -208,13 +208,13 @@ class All extends TheInformation {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
 class Any extends TheInformation {
   constructor(...theInfos) {
     super(theInfos);
-    __publicField$4(this, "infos");
+    __publicField$5(this, "infos");
     this.infos = theInfos;
   }
   value(o) {
@@ -241,13 +241,13 @@ class Applied extends TheInformation {
   }
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 class Chain extends TheInformation {
   constructor(...infos) {
     super(infos);
-    __publicField$3(this, "theInfos");
+    __publicField$4(this, "theInfos");
     this.theInfos = infos;
   }
   value(o) {
@@ -313,14 +313,14 @@ class Filtered extends TheInformation {
   }
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
 class FromCallback extends TheInformation {
   constructor(waitForCb, ...args) {
     super(waitForCb);
     this.waitForCb = waitForCb;
-    __publicField$2(this, "theArgs");
+    __publicField$3(this, "theArgs");
     this.theArgs = args;
   }
   value(o) {
@@ -382,15 +382,15 @@ class FromPromise extends TheInformation {
   }
 }
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Late extends TheInformation {
   constructor(theValue) {
     super(theValue);
     this.theValue = theValue;
-    __publicField$1(this, "theOwner");
-    __publicField$1(this, "lateOwner", new From((v) => {
+    __publicField$2(this, "theOwner");
+    __publicField$2(this, "lateOwner", new From((v) => {
       this.theValue = v;
       this.notify();
     }));
@@ -405,8 +405,9 @@ class Late extends TheInformation {
     this.notify();
     return this;
   }
-  owner() {
-    return this.lateOwner;
+  give(v) {
+    this.lateOwner.give(v);
+    return this;
   }
   notify() {
     if (isFilled(this.theValue) && this.theOwner) {
@@ -496,16 +497,16 @@ class Sequence extends TheInformation {
   }
 }
 
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Shared extends TheInformation {
   constructor(baseSrc, stateless = false) {
     super(baseSrc);
     this.baseSrc = baseSrc;
     this.stateless = stateless;
-    __publicField(this, "lastValue");
-    __publicField(this, "ownersPool", new OwnerPool());
+    __publicField$1(this, "lastValue");
+    __publicField$1(this, "ownersPool", new OwnerPool());
     this.addDep(this.ownersPool);
     this.baseSrc.value(
       new From((v) => {
@@ -533,6 +534,27 @@ class Shared extends TheInformation {
   }
 }
 
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
+class SharedSource extends TheInformation {
+  constructor(baseSrc, stateless = false) {
+    const sharedSrc = new Shared(baseSrc, stateless);
+    super(sharedSrc);
+    this.baseSrc = baseSrc;
+    __publicField(this, "sharedSrc");
+    this.sharedSrc = sharedSrc;
+  }
+  value(o) {
+    this.sharedSrc.value(o);
+    return this;
+  }
+  give(value) {
+    this.sharedSrc.pool().owner().give(value);
+    return this;
+  }
+}
+
 class Stream extends TheInformation {
   constructor(baseSrc) {
     super(baseSrc);
@@ -550,5 +572,5 @@ class Stream extends TheInformation {
   }
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, MbInfo, Of, OfFunc, On, Once, OwnerPool, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, Filtered, From, FromCallback, FromEvent, FromPromise, Late, Lazy, LazyApplied, LazyClass, Map, MbInfo, Of, OfFunc, On, Once, OwnerPool, Sequence, Shared, SharedSource, Stream, TheInformation, TheOwner, Void, isFilled };
 //# sourceMappingURL=silentium.js.map

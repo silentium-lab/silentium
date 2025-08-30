@@ -93,6 +93,8 @@ declare class On<T = unknown> extends Destroyable {
     constructor(src: InformationType<T>, fn?: (value: T) => void);
 }
 
+type SourceType<T> = InformationType<T> & OwnerType<T>;
+
 /**
  * Silent owner
  */
@@ -224,13 +226,13 @@ declare class FromPromise<T> extends TheInformation<T> {
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare class Late<T> extends TheInformation<T> {
+declare class Late<T> extends TheInformation<T> implements OwnerType<T> {
     private theValue?;
     private theOwner?;
     private lateOwner;
     constructor(theValue?: T | undefined);
     value(o: OwnerType<T>): this;
-    owner(): From<T>;
+    give(v: T): this;
     private notify;
 }
 
@@ -320,6 +322,14 @@ declare class Shared<T> extends TheInformation<T> {
     pool(): OwnerPool<T>;
 }
 
+declare class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
+    private baseSrc;
+    private sharedSrc;
+    constructor(baseSrc: InformationType<T>, stateless?: boolean);
+    value(o: OwnerType<T>): this;
+    give(value: T): this;
+}
+
 /**
  * Component that receives a data array and yields values one by one
  * https://silentium-lab.github.io/silentium/#/en/information/stream
@@ -330,4 +340,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
