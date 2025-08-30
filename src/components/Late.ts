@@ -30,6 +30,7 @@ export class Late<T> extends TheInformation<T> implements OwnerType<T> {
   }
 
   public give(v: T) {
+    this.theValue = v;
     this.lateOwner.give(v);
     return this;
   }
