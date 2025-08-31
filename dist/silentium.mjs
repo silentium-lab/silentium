@@ -557,7 +557,6 @@ class SharedSource extends TheInformation {
   }
   give(value) {
     this.baseSrc.give(value);
-    this.sharedSrc.give(value);
     return this;
   }
 }
