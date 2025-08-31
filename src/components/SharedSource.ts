@@ -20,7 +20,6 @@ export class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
 
   public give(value: T): this {
     this.baseSrc.give(value);
-    this.sharedSrc.give(value);
     return this;
   }
 }
