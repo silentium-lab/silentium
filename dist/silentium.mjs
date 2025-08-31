@@ -547,6 +547,7 @@ class SharedSource extends TheInformation {
   constructor(baseSrc, stateless = false) {
     const sharedSrc = new Shared(baseSrc, stateless);
     super(sharedSrc);
+    this.baseSrc = baseSrc;
     __publicField(this, "sharedSrc");
     this.sharedSrc = sharedSrc;
   }
@@ -555,6 +556,7 @@ class SharedSource extends TheInformation {
     return this;
   }
   give(value) {
+    this.baseSrc.give(value);
     this.sharedSrc.give(value);
     return this;
   }

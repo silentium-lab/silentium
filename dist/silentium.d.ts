@@ -324,6 +324,7 @@ declare class Shared<T> extends TheInformation<T> implements OwnerType<T> {
 }
 
 declare class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
+    private baseSrc;
     private sharedSrc;
     constructor(baseSrc: SourceType<T>, stateless?: boolean);
     value(o: OwnerType<T>): this;
