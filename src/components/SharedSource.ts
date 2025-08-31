@@ -4,7 +4,10 @@ import { OwnerType, SourceType, TheInformation } from "../base";
 export class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
   private sharedSrc: Shared<T>;
 
-  public constructor(baseSrc: SourceType<T>, stateless = false) {
+  public constructor(
+    private baseSrc: SourceType<T>,
+    stateless = false,
+  ) {
     const sharedSrc = new Shared(baseSrc, stateless);
     super(sharedSrc);
     this.sharedSrc = sharedSrc;
@@ -16,6 +19,7 @@ export class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
   }
 
   public give(value: T): this {
+    this.baseSrc.give(value);
     this.sharedSrc.give(value);
     return this;
   }
