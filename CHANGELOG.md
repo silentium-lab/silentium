@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.80](https://github.com/silentium-lab/silentium/compare/v0.0.79...v0.0.80) (2025-09-07)
+
+
+### Bug Fixes
+
+* **main:** destroy infos in map component ([d5d0c59](https://github.com/silentium-lab/silentium/commit/d5d0c5965ffa369172ae6ec3d6e834102cc5dba6))
+
 ### [0.0.79](https://github.com/silentium-lab/silentium/compare/v0.0.78...v0.0.79) (2025-08-31)
 
 
