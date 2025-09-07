@@ -1,4 +1,5 @@
 import {
+  Destroyable,
   From,
   InformationType,
   Lazy,
@@ -22,9 +23,13 @@ export class Map<T, TG> extends TheInformation<TG[]> {
   }
 
   public value(o: OwnerType<TG[]>) {
+    const infos: InformationType<TG>[] = [];
     this.baseSrc.value(
       new From((v) => {
-        const infos: InformationType<TG>[] = [];
+        infos.forEach((i) => {
+          (i as unknown as Destroyable)?.destroy();
+        });
+        infos.length = 0;
         v.forEach((val) => {
           let valInfo: InformationType<T> | T = val;
           if (!(valInfo instanceof TheInformation)) {
