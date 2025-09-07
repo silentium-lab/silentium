@@ -445,9 +445,13 @@ class Map extends TheInformation {
     this.targetSrc = targetSrc;
   }
   value(o) {
+    const infos = [];
     this.baseSrc.value(
       new From((v) => {
-        const infos = [];
+        infos.forEach((i) => {
+          i?.destroy();
+        });
+        infos.length = 0;
         v.forEach((val) => {
           let valInfo = val;
           if (!(valInfo instanceof TheInformation)) {
