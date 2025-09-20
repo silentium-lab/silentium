@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.81](https://github.com/silentium-lab/silentium/compare/v0.0.80...v0.0.81) (2025-09-20)
+
+
+### Bug Fixes
+
+* **main:** primitiveSource and LateShared components ([3026e22](https://github.com/silentium-lab/silentium/commit/3026e22bd315d3757e1d2cb089d3d3c9964418fd))
+
 ### [0.0.80](https://github.com/silentium-lab/silentium/compare/v0.0.79...v0.0.80) (2025-09-07)
 
 
