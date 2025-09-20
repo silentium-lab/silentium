@@ -236,6 +236,14 @@ declare class Late<T> extends TheInformation<T> implements OwnerType<T> {
     private notify;
 }
 
+declare class LateShared<T> extends TheInformation<T> implements SourceType<T> {
+    private theValue?;
+    private src;
+    constructor(theValue?: T | undefined);
+    value(o: OwnerType<T>): this;
+    give(value: T): this;
+}
+
 /**
  * Lazy with applied function to its results
  */
@@ -275,6 +283,12 @@ declare class Once<T> extends TheInformation<T> {
     private baseSrc;
     constructor(baseSrc: InformationType<T>);
     value(o: OwnerType<T>): this;
+}
+
+declare class PrimitiveSource<T> {
+    private theValue;
+    constructor(baseSrc: InformationType<T>, theValue?: T | null);
+    [Symbol.toPrimitive](): T | null;
 }
 
 /**
@@ -341,4 +355,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, LateShared, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, PrimitiveSource, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
