@@ -29,6 +29,9 @@ export class FromEvent<T = unknown> extends TheInformation<T> {
     };
     a.value(
       new From(([emitter, eventName, subscribe, unsubscribe]) => {
+        if (!emitter[subscribe]) {
+          return;
+        }
         emitter[subscribe](eventName, handler);
         this.addDep(
           new DestroyFunc(() => {
