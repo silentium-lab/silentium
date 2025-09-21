@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.85](https://github.com/silentium-lab/silentium/compare/v0.0.84...v0.0.85) (2025-09-21)
+
+
+### Bug Fixes
+
+* **main:** no emit ([3b3db56](https://github.com/silentium-lab/silentium/commit/3b3db567f1cf4d8b234bd7da3b72cc807a71e202))
+
 ### [0.0.84](https://github.com/silentium-lab/silentium/compare/v0.0.83...v0.0.84) (2025-09-21)
 
 
