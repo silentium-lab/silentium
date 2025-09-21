@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.83](https://github.com/silentium-lab/silentium/compare/v0.0.82...v0.0.83) (2025-09-21)
+
+
+### Bug Fixes
+
+* **main:** lazyType interface ([a1b276d](https://github.com/silentium-lab/silentium/commit/a1b276dcd166a8084c9583cdfa0ab2e0190be231))
+
 ### [0.0.82](https://github.com/silentium-lab/silentium/compare/v0.0.81...v0.0.82) (2025-09-20)
 
 ### [0.0.81](https://github.com/silentium-lab/silentium/compare/v0.0.80...v0.0.81) (2025-09-20)
