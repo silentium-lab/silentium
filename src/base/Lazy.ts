@@ -19,3 +19,10 @@ export class Lazy<T = unknown> extends Destroyable {
     return this.buildFn?.(...args) ?? (new Of(null) as InformationType<T>);
   }
 }
+
+/**
+ * Lazy things
+ */
+export interface LazyType<R, P extends any[]> {
+  get(...args: P): R;
+}

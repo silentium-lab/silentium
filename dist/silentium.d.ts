@@ -64,6 +64,12 @@ declare class Lazy<T = unknown> extends Destroyable {
     constructor(buildFn?: ((...args: InformationType[]) => InformationType<T>) | undefined);
     get(...args: InformationType[]): InformationType<T>;
 }
+/**
+ * Lazy things
+ */
+interface LazyType<R, P extends any[]> {
+    get(...args: P): R;
+}
 
 /**
  * Information from primitive value
@@ -355,4 +361,4 @@ declare class Stream<T> extends TheInformation<T> {
     value(o: OwnerType<T>): this;
 }
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, LateShared, Lazy, LazyApplied, LazyClass, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, PrimitiveSource, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
+export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, LateShared, Lazy, LazyApplied, LazyClass, type LazyType, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, PrimitiveSource, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
