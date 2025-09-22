@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.87](https://github.com/silentium-lab/silentium/compare/v0.0.86...v0.0.87) (2025-09-22)
+
 ### [0.0.86](https://github.com/silentium-lab/silentium/compare/v0.0.85...v0.0.86) (2025-09-22)
 
 
