@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
 import { Applied } from "./Applied";
-import { From, Of } from "../base";
+import { Destroyable, From, Of } from "../base";
 
 test("Applied.test", () => {
   const info = new Of(2);
@@ -10,4 +10,8 @@ test("Applied.test", () => {
   infoDouble.value(new From(g));
 
   expect(g).toBeCalledWith(4);
+
+  infoDouble.destroy();
+  const destroyable = Destroyable;
+  expect(destroyable.getInstancesCount()).toBe(0);
 });

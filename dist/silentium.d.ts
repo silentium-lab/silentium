@@ -2,7 +2,10 @@
  * Representation of Destroyable object
  */
 declare class Destroyable {
+    static instanceCount: number;
+    static instancesHashMap: Record<string, number>;
     private theDeps;
+    private name;
     constructor(...deps: any[]);
     destroy(): this;
     /**
@@ -10,6 +13,7 @@ declare class Destroyable {
      */
     addDep(dep: any): this;
     dep(dep: any): any;
+    static getInstancesCount(): number;
 }
 
 /**

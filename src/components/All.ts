@@ -19,7 +19,7 @@ export class All<const T extends InformationType[]> extends TheInformation<
   private infos: T;
 
   public constructor(...theInfos: T) {
-    super(theInfos);
+    super(...theInfos);
     this.infos = theInfos;
     this.keysKnown = new Set<string>(Object.keys(theInfos));
   }

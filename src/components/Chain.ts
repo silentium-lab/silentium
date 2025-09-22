@@ -15,7 +15,7 @@ export class Chain<T extends InformationType[]> extends TheInformation<
   private theInfos: T;
 
   public constructor(...infos: T) {
-    super(infos);
+    super(...infos);
     this.theInfos = infos;
   }
 

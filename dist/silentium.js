@@ -1,18 +1,25 @@
 var __defProp$b = Object.defineProperty;
 var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, key + "" , value);
+var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, typeof key !== "symbol" ? key + "" : key, value);
 const isDestroyable = (dep) => {
   return typeof dep === "object" && dep !== null && "destroy" in dep;
 };
-class Destroyable {
+const _Destroyable = class _Destroyable {
   constructor(...deps) {
     __publicField$b(this, "theDeps");
+    __publicField$b(this, "name");
     this.theDeps = deps ?? [];
+    _Destroyable.instanceCount += 1;
+    this.name = this.constructor.name + "_" + _Destroyable.instanceCount;
+    _Destroyable.instancesHashMap[this.name] = 1;
   }
   destroy() {
+    delete _Destroyable.instancesHashMap[this.name];
     this.theDeps?.forEach((dep) => {
       if (isDestroyable(dep)) {
         dep.destroy();
+      } else {
+        delete _Destroyable.instancesHashMap[this.name];
       }
     });
     return this;
@@ -28,7 +35,13 @@ class Destroyable {
     this.addDep(dep);
     return dep;
   }
-}
+  static getInstancesCount() {
+    return Object.keys(_Destroyable.instancesHashMap).length;
+  }
+};
+__publicField$b(_Destroyable, "instanceCount", 0);
+__publicField$b(_Destroyable, "instancesHashMap", {});
+let Destroyable = _Destroyable;
 
 class DestroyFunc extends Destroyable {
   constructor(destructor) {
@@ -180,7 +193,7 @@ var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, 
 var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
 class All extends TheInformation {
   constructor(...theInfos) {
-    super(theInfos);
+    super(...theInfos);
     __publicField$7(this, "keysKnown");
     __publicField$7(this, "keysFilled", /* @__PURE__ */ new Set());
     __publicField$7(this, "infos");
@@ -213,7 +226,7 @@ var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, 
 var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
 class Any extends TheInformation {
   constructor(...theInfos) {
-    super(theInfos);
+    super(...theInfos);
     __publicField$6(this, "infos");
     this.infos = theInfos;
   }
@@ -246,7 +259,7 @@ var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, 
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
 class Chain extends TheInformation {
   constructor(...infos) {
-    super(infos);
+    super(...infos);
     __publicField$5(this, "theInfos");
     this.theInfos = infos;
   }
