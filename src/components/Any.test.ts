@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { Any } from "./Any";
 import { Late } from "./Late";
-import { From, Of } from "../base";
+import { Destroyable, From, Of } from "../base";
 
 test("Any.test", () => {
   const l = new Late<number>();
@@ -17,4 +17,7 @@ test("Any.test", () => {
   l.give(999);
 
   expect(o).toBeCalledWith(999);
+  anyI.destroy();
+  const destroyable = Destroyable;
+  expect(destroyable.getInstancesCount()).toBe(0);
 });

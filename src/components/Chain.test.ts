@@ -2,6 +2,7 @@ import { expect, test } from "vitest";
 import { Diagram } from "../testing";
 import { Chain } from "./Chain";
 import { Late } from "./Late";
+import { Destroyable } from "../base";
 
 test("infoChain.test", () => {
   const d = new Diagram();
@@ -23,4 +24,8 @@ test("infoChain.test", () => {
   triggerSrc.give("done2");
 
   expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
+
+  valueAfterTrigger.destroy();
+  const destroyable = Destroyable;
+  expect(destroyable.getInstancesCount()).toBe(0);
 });

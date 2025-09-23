@@ -9,7 +9,7 @@ export class Any<T> extends TheInformation<T> {
   private infos: InformationType<T>[];
 
   public constructor(...theInfos: InformationType<T>[]) {
-    super(theInfos);
+    super(...theInfos);
     this.infos = theInfos;
   }
 
