@@ -1,14 +1,12 @@
 import { expect, test, vi } from "vitest";
-import { All } from "./All";
-import { Destroyable, From, Of } from "../base";
+import { of } from "../base/Of";
+import { all } from "./All";
 
 test("All.test", () => {
-  const a = new All(new Of(1), new Of(2));
+  const a = all(of(1), of(2));
 
   const o = vi.fn();
-  a.value(new From(o));
+  a(o);
 
   expect(o).toBeCalledWith([1, 2]);
-  a.destroy();
-  expect(Destroyable.getInstancesCount()).toBe(0);
 });

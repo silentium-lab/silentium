@@ -1,12 +1,11 @@
 import { expect, test, vi } from "vitest";
-import { Late } from "./Late";
-import { From } from "../base";
+import { late } from "./Late";
 
 test("Late.test", () => {
-  const l = new Late<number>();
+  const l = late<number>();
 
   const o = vi.fn();
-  l.value(new From(o));
+  l.value(o);
 
   expect(o).not.toHaveBeenCalled();
 

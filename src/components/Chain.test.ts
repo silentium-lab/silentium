@@ -1,16 +1,15 @@
 import { expect, test } from "vitest";
-import { Diagram } from "../testing";
-import { Chain } from "./Chain";
-import { Late } from "./Late";
-import { Destroyable } from "../base";
+import { diagram } from "../testing";
+import { chain } from "./Chain";
+import { late } from "./Late";
 
 test("infoChain.test", () => {
-  const d = new Diagram();
-  const triggerSrc = new Late<string>("immediate");
-  const valueSrc = new Late<string>("the_value");
+  const d = diagram();
+  const triggerSrc = late<string>("immediate");
+  const valueSrc = late<string>("the_value");
 
-  const valueAfterTrigger = new Chain(triggerSrc, valueSrc);
-  valueAfterTrigger.value(d.owner());
+  const valueAfterTrigger = chain(triggerSrc.value, valueSrc.value);
+  valueAfterTrigger(d.user);
 
   expect(d.toString()).toBe("the_value");
 
@@ -24,8 +23,4 @@ test("infoChain.test", () => {
   triggerSrc.give("done2");
 
   expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
-
-  valueAfterTrigger.destroy();
-  const destroyable = Destroyable;
-  expect(destroyable.getInstancesCount()).toBe(0);
 });

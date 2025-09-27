@@ -1,10 +1,6 @@
-import { TheOwner } from "./TheOwner";
+import { DataUserType } from "../types";
 
 /**
- * Silent owner
+ * Silent user
  */
-export class Void extends TheOwner {
-  public give(): this {
-    return this;
-  }
-}
+export const _void = (): DataUserType => () => {};

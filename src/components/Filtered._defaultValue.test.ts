@@ -1,17 +1,17 @@
 import { expect, test, vitest } from "vitest";
-import { Filtered } from "./Filtered";
-import { From, Of } from "../base";
+import { of } from "../base";
+import { filtered } from "./Filtered";
 
 test("Filtered._defaultValue.test", () => {
-  const info = new Filtered(new Of(11), (v) => v === 11);
+  const info = filtered(of(11), (v) => v === 11);
 
   const g1 = vitest.fn();
-  info.value(new From(g1));
+  info(g1);
   expect(g1).toBeCalledWith(11);
 
-  const info2 = new Filtered(new Of(11), (v) => v === 22, 33);
+  const info2 = filtered(of(11), (v) => v === 22, 33);
 
   const g2 = vitest.fn();
-  info2.value(new From(g2));
+  info2(g2);
   expect(g2).toBeCalledWith(33);
 });

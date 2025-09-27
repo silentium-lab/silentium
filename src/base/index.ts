@@ -1,11 +1,3 @@
-export * from "./Destroyable";
-export * from "./DestroyFunc";
-export * from "./From";
-export * from "./Lazy";
-export * from "./Of";
-export * from "./OfFunc";
-export * from "./On";
-export * from "./Source";
-export * from "./TheInformation";
-export * from "./TheOwner";
-export * from "./Void";
+export { of } from "./Of";
+export { on } from "./On";
+export { _void } from "./Void";

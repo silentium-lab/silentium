@@ -1,22 +1,19 @@
-import { From } from "../base";
+import { DataUserType } from "../types";
 
 /**
  * Помогает отлаживать поток ответов от источников информации
  * в виде текстовой диаграммы
  */
-export class Diagram {
-  private responses: any[] = [];
-  private theOwner = new From((v) => {
-    this.responses.push(v);
-  });
+export const diagram = (joinSymbol = "|") => {
+  const responses: any[] = [];
+  const user: DataUserType<string> = (v) => {
+    responses.push(v);
+  };
 
-  public constructor(private joinSymbol = "|") {}
-
-  public toString(): string {
-    return this.responses.join(this.joinSymbol);
-  }
-
-  public owner() {
-    return this.theOwner;
-  }
-}
+  return {
+    toString() {
+      return responses.join(joinSymbol);
+    },
+    user,
+  };
+};

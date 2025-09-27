@@ -1,7 +1,8 @@
-import { From, InformationType, OwnerType, TheInformation } from "../base";
+import { DataTypeValue } from "src/types/DataType";
+import { DataType } from "../types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
+type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 
 /**
  * The set of information sources forms a sequential chain where each source provides
@@ -9,44 +10,29 @@ type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-export class Chain<T extends InformationType[]> extends TheInformation<
-  Last<T>
-> {
-  private theInfos: T;
-
-  public constructor(...infos: T) {
-    super(...infos);
-    this.theInfos = infos;
-  }
-
-  public value(o: OwnerType<Last<T>>) {
-    let lastValue: Last<T> | undefined;
+export const chain = <T extends DataType[]>(...infos: T): Last<T> => {
+  return <Last<T>>((u) => {
+    let lastValue: DataTypeValue<Last<T>> | undefined;
 
     const handleI = (index: number) => {
-      const info = this.theInfos[index] as TheInformation<Last<T>>;
-      const nextI = this.theInfos[index + 1] as
-        | TheInformation<Last<T>>
-        | undefined;
+      const info = infos[index] as Last<T>;
+      const nextI = infos[index + 1] as Last<T> | undefined;
 
-      info.value(
-        new From((v) => {
-          if (!nextI) {
-            lastValue = v;
-          }
+      info((v) => {
+        if (!nextI) {
+          lastValue = v as DataTypeValue<Last<T>>;
+        }
 
-          if (lastValue) {
-            o.give(lastValue);
-          }
+        if (lastValue) {
+          u(lastValue);
+        }
 
-          if (nextI && !lastValue) {
-            handleI(index + 1);
-          }
-        }),
-      );
+        if (nextI && !lastValue) {
+          handleI(index + 1);
+        }
+      });
     };
 
     handleI(0);
-
-    return this;
-  }
-}
+  });
+};

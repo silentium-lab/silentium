@@ -1,14 +1,15 @@
+import { applied } from "../components/Applied";
 import { expect, test } from "vitest";
-import { ExecutorApplied } from "./ExecutorApplied";
-import { Diagram } from "../testing";
-import { Late } from "../components/Late";
+import { late } from "../components/Late";
+import { diagram } from "../testing";
+import { executorApplied } from "./ExecutorApplied";
 
-test("infoExecutorApplied.test", () => {
-  const d = new Diagram();
-  const l = new Late<number>(1);
+test("ExecutorApplied.test", () => {
+  const d = diagram();
+  const l = late<number>(1);
 
   let applierWasCalled = 0;
-  const infoLimited = new ExecutorApplied(l, (owner) => {
+  const infoLimited = executorApplied(l.value, (owner) => {
     return (v) => {
       if (applierWasCalled < 2) {
         owner(v);
@@ -17,7 +18,7 @@ test("infoExecutorApplied.test", () => {
     };
   });
 
-  infoLimited.value(d.owner());
+  applied(infoLimited, String)(d.user);
 
   l.give(2);
   l.give(3);

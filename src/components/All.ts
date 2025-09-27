@@ -1,9 +1,13 @@
-import { From, InformationType, OwnerType, TheInformation } from "../base";
+import { DataType } from "../types";
 
-type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends DataType<infer U> ? U : never;
 
-export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
+export type ExtractTypesFromArrayS<T extends DataType<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
+};
+
+const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
+  return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
 
 /**
@@ -11,40 +15,24 @@ export type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export class All<const T extends InformationType[]> extends TheInformation<
-  ExtractTypesFromArrayS<T>
-> {
-  private keysKnown: Set<string>;
-  private keysFilled = new Set();
-  private infos: T;
+export const all = <const T extends DataType[]>(
+  ...theInfos: T
+): DataType<ExtractTypesFromArrayS<T>> => {
+  const keysKnown = new Set<string>(Object.keys(theInfos));
+  const keysFilled = new Set<string>();
 
-  public constructor(...theInfos: T) {
-    super(...theInfos);
-    this.infos = theInfos;
-    this.keysKnown = new Set<string>(Object.keys(theInfos));
-  }
-
-  public value(o: OwnerType<ExtractTypesFromArrayS<T>>): this {
+  return (u) => {
     const result: Record<string, unknown> = {};
 
-    Object.entries(this.infos).forEach(([key, info]) => {
-      this.keysKnown.add(key);
-      info.value(
-        new From((v) => {
-          this.keysFilled.add(key);
-          result[key] = v;
-          if (this.isAllFilled()) {
-            o.give(Object.values(result) as ExtractTypesFromArrayS<T>);
-          }
-        }),
-      );
+    Object.entries(theInfos).forEach(([key, info]) => {
+      keysKnown.add(key);
+      info((v) => {
+        keysFilled.add(key);
+        result[key] = v;
+        if (isAllFilled(keysFilled, keysKnown)) {
+          u(Object.values(result) as ExtractTypesFromArrayS<T>);
+        }
+      });
     });
-    return this;
-  }
-
-  private isAllFilled() {
-    return (
-      this.keysFilled.size > 0 && this.keysFilled.size === this.keysKnown.size
-    );
-  }
-}
+  };
+};

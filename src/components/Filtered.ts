@@ -1,4 +1,4 @@
-import { From, InformationType, OwnerType, TheInformation } from "../base";
+import { DataType, ValueType } from "../types";
 
 /**
  * Information whose value is being validated
@@ -6,25 +6,18 @@ import { From, InformationType, OwnerType, TheInformation } from "../base";
  * can be passed to the output
  * https://silentium-lab.github.io/silentium/#/en/information/filtered
  */
-export class Filtered<T> extends TheInformation<T> {
-  public constructor(
-    private baseSrc: InformationType<T>,
-    private predicate: (v: T) => boolean,
-    private defaultValue?: T,
-  ) {
-    super(baseSrc);
-  }
-
-  public value(o: OwnerType<T>): this {
-    this.baseSrc.value(
-      new From((v) => {
-        if (this.predicate(v)) {
-          o.give(v);
-        } else if (this.defaultValue !== undefined) {
-          o.give(this.defaultValue);
-        }
-      }),
-    );
-    return this;
-  }
-}
+export const filtered = <T>(
+  baseSrc: DataType<T>,
+  predicate: ValueType<[T], boolean>,
+  defaultValue?: T,
+): DataType<T> => {
+  return (u) => {
+    baseSrc((v) => {
+      if (predicate(v)) {
+        u(v);
+      } else if (defaultValue !== undefined) {
+        u(defaultValue);
+      }
+    });
+  };
+};

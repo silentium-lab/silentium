@@ -1,14 +1,6 @@
-import { Destroyable } from "../base/Destroyable";
-import { From } from "../base/From";
-import { InformationType } from "../base/TheInformation";
-import { Void } from "../base/Void";
+import { DataType, DataUserType } from "../types";
 
 /**
- * Run information with functional owner if needed
+ * Run data with user
  */
-export class On<T = unknown> extends Destroyable {
-  public constructor(src: InformationType<T>, fn?: (value: T) => void) {
-    super(src, fn);
-    src.value(fn ? new From(fn) : new Void());
-  }
-}
+export const on = <T>(src: DataType<T>, user: DataUserType<T>) => src(user);

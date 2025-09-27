@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
-import { FromEvent } from "./FromEvent";
-import { From, Of } from "../base";
+import { of } from "../base";
+import { fromEvent } from "./FromEvent";
 
 test("FromEvent.test", () => {
   let unsubscribed = false;
@@ -12,15 +12,10 @@ test("FromEvent.test", () => {
       unsubscribed = true;
     },
   };
-  const i = new FromEvent(
-    new Of(emitter),
-    new Of("click"),
-    new Of("on"),
-    new Of("off"),
-  );
+  const i = fromEvent(of(emitter), of("click"), of("on"), of("off"));
 
   const o = vi.fn();
-  i.value(new From(o));
+  i.value(o);
 
   expect(o).toBeCalledWith("click123");
 
