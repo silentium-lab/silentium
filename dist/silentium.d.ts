@@ -128,6 +128,7 @@ declare const once: <T>(baseSrc: DataType<T>) => DataType<T>;
 
 declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
     [Symbol.toPrimitive](): T | null;
+    primitive(): T | null;
 };
 
 /**

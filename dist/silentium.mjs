@@ -313,6 +313,9 @@ const primitive = (baseSrc, theValue = null) => {
   return {
     [Symbol.toPrimitive]() {
       return theValue;
+    },
+    primitive() {
+      return theValue;
     }
   };
 };

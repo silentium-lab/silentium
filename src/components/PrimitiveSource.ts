@@ -12,5 +12,8 @@ export const primitive = <T>(
     [Symbol.toPrimitive]() {
       return theValue;
     },
+    primitive() {
+      return theValue;
+    },
   };
 };
