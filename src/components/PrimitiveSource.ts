@@ -1,18 +1,16 @@
-import { From, InformationType } from "../base";
+import { DataType } from "../types";
 
-export class PrimitiveSource<T> {
-  public constructor(
-    baseSrc: InformationType<T>,
-    private theValue: T | null = null,
-  ) {
-    baseSrc.value(
-      new From((v) => {
-        this.theValue = v;
-      }),
-    );
-  }
+export const primitive = <T>(
+  baseSrc: DataType<T>,
+  theValue: T | null = null,
+) => {
+  baseSrc((v) => {
+    theValue = v;
+  });
 
-  public [Symbol.toPrimitive]() {
-    return this.theValue;
-  }
-}
+  return {
+    [Symbol.toPrimitive]() {
+      return theValue;
+    },
+  };
+};

@@ -1,11 +1,12 @@
+import { applied } from "../components/Applied";
 import { expect, test } from "vitest";
-import { Diagram } from "../testing";
-import { Stream } from "./Stream";
-import { Of } from "../base";
+import { of } from "../base";
+import { diagram } from "../testing";
+import { stream } from "./Stream";
 
 test("Stream.test", () => {
-  const d = new Diagram();
-  new Stream(new Of([1, 2, 3, 4, 5])).value(d.owner());
+  const d = diagram();
+  applied(stream(of([1, 2, 3, 4, 5])), String)(d.user);
 
   expect(d.toString()).toBe("1|2|3|4|5");
 });

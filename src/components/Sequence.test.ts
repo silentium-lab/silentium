@@ -1,15 +1,14 @@
 import { expect, test, vi } from "vitest";
-import { Late } from "./Late";
-import { Applied } from "./Applied";
-import { Sequence } from "./Sequence";
-import { From } from "../base";
+import { applied } from "./Applied";
+import { late } from "./Late";
+import { sequence } from "./Sequence";
 
 test("Sequence.test", () => {
-  const l = new Late<number>();
-  const seq = new Applied(new Sequence(l), String);
+  const l = late<number>();
+  const seq = applied(sequence(l.value), String);
 
   const o = vi.fn();
-  seq.value(new From(o));
+  seq(o);
 
   l.give(1);
   l.give(2);

@@ -1,17 +1,16 @@
-import { From } from "../base";
-import { Applied } from "../components/Applied";
-import { LateShared } from "../components/LateShared";
-import { PrimitiveSource } from "../components/PrimitiveSource";
 import { expect, test, vi } from "vitest";
+import { applied } from "../components/Applied";
+import { lateShared } from "../components/LateShared";
+import { primitive } from "../components/PrimitiveSource";
 
 test("PrimitiveSource.test", () => {
-  const l = new LateShared(1);
-  const primitive = new PrimitiveSource(l);
-  const l2 = new LateShared(2);
+  const l = lateShared(1);
+  const p = primitive(l.value);
+  const l2 = lateShared(2);
 
-  const r = new Applied(l2, (a) => ["src", primitive, a].join("_"));
+  const r = applied(l2.value, (a) => ["src", p, a].join("_"));
   const g = vi.fn();
-  r.value(new From(g));
+  r(g);
 
   expect(g).toHaveBeenLastCalledWith("src_1_2");
 
