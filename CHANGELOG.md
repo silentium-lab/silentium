@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.88](https://github.com/silentium-lab/silentium/compare/v0.0.87...v0.0.88) (2025-09-28)
+
+
+### Bug Fixes
+
+* **fns:** continue removed ([5048e9d](https://github.com/silentium-lab/silentium/commit/5048e9d94c1b4731a9d8818fc3dac0d20662740e))
+* **fns:** dist ([c33efc2](https://github.com/silentium-lab/silentium/commit/c33efc2380a4c9c08c8762fadf5debb214648654))
+* **fns:** fns ([9bc2fab](https://github.com/silentium-lab/silentium/commit/9bc2fab1155ed65ec52383069f31e717854c9255))
+* **fns:** no need dist ([e92874d](https://github.com/silentium-lab/silentium/commit/e92874daf27c60c81b437e063f14fb66f8717f6f))
+* **fns:** work on fns ([8796d54](https://github.com/silentium-lab/silentium/commit/8796d54c9f313638de1fe076c10952add8e2b4be))
+* **fns:** work on fns ([005489c](https://github.com/silentium-lab/silentium/commit/005489c41e995b82fb3c44be2c7feecebb15aed6))
+* **fns:** work on fns ([313da60](https://github.com/silentium-lab/silentium/commit/313da609c36af046f935573ed69eba9b924732fc))
+
 ### [0.0.87](https://github.com/silentium-lab/silentium/compare/v0.0.86...v0.0.87) (2025-09-22)
 
 ### [0.0.86](https://github.com/silentium-lab/silentium/compare/v0.0.85...v0.0.86) (2025-09-22)
