@@ -1,119 +1,31 @@
-/**
- * Representation of Destroyable object
- */
-declare class Destroyable {
-    static instanceCount: number;
-    static instancesHashMap: Record<string, number>;
-    private theDeps;
-    private name;
-    constructor(...deps: any[]);
-    destroy(): this;
-    /**
-     * Add dependency what can be destroyed
-     */
-    addDep(dep: any): this;
-    dep(dep: any): any;
-    static getInstancesCount(): number;
+import { DataTypeDestroyable } from 'src/types/DataType';
+
+type DataUserType<T = unknown> = (value: T) => void;
+
+type DestructorType = () => void;
+type DataType<T = unknown> = (user: DataUserType<T>) => DestructorType | void;
+interface DestroyableType {
+    destroy: DestructorType;
 }
 
-/**
- * Representation of destructor function as object
- */
-declare class DestroyFunc extends Destroyable {
-    private destructor;
-    constructor(destructor: () => void);
-    destroy(): this;
+interface DataObjectType<T = unknown> {
+    value: DataType<T>;
 }
 
-interface OwnerType<T = unknown> {
-    give(value: T): this;
-}
-/**
- * Representation of Information Owner
- */
-declare abstract class TheOwner<T = unknown> implements OwnerType<T> {
-    abstract give(value: T): this;
+interface DataUserObjectType<T = unknown> {
+    give: DataUserType<T>;
 }
 
-/**
- * Owner from function
- */
-declare class From<T = unknown> extends TheOwner<T> {
-    private fn;
-    constructor(fn: (value: T) => void);
-    give(value: T): this;
-}
-
-interface InformationType<T = unknown> {
-    value(o: OwnerType<T>): this;
-}
-type MaybeInformationType<T = unknown> = InformationType<T> | T;
-/**
- * Representation of Information
- */
-declare abstract class TheInformation<T = unknown> extends Destroyable implements InformationType<T> {
-    abstract value(o: OwnerType<T>): this;
-}
-declare class MbInfo<T> extends TheInformation<T> {
-    private info;
-    constructor(theInfo: MaybeInformationType<T>);
-    value(o: OwnerType<T>): this;
-}
+type SourceType<T = unknown> = DataObjectType<T> & DataUserObjectType<T>;
 
 /**
- * Ability to create information after some event
+ * A function type that takes a value as an argument
+ * and returns a specific value
  */
-declare class Lazy<T = unknown> extends Destroyable {
-    protected buildFn?: ((...args: InformationType[]) => InformationType<T>) | undefined;
-    constructor(buildFn?: ((...args: InformationType[]) => InformationType<T>) | undefined);
-    get(...args: InformationType[]): InformationType<T>;
-}
-/**
- * Lazy things
- */
-interface LazyType<R, P extends any[]> {
-    get(...args: P): R;
-}
+type ValueType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
 
-/**
- * Information from primitive value
- */
-declare class Of<T> extends TheInformation<T> {
-    private theValue;
-    constructor(theValue: T);
-    value(o: OwnerType<T>): this;
-}
-
-type DestructorFnType = () => void;
-/**
- * Information of function
- */
-declare class OfFunc<T> extends TheInformation<T> {
-    private valueFn;
-    private mbDestructor?;
-    constructor(valueFn: (o: OwnerType<T>) => DestructorFnType | undefined | void);
-    value(o: OwnerType<T>): this;
-    destroy(): this;
-}
-
-/**
- * Run information with functional owner if needed
- */
-declare class On<T = unknown> extends Destroyable {
-    constructor(src: InformationType<T>, fn?: (value: T) => void);
-}
-
-type SourceType<T> = InformationType<T> & OwnerType<T>;
-
-/**
- * Silent owner
- */
-declare class Void extends TheOwner {
-    give(): this;
-}
-
-type ExtractTypeS<T> = T extends InformationType<infer U> ? U : never;
-type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
+type ExtractTypeS<T> = T extends DataType<infer U> ? U : never;
+type ExtractTypesFromArrayS<T extends DataType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
 /**
@@ -121,61 +33,36 @@ type ExtractTypesFromArrayS<T extends InformationType<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-declare class All<const T extends InformationType[]> extends TheInformation<ExtractTypesFromArrayS<T>> {
-    private keysKnown;
-    private keysFilled;
-    private infos;
-    constructor(...theInfos: T);
-    value(o: OwnerType<ExtractTypesFromArrayS<T>>): this;
-    private isAllFilled;
-}
+declare const all: <const T extends DataType[]>(...theInfos: T) => DataType<ExtractTypesFromArrayS<T>>;
 
 /**
  * From a set of information sources we get
  * a common response from any source for a single owner
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
-declare class Any<T> extends TheInformation<T> {
-    private infos;
-    constructor(...theInfos: InformationType<T>[]);
-    value(o: OwnerType<T>): this;
-}
+declare const any: <T>(...infos: DataType<T>[]) => DataType<T>;
 
 /**
  * Information to which the function was applied to change the value
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare class Applied<T, R> extends TheInformation<R> {
-    private baseSrc;
-    private applier;
-    constructor(baseSrc: InformationType<T>, applier: (v: T) => R);
-    value(o: OwnerType<R>): this;
-}
+declare const applied: <T, R>(baseSrc: DataType<T>, applier: ValueType<[T], R>) => DataType<R>;
 
-type Last<T extends any[]> = T extends [...infer U, infer L] ? L : never;
+type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 /**
  * The set of information sources forms a sequential chain where each source provides
  * an answer. The final answer will be the output result. If any source in the chain
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare class Chain<T extends InformationType[]> extends TheInformation<Last<T>> {
-    private theInfos;
-    constructor(...infos: T);
-    value(o: OwnerType<Last<T>>): this;
-}
+declare const chain: <T extends DataType[]>(...infos: T) => Last<T>;
 
 /**
  * Information to which a function is applied in order
  * to control the value passing process
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare class ExecutorApplied<T> extends TheInformation<T> {
-    private baseSrc;
-    private applier;
-    constructor(baseSrc: InformationType<T>, applier: (executor: (v: T) => void) => (v: T) => void);
-    value(o: OwnerType<T>): this;
-}
+declare const executorApplied: <T>(baseSrc: DataType<T>, applier: (executor: DataUserType<T>) => DataUserType<T>) => DataType<T>;
 
 /**
  * Information whose value is being validated
@@ -183,52 +70,21 @@ declare class ExecutorApplied<T> extends TheInformation<T> {
  * can be passed to the output
  * https://silentium-lab.github.io/silentium/#/en/information/filtered
  */
-declare class Filtered<T> extends TheInformation<T> {
-    private baseSrc;
-    private predicate;
-    private defaultValue?;
-    constructor(baseSrc: InformationType<T>, predicate: (v: T) => boolean, defaultValue?: T | undefined);
-    value(o: OwnerType<T>): this;
-}
-
-/**
- * When receiving a reference to a function expecting a callback, the component
- * creates its own callback, and the data received in this callback
- * will become the value of the information object
- * https://silentium-lab.github.io/silentium/#/en/information/from-callback
- */
-declare class FromCallback<T> extends TheInformation<T> {
-    private waitForCb;
-    private theArgs;
-    constructor(waitForCb: (cb: (v: T) => any, ...args: unknown[]) => unknown, ...args: unknown[]);
-    value(o: OwnerType<T>): this;
-}
+declare const filtered: <T>(baseSrc: DataType<T>, predicate: ValueType<[T], boolean>, defaultValue?: T) => DataType<T>;
 
 /**
  * A component that receives data from an event and
  * presents it as an information object
  * https://silentium-lab.github.io/silentium/#/en/information/from-event
  */
-declare class FromEvent<T = unknown> extends TheInformation<T> {
-    private emitterSrc;
-    private eventNameSrc;
-    private subscribeMethodSrc;
-    private unsubscribeMethodSrc;
-    constructor(emitterSrc: InformationType<any>, eventNameSrc: InformationType<string>, subscribeMethodSrc: InformationType<string>, unsubscribeMethodSrc?: InformationType<string>);
-    value(o: OwnerType<T>): this;
-}
+declare const fromEvent: <T>(emitterSrc: DataType<any>, eventNameSrc: DataType<string>, subscribeMethodSrc: DataType<string>, unsubscribeMethodSrc?: DataType<string>) => DataTypeDestroyable<T>;
 
 /**
  * Component that gets a value from a promise and
  * presents it as information
  * https://silentium-lab.github.io/silentium/#/en/information/from-promise
  */
-declare class FromPromise<T> extends TheInformation<T> {
-    private p;
-    private errorOwner?;
-    constructor(p: Promise<T>, errorOwner?: OwnerType | undefined);
-    value(o: OwnerType<T>): this;
-}
+declare const fromPromise: <T>(p: Promise<T>, errorOwner?: DataUserType) => DataType<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -236,52 +92,31 @@ declare class FromPromise<T> extends TheInformation<T> {
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare class Late<T> extends TheInformation<T> implements OwnerType<T> {
-    private theValue?;
-    private theOwner?;
-    private lateOwner;
-    constructor(theValue?: T | undefined);
-    value(o: OwnerType<T>): this;
-    give(v: T): this;
-    private notify;
-}
+declare const late: <T>(v?: T) => SourceType<T>;
 
-declare class LateShared<T> extends TheInformation<T> implements SourceType<T> {
-    private theValue?;
-    private src;
-    constructor(theValue?: T | undefined);
-    value(o: OwnerType<T>): this;
-    give(value: T): this;
-}
+declare const lateShared: <T>(theValue?: T) => SourceType<T>;
 
 /**
  * Lazy with applied function to its results
  */
-declare class LazyApplied<T> extends Lazy<T> {
-    private baseLazy;
-    private applier;
-    constructor(baseLazy: Lazy, applier: (i: InformationType) => InformationType<T>);
-    get(...args: InformationType[]): InformationType<T>;
-}
+declare const lazyApplied: <T>(baseLazy: ValueType<any[], DataType>, applier: (i: DataType) => DataType<T>) => ValueType<DataType[], DataType<T>>;
+
+declare const lazyArgs: (baseLazy: ValueType<any[], DataType>, args: unknown[], startFromArgIndex?: number) => (...runArgs: any[]) => DataType;
 
 /**
- * Lazy instance from class constructor
+ * Lazy what can be destroyed
  */
-declare class LazyClass<T> extends Lazy<T> {
-    constructor(constrFn: any);
-}
+declare const lazyDestroyable: (baseLazy: ValueType<any[], DestroyableType>) => {
+    get: ValueType<any[], DestroyableType>;
+    destroy: DestructorType;
+};
 
 /**
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  * https://silentium-lab.github.io/silentium/#/en/information/map
  */
-declare class Map<T, TG> extends TheInformation<TG[]> {
-    private baseSrc;
-    private targetSrc;
-    constructor(baseSrc: InformationType<T[]>, targetSrc: Lazy<TG>);
-    value(o: OwnerType<TG[]>): this;
-}
+declare const map: <T, TG>(baseSrc: DataType<T[]>, targetSrc: ValueType<any[], DataType<TG>>) => DataType<TG[]>;
 
 /**
  * Limits the number of values from the information source
@@ -289,28 +124,18 @@ declare class Map<T, TG> extends TheInformation<TG[]> {
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-declare class Once<T> extends TheInformation<T> {
-    private baseSrc;
-    constructor(baseSrc: InformationType<T>);
-    value(o: OwnerType<T>): this;
-}
+declare const once: <T>(baseSrc: DataType<T>) => DataType<T>;
 
-declare class PrimitiveSource<T> {
-    private theValue;
-    constructor(baseSrc: InformationType<T>, theValue?: T | null);
+declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
     [Symbol.toPrimitive](): T | null;
-}
+};
 
 /**
  * A component that takes one value at a time and returns
  * an array of all previous values
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
-declare class Sequence<T> extends TheInformation<T[]> {
-    private baseSrc;
-    constructor(baseSrc: InformationType<T>);
-    value(o: OwnerType<T[]>): this;
-}
+declare const sequence: <T>(baseSrc: DataType<T>) => DataType<T[]>;
 
 declare const isFilled: <T>(value?: T) => value is T;
 
@@ -323,11 +148,11 @@ declare class OwnerPool<T> {
     private owners;
     private innerOwner;
     constructor();
-    owner(): OwnerType<T>;
+    owner(): DataUserType<T>;
     size(): number;
-    has(owner: OwnerType<T>): boolean;
-    add(owner: OwnerType<T>): this;
-    remove(g: OwnerType<T>): this;
+    has(owner: DataUserType<T>): boolean;
+    add(owner: DataUserType<T>): this;
+    remove(g: DataUserType<T>): this;
     destroy(): this;
 }
 
@@ -336,33 +161,28 @@ declare class OwnerPool<T> {
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-declare class Shared<T> extends TheInformation<T> implements OwnerType<T> {
-    private baseSrc;
-    private stateless;
-    private lastValue;
-    private ownersPool;
-    constructor(baseSrc: InformationType<T>, stateless?: boolean);
-    value(o: OwnerType<T>): this;
-    pool(): OwnerPool<T>;
-    give(value: T): this;
-}
+declare const shared: <T>(baseSrc: DataType<T>, stateless?: boolean) => SourceType<T> & {
+    pool: () => OwnerPool<T>;
+} & DestroyableType;
 
-declare class SharedSource<T> extends TheInformation<T> implements OwnerType<T> {
-    private baseSrc;
-    private sharedSrc;
-    constructor(baseSrc: SourceType<T>, stateless?: boolean);
-    value(o: OwnerType<T>): this;
-    give(value: T): this;
-}
+declare const sharedSource: <T>(baseSrc: SourceType<T>, stateless?: boolean) => SourceType<T>;
 
 /**
  * Component that receives a data array and yields values one by one
  * https://silentium-lab.github.io/silentium/#/en/information/stream
  */
-declare class Stream<T> extends TheInformation<T> {
-    private baseSrc;
-    constructor(baseSrc: InformationType<T[]>);
-    value(o: OwnerType<T>): this;
-}
+declare const stream: <T>(baseSrc: DataType<T[]>) => DataType<T>;
 
-export { All, Any, Applied, Chain, DestroyFunc, Destroyable, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, From, FromCallback, FromEvent, FromPromise, type InformationType, Late, LateShared, Lazy, LazyApplied, LazyClass, type LazyType, Map, type MaybeInformationType, MbInfo, Of, OfFunc, On, Once, OwnerPool, type OwnerType, PrimitiveSource, Sequence, Shared, SharedSource, type SourceType, Stream, TheInformation, TheOwner, Void, isFilled };
+declare const of: <T>(v: T) => DataType<T>;
+
+/**
+ * Run data with user
+ */
+declare const on: <T>(src: DataType<T>, user: DataUserType<T>) => void | DestructorType;
+
+/**
+ * Silent user
+ */
+declare const _void: () => DataUserType;
+
+export { type ExtractTypesFromArrayS, OwnerPool, _void, all, any, applied, chain, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };

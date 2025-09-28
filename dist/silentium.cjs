@@ -1,110 +1,142 @@
 'use strict';
 
-var __defProp$b = Object.defineProperty;
-var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, typeof key !== "symbol" ? key + "" : key, value);
-const isDestroyable = (dep) => {
-  return typeof dep === "object" && dep !== null && "destroy" in dep;
+const isAllFilled = (keysFilled, keysKnown) => {
+  return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
-const _Destroyable = class _Destroyable {
-  constructor(...deps) {
-    __publicField$b(this, "theDeps");
-    __publicField$b(this, "name");
-    this.theDeps = deps ?? [];
-    _Destroyable.instanceCount += 1;
-    this.name = this.constructor.name + "_" + _Destroyable.instanceCount;
-    _Destroyable.instancesHashMap[this.name] = 1;
-  }
-  destroy() {
-    delete _Destroyable.instancesHashMap[this.name];
-    this.theDeps?.forEach((dep) => {
-      if (isDestroyable(dep)) {
-        dep.destroy();
-      } else {
-        delete _Destroyable.instancesHashMap[this.name];
+const all = (...theInfos) => {
+  const keysKnown = new Set(Object.keys(theInfos));
+  const keysFilled = /* @__PURE__ */ new Set();
+  return (u) => {
+    const result = {};
+    Object.entries(theInfos).forEach(([key, info]) => {
+      keysKnown.add(key);
+      info((v) => {
+        keysFilled.add(key);
+        result[key] = v;
+        if (isAllFilled(keysFilled, keysKnown)) {
+          u(Object.values(result));
+        }
+      });
+    });
+  };
+};
+
+const any = (...infos) => {
+  return (u) => {
+    infos.forEach((info) => {
+      info(u);
+    });
+  };
+};
+
+const applied = (baseSrc, applier) => {
+  return (u) => {
+    baseSrc((v) => {
+      u(applier(v));
+    });
+  };
+};
+
+const chain = (...infos) => {
+  return (u) => {
+    let lastValue;
+    const handleI = (index) => {
+      const info = infos[index];
+      const nextI = infos[index + 1];
+      info((v) => {
+        if (!nextI) {
+          lastValue = v;
+        }
+        if (lastValue) {
+          u(lastValue);
+        }
+        if (nextI && !lastValue) {
+          handleI(index + 1);
+        }
+      });
+    };
+    handleI(0);
+  };
+};
+
+const executorApplied = (baseSrc, applier) => {
+  return (u) => {
+    baseSrc(
+      applier((v) => {
+        u(v);
+      })
+    );
+  };
+};
+
+const filtered = (baseSrc, predicate, defaultValue) => {
+  return (u) => {
+    baseSrc((v) => {
+      if (predicate(v)) {
+        u(v);
+      } else if (defaultValue !== void 0) {
+        u(defaultValue);
       }
     });
-    return this;
-  }
-  /**
-   * Add dependency what can be destroyed
-   */
-  addDep(dep) {
-    this.theDeps?.push(dep);
-    return this;
-  }
-  dep(dep) {
-    this.addDep(dep);
-    return dep;
-  }
-  static getInstancesCount() {
-    return Object.keys(_Destroyable.instancesHashMap).length;
-  }
+  };
 };
-__publicField$b(_Destroyable, "instanceCount", 0);
-__publicField$b(_Destroyable, "instancesHashMap", {});
-let Destroyable = _Destroyable;
 
-class DestroyFunc extends Destroyable {
-  constructor(destructor) {
-    super();
-    this.destructor = destructor;
-  }
-  destroy() {
-    this.destructor();
-    return this;
-  }
-}
+const fromEvent = (emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc) => {
+  let lastU = null;
+  const handler = (v) => {
+    if (lastU) {
+      lastU(v);
+    }
+  };
+  return (u) => {
+    lastU = u;
+    const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
+    a(([emitter, eventName, subscribe]) => {
+      if (!emitter?.[subscribe]) {
+        return;
+      }
+      emitter[subscribe](eventName, handler);
+    });
+    return () => {
+      lastU = null;
+      if (!unsubscribeMethodSrc) {
+        return;
+      }
+      const a2 = all(emitterSrc, eventNameSrc, unsubscribeMethodSrc);
+      a2(([emitter, eventName, unsubscribe]) => {
+        emitter[unsubscribe](eventName, handler);
+      });
+    };
+  };
+};
 
-class TheOwner {
-}
-
-class From extends TheOwner {
-  constructor(fn) {
-    super();
-    this.fn = fn;
-  }
-  give(value) {
-    this.fn(value);
-    return this;
-  }
-}
-
-var __defProp$a = Object.defineProperty;
-var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, key + "" , value);
-class TheInformation extends Destroyable {
-}
-class MbInfo extends TheInformation {
-  constructor(theInfo) {
-    const info = typeof theInfo === "object" && theInfo !== null && "value" in theInfo && typeof theInfo.value === "function" ? theInfo : new Of(theInfo);
-    super(info);
-    __publicField$a(this, "info");
-    this.info = info;
-  }
-  value(o) {
-    this.info.value(o);
-    return this;
-  }
-}
+const fromPromise = (p, errorOwner) => {
+  return (u) => {
+    p.then((v) => {
+      u(v);
+    }).catch((e) => {
+      errorOwner?.(e);
+    });
+  };
+};
 
 const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
 
-var __defProp$9 = Object.defineProperty;
-var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 class OwnerPool {
   constructor() {
-    __publicField$9(this, "owners");
-    __publicField$9(this, "innerOwner");
+    __publicField(this, "owners");
+    __publicField(this, "innerOwner");
     this.owners = /* @__PURE__ */ new Set();
-    this.innerOwner = new From((v) => {
+    this.innerOwner = (v) => {
       this.owners.forEach((g) => {
-        g.give(v);
+        g(v);
       });
-    });
+    };
   }
   owner() {
     return this.innerOwner;
@@ -131,540 +163,205 @@ class OwnerPool {
   }
 }
 
-class Of extends TheInformation {
-  constructor(theValue) {
-    super(theValue);
-    this.theValue = theValue;
-  }
-  value(o) {
-    if (isFilled(this.theValue)) {
-      o.give(this.theValue);
+const late = (v) => {
+  let lateUser = null;
+  const notify = (v2) => {
+    if (isFilled(v2) && lateUser) {
+      lateUser(v2);
     }
-    return this;
-  }
-}
-
-class Lazy extends Destroyable {
-  constructor(buildFn) {
-    super();
-    this.buildFn = buildFn;
-  }
-  get(...args) {
-    args.forEach((dep) => {
-      this.addDep(dep);
-    });
-    return this.buildFn?.(...args) ?? new Of(null);
-  }
-}
-
-var __defProp$8 = Object.defineProperty;
-var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, key + "" , value);
-class OfFunc extends TheInformation {
-  constructor(valueFn) {
-    super(valueFn);
-    this.valueFn = valueFn;
-    __publicField$8(this, "mbDestructor");
-  }
-  value(o) {
-    this.mbDestructor = this.valueFn(o);
-    return this;
-  }
-  destroy() {
-    super.destroy();
-    this.mbDestructor?.();
-    return this;
-  }
-}
-
-class Void extends TheOwner {
-  give() {
-    return this;
-  }
-}
-
-class On extends Destroyable {
-  constructor(src, fn) {
-    super(src, fn);
-    src.value(fn ? new From(fn) : new Void());
-  }
-}
-
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
-class All extends TheInformation {
-  constructor(...theInfos) {
-    super(...theInfos);
-    __publicField$7(this, "keysKnown");
-    __publicField$7(this, "keysFilled", /* @__PURE__ */ new Set());
-    __publicField$7(this, "infos");
-    this.infos = theInfos;
-    this.keysKnown = new Set(Object.keys(theInfos));
-  }
-  value(o) {
-    const result = {};
-    Object.entries(this.infos).forEach(([key, info]) => {
-      this.keysKnown.add(key);
-      info.value(
-        new From((v) => {
-          this.keysFilled.add(key);
-          result[key] = v;
-          if (this.isAllFilled()) {
-            o.give(Object.values(result));
-          }
-        })
-      );
-    });
-    return this;
-  }
-  isAllFilled() {
-    return this.keysFilled.size > 0 && this.keysFilled.size === this.keysKnown.size;
-  }
-}
-
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
-class Any extends TheInformation {
-  constructor(...theInfos) {
-    super(...theInfos);
-    __publicField$6(this, "infos");
-    this.infos = theInfos;
-  }
-  value(o) {
-    this.infos.forEach((info) => {
-      info.value(o);
-    });
-    return this;
-  }
-}
-
-class Applied extends TheInformation {
-  constructor(baseSrc, applier) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-    this.applier = applier;
-  }
-  value(o) {
-    this.baseSrc.value(
-      new From((v) => {
-        o.give(this.applier(v));
-      })
-    );
-    return this;
-  }
-}
-
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
-class Chain extends TheInformation {
-  constructor(...infos) {
-    super(...infos);
-    __publicField$5(this, "theInfos");
-    this.theInfos = infos;
-  }
-  value(o) {
-    let lastValue;
-    const handleI = (index) => {
-      const info = this.theInfos[index];
-      const nextI = this.theInfos[index + 1];
-      info.value(
-        new From((v) => {
-          if (!nextI) {
-            lastValue = v;
-          }
-          if (lastValue) {
-            o.give(lastValue);
-          }
-          if (nextI && !lastValue) {
-            handleI(index + 1);
-          }
-        })
-      );
-    };
-    handleI(0);
-    return this;
-  }
-}
-
-class ExecutorApplied extends TheInformation {
-  constructor(baseSrc, applier) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-    this.applier = applier;
-  }
-  value(o) {
-    this.baseSrc.value(
-      new From(
-        this.applier((v) => {
-          o.give(v);
-        })
-      )
-    );
-    return this;
-  }
-}
-
-class Filtered extends TheInformation {
-  constructor(baseSrc, predicate, defaultValue) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-    this.predicate = predicate;
-    this.defaultValue = defaultValue;
-  }
-  value(o) {
-    this.baseSrc.value(
-      new From((v) => {
-        if (this.predicate(v)) {
-          o.give(v);
-        } else if (this.defaultValue !== void 0) {
-          o.give(this.defaultValue);
-        }
-      })
-    );
-    return this;
-  }
-}
-
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
-class FromCallback extends TheInformation {
-  constructor(waitForCb, ...args) {
-    super(waitForCb);
-    this.waitForCb = waitForCb;
-    __publicField$4(this, "theArgs");
-    this.theArgs = args;
-  }
-  value(o) {
-    this.waitForCb(
-      (v) => {
-        o.give(v);
-      },
-      ...this.theArgs
-    );
-    return this;
-  }
-}
-
-class FromEvent extends TheInformation {
-  constructor(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc = new Of("")) {
-    super(emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc);
-    this.emitterSrc = emitterSrc;
-    this.eventNameSrc = eventNameSrc;
-    this.subscribeMethodSrc = subscribeMethodSrc;
-    this.unsubscribeMethodSrc = unsubscribeMethodSrc;
-  }
-  value(o) {
-    const a = new All(
-      this.emitterSrc,
-      this.eventNameSrc,
-      this.subscribeMethodSrc,
-      this.unsubscribeMethodSrc
-    );
-    const handler = (v) => {
-      o.give(v);
-    };
-    a.value(
-      new From(([emitter, eventName, subscribe, unsubscribe]) => {
-        if (!emitter?.[subscribe]) {
-          return;
-        }
-        emitter[subscribe](eventName, handler);
-        this.addDep(
-          new DestroyFunc(() => {
-            emitter[unsubscribe](eventName, handler);
-          })
+  };
+  return {
+    value: (u) => {
+      if (lateUser) {
+        throw new Error(
+          "Late component gets new user, when another was already connected!"
         );
-      })
-    );
-    return this;
-  }
-}
-
-class FromPromise extends TheInformation {
-  constructor(p, errorOwner) {
-    super(p);
-    this.p = p;
-    this.errorOwner = errorOwner;
-  }
-  value(o) {
-    this.p.then((v) => {
-      o.give(v);
-    }).catch((e) => {
-      this.errorOwner?.give(e);
-    });
-    return this;
-  }
-}
-
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !== "symbol" ? key + "" : key, value);
-class Late extends TheInformation {
-  constructor(theValue) {
-    super(theValue);
-    this.theValue = theValue;
-    __publicField$3(this, "theOwner");
-    __publicField$3(this, "lateOwner", new From((v) => {
-      this.theValue = v;
-      this.notify();
-    }));
-  }
-  value(o) {
-    if (this.theOwner) {
-      throw new Error(
-        "Late component gets new owner, when another was already connected!"
-      );
-    }
-    this.theOwner = o;
-    this.notify();
-    return this;
-  }
-  give(v) {
-    this.theValue = v;
-    this.lateOwner.give(v);
-    return this;
-  }
-  notify() {
-    if (isFilled(this.theValue) && this.theOwner) {
-      this.theOwner.give(this.theValue);
-    }
-    return this;
-  }
-}
-
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
-class Shared extends TheInformation {
-  constructor(baseSrc, stateless = false) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-    this.stateless = stateless;
-    __publicField$2(this, "lastValue");
-    __publicField$2(this, "ownersPool", new OwnerPool());
-    this.addDep(this.ownersPool);
-    this.baseSrc.value(
-      new From((v) => {
-        this.ownersPool.owner().give(v);
-        this.lastValue = v;
-      })
-    );
-  }
-  value(o) {
-    const i = new OfFunc((g) => {
-      if (!this.stateless && isFilled(this.lastValue) && !this.ownersPool.has(g)) {
-        g.give(this.lastValue);
       }
-      this.ownersPool.add(g);
-      return () => {
-        this.ownersPool.remove(g);
-      };
-    });
-    i.value(o);
-    this.addDep(i);
-    return this;
-  }
-  pool() {
-    return this.ownersPool;
-  }
-  give(value) {
-    this.lastValue = value;
-    this.ownersPool.owner().give(value);
-    return this;
-  }
-}
+      lateUser = u;
+      notify(v);
+    },
+    give: (v2) => {
+      notify(v2);
+    }
+  };
+};
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
-class SharedSource extends TheInformation {
-  constructor(baseSrc, stateless = false) {
-    const sharedSrc = new Shared(baseSrc, stateless);
-    super(sharedSrc);
-    this.baseSrc = baseSrc;
-    __publicField$1(this, "sharedSrc");
-    this.sharedSrc = sharedSrc;
-  }
-  value(o) {
-    this.sharedSrc.value(o);
-    return this;
-  }
-  give(value) {
-    this.baseSrc.give(value);
-    return this;
-  }
-}
-
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
-class LateShared extends TheInformation {
-  constructor(theValue) {
-    super(theValue);
-    this.theValue = theValue;
-    __publicField(this, "src");
-    this.src = new SharedSource(new Late(theValue));
-  }
-  value(o) {
-    this.src.value(o);
-    return this;
-  }
-  give(value) {
-    this.src.give(value);
-    return this;
-  }
-}
-
-class LazyApplied extends Lazy {
-  constructor(baseLazy, applier) {
-    super();
-    this.baseLazy = baseLazy;
-    this.applier = applier;
-  }
-  get(...args) {
-    return this.applier(this.baseLazy.get(...args));
-  }
-}
-
-class LazyClass extends Lazy {
-  constructor(constrFn) {
-    const buildFn = (...args) => new constrFn(...args);
-    super(buildFn);
-  }
-}
-
-class Map extends TheInformation {
-  constructor(baseSrc, targetSrc) {
-    super(baseSrc, targetSrc);
-    this.baseSrc = baseSrc;
-    this.targetSrc = targetSrc;
-  }
-  value(o) {
-    const infos = [];
-    this.baseSrc.value(
-      new From((v) => {
-        infos.forEach((i) => {
-          i?.destroy();
-        });
-        infos.length = 0;
-        v.forEach((val) => {
-          let valInfo = val;
-          if (!(valInfo instanceof TheInformation)) {
-            valInfo = new Of(valInfo);
-          }
-          const info = this.targetSrc.get(valInfo);
-          infos.push(info);
-        });
-        const allI = new All(...infos);
-        allI.value(o);
-      })
-    );
-    return this;
-  }
-}
-
-class Once extends TheInformation {
-  constructor(baseSrc) {
-    super();
-    this.baseSrc = baseSrc;
-  }
-  value(o) {
+const once = (baseSrc) => {
+  return (u) => {
     let isFilled = false;
-    this.baseSrc.value(
-      new From((v) => {
-        if (!isFilled) {
-          isFilled = true;
-          o.give(v);
+    baseSrc((v) => {
+      if (!isFilled) {
+        isFilled = true;
+        u(v);
+      }
+    });
+  };
+};
+
+const shared = (baseSrc, stateless = false) => {
+  const ownersPool = new OwnerPool();
+  let lastValue;
+  const calls = late();
+  once(calls.value)(() => {
+    baseSrc((v) => {
+      ownersPool.owner()(v);
+      lastValue = v;
+    });
+  });
+  return {
+    value: (u) => {
+      calls.give(1);
+      if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
+        u(lastValue);
+      }
+      ownersPool.add(u);
+      return () => {
+        ownersPool.remove(u);
+      };
+    },
+    give: (value) => {
+      lastValue = value;
+      ownersPool.owner()(value);
+    },
+    pool() {
+      return ownersPool;
+    },
+    destroy() {
+      ownersPool.destroy();
+    }
+  };
+};
+
+const sharedSource = (baseSrc, stateless = false) => {
+  const sharedSrc = shared(baseSrc.value, stateless);
+  return {
+    value: (u) => {
+      sharedSrc.value(u);
+    },
+    give: (v) => {
+      baseSrc.give(v);
+    }
+  };
+};
+
+const lateShared = (theValue) => {
+  const src = sharedSource(late(theValue));
+  return {
+    value: src.value,
+    give: src.give
+  };
+};
+
+const lazyApplied = (baseLazy, applier) => {
+  return (...args) => {
+    return applier(baseLazy(...args));
+  };
+};
+
+const lazyArgs = (baseLazy, args, startFromArgIndex = 0) => {
+  return (...runArgs) => {
+    return baseLazy(...mergeAtIndex(runArgs, args, startFromArgIndex));
+  };
+};
+function mergeAtIndex(arr1, arr2, index) {
+  const result = arr1.slice(0, index);
+  while (result.length < index) result.push(void 0);
+  return result.concat(arr2);
+}
+
+const lazyDestroyable = (baseLazy) => {
+  const instances = [];
+  return {
+    get: (...args) => {
+      const inst = baseLazy(...args);
+      instances.push(inst);
+      return inst;
+    },
+    destroy: () => {
+      instances.forEach((i) => i.destroy());
+    }
+  };
+};
+
+const of = (v) => (u) => u(v);
+
+const on = (src, user) => src(user);
+
+const _void = () => () => {
+};
+
+const map = (baseSrc, targetSrc) => {
+  return (u) => {
+    baseSrc((v) => {
+      const infos = [];
+      v.forEach((val) => {
+        let valInfo = val;
+        if (typeof valInfo !== "function") {
+          valInfo = of(valInfo);
         }
-      })
-    );
-    return this;
-  }
-}
+        const info = targetSrc(valInfo);
+        infos.push(info);
+      });
+      const allI = all(...infos);
+      allI(u);
+    });
+  };
+};
 
-class PrimitiveSource {
-  constructor(baseSrc, theValue = null) {
-    this.theValue = theValue;
-    baseSrc.value(
-      new From((v) => {
-        this.theValue = v;
-      })
-    );
-  }
-  [Symbol.toPrimitive]() {
-    return this.theValue;
-  }
-}
+const primitive = (baseSrc, theValue = null) => {
+  baseSrc((v) => {
+    theValue = v;
+  });
+  return {
+    [Symbol.toPrimitive]() {
+      return theValue;
+    }
+  };
+};
 
-class Sequence extends TheInformation {
-  constructor(baseSrc) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-  }
-  value(o) {
+const sequence = (baseSrc) => {
+  return (u) => {
     const result = [];
-    this.baseSrc.value(
-      new From((v) => {
-        result.push(v);
-        o.give(result);
-      })
-    );
-    return this;
-  }
-}
+    baseSrc((v) => {
+      result.push(v);
+      u(result);
+    });
+  };
+};
 
-class Stream extends TheInformation {
-  constructor(baseSrc) {
-    super(baseSrc);
-    this.baseSrc = baseSrc;
-  }
-  value(o) {
-    this.baseSrc.value(
-      new From((v) => {
-        v.forEach((cv) => {
-          o.give(cv);
-        });
-      })
-    );
-    return this;
-  }
-}
+const stream = (baseSrc) => {
+  return (u) => {
+    baseSrc((v) => {
+      v.forEach((cv) => {
+        u(cv);
+      });
+    });
+  };
+};
 
-exports.All = All;
-exports.Any = Any;
-exports.Applied = Applied;
-exports.Chain = Chain;
-exports.DestroyFunc = DestroyFunc;
-exports.Destroyable = Destroyable;
-exports.ExecutorApplied = ExecutorApplied;
-exports.Filtered = Filtered;
-exports.From = From;
-exports.FromCallback = FromCallback;
-exports.FromEvent = FromEvent;
-exports.FromPromise = FromPromise;
-exports.Late = Late;
-exports.LateShared = LateShared;
-exports.Lazy = Lazy;
-exports.LazyApplied = LazyApplied;
-exports.LazyClass = LazyClass;
-exports.Map = Map;
-exports.MbInfo = MbInfo;
-exports.Of = Of;
-exports.OfFunc = OfFunc;
-exports.On = On;
-exports.Once = Once;
 exports.OwnerPool = OwnerPool;
-exports.PrimitiveSource = PrimitiveSource;
-exports.Sequence = Sequence;
-exports.Shared = Shared;
-exports.SharedSource = SharedSource;
-exports.Stream = Stream;
-exports.TheInformation = TheInformation;
-exports.TheOwner = TheOwner;
-exports.Void = Void;
+exports._void = _void;
+exports.all = all;
+exports.any = any;
+exports.applied = applied;
+exports.chain = chain;
+exports.executorApplied = executorApplied;
+exports.filtered = filtered;
+exports.fromEvent = fromEvent;
+exports.fromPromise = fromPromise;
 exports.isFilled = isFilled;
+exports.late = late;
+exports.lateShared = lateShared;
+exports.lazyApplied = lazyApplied;
+exports.lazyArgs = lazyArgs;
+exports.lazyDestroyable = lazyDestroyable;
+exports.map = map;
+exports.of = of;
+exports.on = on;
+exports.once = once;
+exports.primitive = primitive;
+exports.sequence = sequence;
+exports.shared = shared;
+exports.sharedSource = sharedSource;
+exports.stream = stream;
 //# sourceMappingURL=silentium.cjs.map
