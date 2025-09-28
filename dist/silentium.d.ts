@@ -185,4 +185,4 @@ declare const on: <T>(src: DataType<T>, user: DataUserType<T>) => void | Destruc
  */
 declare const _void: () => DataUserType;
 
-export { type ExtractTypesFromArrayS, OwnerPool, _void, all, any, applied, chain, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { type DataObjectType, type DataType, type DataUserObjectType, type DataUserType, type DestroyableType, type DestructorType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, type ValueType, _void, all, any, applied, chain, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
