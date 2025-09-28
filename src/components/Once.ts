@@ -1,4 +1,4 @@
-import { From, InformationType, OwnerType, TheInformation } from "../base";
+import { DataType } from "../types";
 
 /**
  * Limits the number of values from the information source
@@ -6,21 +6,14 @@ import { From, InformationType, OwnerType, TheInformation } from "../base";
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-export class Once<T> extends TheInformation<T> {
-  public constructor(private baseSrc: InformationType<T>) {
-    super();
-  }
-
-  public value(o: OwnerType<T>): this {
+export const once = <T>(baseSrc: DataType<T>): DataType<T> => {
+  return (u) => {
     let isFilled = false;
-    this.baseSrc.value(
-      new From((v) => {
-        if (!isFilled) {
-          isFilled = true;
-          o.give(v);
-        }
-      }),
-    );
-    return this;
-  }
-}
+    baseSrc((v) => {
+      if (!isFilled) {
+        isFilled = true;
+        u(v);
+      }
+    });
+  };
+};

@@ -1,26 +1,19 @@
-import { OwnerType, TheInformation } from "../base";
+import { DataType, DataUserType } from "../types";
 
 /**
  * Component that gets a value from a promise and
  * presents it as information
  * https://silentium-lab.github.io/silentium/#/en/information/from-promise
  */
-export class FromPromise<T> extends TheInformation<T> {
-  public constructor(
-    private p: Promise<T>,
-    private errorOwner?: OwnerType,
-  ) {
-    super(p);
-  }
-
-  public value(o: OwnerType<T>): this {
-    this.p
-      .then((v) => {
-        o.give(v);
-      })
-      .catch((e) => {
-        this.errorOwner?.give(e);
-      });
-    return this;
-  }
-}
+export const fromPromise = <T>(
+  p: Promise<T>,
+  errorOwner?: DataUserType,
+): DataType<T> => {
+  return (u) => {
+    p.then((v) => {
+      u(v);
+    }).catch((e) => {
+      errorOwner?.(e);
+    });
+  };
+};

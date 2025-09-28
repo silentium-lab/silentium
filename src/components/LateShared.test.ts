@@ -1,15 +1,14 @@
-import { LateShared } from "../components/LateShared";
 import { expect, test, vi } from "vitest";
-import { From } from "../base";
+import { lateShared } from "../components/LateShared";
 
 test("LateShared.test", () => {
-  const l = new LateShared<number>();
+  const l = lateShared<number>();
 
   const o = vi.fn();
-  l.value(new From(o));
+  l.value(o);
 
   const o2 = vi.fn();
-  l.value(new From(o2));
+  l.value(o2);
 
   expect(o).not.toHaveBeenCalled();
   expect(o2).not.toHaveBeenCalled();

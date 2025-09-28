@@ -14,19 +14,18 @@ exports.fromEvent = function (emitterSrc, eventNameSrc, subscribeMethodSrc, unsu
             lastU(v);
         }
     };
-    return {
-        value: function (u) {
-            lastU = u;
-            var a = All_1.all(emitterSrc, eventNameSrc, subscribeMethodSrc);
-            a(function (_a) {
-                var emitter = _a[0], eventName = _a[1], subscribe = _a[2];
-                if (!(emitter === null || emitter === void 0 ? void 0 : emitter[subscribe])) {
-                    return;
-                }
-                emitter[subscribe](eventName, handler);
-            });
-        },
-        destroy: function () {
+    return function (u) {
+        lastU = u;
+        var a = All_1.all(emitterSrc, eventNameSrc, subscribeMethodSrc);
+        a(function (_a) {
+            var emitter = _a[0], eventName = _a[1], subscribe = _a[2];
+            if (!(emitter === null || emitter === void 0 ? void 0 : emitter[subscribe])) {
+                return;
+            }
+            emitter[subscribe](eventName, handler);
+        });
+        return function () {
+            lastU = null;
             if (!unsubscribeMethodSrc) {
                 return;
             }
@@ -35,6 +34,6 @@ exports.fromEvent = function (emitterSrc, eventNameSrc, subscribeMethodSrc, unsu
                 var emitter = _a[0], eventName = _a[1], unsubscribe = _a[2];
                 emitter[unsubscribe](eventName, handler);
             });
-        }
+        };
     };
 };

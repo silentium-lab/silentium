@@ -15,8 +15,8 @@ vitest_1.test("FromEvent.test", function () {
     };
     var i = FromEvent_1.fromEvent(base_1.of(emitter), base_1.of("click"), base_1.of("on"), base_1.of("off"));
     var o = vitest_1.vi.fn();
-    i.value(o);
+    var destroy = i(o);
     vitest_1.expect(o).toBeCalledWith("click123");
-    i.destroy();
+    destroy();
     vitest_1.expect(unsubscribed).toBe(true);
 });

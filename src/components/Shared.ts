@@ -1,62 +1,48 @@
+import { DataType, DestroyableType, SourceType } from "../types";
 import { isFilled, OwnerPool } from "../helpers";
-import {
-  From,
-  InformationType,
-  OfFunc,
-  OwnerType,
-  TheInformation,
-} from "../base";
+import { late } from "../components/Late";
+import { once } from "../components/Once";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export class Shared<T> extends TheInformation<T> implements OwnerType<T> {
-  private lastValue: T | undefined;
-  private ownersPool = new OwnerPool<T>();
+export const shared = <T>(
+  baseSrc: DataType<T>,
+  stateless = false,
+): SourceType<T> & { pool: () => OwnerPool<T> } & DestroyableType => {
+  const ownersPool = new OwnerPool<T>();
+  let lastValue: T | undefined;
 
-  public constructor(
-    private baseSrc: InformationType<T>,
-    private stateless = false,
-  ) {
-    super(baseSrc);
-    this.addDep(this.ownersPool);
-    this.baseSrc.value(
-      new From((v) => {
-        this.ownersPool.owner().give(v);
-        this.lastValue = v;
-      }),
-    );
-  }
-
-  public value(o: OwnerType<T>): this {
-    const i = new OfFunc((g: OwnerType<T>) => {
-      if (
-        !this.stateless &&
-        isFilled(this.lastValue) &&
-        !this.ownersPool.has(g)
-      ) {
-        g.give(this.lastValue);
-      }
-      this.ownersPool.add(g);
-      return () => {
-        this.ownersPool.remove(g);
-      };
+  const calls = late();
+  once(calls.value)(() => {
+    baseSrc((v) => {
+      ownersPool.owner()(v);
+      lastValue = v;
     });
-    i.value(o);
-    this.addDep(i);
+  });
 
-    return this;
-  }
-
-  public pool() {
-    return this.ownersPool;
-  }
-
-  public give(value: T) {
-    this.lastValue = value;
-    this.ownersPool.owner().give(value);
-    return this;
-  }
-}
+  return {
+    value: (u) => {
+      calls.give(1);
+      if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
+        u(lastValue);
+      }
+      ownersPool.add(u);
+      return () => {
+        ownersPool.remove(u);
+      };
+    },
+    give: (value: T) => {
+      lastValue = value;
+      ownersPool.owner()(value);
+    },
+    pool() {
+      return ownersPool;
+    },
+    destroy() {
+      ownersPool.destroy();
+    },
+  };
+};

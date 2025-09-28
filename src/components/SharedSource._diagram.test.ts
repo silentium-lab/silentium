@@ -1,13 +1,14 @@
-import { Diagram } from "../testing";
+import { applied } from "../components/Applied";
 import { expect, test } from "vitest";
-import { Late } from "./Late";
-import { SharedSource } from "./SharedSource";
+import { diagram } from "../testing";
+import { late } from "./Late";
+import { sharedSource } from "./SharedSource";
 
 test("SharedSource._diagram.test", () => {
-  const d = new Diagram();
-  const s = new SharedSource(new Late<number>(), true);
+  const d = diagram();
+  const s = sharedSource(late<number>(), true);
 
-  s.value(d.owner());
+  applied(s.value, String)(d.user);
 
   s.give(1);
 

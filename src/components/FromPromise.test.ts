@@ -1,26 +1,25 @@
 import { expect, test, vi } from "vitest";
-import { FromPromise } from "./FromPromise";
 import { wait } from "../testing";
-import { From } from "../base";
-import { Late } from "./Late";
+import { fromPromise } from "./FromPromise";
+import { late } from "./Late";
 
 test("FromPromise.test", async () => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
-  const i = new FromPromise(Promise.resolve(345));
+  const i = fromPromise(Promise.resolve(345));
   const o = vi.fn();
-  i.value(new From(o));
+  i(o);
 
   await wait(50);
 
   expect(o).toBeCalledWith(345);
 
-  const err = new Late();
-  const i2 = new FromPromise(Promise.reject(111), err);
+  const err = late();
+  const i2 = fromPromise(Promise.reject(111), err.give);
   const o2 = vi.fn();
-  i2.value(new From(o2));
+  i2(o2);
 
   const oError = vi.fn();
-  err.value(new From(oError));
+  err.value(oError);
 
   await wait(50);
 

@@ -15,10 +15,10 @@ test("FromEvent.test", () => {
   const i = fromEvent(of(emitter), of("click"), of("on"), of("off"));
 
   const o = vi.fn();
-  i.value(o);
+  const destroy = i(o);
 
   expect(o).toBeCalledWith("click123");
 
-  i.destroy();
+  destroy();
   expect(unsubscribed).toBe(true);
 });

@@ -1,13 +1,12 @@
-import { Late } from "./Late";
 import { expect, test, vitest } from "vitest";
-import { Once } from "./Once";
-import { From } from "../base";
+import { late } from "./Late";
+import { once } from "./Once";
 
 test("Once._main.test", () => {
-  const l = new Late<number>(123);
-  const info = new Once(l);
+  const l = late<number>(123);
+  const info = once(l.value);
   const g = vitest.fn();
-  info.value(new From(g));
+  info(g);
 
   l.give(321);
 

@@ -4,7 +4,6 @@ export * from "./Applied";
 export * from "./Chain";
 export * from "./ExecutorApplied";
 export * from "./Filtered";
-export * from "./FromCallback";
 export * from "./FromEvent";
 export * from "./FromPromise";
 export * from "./Late";

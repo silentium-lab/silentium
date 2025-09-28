@@ -1,24 +1,19 @@
-import { Diagram } from "../testing";
 import { expect, test } from "vitest";
-import { Late } from "./Late";
-import { Shared } from "./Shared";
-import { From } from "../base";
+import { diagram } from "../testing";
+import { late } from "./Late";
+import { shared } from "./Shared";
 
 test("Shared.test", () => {
-  const d = new Diagram();
-  const l = new Late<number>(1);
-  const s = new Shared(l);
+  const d = diagram();
+  const l = late<number>(1);
+  const s = shared(l.value);
 
-  s.value(
-    new From((v) => {
-      d.owner().give(`g1_${v}`);
-    }),
-  );
-  s.value(
-    new From((v) => {
-      d.owner().give(`g2_${v}`);
-    }),
-  );
+  s.value((v) => {
+    d.user(`g1_${v}`);
+  });
+  s.value((v) => {
+    d.user(`g2_${v}`);
+  });
 
   expect(d.toString()).toBe("g1_1|g2_1");
 

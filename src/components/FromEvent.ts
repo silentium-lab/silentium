@@ -1,9 +1,5 @@
-import {
-  DataObjectType,
-  DataType,
-  DataUserType,
-  DestroyableType,
-} from "../types";
+import { DataTypeDestroyable } from "src/types/DataType";
+import { DataType, DataUserType } from "../types";
 import { all } from "./All";
 
 /**
@@ -16,25 +12,25 @@ export const fromEvent = <T>(
   eventNameSrc: DataType<string>,
   subscribeMethodSrc: DataType<string>,
   unsubscribeMethodSrc?: DataType<string>,
-): DataObjectType<T> & DestroyableType => {
+): DataTypeDestroyable<T> => {
   let lastU: DataUserType<T> | null = null;
   const handler = (v: T) => {
     if (lastU) {
       lastU(v);
     }
   };
-  return {
-    value: (u) => {
-      lastU = u;
-      const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
-      a(([emitter, eventName, subscribe]) => {
-        if (!emitter?.[subscribe]) {
-          return;
-        }
-        emitter[subscribe](eventName, handler);
-      });
-    },
-    destroy: () => {
+  return (u) => {
+    lastU = u;
+    const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
+    a(([emitter, eventName, subscribe]) => {
+      if (!emitter?.[subscribe]) {
+        return;
+      }
+      emitter[subscribe](eventName, handler);
+    });
+
+    return () => {
+      lastU = null;
       if (!unsubscribeMethodSrc) {
         return;
       }
@@ -42,6 +38,6 @@ export const fromEvent = <T>(
       a(([emitter, eventName, unsubscribe]) => {
         emitter[unsubscribe](eventName, handler);
       });
-    },
+    };
   };
 };
