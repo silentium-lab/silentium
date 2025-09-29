@@ -138,7 +138,7 @@ declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
  */
 declare const sequence: <T>(baseSrc: DataType<T>) => DataType<T[]>;
 
-declare const isFilled: <T>(value?: T) => value is T;
+declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
 
 /**
  * Helps maintain an owner list allowing different
