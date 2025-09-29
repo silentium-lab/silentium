@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.92](https://github.com/silentium-lab/silentium/compare/v0.0.91...v0.0.92) (2025-09-29)
+
+
+### Bug Fixes
+
+* **main:** exclude null from isFilled ([177693f](https://github.com/silentium-lab/silentium/commit/177693fad74191aa951ec12e25e972f6fd737ec0))
+
 ### [0.0.91](https://github.com/silentium-lab/silentium/compare/v0.0.90...v0.0.91) (2025-09-28)
 
 
