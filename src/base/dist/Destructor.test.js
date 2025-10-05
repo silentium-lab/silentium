@@ -7,7 +7,7 @@ vitest_1.describe("Destructor.test", function () {
     vitest_1.test("Destructor always exists", function () {
         var src = Destructor_1.destructor(Of_1.of("1"));
         var user = vitest_1.vi.fn();
-        var d = src(user);
+        var d = src.value(user);
         vitest_1.expect(user).toHaveBeenCalledWith("1");
         vitest_1.expect(typeof d).toBe("function");
     });
@@ -20,7 +20,7 @@ vitest_1.describe("Destructor.test", function () {
             return d;
         }, destructorUser);
         var user = vitest_1.vi.fn();
-        src(user);
+        src.value(user);
         vitest_1.expect(user).toHaveBeenCalledWith("2");
         vitest_1.expect(destructorUser).toHaveBeenCalledWith(d);
     });

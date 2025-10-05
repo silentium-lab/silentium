@@ -176,7 +176,10 @@ declare const sharedSource: <T>(baseSrc: SourceType<T>, stateless?: boolean) => 
  */
 declare const stream: <T>(baseSrc: DataType<T[]>) => DataType<T>;
 
-declare const destructor: <T>(src: DataType$1<T>, destructorUser?: DataUserType$1<DestructorType$1>) => DataType$1<T>;
+declare const destructor: <T>(src: DataType$1<T>, destructorUser?: DataUserType$1<DestructorType$1>) => {
+    value: DataType$1<T>;
+    destroy: () => void;
+};
 
 /**
  * Create local copy of source what can be destroyed
