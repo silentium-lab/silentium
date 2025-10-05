@@ -1,4 +1,5 @@
 import { DataTypeDestroyable } from 'src/types/DataType';
+import { DataType as DataType$1, DataUserType as DataUserType$1, DestructorType as DestructorType$1 } from 'src/types';
 
 type DataUserType<T = unknown> = (value: T) => void;
 
@@ -129,6 +130,7 @@ declare const once: <T>(baseSrc: DataType<T>) => DataType<T>;
 declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
     [Symbol.toPrimitive](): T | null;
     primitive(): T | null;
+    primitiveWithException(): T & ({} | undefined);
 };
 
 /**
@@ -186,4 +188,6 @@ declare const on: <T>(src: DataType<T>, user: DataUserType<T>) => void | Destruc
  */
 declare const _void: () => DataUserType;
 
-export { type DataObjectType, type DataType, type DataUserObjectType, type DataUserType, type DestroyableType, type DestructorType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, type ValueType, _void, all, any, applied, chain, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+declare const destructor: <T>(src: DataType$1<T>, destructorUser?: DataUserType$1<DestructorType$1>) => DataType$1<T>;
+
+export { type DataObjectType, type DataType, type DataUserObjectType, type DataUserType, type DestroyableType, type DestructorType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, type ValueType, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };

@@ -290,6 +290,16 @@ const on = (src, user) => src(user);
 const _void = () => () => {
 };
 
+const destructor = (src, destructorUser) => (u) => {
+  const mbDestructor = src(u);
+  if (mbDestructor && destructorUser) {
+    destructorUser(mbDestructor);
+  }
+  return () => {
+    mbDestructor?.();
+  };
+};
+
 const map = (baseSrc, targetSrc) => {
   return (u) => {
     baseSrc((v) => {
@@ -317,6 +327,12 @@ const primitive = (baseSrc, theValue = null) => {
       return theValue;
     },
     primitive() {
+      return theValue;
+    },
+    primitiveWithException() {
+      if (theValue === null) {
+        throw new Error("Primitive value is null");
+      }
       return theValue;
     }
   };
@@ -348,6 +364,7 @@ exports.all = all;
 exports.any = any;
 exports.applied = applied;
 exports.chain = chain;
+exports.destructor = destructor;
 exports.executorApplied = executorApplied;
 exports.filtered = filtered;
 exports.fromEvent = fromEvent;

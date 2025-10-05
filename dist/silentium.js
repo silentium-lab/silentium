@@ -288,6 +288,16 @@ const on = (src, user) => src(user);
 const _void = () => () => {
 };
 
+const destructor = (src, destructorUser) => (u) => {
+  const mbDestructor = src(u);
+  if (mbDestructor && destructorUser) {
+    destructorUser(mbDestructor);
+  }
+  return () => {
+    mbDestructor?.();
+  };
+};
+
 const map = (baseSrc, targetSrc) => {
   return (u) => {
     baseSrc((v) => {
@@ -316,6 +326,12 @@ const primitive = (baseSrc, theValue = null) => {
     },
     primitive() {
       return theValue;
+    },
+    primitiveWithException() {
+      if (theValue === null) {
+        throw new Error("Primitive value is null");
+      }
+      return theValue;
     }
   };
 };
@@ -340,5 +356,5 @@ const stream = (baseSrc) => {
   };
 };
 
-export { OwnerPool, _void, all, any, applied, chain, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { OwnerPool, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
 //# sourceMappingURL=silentium.js.map

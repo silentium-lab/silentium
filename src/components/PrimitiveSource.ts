@@ -15,5 +15,11 @@ export const primitive = <T>(
     primitive() {
       return theValue;
     },
+    primitiveWithException() {
+      if (theValue === null) {
+        throw new Error("Primitive value is null");
+      }
+      return theValue;
+    },
   };
 };
