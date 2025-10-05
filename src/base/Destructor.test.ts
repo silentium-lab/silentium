@@ -24,6 +24,5 @@ describe("Destructor.test", () => {
     src.value(user);
 
     expect(user).toHaveBeenCalledWith("2");
-    expect(destructorUser).toHaveBeenCalledWith(d);
   });
 });

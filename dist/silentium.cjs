@@ -285,19 +285,25 @@ const lazyDestroyable = (baseLazy) => {
 
 const destructor = (src, destructorUser) => {
   let mbDestructor;
+  let theUser = null;
+  const destroy = () => {
+    theUser = null;
+    mbDestructor?.();
+  };
   return {
     value: (u) => {
-      mbDestructor = src(u);
+      theUser = u;
+      mbDestructor = src((v) => {
+        if (theUser) {
+          theUser(v);
+        }
+      });
       if (mbDestructor && destructorUser) {
-        destructorUser(mbDestructor);
+        destructorUser(destroy);
       }
-      return () => {
-        mbDestructor?.();
-      };
+      return destroy;
     },
-    destroy: () => {
-      mbDestructor?.();
-    }
+    destroy
   };
 };
 

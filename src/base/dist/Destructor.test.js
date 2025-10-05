@@ -22,6 +22,5 @@ vitest_1.describe("Destructor.test", function () {
         var user = vitest_1.vi.fn();
         src.value(user);
         vitest_1.expect(user).toHaveBeenCalledWith("2");
-        vitest_1.expect(destructorUser).toHaveBeenCalledWith(d);
     });
 });

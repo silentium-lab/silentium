@@ -5,18 +5,24 @@ export const destructor = <T>(
   destructorUser?: DataUserType<DestructorType>,
 ) => {
   let mbDestructor: DestructorType | void;
+  let theUser: DataUserType<T> | null = null;
+  const destroy = () => {
+    theUser = null;
+    mbDestructor?.();
+  };
   return {
-    value: ((u) => {
-      mbDestructor = src(u);
+    value: ((u: any) => {
+      theUser = u;
+      mbDestructor = src((v) => {
+        if (theUser) {
+          theUser(v);
+        }
+      });
       if (mbDestructor && destructorUser) {
-        destructorUser(mbDestructor);
+        destructorUser(destroy);
       }
-      return () => {
-        mbDestructor?.();
-      };
+      return destroy;
     }) as DataType<T>,
-    destroy: () => {
-      mbDestructor?.();
-    },
+    destroy,
   };
 };

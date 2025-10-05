@@ -3,18 +3,24 @@ exports.__esModule = true;
 exports.destructor = void 0;
 exports.destructor = function (src, destructorUser) {
     var mbDestructor;
+    var theUser = null;
+    var destroy = function () {
+        theUser = null;
+        mbDestructor === null || mbDestructor === void 0 ? void 0 : mbDestructor();
+    };
     return {
         value: (function (u) {
-            mbDestructor = src(u);
+            theUser = u;
+            mbDestructor = src(function (v) {
+                if (theUser) {
+                    theUser(v);
+                }
+            });
             if (mbDestructor && destructorUser) {
-                destructorUser(mbDestructor);
+                destructorUser(destroy);
             }
-            return function () {
-                mbDestructor === null || mbDestructor === void 0 ? void 0 : mbDestructor();
-            };
+            return destroy;
         }),
-        destroy: function () {
-            mbDestructor === null || mbDestructor === void 0 ? void 0 : mbDestructor();
-        }
+        destroy: destroy
     };
 };
