@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.95](https://github.com/silentium-lab/silentium/compare/v0.0.94...v0.0.95) (2025-10-05)
+
+
+### Bug Fixes
+
+* **main:** local component ([baf55b3](https://github.com/silentium-lab/silentium/commit/baf55b376a4c184d88ed8778a82b9db95ce9396f))
+
 ### [0.0.94](https://github.com/silentium-lab/silentium/compare/v0.0.93...v0.0.94) (2025-10-05)
 
 
