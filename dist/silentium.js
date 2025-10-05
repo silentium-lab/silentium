@@ -281,13 +281,6 @@ const lazyDestroyable = (baseLazy) => {
   };
 };
 
-const of = (v) => (u) => u(v);
-
-const on = (src, user) => src(user);
-
-const _void = () => () => {
-};
-
 const destructor = (src, destructorUser) => (u) => {
   const mbDestructor = src(u);
   if (mbDestructor && destructorUser) {
@@ -296,6 +289,28 @@ const destructor = (src, destructorUser) => (u) => {
   return () => {
     mbDestructor?.();
   };
+};
+
+const local = (baseSrc) => {
+  return function Local(user) {
+    let destroyed = false;
+    const d = baseSrc((v) => {
+      if (!destroyed) {
+        user(v);
+      }
+    });
+    return () => {
+      destroyed = true;
+      d?.();
+    };
+  };
+};
+
+const of = (v) => (u) => u(v);
+
+const on = (src, user) => src(user);
+
+const _void = () => () => {
 };
 
 const map = (baseSrc, targetSrc) => {
@@ -356,5 +371,5 @@ const stream = (baseSrc) => {
   };
 };
 
-export { OwnerPool, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { OwnerPool, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
 //# sourceMappingURL=silentium.js.map
