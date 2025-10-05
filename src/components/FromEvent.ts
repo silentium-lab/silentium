@@ -36,7 +36,7 @@ export const fromEvent = <T>(
       }
       const a = all(emitterSrc, eventNameSrc, unsubscribeMethodSrc);
       a(([emitter, eventName, unsubscribe]) => {
-        emitter[unsubscribe](eventName, handler);
+        emitter?.[unsubscribe]?.(eventName, handler);
       });
     };
   };

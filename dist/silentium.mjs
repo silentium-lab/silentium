@@ -102,7 +102,7 @@ const fromEvent = (emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMeth
       }
       const a2 = all(emitterSrc, eventNameSrc, unsubscribeMethodSrc);
       a2(([emitter, eventName, unsubscribe]) => {
-        emitter[unsubscribe](eventName, handler);
+        emitter?.[unsubscribe]?.(eventName, handler);
       });
     };
   };
