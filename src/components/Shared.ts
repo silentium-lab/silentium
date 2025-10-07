@@ -18,8 +18,8 @@ export const shared = <T>(
   const calls = late();
   once(calls.value)(() => {
     baseSrc((v) => {
-      ownersPool.owner()(v);
       lastValue = v;
+      ownersPool.owner()(v);
     });
   });
 

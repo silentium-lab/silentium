@@ -204,8 +204,8 @@ const shared = (baseSrc, stateless = false) => {
   const calls = late();
   once(calls.value)(() => {
     baseSrc((v) => {
-      ownersPool.owner()(v);
       lastValue = v;
+      ownersPool.owner()(v);
     });
   });
   return {
@@ -322,7 +322,9 @@ const local = (baseSrc) => {
   };
 };
 
-const of = (v) => (u) => u(v);
+const of = (v) => function Of(u) {
+  return u(v);
+};
 
 const on = (src, user) => src(user);
 
