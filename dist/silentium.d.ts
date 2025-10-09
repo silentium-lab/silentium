@@ -1,5 +1,4 @@
 import { DataTypeDestroyable } from 'src/types/DataType';
-import { DataType as DataType$1, DataUserType as DataUserType$1, DestructorType as DestructorType$1 } from 'src/types';
 
 type DataUserType<T = unknown> = (value: T) => void;
 
@@ -176,15 +175,15 @@ declare const sharedSource: <T>(baseSrc: SourceType<T>, stateless?: boolean) => 
  */
 declare const stream: <T>(baseSrc: DataType<T[]>) => DataType<T>;
 
-declare const destructor: <T>(src: DataType$1<T>, destructorUser?: DataUserType$1<DestructorType$1>) => {
-    value: DataType$1<T>;
+declare const destructor: <T>(src: DataType<T>, destructorUser?: DataUserType<DestructorType>) => {
+    value: DataType<T>;
     destroy: () => void;
 };
 
 /**
  * Create local copy of source what can be destroyed
  */
-declare const local: <T>(baseSrc: DataType$1<T>) => DataType$1<T>;
+declare const local: <T>(baseSrc: DataType<T>) => DataType<T>;
 
 declare const of: <T>(v: T) => DataType<T>;
 
