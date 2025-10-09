@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.99](https://github.com/silentium-lab/silentium/compare/v0.0.98...v0.0.99) (2025-10-09)
+
+
+### Bug Fixes
+
+* **main:** fix shared late test ([be20c87](https://github.com/silentium-lab/silentium/commit/be20c87898b91a3bb73978a957365124940b8a71))
+* **main:** more function names ([be96b16](https://github.com/silentium-lab/silentium/commit/be96b166c8cd9891b7b42f84cdc0b319c992622f))
+
 ### [0.0.98](https://github.com/silentium-lab/silentium/compare/v0.0.97...v0.0.98) (2025-10-07)
 
 
