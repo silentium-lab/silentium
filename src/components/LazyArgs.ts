@@ -5,7 +5,7 @@ export const lazyArgs = (
   args: unknown[],
   startFromArgIndex: number = 0,
 ) => {
-  return (...runArgs: any[]) => {
+  return function LazyArgsData(...runArgs: any[]) {
     return baseLazy(...mergeAtIndex(runArgs, args, startFromArgIndex));
   };
 };

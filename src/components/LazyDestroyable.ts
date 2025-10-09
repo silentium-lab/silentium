@@ -8,12 +8,12 @@ export const lazyDestroyable = (
 ): { get: ValueType<any[], DestroyableType>; destroy: DestructorType } => {
   const instances: DestroyableType[] = [];
   return {
-    get: (...args) => {
+    get: function lazyDestroyable(...args) {
       const inst = baseLazy(...args);
       instances.push(inst);
       return inst;
     },
-    destroy: () => {
+    destroy: function LazyDestructor() {
       instances.forEach((i) => i.destroy());
     },
   };

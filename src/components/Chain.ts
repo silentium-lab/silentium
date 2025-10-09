@@ -1,4 +1,4 @@
-import { DataTypeValue } from "src/types/DataType";
+import { DataTypeValue } from "../types/DataType";
 import { DataType } from "../types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,14 +11,14 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
 export const chain = <T extends DataType[]>(...infos: T): Last<T> => {
-  return <Last<T>>((u) => {
+  return <Last<T>>function ChainData(u) {
     let lastValue: DataTypeValue<Last<T>> | undefined;
 
     const handleI = (index: number) => {
       const info = infos[index] as Last<T>;
       const nextI = infos[index + 1] as Last<T> | undefined;
 
-      info((v) => {
+      info(function ChainItemUser(v) {
         if (!nextI) {
           lastValue = v as DataTypeValue<Last<T>>;
         }
@@ -34,5 +34,5 @@ export const chain = <T extends DataType[]>(...infos: T): Last<T> => {
     };
 
     handleI(0);
-  });
+  };
 };

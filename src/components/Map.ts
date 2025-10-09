@@ -11,8 +11,8 @@ export const map = <T, TG>(
   baseSrc: DataType<T[]>,
   targetSrc: ValueType<any[], DataType<TG>>,
 ): DataType<TG[]> => {
-  return (u) => {
-    baseSrc((v) => {
+  return function MapData(u) {
+    baseSrc(function MapBaseUser(v) {
       const infos: DataType<TG>[] = [];
       v.forEach((val) => {
         let valInfo: DataType<T> | T = val;

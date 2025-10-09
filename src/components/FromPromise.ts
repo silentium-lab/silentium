@@ -9,10 +9,10 @@ export const fromPromise = <T>(
   p: Promise<T>,
   errorOwner?: DataUserType,
 ): DataType<T> => {
-  return (u) => {
-    p.then((v) => {
+  return function FromPromiseData(u) {
+    p.then(function FromPromiseThen(v) {
       u(v);
-    }).catch((e) => {
+    }).catch(function FromPromiseCatch(e) {
       errorOwner?.(e);
     });
   };

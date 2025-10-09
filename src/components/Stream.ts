@@ -5,8 +5,8 @@ import { DataType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/stream
  */
 export const stream = <T>(baseSrc: DataType<T[]>): DataType<T> => {
-  return (u) => {
-    baseSrc((v) => {
+  return function StreamData(u) {
+    baseSrc(function StreamBaseUser(v) {
       v.forEach((cv) => {
         u(cv);
       });

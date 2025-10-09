@@ -8,8 +8,8 @@ export const applied = <T, R>(
   baseSrc: DataType<T>,
   applier: ValueType<[T], R>,
 ): DataType<R> => {
-  return (u) => {
-    baseSrc((v) => {
+  return function AppliedData(u) {
+    baseSrc(function AppliedBaseUser(v) {
       u(applier(v));
     });
   };

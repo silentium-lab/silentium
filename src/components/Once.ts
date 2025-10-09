@@ -7,9 +7,9 @@ import { DataType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
 export const once = <T>(baseSrc: DataType<T>): DataType<T> => {
-  return (u) => {
+  return function OnceData(u) {
     let isFilled = false;
-    baseSrc((v) => {
+    baseSrc(function OnceBaseUser(v) {
       if (!isFilled) {
         isFilled = true;
         u(v);

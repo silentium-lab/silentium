@@ -21,12 +21,12 @@ export const all = <const T extends DataType[]>(
   const keysKnown = new Set<string>(Object.keys(theInfos));
   const keysFilled = new Set<string>();
 
-  return (u) => {
+  return function AllData(u) {
     const result: Record<string, unknown> = {};
 
     Object.entries(theInfos).forEach(([key, info]) => {
       keysKnown.add(key);
-      info((v) => {
+      info(function AllItemUser(v) {
         keysFilled.add(key);
         result[key] = v;
         if (isAllFilled(keysFilled, keysKnown)) {

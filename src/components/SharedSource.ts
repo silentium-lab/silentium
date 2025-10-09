@@ -8,10 +8,10 @@ export const sharedSource = <T>(
   const sharedSrc = shared(baseSrc.value, stateless);
 
   return {
-    value: (u) => {
+    value: function SharedSource(u) {
       sharedSrc.value(u);
     },
-    give: (v) => {
+    give: function SharedSourceUser(v) {
       baseSrc.give(v);
     },
   };

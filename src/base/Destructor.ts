@@ -1,4 +1,4 @@
-import { DataType, DataUserType, DestructorType } from "src/types";
+import { DataType, DataUserType, DestructorType } from "../types";
 
 export const destructor = <T>(
   src: DataType<T>,
@@ -11,7 +11,7 @@ export const destructor = <T>(
     mbDestructor?.();
   };
   return {
-    value: ((u: any) => {
+    value: function DestructorData(u: any) {
       theUser = u;
       mbDestructor = src((v) => {
         if (theUser) {
@@ -22,7 +22,7 @@ export const destructor = <T>(
         destructorUser(destroy);
       }
       return destroy;
-    }) as DataType<T>,
+    } as DataType<T>,
     destroy,
   };
 };

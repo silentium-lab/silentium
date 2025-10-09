@@ -7,7 +7,7 @@ export const lazyApplied = <T>(
   baseLazy: ValueType<any[], DataType>,
   applier: (i: DataType) => DataType<T>,
 ): ValueType<DataType[], DataType<T>> => {
-  return (...args) => {
+  return function LazyAppliedData(...args) {
     return applier(baseLazy(...args));
   };
 };

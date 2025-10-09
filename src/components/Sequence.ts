@@ -6,9 +6,9 @@ import { DataType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
 export const sequence = <T>(baseSrc: DataType<T>): DataType<T[]> => {
-  return (u) => {
+  return function SequenceData(u) {
     const result: T[] = [];
-    baseSrc((v) => {
+    baseSrc(function SequenceBaseUser(v) {
       result.push(v);
       u(result);
     });

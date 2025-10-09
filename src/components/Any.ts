@@ -6,7 +6,7 @@ import { DataType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
 export const any = <T>(...infos: DataType<T>[]): DataType<T> => {
-  return (u) => {
+  return function AnyData(u) {
     infos.forEach((info) => {
       info(u);
     });

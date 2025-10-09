@@ -1,12 +1,12 @@
-import { DataType } from "src/types";
+import { DataType } from "../types";
 
 /**
  * Create local copy of source what can be destroyed
  */
 export const local = <T>(baseSrc: DataType<T>): DataType<T> => {
-  return function Local(user) {
+  return function LocalData(user) {
     let destroyed = false;
-    const d = baseSrc((v) => {
+    const d = baseSrc(function LocalBaseUser(v) {
       if (!destroyed) {
         user(v);
       }

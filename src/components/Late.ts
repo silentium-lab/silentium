@@ -16,7 +16,7 @@ export const late = <T>(v?: T): SourceType<T> => {
   };
 
   return {
-    value: (u) => {
+    value: function Late(u) {
       if (lateUser) {
         throw new Error(
           "Late component gets new user, when another was already connected!",
@@ -26,7 +26,7 @@ export const late = <T>(v?: T): SourceType<T> => {
       lateUser = u;
       notify(v);
     },
-    give: (v) => {
+    give: function LateUser(v) {
       notify(v);
     },
   };

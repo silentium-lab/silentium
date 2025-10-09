@@ -16,15 +16,15 @@ export const shared = <T>(
   let lastValue: T | undefined;
 
   const calls = late();
-  once(calls.value)(() => {
-    baseSrc((v) => {
+  once(calls.value)(function SharedCallsUser() {
+    baseSrc(function SharedBaseUser(v) {
       lastValue = v;
       ownersPool.owner()(v);
     });
   });
 
   return {
-    value: (u) => {
+    value: function Shared(u) {
       calls.give(1);
       if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
         u(lastValue);
@@ -34,7 +34,7 @@ export const shared = <T>(
         ownersPool.remove(u);
       };
     },
-    give: (value: T) => {
+    give: function SharedUser(value: T) {
       lastValue = value;
       ownersPool.owner()(value);
     },

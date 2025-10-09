@@ -9,11 +9,8 @@ export const executorApplied = <T>(
   baseSrc: DataType<T>,
   applier: (executor: DataUserType<T>) => DataUserType<T>,
 ): DataType<T> => {
-  return (u) => {
-    baseSrc(
-      applier((v) => {
-        u(v);
-      }),
-    );
+  return function ExecutorAppliedData(u) {
+    const ExecutorAppliedBaseUser = applier(u);
+    baseSrc(ExecutorAppliedBaseUser);
   };
 };

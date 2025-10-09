@@ -1,6 +1,6 @@
 import { DataType } from "../types";
 
 export const of = <T>(v: T): DataType<T> =>
-  function Of(u) {
+  function OfData(u) {
     return u(v);
   };

@@ -11,8 +11,8 @@ export const filtered = <T>(
   predicate: ValueType<[T], boolean>,
   defaultValue?: T,
 ): DataType<T> => {
-  return (u) => {
-    baseSrc((v) => {
+  return function FilteredData(u) {
+    baseSrc(function FilteredBaseUser(v) {
       if (predicate(v)) {
         u(v);
       } else if (defaultValue !== undefined) {

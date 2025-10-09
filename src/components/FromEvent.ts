@@ -14,22 +14,22 @@ export const fromEvent = <T>(
   unsubscribeMethodSrc?: DataType<string>,
 ): DataTypeDestroyable<T> => {
   let lastU: DataUserType<T> | null = null;
-  const handler = (v: T) => {
+  const handler = function FromEventHandler(v: T) {
     if (lastU) {
       lastU(v);
     }
   };
-  return (u) => {
+  return function FromEventData(u) {
     lastU = u;
     const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
-    a(([emitter, eventName, subscribe]) => {
+    a(function FromEventAllUser([emitter, eventName, subscribe]) {
       if (!emitter?.[subscribe]) {
         return;
       }
       emitter[subscribe](eventName, handler);
     });
 
-    return () => {
+    return function FromEventDestructor() {
       lastU = null;
       if (!unsubscribeMethodSrc) {
         return;

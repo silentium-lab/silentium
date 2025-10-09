@@ -4,7 +4,7 @@ export const primitive = <T>(
   baseSrc: DataType<T>,
   theValue: T | null = null,
 ) => {
-  baseSrc((v) => {
+  baseSrc(function PrimitiveBaseUser(v) {
     theValue = v;
   });
 
