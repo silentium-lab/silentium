@@ -15,11 +15,11 @@ test("LateShared.test", () => {
 
   l.give(1);
 
-  expect(o).toHaveBeenCalledWith(1);
-  expect(o2).toHaveBeenCalledWith(1);
+  expect(o).toHaveBeenLastCalledWith(1);
+  expect(o2).toHaveBeenLastCalledWith(1);
 
   l.give(2);
 
-  expect(o).toHaveBeenCalledWith(1);
-  expect(o2).toHaveBeenCalledWith(1);
+  expect(o).toHaveBeenLastCalledWith(2);
+  expect(o2).toHaveBeenLastCalledWith(2);
 });
