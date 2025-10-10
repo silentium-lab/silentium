@@ -165,6 +165,7 @@ declare class OwnerPool<T> {
  */
 declare const shared: <T>(baseSrc: DataType<T>, stateless?: boolean) => SourceType<T> & {
     pool: () => OwnerPool<T>;
+    touched: () => void;
 } & DestroyableType;
 
 declare const sharedSource: <T>(baseSrc: SourceType<T>, stateless?: boolean) => SourceType<T>;

@@ -215,8 +215,12 @@ const shared = (baseSrc, stateless = false) => {
       };
     },
     give: function SharedUser(value) {
+      calls.give(1);
       lastValue = value;
       ownersPool.owner()(value);
+    },
+    touched() {
+      calls.give(1);
     },
     pool() {
       return ownersPool;
@@ -234,6 +238,7 @@ const sharedSource = (baseSrc, stateless = false) => {
       sharedSrc.value(u);
     },
     give: function SharedSourceUser(v) {
+      sharedSrc.touched();
       baseSrc.give(v);
     }
   };
