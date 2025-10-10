@@ -12,6 +12,7 @@ export const sharedSource = <T>(
       sharedSrc.value(u);
     },
     give: function SharedSourceUser(v) {
+      sharedSrc.touched();
       baseSrc.give(v);
     },
   };

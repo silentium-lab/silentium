@@ -11,7 +11,10 @@ import { once } from "../components/Once";
 export const shared = <T>(
   baseSrc: DataType<T>,
   stateless = false,
-): SourceType<T> & { pool: () => OwnerPool<T> } & DestroyableType => {
+): SourceType<T> & {
+  pool: () => OwnerPool<T>;
+  touched: () => void;
+} & DestroyableType => {
   const ownersPool = new OwnerPool<T>();
   let lastValue: T | undefined;
 
@@ -35,8 +38,12 @@ export const shared = <T>(
       };
     },
     give: function SharedUser(value: T) {
+      calls.give(1);
       lastValue = value;
       ownersPool.owner()(value);
+    },
+    touched() {
+      calls.give(1);
     },
     pool() {
       return ownersPool;
