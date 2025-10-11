@@ -1,31 +1,32 @@
-import { DataTypeDestroyable } from 'src/types/DataType';
-
-type DataUserType<T = unknown> = (value: T) => void;
+type EventUserType<T = unknown> = (value: T) => void;
 
 type DestructorType = () => void;
-type DataType<T = unknown> = (user: DataUserType<T>) => DestructorType | void;
+type EventType<T = unknown> = (user: EventUserType<T>) => DestructorType | void;
+type ExcludeVoidFromReturnType<F extends (...args: any[]) => any> = F extends (...args: infer Args) => infer Return ? (...args: Args) => Exclude<Return, void> : never;
+type EventTypeDestroyable<T = unknown> = ExcludeVoidFromReturnType<EventType<T>>;
 interface DestroyableType {
     destroy: DestructorType;
 }
+type EventTypeValue<T> = T extends EventType<infer U> ? U : never;
 
-interface DataObjectType<T = unknown> {
-    value: DataType<T>;
+interface EventObjectType<T = unknown> {
+    event: EventType<T>;
 }
 
-interface DataUserObjectType<T = unknown> {
-    give: DataUserType<T>;
+interface EventUserObjectType<T = unknown> {
+    use: EventUserType<T>;
 }
 
-type SourceType<T = unknown> = DataObjectType<T> & DataUserObjectType<T>;
+type SourceType<T = unknown> = EventObjectType<T> & EventUserObjectType<T>;
 
 /**
  * A function type that takes a value as an argument
  * and returns a specific value
  */
-type ValueType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
+type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
 
-type ExtractTypeS<T> = T extends DataType<infer U> ? U : never;
-type ExtractTypesFromArrayS<T extends DataType<any>[]> = {
+type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
+type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
 /**
@@ -33,20 +34,20 @@ type ExtractTypesFromArrayS<T extends DataType<any>[]> = {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-declare const all: <const T extends DataType[]>(...theInfos: T) => DataType<ExtractTypesFromArrayS<T>>;
+declare const all: <const T extends EventType[]>(...theInfos: T) => EventType<ExtractTypesFromArrayS<T>>;
 
 /**
  * From a set of information sources we get
  * a common response from any source for a single owner
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
-declare const any: <T>(...infos: DataType<T>[]) => DataType<T>;
+declare const any: <T>(...infos: EventType<T>[]) => EventType<T>;
 
 /**
  * Information to which the function was applied to change the value
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare const applied: <T, R>(baseSrc: DataType<T>, applier: ValueType<[T], R>) => DataType<R>;
+declare const applied: <T, R>(baseEv: EventType<T>, applier: ConstructorType<[T], R>) => EventType<R>;
 
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 /**
@@ -55,14 +56,14 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare const chain: <T extends DataType[]>(...infos: T) => Last<T>;
+declare const chain: <T extends EventType[]>(...infos: T) => Last<T>;
 
 /**
  * Information to which a function is applied in order
  * to control the value passing process
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-declare const executorApplied: <T>(baseSrc: DataType<T>, applier: (executor: DataUserType<T>) => DataUserType<T>) => DataType<T>;
+declare const executorApplied: <T>(baseEv: EventType<T>, applier: (executor: EventUserType<T>) => EventUserType<T>) => EventType<T>;
 
 /**
  * Information whose value is being validated
@@ -70,21 +71,21 @@ declare const executorApplied: <T>(baseSrc: DataType<T>, applier: (executor: Dat
  * can be passed to the output
  * https://silentium-lab.github.io/silentium/#/en/information/filtered
  */
-declare const filtered: <T>(baseSrc: DataType<T>, predicate: ValueType<[T], boolean>, defaultValue?: T) => DataType<T>;
+declare const filtered: <T>(baseEv: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T) => EventType<T>;
 
 /**
  * A component that receives data from an event and
  * presents it as an information object
  * https://silentium-lab.github.io/silentium/#/en/information/from-event
  */
-declare const fromEvent: <T>(emitterSrc: DataType<any>, eventNameSrc: DataType<string>, subscribeMethodSrc: DataType<string>, unsubscribeMethodSrc?: DataType<string>) => DataTypeDestroyable<T>;
+declare const fromEvent: <T>(emitterEv: EventType<any>, eventNameEv: EventType<string>, subscribeMethodEv: EventType<string>, unsubscribeMethodEv?: EventType<string>) => EventTypeDestroyable<T>;
 
 /**
  * Component that gets a value from a promise and
  * presents it as information
  * https://silentium-lab.github.io/silentium/#/en/information/from-promise
  */
-declare const fromPromise: <T>(p: Promise<T>, errorOwner?: DataUserType) => DataType<T>;
+declare const fromPromise: <T>(p: Promise<T>, errorOwner?: EventUserType) => EventType<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -94,20 +95,20 @@ declare const fromPromise: <T>(p: Promise<T>, errorOwner?: DataUserType) => Data
  */
 declare const late: <T>(v?: T) => SourceType<T>;
 
-declare const lateShared: <T>(theValue?: T) => SourceType<T>;
+declare const lateShared: <T>(value?: T) => SourceType<T>;
 
 /**
- * Lazy with applied function to its results
+ * Constructor with applied function to its results
  */
-declare const lazyApplied: <T>(baseLazy: ValueType<any[], DataType>, applier: (i: DataType) => DataType<T>) => ValueType<DataType[], DataType<T>>;
+declare const constructorApplied: <T>(baseConstructor: ConstructorType<any[], EventType>, applier: (i: EventType) => EventType<T>) => ConstructorType<EventType[], EventType<T>>;
 
-declare const lazyArgs: (baseLazy: ValueType<any[], DataType>, args: unknown[], startFromArgIndex?: number) => (...runArgs: any[]) => DataType;
+declare const constructorArgs: (baseConstructor: ConstructorType<any[], EventType>, args: unknown[], startFromArgIndex?: number) => (...runArgs: any[]) => EventType;
 
 /**
- * Lazy what can be destroyed
+ * Constructor what can be destroyed
  */
-declare const lazyDestroyable: (baseLazy: ValueType<any[], DestroyableType>) => {
-    get: ValueType<any[], DestroyableType>;
+declare const constructorDestroyable: (baseConstructor: ConstructorType<any[], DestroyableType>) => {
+    get: ConstructorType<any[], DestroyableType>;
     destroy: DestructorType;
 };
 
@@ -116,7 +117,7 @@ declare const lazyDestroyable: (baseLazy: ValueType<any[], DestroyableType>) => 
  * producing an information source with new values
  * https://silentium-lab.github.io/silentium/#/en/information/map
  */
-declare const map: <T, TG>(baseSrc: DataType<T[]>, targetSrc: ValueType<any[], DataType<TG>>) => DataType<TG[]>;
+declare const map: <T, TG>(baseEv: EventType<T[]>, targetEv: ConstructorType<any[], EventType<TG>>) => EventType<TG[]>;
 
 /**
  * Limits the number of values from the information source
@@ -124,9 +125,9 @@ declare const map: <T, TG>(baseSrc: DataType<T[]>, targetSrc: ValueType<any[], D
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-declare const once: <T>(baseSrc: DataType<T>) => DataType<T>;
+declare const once: <T>(baseEv: EventType<T>) => EventType<T>;
 
-declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
+declare const primitive: <T>(baseEv: EventType<T>, theValue?: T | null) => {
     [Symbol.toPrimitive](): T | null;
     primitive(): T | null;
     primitiveWithException(): T & ({} | undefined);
@@ -137,7 +138,7 @@ declare const primitive: <T>(baseSrc: DataType<T>, theValue?: T | null) => {
  * an array of all previous values
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
-declare const sequence: <T>(baseSrc: DataType<T>) => DataType<T[]>;
+declare const sequence: <T>(baseEv: EventType<T>) => EventType<T[]>;
 
 declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
 
@@ -150,11 +151,11 @@ declare class OwnerPool<T> {
     private owners;
     private innerOwner;
     constructor();
-    owner(): DataUserType<T>;
+    owner(): EventUserType<T>;
     size(): number;
-    has(owner: DataUserType<T>): boolean;
-    add(owner: DataUserType<T>): this;
-    remove(g: DataUserType<T>): this;
+    has(owner: EventUserType<T>): boolean;
+    add(owner: EventUserType<T>): this;
+    remove(g: EventUserType<T>): this;
     destroy(): this;
 }
 
@@ -163,39 +164,39 @@ declare class OwnerPool<T> {
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-declare const shared: <T>(baseSrc: DataType<T>, stateless?: boolean) => SourceType<T> & {
+declare const shared: <T>(baseEv: EventType<T>, stateless?: boolean) => SourceType<T> & {
     pool: () => OwnerPool<T>;
     touched: () => void;
 } & DestroyableType;
 
-declare const sharedSource: <T>(baseSrc: SourceType<T>, stateless?: boolean) => SourceType<T>;
+declare const sharedSource: <T>(baseEv: SourceType<T>, stateless?: boolean) => SourceType<T>;
 
 /**
  * Component that receives a data array and yields values one by one
  * https://silentium-lab.github.io/silentium/#/en/information/stream
  */
-declare const stream: <T>(baseSrc: DataType<T[]>) => DataType<T>;
+declare const stream: <T>(baseEv: EventType<T[]>) => EventType<T>;
 
-declare const destructor: <T>(src: DataType<T>, destructorUser?: DataUserType<DestructorType>) => {
-    value: DataType<T>;
+declare const destructor: <T>(baseEv: EventType<T>, destructorUser?: EventUserType<DestructorType>) => {
+    value: EventType<T>;
     destroy: () => void;
 };
 
 /**
  * Create local copy of source what can be destroyed
  */
-declare const local: <T>(baseSrc: DataType<T>) => DataType<T>;
+declare const local: <T>(baseEv: EventType<T>) => EventType<T>;
 
-declare const of: <T>(v: T) => DataType<T>;
+declare const of: <T>(value: T) => EventType<T>;
 
 /**
  * Run data with user
  */
-declare const on: <T>(src: DataType<T>, user: DataUserType<T>) => void | DestructorType;
+declare const on: <T>(event: EventType<T>, user: EventUserType<T>) => void | DestructorType;
 
 /**
  * Silent user
  */
-declare const _void: () => DataUserType;
+declare const _void: () => EventUserType;
 
-export { type DataObjectType, type DataType, type DataUserObjectType, type DataUserType, type DestroyableType, type DestructorType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, type ValueType, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { type ConstructorType, type DestroyableType, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };

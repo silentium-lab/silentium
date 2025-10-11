@@ -4,7 +4,7 @@ const isAllFilled = (keysFilled, keysKnown) => {
 const all = (...theInfos) => {
   const keysKnown = new Set(Object.keys(theInfos));
   const keysFilled = /* @__PURE__ */ new Set();
-  return function AllData(u) {
+  return function AllEvent(u) {
     const result = {};
     Object.entries(theInfos).forEach(([key, info]) => {
       keysKnown.add(key);
@@ -20,23 +20,23 @@ const all = (...theInfos) => {
 };
 
 const any = (...infos) => {
-  return function AnyData(u) {
+  return function AnyEvent(u) {
     infos.forEach((info) => {
       info(u);
     });
   };
 };
 
-const applied = (baseSrc, applier) => {
-  return function AppliedData(u) {
-    baseSrc(function AppliedBaseUser(v) {
+const applied = (baseEv, applier) => {
+  return function AppliedEvent(u) {
+    baseEv(function AppliedBaseUser(v) {
       u(applier(v));
     });
   };
 };
 
 const chain = (...infos) => {
-  return function ChainData(u) {
+  return function ChainEvent(u) {
     let lastValue;
     const handleI = (index) => {
       const info = infos[index];
@@ -57,16 +57,16 @@ const chain = (...infos) => {
   };
 };
 
-const executorApplied = (baseSrc, applier) => {
-  return function ExecutorAppliedData(u) {
+const executorApplied = (baseEv, applier) => {
+  return function ExecutorAppliedEvent(u) {
     const ExecutorAppliedBaseUser = applier(u);
-    baseSrc(ExecutorAppliedBaseUser);
+    baseEv(ExecutorAppliedBaseUser);
   };
 };
 
-const filtered = (baseSrc, predicate, defaultValue) => {
-  return function FilteredData(u) {
-    baseSrc(function FilteredBaseUser(v) {
+const filtered = (baseEv, predicate, defaultValue) => {
+  return function FilteredEvent(u) {
+    baseEv(function FilteredBaseUser(v) {
       if (predicate(v)) {
         u(v);
       } else if (defaultValue !== void 0) {
@@ -76,16 +76,16 @@ const filtered = (baseSrc, predicate, defaultValue) => {
   };
 };
 
-const fromEvent = (emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMethodSrc) => {
+const fromEvent = (emitterEv, eventNameEv, subscribeMethodEv, unsubscribeMethodEv) => {
   let lastU = null;
   const handler = function FromEventHandler(v) {
     if (lastU) {
       lastU(v);
     }
   };
-  return function FromEventData(u) {
+  return function FromEventEvent(u) {
     lastU = u;
-    const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
+    const a = all(emitterEv, eventNameEv, subscribeMethodEv);
     a(function FromEventAllUser([emitter, eventName, subscribe]) {
       if (!emitter?.[subscribe]) {
         return;
@@ -94,10 +94,10 @@ const fromEvent = (emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMeth
     });
     return function FromEventDestructor() {
       lastU = null;
-      if (!unsubscribeMethodSrc) {
+      if (!unsubscribeMethodEv) {
         return;
       }
-      const a2 = all(emitterSrc, eventNameSrc, unsubscribeMethodSrc);
+      const a2 = all(emitterEv, eventNameEv, unsubscribeMethodEv);
       a2(([emitter, eventName, unsubscribe]) => {
         emitter?.[unsubscribe]?.(eventName, handler);
       });
@@ -106,7 +106,7 @@ const fromEvent = (emitterSrc, eventNameSrc, subscribeMethodSrc, unsubscribeMeth
 };
 
 const fromPromise = (p, errorOwner) => {
-  return function FromPromiseData(u) {
+  return function FromPromiseEvent(u) {
     p.then(function FromPromiseThen(v) {
       u(v);
     }).catch(function FromPromiseCatch(e) {
@@ -166,7 +166,7 @@ const late = (v) => {
     }
   };
   return {
-    value: function Late(u) {
+    event: function LateEvent(u) {
       if (lateUser) {
         throw new Error(
           "Late component gets new user, when another was already connected!"
@@ -175,16 +175,16 @@ const late = (v) => {
       lateUser = u;
       notify(v);
     },
-    give: function LateUser(v2) {
+    use: function LateUser(v2) {
       notify(v2);
     }
   };
 };
 
-const once = (baseSrc) => {
-  return function OnceData(u) {
+const once = (baseEv) => {
+  return function OnceEvent(u) {
     let isFilled = false;
-    baseSrc(function OnceBaseUser(v) {
+    baseEv(function OnceBaseUser(v) {
       if (!isFilled) {
         isFilled = true;
         u(v);
@@ -193,19 +193,19 @@ const once = (baseSrc) => {
   };
 };
 
-const shared = (baseSrc, stateless = false) => {
+const shared = (baseEv, stateless = false) => {
   const ownersPool = new OwnerPool();
   let lastValue;
   const calls = late();
-  once(calls.value)(function SharedCallsUser() {
-    baseSrc(function SharedBaseUser(v) {
+  once(calls.event)(function SharedCallsUser() {
+    baseEv(function SharedBaseUser(v) {
       lastValue = v;
       ownersPool.owner()(v);
     });
   });
   return {
-    value: function Shared(u) {
-      calls.give(1);
+    event: function SharedEvent(u) {
+      calls.use(1);
       if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
         u(lastValue);
       }
@@ -214,13 +214,13 @@ const shared = (baseSrc, stateless = false) => {
         ownersPool.remove(u);
       };
     },
-    give: function SharedUser(value) {
-      calls.give(1);
+    use: function SharedUser(value) {
+      calls.use(1);
       lastValue = value;
       ownersPool.owner()(value);
     },
     touched() {
-      calls.give(1);
+      calls.use(1);
     },
     pool() {
       return ownersPool;
@@ -231,36 +231,32 @@ const shared = (baseSrc, stateless = false) => {
   };
 };
 
-const sharedSource = (baseSrc, stateless = false) => {
-  const sharedSrc = shared(baseSrc.value, stateless);
+const sharedSource = (baseEv, stateless = false) => {
+  const sharedEv = shared(baseEv.event, stateless);
   return {
-    value: function SharedSource(u) {
-      sharedSrc.value(u);
+    event: function SharedSourceEvent(u) {
+      sharedEv.event(u);
     },
-    give: function SharedSourceUser(v) {
-      sharedSrc.touched();
-      baseSrc.give(v);
+    use: function SharedSourceUser(v) {
+      sharedEv.touched();
+      baseEv.use(v);
     }
   };
 };
 
-const lateShared = (theValue) => {
-  const src = sharedSource(late(theValue));
-  return {
-    value: src.value,
-    give: src.give
-  };
+const lateShared = (value) => {
+  return sharedSource(late(value));
 };
 
-const lazyApplied = (baseLazy, applier) => {
+const constructorApplied = (baseConstructor, applier) => {
   return function LazyAppliedData(...args) {
-    return applier(baseLazy(...args));
+    return applier(baseConstructor(...args));
   };
 };
 
-const lazyArgs = (baseLazy, args, startFromArgIndex = 0) => {
-  return function LazyArgsData(...runArgs) {
-    return baseLazy(...mergeAtIndex(runArgs, args, startFromArgIndex));
+const constructorArgs = (baseConstructor, args, startFromArgIndex = 0) => {
+  return function ConstructorArgsEvent(...runArgs) {
+    return baseConstructor(...mergeAtIndex(runArgs, args, startFromArgIndex));
   };
 };
 function mergeAtIndex(arr1, arr2, index) {
@@ -269,21 +265,21 @@ function mergeAtIndex(arr1, arr2, index) {
   return result.concat(arr2);
 }
 
-const lazyDestroyable = (baseLazy) => {
+const constructorDestroyable = (baseConstructor) => {
   const instances = [];
   return {
-    get: function lazyDestroyable2(...args) {
-      const inst = baseLazy(...args);
+    get: function ConstructorDestroyable(...args) {
+      const inst = baseConstructor(...args);
       instances.push(inst);
       return inst;
     },
-    destroy: function LazyDestructor() {
+    destroy: function ConstructorDestructor() {
       instances.forEach((i) => i.destroy());
     }
   };
 };
 
-const destructor = (src, destructorUser) => {
+const destructor = (baseEv, destructorUser) => {
   let mbDestructor;
   let theUser = null;
   const destroy = () => {
@@ -293,7 +289,7 @@ const destructor = (src, destructorUser) => {
   return {
     value: function DestructorData(u) {
       theUser = u;
-      mbDestructor = src((v) => {
+      mbDestructor = baseEv((v) => {
         if (theUser) {
           theUser(v);
         }
@@ -307,10 +303,10 @@ const destructor = (src, destructorUser) => {
   };
 };
 
-const local = (baseSrc) => {
-  return function LocalData(user) {
+const local = (baseEv) => {
+  return function LocalEvent(user) {
     let destroyed = false;
-    const d = baseSrc(function LocalBaseUser(v) {
+    const d = baseEv(function LocalBaseUser(v) {
       if (!destroyed) {
         user(v);
       }
@@ -322,25 +318,25 @@ const local = (baseSrc) => {
   };
 };
 
-const of = (v) => function OfData(u) {
-  return u(v);
+const of = (value) => function OfEvent(u) {
+  return u(value);
 };
 
-const on = (src, user) => src(user);
+const on = (event, user) => event(user);
 
-const _void = () => function VoidData() {
+const _void = () => function VoidEvent() {
 };
 
-const map = (baseSrc, targetSrc) => {
+const map = (baseEv, targetEv) => {
   return function MapData(u) {
-    baseSrc(function MapBaseUser(v) {
+    baseEv(function MapBaseUser(v) {
       const infos = [];
       v.forEach((val) => {
         let valInfo = val;
         if (typeof valInfo !== "function") {
           valInfo = of(valInfo);
         }
-        const info = targetSrc(valInfo);
+        const info = targetEv(valInfo);
         infos.push(info);
       });
       const allI = all(...infos);
@@ -349,8 +345,8 @@ const map = (baseSrc, targetSrc) => {
   };
 };
 
-const primitive = (baseSrc, theValue = null) => {
-  baseSrc(function PrimitiveBaseUser(v) {
+const primitive = (baseEv, theValue = null) => {
+  baseEv(function PrimitiveBaseUser(v) {
     theValue = v;
   });
   return {
@@ -369,19 +365,19 @@ const primitive = (baseSrc, theValue = null) => {
   };
 };
 
-const sequence = (baseSrc) => {
-  return function SequenceData(u) {
+const sequence = (baseEv) => {
+  return function SequenceEvent(u) {
     const result = [];
-    baseSrc(function SequenceBaseUser(v) {
+    baseEv(function SequenceBaseUser(v) {
       result.push(v);
       u(result);
     });
   };
 };
 
-const stream = (baseSrc) => {
-  return function StreamData(u) {
-    baseSrc(function StreamBaseUser(v) {
+const stream = (baseEv) => {
+  return function StreamEvent(u) {
+    baseEv(function StreamBaseUser(v) {
       v.forEach((cv) => {
         u(cv);
       });
@@ -389,5 +385,5 @@ const stream = (baseSrc) => {
   };
 };
 
-export { OwnerPool, _void, all, any, applied, chain, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, lazyApplied, lazyArgs, lazyDestroyable, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { OwnerPool, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
 //# sourceMappingURL=silentium.js.map
