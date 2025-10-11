@@ -178,7 +178,7 @@ declare const sharedSource: <T>(baseEv: SourceType<T>, stateless?: boolean) => S
 declare const stream: <T>(baseEv: EventType<T[]>) => EventType<T>;
 
 declare const destructor: <T>(baseEv: EventType<T>, destructorUser?: EventUserType<DestructorType>) => {
-    value: EventType<T>;
+    event: EventType<T>;
     destroy: () => void;
 };
 

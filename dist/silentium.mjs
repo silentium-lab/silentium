@@ -287,7 +287,7 @@ const destructor = (baseEv, destructorUser) => {
     mbDestructor?.();
   };
   return {
-    value: function DestructorData(u) {
+    event: function DestructorData(u) {
       theUser = u;
       mbDestructor = baseEv((v) => {
         if (theUser) {

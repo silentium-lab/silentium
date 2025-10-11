@@ -11,7 +11,7 @@ export const destructor = <T>(
     mbDestructor?.();
   };
   return {
-    value: function DestructorData(u: any) {
+    event: function DestructorData(u: any) {
       theUser = u;
       mbDestructor = baseEv((v) => {
         if (theUser) {

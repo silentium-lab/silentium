@@ -6,7 +6,7 @@ describe("Destructor.test", () => {
   test("Destructor always exists", () => {
     const ev = destructor(of("1"));
     const user = vi.fn();
-    const d = ev.value(user);
+    const d = ev.event(user);
 
     expect(user).toHaveBeenCalledWith("1");
     expect(typeof d).toBe("function");
@@ -21,7 +21,7 @@ describe("Destructor.test", () => {
       return d;
     }, destructorUser);
     const user = vi.fn();
-    ev.value(user);
+    ev.event(user);
 
     expect(user).toHaveBeenCalledWith("2");
   });
