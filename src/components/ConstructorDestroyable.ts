@@ -1,23 +1,39 @@
-import { DestroyableType, DestructorType, ConstructorType } from "../types";
+import { destructor } from "../base";
+import {
+  DestroyableType,
+  DestructorType,
+  ConstructorType,
+  EventType,
+  EventObjectType,
+} from "../types";
 
 /**
  * Constructor what can be destroyed
  */
 export const constructorDestroyable = (
-  baseConstructor: ConstructorType<any[], DestroyableType>,
+  baseConstructor: ConstructorType<
+    any[],
+    (DestroyableType & EventObjectType) | EventType
+  >,
 ): {
-  get: ConstructorType<any[], DestroyableType>;
+  get: ConstructorType<any[], DestroyableType & EventObjectType>;
   destroy: DestructorType;
 } => {
-  const instances: DestroyableType[] = [];
+  const destructors: DestructorType[] = [];
   return {
     get: function ConstructorDestroyable(...args) {
       const inst = baseConstructor(...args);
-      instances.push(inst);
+      if ("destroy" in inst) {
+        destructors.push(inst.destroy);
+      } else {
+        const d = destructor(inst);
+        destructors.push(d.destroy);
+        return d;
+      }
       return inst;
     },
     destroy: function ConstructorDestructor() {
-      instances.forEach((i) => i.destroy());
+      destructors.forEach((i) => i());
     },
   };
 };

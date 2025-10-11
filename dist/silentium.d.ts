@@ -107,8 +107,8 @@ declare const constructorArgs: (baseConstructor: ConstructorType<any[], EventTyp
 /**
  * Constructor what can be destroyed
  */
-declare const constructorDestroyable: (baseConstructor: ConstructorType<any[], DestroyableType>) => {
-    get: ConstructorType<any[], DestroyableType>;
+declare const constructorDestroyable: (baseConstructor: ConstructorType<any[], (DestroyableType & EventObjectType) | EventType>) => {
+    get: ConstructorType<any[], DestroyableType & EventObjectType>;
     destroy: DestructorType;
 };
 
