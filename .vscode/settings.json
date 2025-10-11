@@ -1,9 +1,0 @@
-{
-    "liveServer.settings.port": 5502,
-    "npm-scripts.showStartNotification": false,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "cSpell.words": [
-        "silentium"
-    ],
-    "compile-hero.disable-compile-files-on-did-save-code": false
-}

@@ -1,5 +1,5 @@
-import { DataTypeValue } from "../types/DataType";
-import { DataType } from "../types";
+import { EventTypeValue } from "../types/EventType";
+import { EventType } from "../types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
@@ -10,9 +10,9 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * provides a new answer, the component's overall response will be repeated.
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-export const chain = <T extends DataType[]>(...infos: T): Last<T> => {
-  return <Last<T>>function ChainData(u) {
-    let lastValue: DataTypeValue<Last<T>> | undefined;
+export const chain = <T extends EventType[]>(...infos: T): Last<T> => {
+  return <Last<T>>function ChainEvent(u) {
+    let lastValue: EventTypeValue<Last<T>> | undefined;
 
     const handleI = (index: number) => {
       const info = infos[index] as Last<T>;
@@ -20,7 +20,7 @@ export const chain = <T extends DataType[]>(...infos: T): Last<T> => {
 
       info(function ChainItemUser(v) {
         if (!nextI) {
-          lastValue = v as DataTypeValue<Last<T>>;
+          lastValue = v as EventTypeValue<Last<T>>;
         }
 
         if (lastValue) {

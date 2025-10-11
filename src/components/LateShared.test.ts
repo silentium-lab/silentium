@@ -6,20 +6,20 @@ describe("LateShared.test", () => {
     const l = lateShared<number>();
 
     const o = vi.fn();
-    l.value(o);
+    l.event(o);
 
     const o2 = vi.fn();
-    l.value(o2);
+    l.event(o2);
 
     expect(o).not.toHaveBeenCalled();
     expect(o2).not.toHaveBeenCalled();
 
-    l.give(1);
+    l.use(1);
 
     expect(o).toHaveBeenLastCalledWith(1);
     expect(o2).toHaveBeenLastCalledWith(1);
 
-    l.give(2);
+    l.use(2);
 
     expect(o).toHaveBeenLastCalledWith(2);
     expect(o2).toHaveBeenLastCalledWith(2);
@@ -28,10 +28,10 @@ describe("LateShared.test", () => {
   test("with value", function LateSharedTest() {
     const l = lateShared<number>(1);
 
-    l.give(2);
+    l.use(2);
 
     const o = vi.fn();
-    l.value(o);
+    l.event(o);
 
     expect(o).toHaveBeenLastCalledWith(2);
   });

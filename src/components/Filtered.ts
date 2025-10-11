@@ -1,4 +1,4 @@
-import { DataType, ValueType } from "../types";
+import { EventType, ConstructorType } from "../types";
 
 /**
  * Information whose value is being validated
@@ -7,12 +7,12 @@ import { DataType, ValueType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/filtered
  */
 export const filtered = <T>(
-  baseSrc: DataType<T>,
-  predicate: ValueType<[T], boolean>,
+  baseEv: EventType<T>,
+  predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
-): DataType<T> => {
-  return function FilteredData(u) {
-    baseSrc(function FilteredBaseUser(v) {
+): EventType<T> => {
+  return function FilteredEvent(u) {
+    baseEv(function FilteredBaseUser(v) {
       if (predicate(v)) {
         u(v);
       } else if (defaultValue !== undefined) {

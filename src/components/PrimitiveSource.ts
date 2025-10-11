@@ -1,10 +1,10 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
 export const primitive = <T>(
-  baseSrc: DataType<T>,
+  baseEv: EventType<T>,
   theValue: T | null = null,
 ) => {
-  baseSrc(function PrimitiveBaseUser(v) {
+  baseEv(function PrimitiveBaseUser(v) {
     theValue = v;
   });
 

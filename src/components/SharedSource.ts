@@ -2,18 +2,18 @@ import { SourceType } from "../types";
 import { shared } from "../components/Shared";
 
 export const sharedSource = <T>(
-  baseSrc: SourceType<T>,
+  baseEv: SourceType<T>,
   stateless = false,
 ): SourceType<T> => {
-  const sharedSrc = shared(baseSrc.value, stateless);
+  const sharedEv = shared(baseEv.event, stateless);
 
   return {
-    value: function SharedSource(u) {
-      sharedSrc.value(u);
+    event: function SharedSourceEvent(u) {
+      sharedEv.event(u);
     },
-    give: function SharedSourceUser(v) {
-      sharedSrc.touched();
-      baseSrc.give(v);
+    use: function SharedSourceUser(v) {
+      sharedEv.touched();
+      baseEv.use(v);
     },
   };
 };

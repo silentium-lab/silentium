@@ -1,4 +1,4 @@
-import { DataType, ValueType } from "../types";
+import { EventType, ConstructorType } from "../types";
 import { of } from "../base";
 import { all } from "./All";
 
@@ -8,18 +8,18 @@ import { all } from "./All";
  * https://silentium-lab.github.io/silentium/#/en/information/map
  */
 export const map = <T, TG>(
-  baseSrc: DataType<T[]>,
-  targetSrc: ValueType<any[], DataType<TG>>,
-): DataType<TG[]> => {
+  baseEv: EventType<T[]>,
+  targetEv: ConstructorType<any[], EventType<TG>>,
+): EventType<TG[]> => {
   return function MapData(u) {
-    baseSrc(function MapBaseUser(v) {
-      const infos: DataType<TG>[] = [];
+    baseEv(function MapBaseUser(v) {
+      const infos: EventType<TG>[] = [];
       v.forEach((val) => {
-        let valInfo: DataType<T> | T = val;
+        let valInfo: EventType<T> | T = val;
         if (typeof valInfo !== "function") {
           valInfo = of(valInfo);
         }
-        const info = targetSrc(valInfo);
+        const info = targetEv(valInfo);
         infos.push(info);
       });
       const allI = all(...infos);

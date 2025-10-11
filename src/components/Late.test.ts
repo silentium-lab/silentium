@@ -6,15 +6,15 @@ describe("Late.test", () => {
     const l = late<number>();
 
     const o = vi.fn();
-    l.value(o);
+    l.event(o);
 
     expect(o).not.toHaveBeenCalled();
 
-    l.give(1);
+    l.use(1);
 
     expect(o).toHaveBeenCalledWith(1);
 
-    l.give(2);
+    l.use(2);
 
     expect(o).toHaveBeenCalledWith(2);
   });
@@ -22,9 +22,9 @@ describe("Late.test", () => {
   test("Begins with 1 value", () => {
     const l = late<number>(1);
     const o = vi.fn();
-    l.value(o);
+    l.event(o);
 
-    l.give(2);
+    l.use(2);
 
     expect(o).toHaveBeenLastCalledWith(2);
   });

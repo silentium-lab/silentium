@@ -1,26 +1,28 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { diagram } from "../testing";
 import { chain } from "./Chain";
 import { late } from "./Late";
 
-test("infoChain.test", () => {
-  const d = diagram();
-  const triggerSrc = late<string>("immediate");
-  const valueSrc = late<string>("the_value");
+describe("Chain.test", () => {
+  test("event connected to over events", () => {
+    const d = diagram();
+    const triggerEv = late<string>("immediate");
+    const valueEv = late<string>("the_value");
 
-  const valueAfterTrigger = chain(triggerSrc.value, valueSrc.value);
-  valueAfterTrigger(d.user);
+    const chainEv = chain(triggerEv.event, valueEv.event);
+    chainEv(d.user);
 
-  expect(d.toString()).toBe("the_value");
+    expect(d.toString()).toBe("the_value");
 
-  triggerSrc.give("done");
+    triggerEv.use("done");
 
-  expect(d.toString()).toBe("the_value|the_value");
+    expect(d.toString()).toBe("the_value|the_value");
 
-  valueSrc.give("new_value");
-  expect(d.toString()).toBe("the_value|the_value|new_value");
+    valueEv.use("new_value");
+    expect(d.toString()).toBe("the_value|the_value|new_value");
 
-  triggerSrc.give("done2");
+    triggerEv.use("done2");
 
-  expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
+    expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
+  });
 });

@@ -1,6 +1,6 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
-export const of = <T>(v: T): DataType<T> =>
-  function OfData(u) {
-    return u(v);
+export const of = <T>(value: T): EventType<T> =>
+  function OfEvent(u) {
+    return u(value);
   };

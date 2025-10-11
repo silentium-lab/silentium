@@ -3,20 +3,20 @@ import { local } from "../base/Local";
 import { late } from "../components";
 
 describe("Local.test", () => {
-  test("", () => {
-    const src = late(1);
-    const localSrc = local(src.value);
+  test("local event don't react after destroying", () => {
+    const ev = late(1);
+    const localEv = local(ev.event);
     const g = vi.fn();
-    const d = localSrc(g);
+    const d = localEv(g);
 
     expect(g).toHaveBeenCalledWith(1);
 
-    src.give(2);
+    ev.use(2);
 
     expect(g).toHaveBeenCalledWith(2);
 
     d?.();
-    src.give(3);
+    ev.use(3);
 
     expect(g).toHaveBeenCalledWith(2);
   });

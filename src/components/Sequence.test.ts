@@ -1,20 +1,22 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { applied } from "./Applied";
 import { late } from "./Late";
 import { sequence } from "./Sequence";
 
-test("Sequence.test", () => {
-  const l = late<number>();
-  const seq = applied(sequence(l.value), String);
+describe("Sequence.test", () => {
+  test("use one by one values", () => {
+    const l = late<number>();
+    const seq = applied(sequence(l.event), String);
 
-  const o = vi.fn();
-  seq(o);
+    const o = vi.fn();
+    seq(o);
 
-  l.give(1);
-  l.give(2);
-  l.give(3);
-  l.give(4);
-  l.give(5);
+    l.use(1);
+    l.use(2);
+    l.use(3);
+    l.use(4);
+    l.use(5);
 
-  expect(o).toBeCalledWith("1,2,3,4,5");
+    expect(o).toHaveBeenLastCalledWith("1,2,3,4,5");
+  });
 });

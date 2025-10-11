@@ -1,5 +1,5 @@
-import { DataTypeDestroyable } from "src/types/DataType";
-import { DataType, DataUserType } from "../types";
+import { EventTypeDestroyable } from "../types/EventType";
+import { EventType, EventUserType } from "../types";
 import { all } from "./All";
 
 /**
@@ -8,20 +8,20 @@ import { all } from "./All";
  * https://silentium-lab.github.io/silentium/#/en/information/from-event
  */
 export const fromEvent = <T>(
-  emitterSrc: DataType<any>,
-  eventNameSrc: DataType<string>,
-  subscribeMethodSrc: DataType<string>,
-  unsubscribeMethodSrc?: DataType<string>,
-): DataTypeDestroyable<T> => {
-  let lastU: DataUserType<T> | null = null;
+  emitterEv: EventType<any>,
+  eventNameEv: EventType<string>,
+  subscribeMethodEv: EventType<string>,
+  unsubscribeMethodEv?: EventType<string>,
+): EventTypeDestroyable<T> => {
+  let lastU: EventUserType<T> | null = null;
   const handler = function FromEventHandler(v: T) {
     if (lastU) {
       lastU(v);
     }
   };
-  return function FromEventData(u) {
+  return function FromEventEvent(u) {
     lastU = u;
-    const a = all(emitterSrc, eventNameSrc, subscribeMethodSrc);
+    const a = all(emitterEv, eventNameEv, subscribeMethodEv);
     a(function FromEventAllUser([emitter, eventName, subscribe]) {
       if (!emitter?.[subscribe]) {
         return;
@@ -31,10 +31,10 @@ export const fromEvent = <T>(
 
     return function FromEventDestructor() {
       lastU = null;
-      if (!unsubscribeMethodSrc) {
+      if (!unsubscribeMethodEv) {
         return;
       }
-      const a = all(emitterSrc, eventNameSrc, unsubscribeMethodSrc);
+      const a = all(emitterEv, eventNameEv, unsubscribeMethodEv);
       a(([emitter, eventName, unsubscribe]) => {
         emitter?.[unsubscribe]?.(eventName, handler);
       });

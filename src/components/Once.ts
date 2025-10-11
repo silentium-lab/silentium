@@ -1,4 +1,4 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
 /**
  * Limits the number of values from the information source
@@ -6,10 +6,10 @@ import { DataType } from "../types";
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-export const once = <T>(baseSrc: DataType<T>): DataType<T> => {
-  return function OnceData(u) {
+export const once = <T>(baseEv: EventType<T>): EventType<T> => {
+  return function OnceEvent(u) {
     let isFilled = false;
-    baseSrc(function OnceBaseUser(v) {
+    baseEv(function OnceBaseUser(v) {
       if (!isFilled) {
         isFilled = true;
         u(v);

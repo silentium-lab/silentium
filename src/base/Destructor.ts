@@ -1,11 +1,11 @@
-import { DataType, DataUserType, DestructorType } from "../types";
+import { DestructorType, EventType, EventUserType } from "../types";
 
 export const destructor = <T>(
-  src: DataType<T>,
-  destructorUser?: DataUserType<DestructorType>,
+  baseEv: EventType<T>,
+  destructorUser?: EventUserType<DestructorType>,
 ) => {
   let mbDestructor: DestructorType | void;
-  let theUser: DataUserType<T> | null = null;
+  let theUser: EventUserType<T> | null = null;
   const destroy = () => {
     theUser = null;
     mbDestructor?.();
@@ -13,7 +13,7 @@ export const destructor = <T>(
   return {
     value: function DestructorData(u: any) {
       theUser = u;
-      mbDestructor = src((v) => {
+      mbDestructor = baseEv((v) => {
         if (theUser) {
           theUser(v);
         }
@@ -22,7 +22,7 @@ export const destructor = <T>(
         destructorUser(destroy);
       }
       return destroy;
-    } as DataType<T>,
+    } as EventType<T>,
     destroy,
   };
 };

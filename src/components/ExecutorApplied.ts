@@ -1,4 +1,4 @@
-import { DataType, DataUserType } from "../types";
+import { EventType, EventUserType } from "../types";
 
 /**
  * Information to which a function is applied in order
@@ -6,11 +6,11 @@ import { DataType, DataUserType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
 export const executorApplied = <T>(
-  baseSrc: DataType<T>,
-  applier: (executor: DataUserType<T>) => DataUserType<T>,
-): DataType<T> => {
-  return function ExecutorAppliedData(u) {
+  baseEv: EventType<T>,
+  applier: (executor: EventUserType<T>) => EventUserType<T>,
+): EventType<T> => {
+  return function ExecutorAppliedEvent(u) {
     const ExecutorAppliedBaseUser = applier(u);
-    baseSrc(ExecutorAppliedBaseUser);
+    baseEv(ExecutorAppliedBaseUser);
   };
 };

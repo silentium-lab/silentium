@@ -1,4 +1,4 @@
-import { DataUserType, SourceType } from "../types";
+import { EventUserType, SourceType } from "../types";
 import { isFilled } from "../helpers";
 
 /**
@@ -8,7 +8,7 @@ import { isFilled } from "../helpers";
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
 export const late = <T>(v?: T): SourceType<T> => {
-  let lateUser: DataUserType<T> | null = null;
+  let lateUser: EventUserType<T> | null = null;
   const notify = (v?: T) => {
     if (isFilled(v) && lateUser) {
       lateUser(v);
@@ -16,7 +16,7 @@ export const late = <T>(v?: T): SourceType<T> => {
   };
 
   return {
-    value: function Late(u) {
+    event: function LateEvent(u) {
       if (lateUser) {
         throw new Error(
           "Late component gets new user, when another was already connected!",
@@ -26,7 +26,7 @@ export const late = <T>(v?: T): SourceType<T> => {
       lateUser = u;
       notify(v);
     },
-    give: function LateUser(v) {
+    use: function LateUser(v) {
       notify(v);
     },
   };

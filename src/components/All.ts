@@ -1,8 +1,8 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
-type ExtractTypeS<T> = T extends DataType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
 
-export type ExtractTypesFromArrayS<T extends DataType<any>[]> = {
+export type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
@@ -15,13 +15,13 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export const all = <const T extends DataType[]>(
+export const all = <const T extends EventType[]>(
   ...theInfos: T
-): DataType<ExtractTypesFromArrayS<T>> => {
+): EventType<ExtractTypesFromArrayS<T>> => {
   const keysKnown = new Set<string>(Object.keys(theInfos));
   const keysFilled = new Set<string>();
 
-  return function AllData(u) {
+  return function AllEvent(u) {
     const result: Record<string, unknown> = {};
 
     Object.entries(theInfos).forEach(([key, info]) => {

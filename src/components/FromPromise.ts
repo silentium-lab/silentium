@@ -1,4 +1,4 @@
-import { DataType, DataUserType } from "../types";
+import { EventType, EventUserType } from "../types";
 
 /**
  * Component that gets a value from a promise and
@@ -7,9 +7,9 @@ import { DataType, DataUserType } from "../types";
  */
 export const fromPromise = <T>(
   p: Promise<T>,
-  errorOwner?: DataUserType,
-): DataType<T> => {
-  return function FromPromiseData(u) {
+  errorOwner?: EventUserType,
+): EventType<T> => {
+  return function FromPromiseEvent(u) {
     p.then(function FromPromiseThen(v) {
       u(v);
     }).catch(function FromPromiseCatch(e) {

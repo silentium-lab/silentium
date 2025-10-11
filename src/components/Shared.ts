@@ -1,4 +1,4 @@
-import { DataType, DestroyableType, SourceType } from "../types";
+import { EventType, DestroyableType, SourceType } from "../types";
 import { isFilled, OwnerPool } from "../helpers";
 import { late } from "../components/Late";
 import { once } from "../components/Once";
@@ -9,7 +9,7 @@ import { once } from "../components/Once";
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
 export const shared = <T>(
-  baseSrc: DataType<T>,
+  baseEv: EventType<T>,
   stateless = false,
 ): SourceType<T> & {
   pool: () => OwnerPool<T>;
@@ -19,16 +19,16 @@ export const shared = <T>(
   let lastValue: T | undefined;
 
   const calls = late();
-  once(calls.value)(function SharedCallsUser() {
-    baseSrc(function SharedBaseUser(v) {
+  once(calls.event)(function SharedCallsUser() {
+    baseEv(function SharedBaseUser(v) {
       lastValue = v;
       ownersPool.owner()(v);
     });
   });
 
   return {
-    value: function Shared(u) {
-      calls.give(1);
+    event: function SharedEvent(u) {
+      calls.use(1);
       if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
         u(lastValue);
       }
@@ -37,13 +37,13 @@ export const shared = <T>(
         ownersPool.remove(u);
       };
     },
-    give: function SharedUser(value: T) {
-      calls.give(1);
+    use: function SharedUser(value: T) {
+      calls.use(1);
       lastValue = value;
       ownersPool.owner()(value);
     },
     touched() {
-      calls.give(1);
+      calls.use(1);
     },
     pool() {
       return ownersPool;

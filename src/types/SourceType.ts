@@ -1,4 +1,5 @@
-import { DataObjectType } from "./DataObjectType";
-import { DataUserObjectType } from "./DataUserObjectType";
+import { EventObjectType } from "./EventObjectType";
+import { EventUserObjectType } from "./EventUserObjectType";
 
-export type SourceType<T = unknown> = DataObjectType<T> & DataUserObjectType<T>;
+export type SourceType<T = unknown> = EventObjectType<T> &
+  EventUserObjectType<T>;

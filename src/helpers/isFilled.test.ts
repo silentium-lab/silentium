@@ -1,7 +1,9 @@
 import { isFilled } from "../helpers/isFilled";
-import { test } from "vitest";
+import { describe, test } from "vitest";
 import { expectTypeOf } from "expect-type";
 
-test("isFilled.test", () => {
-  expectTypeOf(isFilled<string | null>).guards.toBeString();
+describe("isFilled.test", () => {
+  test("type check", () => {
+    expectTypeOf(isFilled<string | null>).guards.toBeString();
+  });
 });

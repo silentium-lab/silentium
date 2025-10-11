@@ -1,14 +1,14 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
 /**
  * A component that takes one value at a time and returns
  * an array of all previous values
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
-export const sequence = <T>(baseSrc: DataType<T>): DataType<T[]> => {
-  return function SequenceData(u) {
+export const sequence = <T>(baseEv: EventType<T>): EventType<T[]> => {
+  return function SequenceEvent(u) {
     const result: T[] = [];
-    baseSrc(function SequenceBaseUser(v) {
+    baseEv(function SequenceBaseUser(v) {
       result.push(v);
       u(result);
     });

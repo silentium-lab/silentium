@@ -1,6 +1,6 @@
-import { DataUserType } from "../types";
+import { EventUserType } from "../types";
 
 /**
  * Silent user
  */
-export const _void = (): DataUserType => function VoidData() {};
+export const _void = (): EventUserType => function VoidEvent() {};

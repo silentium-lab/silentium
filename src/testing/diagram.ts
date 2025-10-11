@@ -1,4 +1,4 @@
-import { DataUserType } from "../types";
+import { EventUserType } from "../types";
 
 /**
  * Помогает отлаживать поток ответов от источников информации
@@ -6,7 +6,7 @@ import { DataUserType } from "../types";
  */
 export const diagram = (joinSymbol = "|") => {
   const responses: any[] = [];
-  const user: DataUserType<string> = (v) => {
+  const user: EventUserType<string> = (v) => {
     responses.push(v);
   };
 

@@ -4,9 +4,9 @@ import { of } from "../base/Of";
 
 describe("Destructor.test", () => {
   test("Destructor always exists", () => {
-    const src = destructor(of("1"));
+    const ev = destructor(of("1"));
     const user = vi.fn();
-    const d = src.value(user);
+    const d = ev.value(user);
 
     expect(user).toHaveBeenCalledWith("1");
     expect(typeof d).toBe("function");
@@ -16,12 +16,12 @@ describe("Destructor.test", () => {
     const destructorUser = vi.fn();
     const d = () => {};
     d.theName = "destructor";
-    const src = destructor((user) => {
+    const ev = destructor((user) => {
       user("2");
       return d;
     }, destructorUser);
     const user = vi.fn();
-    src.value(user);
+    ev.value(user);
 
     expect(user).toHaveBeenCalledWith("2");
   });

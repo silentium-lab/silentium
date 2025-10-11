@@ -1,12 +1,12 @@
-import { DataType } from "../types";
+import { EventType } from "../types";
 
 /**
  * Create local copy of source what can be destroyed
  */
-export const local = <T>(baseSrc: DataType<T>): DataType<T> => {
-  return function LocalData(user) {
+export const local = <T>(baseEv: EventType<T>): EventType<T> => {
+  return function LocalEvent(user) {
     let destroyed = false;
-    const d = baseSrc(function LocalBaseUser(v) {
+    const d = baseEv(function LocalBaseUser(v) {
       if (!destroyed) {
         user(v);
       }
