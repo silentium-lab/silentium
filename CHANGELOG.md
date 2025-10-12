@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.105](https://github.com/silentium-lab/silentium/compare/v0.0.104...v0.0.105) (2025-10-12)
+
+
+### Bug Fixes
+
+* **main:** destroyContainer component ([c3f71ec](https://github.com/silentium-lab/silentium/commit/c3f71ec8110fe67a46c7581b914da463e9e762c9))
+
 ### [0.0.104](https://github.com/silentium-lab/silentium/compare/v0.0.103...v0.0.104) (2025-10-12)
 
 
