@@ -199,4 +199,9 @@ declare const on: <T>(event: EventType<T>, user: EventUserType<T>) => void | Des
  */
 declare const _void: () => EventUserType;
 
-export { type ConstructorType, type DestroyableType, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+declare const destroyContainer: () => {
+    add(e: EventType): EventType<unknown>;
+    destroy(): void;
+};
+
+export { type ConstructorType, type DestroyableType, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, type ExtractTypesFromArrayS, OwnerPool, type SourceType, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destroyContainer, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };

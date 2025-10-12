@@ -339,6 +339,20 @@ const on = (event, user) => event(user);
 const _void = () => function VoidEvent() {
 };
 
+const destroyContainer = () => {
+  const destructors = [];
+  return {
+    add(e) {
+      const d = destructor(e);
+      destructors.push(d.destroy);
+      return d.event;
+    },
+    destroy() {
+      destructors.forEach((d) => d());
+    }
+  };
+};
+
 const map = (baseEv, targetEv) => {
   return function MapData(u) {
     baseEv(function MapBaseUser(v) {
@@ -397,5 +411,5 @@ const stream = (baseEv) => {
   };
 };
 
-export { OwnerPool, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
+export { OwnerPool, _void, all, any, applied, chain, constructorApplied, constructorArgs, constructorDestroyable, destroyContainer, destructor, executorApplied, filtered, fromEvent, fromPromise, isFilled, late, lateShared, local, map, of, on, once, primitive, sequence, shared, sharedSource, stream };
 //# sourceMappingURL=silentium.js.map

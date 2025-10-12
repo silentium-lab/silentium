@@ -341,6 +341,20 @@ const on = (event, user) => event(user);
 const _void = () => function VoidEvent() {
 };
 
+const destroyContainer = () => {
+  const destructors = [];
+  return {
+    add(e) {
+      const d = destructor(e);
+      destructors.push(d.destroy);
+      return d.event;
+    },
+    destroy() {
+      destructors.forEach((d) => d());
+    }
+  };
+};
+
 const map = (baseEv, targetEv) => {
   return function MapData(u) {
     baseEv(function MapBaseUser(v) {
@@ -408,6 +422,7 @@ exports.chain = chain;
 exports.constructorApplied = constructorApplied;
 exports.constructorArgs = constructorArgs;
 exports.constructorDestroyable = constructorDestroyable;
+exports.destroyContainer = destroyContainer;
 exports.destructor = destructor;
 exports.executorApplied = executorApplied;
 exports.filtered = filtered;
