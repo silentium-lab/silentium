@@ -13,7 +13,9 @@ describe("ConstructorDestroyable.test", () => {
     }));
     const inst = p.get();
 
-    inst.destroy();
+    inst(_void);
+
+    p.destroy();
 
     expect(isDestroyed).toBe(true);
   });
@@ -28,9 +30,9 @@ describe("ConstructorDestroyable.test", () => {
       };
     });
     const inst = p.get();
-    inst.event(_void);
+    const d = inst(_void);
 
-    inst.destroy();
+    d?.();
 
     expect(isDestroyed).toBe(true);
   });

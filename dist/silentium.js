@@ -265,6 +265,32 @@ function mergeAtIndex(arr1, arr2, index) {
   return result.concat(arr2);
 }
 
+const constructorDestroyable = (baseConstructor) => {
+  const destructors = [];
+  return {
+    get: function ConstructorDestroyable(...args) {
+      const inst = baseConstructor(...args);
+      return (user) => {
+        if ("destroy" in inst) {
+          destructors.push(inst.destroy);
+          inst.event(user);
+        } else {
+          const d = inst(user);
+          if (d) {
+            destructors.push(d);
+          }
+        }
+        return () => {
+          destructors.forEach((i) => i());
+        };
+      };
+    },
+    destroy: function ConstructorDestructor() {
+      destructors.forEach((i) => i());
+    }
+  };
+};
+
 const destructor = (baseEv, destructorUser) => {
   let mbDestructor;
   let theUser = null;
@@ -311,26 +337,6 @@ const of = (value) => function OfEvent(u) {
 const on = (event, user) => event(user);
 
 const _void = () => function VoidEvent() {
-};
-
-const constructorDestroyable = (baseConstructor) => {
-  const destructors = [];
-  return {
-    get: function ConstructorDestroyable(...args) {
-      const inst = baseConstructor(...args);
-      if ("destroy" in inst) {
-        destructors.push(inst.destroy);
-      } else {
-        const d = destructor(inst);
-        destructors.push(d.destroy);
-        return d;
-      }
-      return inst;
-    },
-    destroy: function ConstructorDestructor() {
-      destructors.forEach((i) => i());
-    }
-  };
 };
 
 const map = (baseEv, targetEv) => {
