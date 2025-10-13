@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.106](https://github.com/silentium-lab/silentium/compare/v0.0.105...v0.0.106) (2025-10-13)
+
+
+### Bug Fixes
+
+* **main:** constructors from upper case ([f4ce5bb](https://github.com/silentium-lab/silentium/commit/f4ce5bb30e6a6b9d981826a9309895b513162a12))
+* **main:** review fixes ([8f58cb3](https://github.com/silentium-lab/silentium/commit/8f58cb3449b4c7ec2247ae937ac1f0706b3e535f))
+
 ### [0.0.105](https://github.com/silentium-lab/silentium/compare/v0.0.104...v0.0.105) (2025-10-12)
 
 
