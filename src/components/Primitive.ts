@@ -1,9 +1,6 @@
 import { EventType } from "../types";
 
-export const primitive = <T>(
-  baseEv: EventType<T>,
-  theValue: T | null = null,
-) => {
+export function Primitive<T>(baseEv: EventType<T>, theValue: T | null = null) {
   baseEv(function PrimitiveBaseUser(v) {
     theValue = v;
   });
@@ -22,4 +19,4 @@ export const primitive = <T>(
       return theValue;
     },
   };
-};
+}

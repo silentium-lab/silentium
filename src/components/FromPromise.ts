@@ -5,10 +5,10 @@ import { EventType, EventUserType } from "../types";
  * presents it as information
  * https://silentium-lab.github.io/silentium/#/en/information/from-promise
  */
-export const fromPromise = <T>(
+export function FromPromise<T>(
   p: Promise<T>,
   errorOwner?: EventUserType,
-): EventType<T> => {
+): EventType<T> {
   return function FromPromiseEvent(u) {
     p.then(function FromPromiseThen(v) {
       u(v);
@@ -16,4 +16,4 @@ export const fromPromise = <T>(
       errorOwner?.(e);
     });
   };
-};
+}

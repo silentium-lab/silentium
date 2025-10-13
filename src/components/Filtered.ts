@@ -6,11 +6,11 @@ import { EventType, ConstructorType } from "../types";
  * can be passed to the output
  * https://silentium-lab.github.io/silentium/#/en/information/filtered
  */
-export const filtered = <T>(
+export function Filtered<T>(
   baseEv: EventType<T>,
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
-): EventType<T> => {
+): EventType<T> {
   return function FilteredEvent(u) {
     baseEv(function FilteredBaseUser(v) {
       if (predicate(v)) {
@@ -20,4 +20,4 @@ export const filtered = <T>(
       }
     });
   };
-};
+}

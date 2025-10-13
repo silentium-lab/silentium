@@ -1,17 +1,17 @@
 import { describe, expect, test, vi } from "vitest";
-import { of } from "../base";
-import { chain } from "./Chain";
-import { late } from "./Late";
-import { constructorApplied } from "./ConstructorApplied";
+import { Of } from "../base";
+import { Chain } from "./Chain";
+import { Late } from "./Late";
+import { ConstructorApplied } from "./ConstructorApplied";
 
 describe("ConstructorApplied.test", () => {
   test("apply fn to result", () => {
-    const l = late();
-    const lazyInf = constructorApplied(
+    const l = Late();
+    const lazyInf = ConstructorApplied(
       (v) => v,
-      (i) => chain(l.event, i),
+      (i) => Chain(l.event, i),
     );
-    const inf = lazyInf(of(1));
+    const inf = lazyInf(Of(1));
 
     const g = vi.fn();
     inf(g);

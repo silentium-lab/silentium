@@ -1,14 +1,14 @@
 import { describe, expect, test, vi } from "vitest";
-import { of } from "../base/Of";
-import { any } from "./Any";
-import { late } from "./Late";
+import { Of } from "../base/Of";
+import { Any } from "./Any";
+import { Late } from "./Late";
 
 describe("Any.test", () => {
   test("event what responds from any connected event", () => {
-    const l = late<number>();
-    const d = of("default");
+    const l = Late<number>();
+    const d = Of("default");
 
-    const anyI = any<string | number>(l.event, d);
+    const anyI = Any<string | number>(l.event, d);
 
     const o = vi.fn();
     anyI(o);

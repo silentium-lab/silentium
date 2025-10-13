@@ -1,25 +1,25 @@
 import { EventType, DestroyableType, SourceType } from "../types";
 import { isFilled, OwnerPool } from "../helpers";
-import { late } from "../components/Late";
-import { once } from "../components/Once";
+import { Late } from "../components/Late";
+import { Once } from "../components/Once";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export const shared = <T>(
+export function Shared<T>(
   baseEv: EventType<T>,
   stateless = false,
 ): SourceType<T> & {
   pool: () => OwnerPool<T>;
   touched: () => void;
-} & DestroyableType => {
+} & DestroyableType {
   const ownersPool = new OwnerPool<T>();
   let lastValue: T | undefined;
 
-  const calls = late();
-  once(calls.event)(function SharedCallsUser() {
+  const calls = Late();
+  Once(calls.event)(function SharedCallsUser() {
     baseEv(function SharedBaseUser(v) {
       lastValue = v;
       ownersPool.owner()(v);
@@ -52,4 +52,4 @@ export const shared = <T>(
       ownersPool.destroy();
     },
   };
-};
+}

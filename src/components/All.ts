@@ -15,9 +15,9 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * represented as an array containing values from all sources
  * https://silentium-lab.github.io/silentium/#/en/information/all
  */
-export const all = <const T extends EventType[]>(
+export function All<const T extends EventType[]>(
   ...theInfos: T
-): EventType<ExtractTypesFromArrayS<T>> => {
+): EventType<ExtractTypesFromArrayS<T>> {
   const keysKnown = new Set<string>(Object.keys(theInfos));
   const keysFilled = new Set<string>();
 
@@ -35,4 +35,4 @@ export const all = <const T extends EventType[]>(
       });
     });
   };
-};
+}

@@ -1,16 +1,16 @@
-import { applied } from "../components/Applied";
+import { Applied } from "../components/Applied";
 import { describe, expect, test } from "vitest";
-import { late } from "../components/Late";
-import { diagram } from "../testing";
-import { executorApplied } from "./ExecutorApplied";
+import { Late } from "../components/Late";
+import { Diagram } from "../testing";
+import { ExecutorApplied } from "./ExecutorApplied";
 
 describe("ExecutorApplied.test", () => {
   test("fn applied to value transferring", () => {
-    const d = diagram();
-    const l = late<number>(1);
+    const d = Diagram();
+    const l = Late<number>(1);
 
     let applierWasCalled = 0;
-    const infoLimited = executorApplied(l.event, (owner) => {
+    const infoLimited = ExecutorApplied(l.event, (owner) => {
       return (v) => {
         if (applierWasCalled < 2) {
           owner(v);
@@ -19,7 +19,7 @@ describe("ExecutorApplied.test", () => {
       };
     });
 
-    applied(infoLimited, String)(d.user);
+    Applied(infoLimited, String)(d.user);
 
     l.use(2);
     l.use(3);

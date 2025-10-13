@@ -5,12 +5,12 @@ import { EventType, EventUserType } from "../types";
  * to control the value passing process
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
-export const executorApplied = <T>(
+export function ExecutorApplied<T>(
   baseEv: EventType<T>,
   applier: (executor: EventUserType<T>) => EventUserType<T>,
-): EventType<T> => {
+): EventType<T> {
   return function ExecutorAppliedEvent(u) {
     const ExecutorAppliedBaseUser = applier(u);
     baseEv(ExecutorAppliedBaseUser);
   };
-};
+}

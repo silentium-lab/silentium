@@ -1,15 +1,15 @@
 import { describe, expect, test, vi } from "vitest";
-import { applied } from "../components/Applied";
-import { lateShared } from "../components/LateShared";
-import { primitive } from "../components/PrimitiveSource";
+import { Applied } from "./Applied";
+import { LateShared } from "./LateShared";
+import { Primitive } from "./Primitive";
 
 describe("PrimitiveSource.test", () => {
   test("primitive reference change", () => {
-    const l = lateShared(1);
-    const p = primitive(l.event);
-    const l2 = lateShared(2);
+    const l = LateShared(1);
+    const p = Primitive(l.event);
+    const l2 = LateShared(2);
 
-    const r = applied(l2.event, (a) => ["ev", p, a].join("_"));
+    const r = Applied(l2.event, (a) => ["ev", p, a].join("_"));
     const g = vi.fn();
     r(g);
 

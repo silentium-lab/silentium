@@ -5,7 +5,7 @@ import { EventType } from "../types";
  * an array of all previous values
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
-export const sequence = <T>(baseEv: EventType<T>): EventType<T[]> => {
+export function Sequence<T>(baseEv: EventType<T>): EventType<T[]> {
   return function SequenceEvent(u) {
     const result: T[] = [];
     baseEv(function SequenceBaseUser(v) {
@@ -13,4 +13,4 @@ export const sequence = <T>(baseEv: EventType<T>): EventType<T[]> => {
       u(result);
     });
   };
-};
+}

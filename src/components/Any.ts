@@ -5,10 +5,10 @@ import { EventType } from "../types";
  * a common response from any source for a single owner
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
-export const any = <T>(...infos: EventType<T>[]): EventType<T> => {
+export function Any<T>(...infos: EventType<T>[]): EventType<T> {
   return function AnyEvent(u) {
     infos.forEach((info) => {
       info(u);
     });
   };
-};
+}

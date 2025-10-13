@@ -7,7 +7,7 @@ import { isFilled } from "../helpers";
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-export const late = <T>(v?: T): SourceType<T> => {
+export function Late<T>(v?: T): SourceType<T> {
   let lateUser: EventUserType<T> | null = null;
   const notify = (v?: T) => {
     if (isFilled(v) && lateUser) {
@@ -30,4 +30,4 @@ export const late = <T>(v?: T): SourceType<T> => {
       notify(v);
     },
   };
-};
+}

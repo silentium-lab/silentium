@@ -1,19 +1,19 @@
-import { _void, of } from "../base";
-import { constructorDestroyable } from "./ConstructorDestroyable";
+import { Void, Of } from "../base";
+import { ConstructorDestroyable } from "./ConstructorDestroyable";
 import { describe, expect, test } from "vitest";
 
 describe("ConstructorDestroyable.test", () => {
   test("destroy base constructor", () => {
     let isDestroyed = false;
-    const p = constructorDestroyable(() => ({
-      event: of("123"),
+    const p = ConstructorDestroyable(() => ({
+      event: Of("123"),
       destroy() {
         isDestroyed = true;
       },
     }));
     const inst = p.get();
 
-    inst(_void);
+    inst(Void);
 
     p.destroy();
 
@@ -22,7 +22,7 @@ describe("ConstructorDestroyable.test", () => {
 
   test("destroy event type", () => {
     let isDestroyed = false;
-    const p = constructorDestroyable(() => {
+    const p = ConstructorDestroyable(() => {
       return () => {
         return () => {
           isDestroyed = true;
@@ -30,7 +30,7 @@ describe("ConstructorDestroyable.test", () => {
       };
     });
     const inst = p.get();
-    const d = inst(_void);
+    const d = inst(Void);
 
     d?.();
 

@@ -1,11 +1,11 @@
 import { describe, expect, test, vi } from "vitest";
-import { local } from "../base/Local";
-import { late } from "../components";
+import { Local } from "../base/Local";
+import { Late } from "../components";
 
 describe("Local.test", () => {
   test("local event don't react after destroying", () => {
-    const ev = late(1);
-    const localEv = local(ev.event);
+    const ev = Late(1);
+    const localEv = Local(ev.event);
     const g = vi.fn();
     const d = localEv(g);
 

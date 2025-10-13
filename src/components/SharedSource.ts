@@ -1,11 +1,11 @@
 import { SourceType } from "../types";
-import { shared } from "../components/Shared";
+import { Shared } from "../components/Shared";
 
-export const sharedSource = <T>(
+export function SharedSource<T>(
   baseEv: SourceType<T>,
   stateless = false,
-): SourceType<T> => {
-  const sharedEv = shared(baseEv.event, stateless);
+): SourceType<T> {
+  const sharedEv = Shared(baseEv.event, stateless);
 
   return {
     event: function SharedSourceEvent(u) {
@@ -16,4 +16,4 @@ export const sharedSource = <T>(
       baseEv.use(v);
     },
   };
-};
+}

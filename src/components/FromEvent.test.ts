@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { of } from "../base";
-import { fromEvent } from "./FromEvent";
+import { Of } from "../base";
+import { FromEvent } from "./FromEvent";
 
 describe("FromEvent.test", () => {
   test("from event with destructor", () => {
@@ -13,7 +13,7 @@ describe("FromEvent.test", () => {
         unsubscribed = true;
       },
     };
-    const i = fromEvent(of(emitter), of("click"), of("on"), of("off"));
+    const i = FromEvent(Of(emitter), Of("click"), Of("on"), Of("off"));
 
     const o = vi.fn();
     const destroy = i(o);

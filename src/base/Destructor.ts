@@ -1,9 +1,9 @@
 import { DestructorType, EventType, EventUserType } from "../types";
 
-export const destructor = <T>(
+export function Destructor<T>(
   baseEv: EventType<T>,
   destructorUser?: EventUserType<DestructorType>,
-) => {
+) {
   let mbDestructor: DestructorType | void;
   let theUser: EventUserType<T> | null = null;
   const destroy = () => {
@@ -11,7 +11,7 @@ export const destructor = <T>(
     mbDestructor?.();
   };
   return {
-    event: function DestructorData(u: any) {
+    event: function DestructorEvent(u: any) {
       theUser = u;
       mbDestructor = baseEv((v) => {
         if (theUser) {
@@ -25,4 +25,4 @@ export const destructor = <T>(
     } as EventType<T>,
     destroy,
   };
-};
+}

@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
-import { late } from "./Late";
+import { Late } from "./Late";
 
 describe("Late.test", () => {
   test("Begins with empty value", () => {
-    const l = late<number>();
+    const l = Late<number>();
 
     const o = vi.fn();
     l.event(o);
@@ -20,7 +20,7 @@ describe("Late.test", () => {
   });
 
   test("Begins with 1 value", () => {
-    const l = late<number>(1);
+    const l = Late<number>(1);
     const o = vi.fn();
     l.event(o);
 

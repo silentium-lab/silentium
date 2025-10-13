@@ -1,12 +1,12 @@
-import { diagram } from "../testing";
-import { late } from "../components/Late";
-import { sharedSource } from "../components/SharedSource";
+import { Diagram } from "../testing";
+import { Late } from "../components/Late";
+import { SharedSource } from "../components/SharedSource";
 import { describe, expect, test, vi } from "vitest";
-import { applied } from "../components/Applied";
+import { Applied } from "../components/Applied";
 
 describe("SharedSource.test", () => {
   test("event with many users", () => {
-    const s = sharedSource(late<number>(1), true);
+    const s = SharedSource(Late<number>(1), true);
 
     const g = vi.fn();
     s.event(g);
@@ -25,10 +25,10 @@ describe("SharedSource.test", () => {
   });
 
   test("with diagram", () => {
-    const d = diagram();
-    const s = sharedSource(late<number>(), true);
+    const d = Diagram();
+    const s = SharedSource(Late<number>(), true);
 
-    applied(s.event, String)(d.user);
+    Applied(s.event, String)(d.user);
 
     s.use(1);
 

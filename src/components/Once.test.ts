@@ -1,11 +1,11 @@
 import { describe, expect, test, vitest } from "vitest";
-import { late } from "./Late";
-import { once } from "./Once";
+import { Late } from "./Late";
+import { Once } from "./Once";
 
 describe("Once.test", () => {
   test("with not called check", () => {
-    const l = late<number>();
-    const info = once(l.event);
+    const l = Late<number>();
+    const info = Once(l.event);
     const g = vitest.fn();
     info(g);
 
@@ -15,8 +15,8 @@ describe("Once.test", () => {
   });
 
   test("once main process", () => {
-    const l = late<number>(123);
-    const info = once(l.event);
+    const l = Late<number>(123);
+    const info = Once(l.event);
     const g = vitest.fn();
     info(g);
 

@@ -1,9 +1,9 @@
 import { EventType, EventUserType } from "../types";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { of } from "../base";
-import { diagram, wait } from "../testing";
-import { map } from "./Map";
-import { applied } from "./Applied";
+import { Of } from "../base";
+import { Diagram, wait } from "../testing";
+import { Map } from "./Map";
+import { Applied } from "./Applied";
 
 function x2(baseNumber: EventType<number>) {
   return (o: EventUserType<number>) => {
@@ -29,8 +29,8 @@ describe("Map.test", () => {
         o(val);
       });
     };
-    const info = of([1, 2, 3, 9].map(infoDeferred));
-    const infoMapped = map(info, x2);
+    const info = Of([1, 2, 3, 9].map(infoDeferred));
+    const infoMapped = Map(info, x2);
 
     const callFn = vi.fn();
     infoMapped((v) => {
@@ -43,10 +43,10 @@ describe("Map.test", () => {
   });
 
   test("map twice", () => {
-    const d = diagram();
-    const infoMapped = map(of([1, 2, 3, 9]), x2);
+    const d = Diagram();
+    const infoMapped = Map(Of([1, 2, 3, 9]), x2);
 
-    applied(infoMapped, String)(d.user);
+    Applied(infoMapped, String)(d.user);
 
     expect(d.toString()).toBe("2,4,6,18");
   });

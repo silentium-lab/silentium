@@ -1,5 +1,5 @@
-import { destroyContainer } from "../base/DestroyContainer";
-import { _void } from "../base/Void";
+import { DestroyContainer } from "../base/DestroyContainer";
+import { Void } from "../base/Void";
 import { describe, expect, test } from "vitest";
 
 describe("DestroyContainer.test", () => {
@@ -12,9 +12,9 @@ describe("DestroyContainer.test", () => {
       };
     };
 
-    const c = destroyContainer();
-    c.add(e)(_void);
-    c.add(e)(_void);
+    const c = DestroyContainer();
+    c.add(e)(Void);
+    c.add(e)(Void);
 
     c.destroy();
 

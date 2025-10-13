@@ -6,7 +6,7 @@ import { EventType } from "../types";
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-export const once = <T>(baseEv: EventType<T>): EventType<T> => {
+export function Once<T>(baseEv: EventType<T>): EventType<T> {
   return function OnceEvent(u) {
     let isFilled = false;
     baseEv(function OnceBaseUser(v) {
@@ -16,4 +16,4 @@ export const once = <T>(baseEv: EventType<T>): EventType<T> => {
       }
     });
   };
-};
+}

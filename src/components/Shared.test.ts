@@ -1,13 +1,13 @@
 import { describe, expect, test, vi } from "vitest";
-import { diagram } from "../testing";
-import { late } from "./Late";
-import { shared } from "./Shared";
+import { Diagram } from "../testing";
+import { Late } from "./Late";
+import { Shared } from "./Shared";
 
 describe("Shared.test", () => {
   test("many users for one event", () => {
-    const d = diagram();
-    const l = late<number>(1);
-    const s = shared(l.event);
+    const d = Diagram();
+    const l = Late<number>(1);
+    const s = Shared(l.event);
 
     s.event((v) => {
       d.user(`g1_${v}`);
@@ -29,8 +29,8 @@ describe("Shared.test", () => {
   });
 
   test("stateless", () => {
-    const l = late<number>(1);
-    const s = shared(l.event, true);
+    const l = Late<number>(1);
+    const s = Shared(l.event, true);
 
     const g = vi.fn();
     s.event(g);

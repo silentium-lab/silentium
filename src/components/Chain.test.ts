@@ -1,15 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { diagram } from "../testing";
-import { chain } from "./Chain";
-import { late } from "./Late";
+import { Diagram } from "../testing";
+import { Chain } from "./Chain";
+import { Late } from "./Late";
 
 describe("Chain.test", () => {
   test("event connected to over events", () => {
-    const d = diagram();
-    const triggerEv = late<string>("immediate");
-    const valueEv = late<string>("the_value");
+    const d = Diagram();
+    const triggerEv = Late<string>("immediate");
+    const valueEv = Late<string>("the_value");
 
-    const chainEv = chain(triggerEv.event, valueEv.event);
+    const chainEv = Chain(triggerEv.event, valueEv.event);
     chainEv(d.user);
 
     expect(d.toString()).toBe("the_value");

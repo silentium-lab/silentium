@@ -1,10 +1,10 @@
 import { describe, expect, test, vi } from "vitest";
-import { destructor } from "../base/Destructor";
-import { of } from "../base/Of";
+import { Destructor } from "../base/Destructor";
+import { Of } from "../base/Of";
 
 describe("Destructor.test", () => {
   test("Destructor always exists", () => {
-    const ev = destructor(of("1"));
+    const ev = Destructor(Of("1"));
     const user = vi.fn();
     const d = ev.event(user);
 
@@ -16,7 +16,7 @@ describe("Destructor.test", () => {
     const destructorUser = vi.fn();
     const d = () => {};
     d.theName = "destructor";
-    const ev = destructor((user) => {
+    const ev = Destructor((user) => {
       user("2");
       return d;
     }, destructorUser);

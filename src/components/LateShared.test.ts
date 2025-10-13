@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
-import { lateShared } from "../components/LateShared";
+import { LateShared } from "../components/LateShared";
 
 describe("LateShared.test", () => {
   test("without value", () => {
-    const l = lateShared<number>();
+    const l = LateShared<number>();
 
     const o = vi.fn();
     l.event(o);
@@ -26,7 +26,7 @@ describe("LateShared.test", () => {
   });
 
   test("with value", function LateSharedTest() {
-    const l = lateShared<number>(1);
+    const l = LateShared<number>(1);
 
     l.use(2);
 

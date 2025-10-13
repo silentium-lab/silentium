@@ -1,11 +1,11 @@
-import { destructor } from "../base/Destructor";
+import { Destructor } from "../base/Destructor";
 import { DestructorType, EventType } from "../types";
 
-export const destroyContainer = () => {
+export function DestroyContainer() {
   const destructors: DestructorType[] = [];
   return {
     add(e: EventType) {
-      const d = destructor(e);
+      const d = Destructor(e);
       destructors.push(d.destroy);
       return d.event;
     },
@@ -13,4 +13,4 @@ export const destroyContainer = () => {
       destructors.forEach((d) => d());
     },
   };
-};
+}

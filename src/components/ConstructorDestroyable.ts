@@ -9,7 +9,7 @@ import {
 /**
  * Constructor what can be destroyed
  */
-export const constructorDestroyable = (
+export function ConstructorDestroyable(
   baseConstructor: ConstructorType<
     any[],
     (DestroyableType & EventObjectType) | EventType
@@ -17,10 +17,10 @@ export const constructorDestroyable = (
 ): {
   get: ConstructorType<any[], EventType>;
   destroy: DestructorType;
-} => {
+} {
   const destructors: DestructorType[] = [];
   return {
-    get: function ConstructorDestroyable(...args) {
+    get: function ConstructorDestroyableGet(...args) {
       const inst = baseConstructor(...args);
       return (user) => {
         if ("destroy" in inst) {
@@ -42,4 +42,4 @@ export const constructorDestroyable = (
       destructors.forEach((i) => i());
     },
   };
-};
+}

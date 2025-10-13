@@ -4,7 +4,7 @@ import { EventUserType } from "../types";
  * Помогает отлаживать поток ответов от источников информации
  * в виде текстовой диаграммы
  */
-export const diagram = (joinSymbol = "|") => {
+export const Diagram = (joinSymbol = "|") => {
   const responses: any[] = [];
   const user: EventUserType<string> = (v) => {
     responses.push(v);

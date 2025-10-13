@@ -13,7 +13,7 @@ export * from "./ConstructorArgs";
 export * from "./ConstructorDestroyable";
 export * from "./Map";
 export * from "./Once";
-export * from "./PrimitiveSource";
+export * from "./Primitive";
 export * from "./Sequence";
 export * from "./Shared";
 export * from "./SharedSource";
