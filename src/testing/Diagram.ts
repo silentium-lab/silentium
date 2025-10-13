@@ -5,7 +5,7 @@ import { EventUserType } from "../types";
  * в виде текстовой диаграммы
  */
 export const Diagram = (joinSymbol = "|") => {
-  const responses: any[] = [];
+  const responses: unknown[] = [];
   const user: EventUserType<string> = (v) => {
     responses.push(v);
   };

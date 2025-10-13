@@ -11,7 +11,7 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
 export function Chain<T extends EventType[]>(...infos: T): Last<T> {
-  return <Last<T>>function ChainEvent(u) {
+  return <Last<T>>function ChainEvent(user) {
     let lastValue: EventTypeValue<Last<T>> | undefined;
 
     const handleI = (index: number) => {
@@ -24,7 +24,7 @@ export function Chain<T extends EventType[]>(...infos: T): Last<T> {
         }
 
         if (lastValue) {
-          u(lastValue);
+          user(lastValue);
         }
 
         if (nextI && !lastValue) {

@@ -8,9 +8,9 @@ export function Applied<T, R>(
   baseEv: EventType<T>,
   applier: ConstructorType<[T], R>,
 ): EventType<R> {
-  return function AppliedEvent(u) {
+  return function AppliedEvent(user) {
     baseEv(function AppliedBaseUser(v) {
-      u(applier(v));
+      user(applier(v));
     });
   };
 }

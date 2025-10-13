@@ -19,8 +19,8 @@ export function FromEvent<T>(
       lastU(v);
     }
   };
-  return function FromEventEvent(u) {
-    lastU = u;
+  return function FromEventEvent(user) {
+    lastU = user;
     const a = All(emitterEv, eventNameEv, subscribeMethodEv);
     a(function FromEventAllUser([emitter, eventName, subscribe]) {
       if (!emitter?.[subscribe]) {

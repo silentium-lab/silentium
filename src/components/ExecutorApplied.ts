@@ -9,8 +9,8 @@ export function ExecutorApplied<T>(
   baseEv: EventType<T>,
   applier: (executor: EventUserType<T>) => EventUserType<T>,
 ): EventType<T> {
-  return function ExecutorAppliedEvent(u) {
-    const ExecutorAppliedBaseUser = applier(u);
+  return function ExecutorAppliedEvent(user) {
+    const ExecutorAppliedBaseUser = applier(user);
     baseEv(ExecutorAppliedBaseUser);
   };
 }

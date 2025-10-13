@@ -16,14 +16,14 @@ export function Late<T>(v?: T): SourceType<T> {
   };
 
   return {
-    event: function LateEvent(u) {
+    event: function LateEvent(user) {
       if (lateUser) {
         throw new Error(
           "Late component gets new user, when another was already connected!",
         );
       }
 
-      lateUser = u;
+      lateUser = user;
       notify(v);
     },
     use: function LateUser(v) {

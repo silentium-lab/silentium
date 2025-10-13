@@ -5,10 +5,10 @@ import { EventType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/stream
  */
 export function Stream<T>(baseEv: EventType<T[]>): EventType<T> {
-  return function StreamEvent(u) {
+  return function StreamEvent(user) {
     baseEv(function StreamBaseUser(v) {
       v.forEach((cv) => {
-        u(cv);
+        user(cv);
       });
     });
   };

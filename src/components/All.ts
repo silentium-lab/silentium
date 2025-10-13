@@ -21,7 +21,7 @@ export function All<const T extends EventType[]>(
   const keysKnown = new Set<string>(Object.keys(theInfos));
   const keysFilled = new Set<string>();
 
-  return function AllEvent(u) {
+  return function AllEvent(user) {
     const result: Record<string, unknown> = {};
 
     Object.entries(theInfos).forEach(([key, info]) => {
@@ -30,7 +30,7 @@ export function All<const T extends EventType[]>(
         keysFilled.add(key);
         result[key] = v;
         if (isAllFilled(keysFilled, keysKnown)) {
-          u(Object.values(result) as ExtractTypesFromArrayS<T>);
+          user(Object.values(result) as ExtractTypesFromArrayS<T>);
         }
       });
     });

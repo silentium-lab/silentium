@@ -7,12 +7,12 @@ import { EventType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
 export function Once<T>(baseEv: EventType<T>): EventType<T> {
-  return function OnceEvent(u) {
+  return function OnceEvent(user) {
     let isFilled = false;
     baseEv(function OnceBaseUser(v) {
       if (!isFilled) {
         isFilled = true;
-        u(v);
+        user(v);
       }
     });
   };

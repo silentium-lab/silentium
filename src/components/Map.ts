@@ -11,7 +11,7 @@ export function Map<T, TG>(
   baseEv: EventType<T[]>,
   targetEv: ConstructorType<any[], EventType<TG>>,
 ): EventType<TG[]> {
-  return function MapData(u) {
+  return function MapData(user) {
     baseEv(function MapBaseUser(v) {
       const infos: EventType<TG>[] = [];
       v.forEach((val) => {
@@ -23,7 +23,7 @@ export function Map<T, TG>(
         infos.push(info);
       });
       const allI = All(...infos);
-      allI(u);
+      allI(user);
     });
   };
 }

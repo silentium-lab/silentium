@@ -27,14 +27,14 @@ export function Shared<T>(
   });
 
   return {
-    event: function SharedEvent(u) {
+    event: function SharedEvent(user) {
       calls.use(1);
-      if (!stateless && isFilled(lastValue) && !ownersPool.has(u)) {
-        u(lastValue);
+      if (!stateless && isFilled(lastValue) && !ownersPool.has(user)) {
+        user(lastValue);
       }
-      ownersPool.add(u);
+      ownersPool.add(user);
       return () => {
-        ownersPool.remove(u);
+        ownersPool.remove(user);
       };
     },
     use: function SharedUser(value: T) {

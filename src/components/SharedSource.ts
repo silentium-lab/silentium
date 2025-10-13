@@ -8,8 +8,8 @@ export function SharedSource<T>(
   const sharedEv = Shared(baseEv.event, stateless);
 
   return {
-    event: function SharedSourceEvent(u) {
-      sharedEv.event(u);
+    event: function SharedSourceEvent(user) {
+      sharedEv.event(user);
     },
     use: function SharedSourceUser(v) {
       sharedEv.touched();

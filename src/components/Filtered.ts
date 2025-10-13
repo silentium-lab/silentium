@@ -11,12 +11,12 @@ export function Filtered<T>(
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
 ): EventType<T> {
-  return function FilteredEvent(u) {
+  return function FilteredEvent(user) {
     baseEv(function FilteredBaseUser(v) {
       if (predicate(v)) {
-        u(v);
+        user(v);
       } else if (defaultValue !== undefined) {
-        u(defaultValue);
+        user(defaultValue);
       }
     });
   };

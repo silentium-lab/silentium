@@ -5,17 +5,17 @@ export function Destructor<T>(
   destructorUser?: EventUserType<DestructorType>,
 ) {
   let mbDestructor: DestructorType | void;
-  let theUser: EventUserType<T> | null = null;
+  let theUser: WeakRef<EventUserType<T>> | null = null;
   const destroy = () => {
     theUser = null;
     mbDestructor?.();
   };
   return {
-    event: function DestructorEvent(u: any) {
-      theUser = u;
+    event: function DestructorEvent(user) {
+      theUser = new WeakRef(user);
       mbDestructor = baseEv((v) => {
         if (theUser) {
-          theUser(v);
+          theUser.deref()?.(v);
         }
       });
       if (mbDestructor && destructorUser) {

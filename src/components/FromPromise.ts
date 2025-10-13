@@ -9,9 +9,9 @@ export function FromPromise<T>(
   p: Promise<T>,
   errorOwner?: EventUserType,
 ): EventType<T> {
-  return function FromPromiseEvent(u) {
+  return function FromPromiseEvent(user) {
     p.then(function FromPromiseThen(v) {
-      u(v);
+      user(v);
     }).catch(function FromPromiseCatch(e) {
       errorOwner?.(e);
     });

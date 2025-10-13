@@ -6,9 +6,9 @@ import { EventType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/any
  */
 export function Any<T>(...infos: EventType<T>[]): EventType<T> {
-  return function AnyEvent(u) {
+  return function AnyEvent(user) {
     infos.forEach((info) => {
-      info(u);
+      info(user);
     });
   };
 }
