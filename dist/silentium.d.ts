@@ -1,3 +1,5 @@
+import { EventType as EventType$1, EventUserType as EventUserType$1 } from 'src/types';
+
 type EventUserType<T = unknown> = (value: T) => void;
 
 type DestructorType = () => void;
@@ -49,6 +51,12 @@ declare function Any<T>(...infos: EventType<T>[]): EventType<T>;
  */
 declare function Applied<T, R>(baseEv: EventType<T>, applier: ConstructorType<[T], R>): EventType<R>;
 
+/**
+ * Catches exception and passes
+ * exception content to error user
+ */
+declare function Catch<T>($base: EventType$1<T>, error: EventUserType$1, errorOriginal?: EventUserType$1): EventType$1<T>;
+
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 /**
  * The set of information sources forms a sequential chain where each source provides
@@ -57,6 +65,21 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * https://silentium-lab.github.io/silentium/#/en/information/applied
  */
 declare function Chain<T extends EventType[]>(...infos: T): Last<T>;
+
+/**
+ * Constructor with applied function to its results
+ */
+declare function ConstructorApplied<T>(baseConstructor: ConstructorType<any[], EventType>, applier: (i: EventType) => EventType<T>): ConstructorType<EventType[], EventType<T>>;
+
+declare function ConstructorArgs(baseConstructor: ConstructorType<any[], EventType>, args: unknown[], startFromArgIndex?: number): (...runArgs: any[]) => EventType;
+
+/**
+ * Constructor what can be destroyed
+ */
+declare function ConstructorDestroyable(baseConstructor: ConstructorType<any[], (DestroyableType & EventObjectType) | EventType>): {
+    get: ConstructorType<any[], EventType>;
+    destroy: DestructorType;
+};
 
 /**
  * Information to which a function is applied in order
@@ -96,21 +119,6 @@ declare function FromPromise<T>(p: Promise<T>, errorOwner?: EventUserType): Even
 declare function Late<T>(v?: T): SourceType<T>;
 
 declare function LateShared<T>(value?: T): SourceType<T>;
-
-/**
- * Constructor with applied function to its results
- */
-declare function ConstructorApplied<T>(baseConstructor: ConstructorType<any[], EventType>, applier: (i: EventType) => EventType<T>): ConstructorType<EventType[], EventType<T>>;
-
-declare function ConstructorArgs(baseConstructor: ConstructorType<any[], EventType>, args: unknown[], startFromArgIndex?: number): (...runArgs: any[]) => EventType;
-
-/**
- * Constructor what can be destroyed
- */
-declare function ConstructorDestroyable(baseConstructor: ConstructorType<any[], (DestroyableType & EventObjectType) | EventType>): {
-    get: ConstructorType<any[], EventType>;
-    destroy: DestructorType;
-};
 
 /**
  * Component that applies an info object constructor to each data item,
@@ -204,4 +212,4 @@ declare function DestroyContainer(): {
     destroy(): void;
 };
 
-export { All, Any, Applied, Chain, ConstructorApplied, ConstructorArgs, ConstructorDestroyable, type ConstructorType, DestroyContainer, type DestroyableType, Destructor, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, On, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Void, isFilled };
+export { All, Any, Applied, Catch, Chain, ConstructorApplied, ConstructorArgs, ConstructorDestroyable, type ConstructorType, DestroyContainer, type DestroyableType, Destructor, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, On, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Void, isFilled };

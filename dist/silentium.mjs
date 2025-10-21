@@ -35,6 +35,23 @@ function Applied(baseEv, applier) {
   };
 }
 
+function Catch($base, error, errorOriginal) {
+  return (user) => {
+    try {
+      $base(user);
+    } catch (e) {
+      if (e instanceof Error) {
+        error(e.message);
+      } else {
+        error(e);
+      }
+      if (errorOriginal) {
+        errorOriginal(e);
+      }
+    }
+  };
+}
+
 function Chain(...infos) {
   return function ChainEvent(user) {
     let lastValue;
@@ -54,6 +71,49 @@ function Chain(...infos) {
       });
     };
     handleI(0);
+  };
+}
+
+function ConstructorApplied(baseConstructor, applier) {
+  return function LazyAppliedData(...args) {
+    return applier(baseConstructor(...args));
+  };
+}
+
+function ConstructorArgs(baseConstructor, args, startFromArgIndex = 0) {
+  return function ConstructorArgsEvent(...runArgs) {
+    return baseConstructor(...mergeAtIndex(runArgs, args, startFromArgIndex));
+  };
+}
+function mergeAtIndex(arr1, arr2, index) {
+  const result = arr1.slice(0, index);
+  while (result.length < index) result.push(void 0);
+  return result.concat(arr2);
+}
+
+function ConstructorDestroyable(baseConstructor) {
+  const destructors = [];
+  return {
+    get: function ConstructorDestroyableGet(...args) {
+      const inst = baseConstructor(...args);
+      return (user) => {
+        if ("destroy" in inst) {
+          destructors.push(inst.destroy);
+          inst.event(user);
+        } else {
+          const d = inst(user);
+          if (d) {
+            destructors.push(d);
+          }
+        }
+        return () => {
+          destructors.forEach((i) => i());
+        };
+      };
+    },
+    destroy: function ConstructorDestructor() {
+      destructors.forEach((i) => i());
+    }
   };
 }
 
@@ -248,49 +308,6 @@ function LateShared(value) {
   return SharedSource(Late(value));
 }
 
-function ConstructorApplied(baseConstructor, applier) {
-  return function LazyAppliedData(...args) {
-    return applier(baseConstructor(...args));
-  };
-}
-
-function ConstructorArgs(baseConstructor, args, startFromArgIndex = 0) {
-  return function ConstructorArgsEvent(...runArgs) {
-    return baseConstructor(...mergeAtIndex(runArgs, args, startFromArgIndex));
-  };
-}
-function mergeAtIndex(arr1, arr2, index) {
-  const result = arr1.slice(0, index);
-  while (result.length < index) result.push(void 0);
-  return result.concat(arr2);
-}
-
-function ConstructorDestroyable(baseConstructor) {
-  const destructors = [];
-  return {
-    get: function ConstructorDestroyableGet(...args) {
-      const inst = baseConstructor(...args);
-      return (user) => {
-        if ("destroy" in inst) {
-          destructors.push(inst.destroy);
-          inst.event(user);
-        } else {
-          const d = inst(user);
-          if (d) {
-            destructors.push(d);
-          }
-        }
-        return () => {
-          destructors.forEach((i) => i());
-        };
-      };
-    },
-    destroy: function ConstructorDestructor() {
-      destructors.forEach((i) => i());
-    }
-  };
-}
-
 function Destructor(baseEv, destructorUser) {
   let mbDestructor;
   let theUser = null;
@@ -417,5 +434,5 @@ function Stream(baseEv) {
   };
 }
 
-export { All, Any, Applied, Chain, ConstructorApplied, ConstructorArgs, ConstructorDestroyable, DestroyContainer, Destructor, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, On, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, Stream, Void, isFilled };
+export { All, Any, Applied, Catch, Chain, ConstructorApplied, ConstructorArgs, ConstructorDestroyable, DestroyContainer, Destructor, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, On, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, Stream, Void, isFilled };
 //# sourceMappingURL=silentium.mjs.map
