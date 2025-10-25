@@ -1,43 +1,50 @@
-import { EventTypeDestroyable } from "../types/EventType";
+import { ParentUser, User } from "src/base/User";
 import { EventType, EventUserType } from "../types";
+import { DestroyableType } from "../types/EventType";
 import { All } from "./All";
 
-/**
- * A component that receives data from an event and
- * presents it as an information object
- * https://silentium-lab.github.io/silentium/#/en/information/from-event
- */
-export function FromEvent<T>(
-  emitterEv: EventType<any>,
-  eventNameEv: EventType<string>,
-  subscribeMethodEv: EventType<string>,
-  unsubscribeMethodEv?: EventType<string>,
-): EventTypeDestroyable<T> {
-  let lastU: EventUserType<T> | null = null;
-  const handler = function FromEventHandler(v: T) {
-    if (lastU) {
-      lastU(v);
+export class FromEvent<T> implements EventType<T>, DestroyableType {
+  private lastUser: EventUserType<T> | null = null;
+  private handler = (v: T) => {
+    if (this.lastUser) {
+      this.lastUser.use(v);
     }
   };
-  return function FromEventEvent(user) {
-    lastU = user;
-    const a = All(emitterEv, eventNameEv, subscribeMethodEv);
-    a(function FromEventAllUser([emitter, eventName, subscribe]) {
+
+  public constructor(
+    private $emitter: EventType<any>,
+    private $eventName: EventType<string>,
+    private $subscribeMethod: EventType<string>,
+    private $unsubscribeMethod?: EventType<string>,
+  ) {}
+
+  public event(user: EventUserType<T>): this {
+    const a = new All(this.$emitter, this.$eventName, this.$subscribeMethod);
+    a.event(this.parent.child(user));
+    return this;
+  }
+
+  private parent = new ParentUser<[any, string, string]>(
+    ([emitter, eventName, subscribe], parent) => {
+      this.lastUser = parent;
       if (!emitter?.[subscribe]) {
         return;
       }
-      emitter[subscribe](eventName, handler);
-    });
+      emitter[subscribe](eventName, this.handler);
+    },
+  );
 
-    return function FromEventDestructor() {
-      lastU = null;
-      if (!unsubscribeMethodEv) {
-        return;
-      }
-      const a = All(emitterEv, eventNameEv, unsubscribeMethodEv);
-      a(([emitter, eventName, unsubscribe]) => {
-        emitter?.[unsubscribe]?.(eventName, handler);
-      });
-    };
-  };
+  public destroy(): this {
+    this.lastUser = null;
+    if (!this.$unsubscribeMethod) {
+      return this;
+    }
+    const a = new All(this.$emitter, this.$eventName, this.$unsubscribeMethod);
+    a.event(
+      new User(([emitter, eventName, unsubscribe]) => {
+        emitter?.[unsubscribe]?.(eventName, this.handler);
+      }),
+    );
+    return this;
+  }
 }

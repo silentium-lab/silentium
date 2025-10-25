@@ -1,16 +1,14 @@
 import { EventType, EventUserType } from "../types";
 
-/**
- * Information to which a function is applied in order
- * to control the value passing process
- * https://silentium-lab.github.io/silentium/#/en/information/applied
- */
-export function ExecutorApplied<T>(
-  baseEv: EventType<T>,
-  applier: (executor: EventUserType<T>) => EventUserType<T>,
-): EventType<T> {
-  return function ExecutorAppliedEvent(user) {
-    const ExecutorAppliedBaseUser = applier(user);
-    baseEv(ExecutorAppliedBaseUser);
-  };
+export class ExecutorApplied<T> implements EventType<T> {
+  public constructor(
+    private $base: EventType<T>,
+    private applier: (executor: EventUserType<T>) => EventUserType<T>,
+  ) {}
+
+  public event(user: EventUserType<T>) {
+    const ExecutorAppliedBaseUser = this.applier(user);
+    this.$base.event(ExecutorAppliedBaseUser);
+    return this;
+  }
 }

@@ -1,16 +1,15 @@
-import { Destructor } from "../base/Destructor";
-import { DestructorType, EventType } from "../types";
+import { DestroyableType } from "../types";
 
-export function DestroyContainer() {
-  const destructors: DestructorType[] = [];
-  return {
-    add(e: EventType) {
-      const d = Destructor(e);
-      destructors.push(d.destroy);
-      return d.event;
-    },
-    destroy() {
-      destructors.forEach((d) => d());
-    },
-  };
+export class DestroyContainer implements DestroyableType {
+  private destructors: DestroyableType[] = [];
+
+  public add(e: DestroyableType) {
+    this.destructors.push(e);
+    return this;
+  }
+
+  public destroy() {
+    this.destructors.forEach((d) => d.destroy());
+    return this;
+  }
 }

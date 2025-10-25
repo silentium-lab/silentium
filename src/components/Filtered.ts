@@ -1,23 +1,23 @@
-import { EventType, ConstructorType } from "../types";
+import { ParentUser } from "../base/User";
+import { EventType, ConstructorType, EventUserType } from "../types";
 
-/**
- * Information whose value is being validated
- * via a predicate; if the predicate returns true, the value
- * can be passed to the output
- * https://silentium-lab.github.io/silentium/#/en/information/filtered
- */
-export function Filtered<T>(
-  baseEv: EventType<T>,
-  predicate: ConstructorType<[T], boolean>,
-  defaultValue?: T,
-): EventType<T> {
-  return function FilteredEvent(user) {
-    baseEv(function FilteredBaseUser(v) {
-      if (predicate(v)) {
-        user(v);
-      } else if (defaultValue !== undefined) {
-        user(defaultValue);
-      }
-    });
-  };
+export class Filtered<T> implements EventType<T> {
+  public constructor(
+    private $base: EventType<T>,
+    private predicate: ConstructorType<[T], boolean>,
+    private defaultValue?: T,
+  ) {}
+
+  public event(user: EventUserType<T>) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
+
+  private parent = new ParentUser<T>((v, child) => {
+    if (this.predicate(v)) {
+      child.use(v);
+    } else if (this.defaultValue !== undefined) {
+      child.use(this.defaultValue);
+    }
+  });
 }

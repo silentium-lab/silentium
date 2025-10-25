@@ -1,5 +1,5 @@
 import { Void, Of } from "../base";
-import { ConstructorDestroyable } from "./ConstructorDestroyable";
+import { ConstructorDestroyable } from "./TransportDestroyable";
 import { describe, expect, test } from "vitest";
 
 describe("ConstructorDestroyable.test", () => {

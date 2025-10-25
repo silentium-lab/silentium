@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { Of } from "../base";
 import { Chain } from "./Chain";
 import { Late } from "./Late";
-import { ConstructorApplied } from "./ConstructorApplied";
+import { ConstructorApplied } from "./TransportApplied";
 
 describe("ConstructorApplied.test", () => {
   test("apply fn to result", () => {

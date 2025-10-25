@@ -1,1 +1,3 @@
-export type EventUserType<T = unknown> = (value: T) => void;
+export interface EventUserType<T = unknown> {
+  use(value: T): this;
+}

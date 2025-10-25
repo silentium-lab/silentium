@@ -1,26 +1,25 @@
-import { EventType, EventUserType } from "src/types";
+import { EventType, EventUserType } from "../types";
 
-/**
- * Catches exception and passes
- * exception content to error user
- */
-export function Catch<T>(
-  $base: EventType<T>,
-  error: EventUserType,
-  errorOriginal?: EventUserType,
-): EventType<T> {
-  return (user) => {
+export class Catch<T> implements EventType<T> {
+  public constructor(
+    private $base: EventType<T>,
+    private errorMessage: EventUserType,
+    private errorOriginal?: EventUserType,
+  ) {}
+
+  public event(user: EventUserType<T>) {
     try {
-      $base(user);
+      this.$base.event(user);
     } catch (e: any) {
       if (e instanceof Error) {
-        error(e.message);
+        this.errorMessage.use(e.message);
       } else {
-        error(e);
+        this.errorMessage.use(e);
       }
-      if (errorOriginal) {
-        errorOriginal(e);
+      if (this.errorOriginal) {
+        this.errorOriginal.use(e);
       }
     }
-  };
+    return this;
+  }
 }

@@ -1,16 +1,18 @@
-import { EventType, ConstructorType } from "../types";
+import { ParentUser } from "../base/User";
+import { ConstructorType, EventType, EventUserType } from "../types";
 
-/**
- * Information to which the function was applied to change the value
- * https://silentium-lab.github.io/silentium/#/en/information/applied
- */
-export function Applied<T, R>(
-  baseEv: EventType<T>,
-  applier: ConstructorType<[T], R>,
-): EventType<R> {
-  return function AppliedEvent(user) {
-    baseEv(function AppliedBaseUser(v) {
-      user(applier(v));
-    });
-  };
+export class Applied<T, R> implements EventType<R> {
+  public constructor(
+    private $base: EventType<T>,
+    private applier: ConstructorType<[T], R>,
+  ) {}
+
+  public event(user: EventUserType<R>) {
+    this.$base.event(this.user.child(user));
+    return this;
+  }
+
+  private user = new ParentUser((v: T, child) => {
+    child.use(this.applier(v));
+  });
 }

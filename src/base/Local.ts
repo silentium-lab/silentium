@@ -1,19 +1,26 @@
-import { EventType } from "../types";
+import { ParentUser } from "../base/User";
+import { DestroyableType, EventType, EventUserType } from "../types";
 
 /**
  * Create local copy of source what can be destroyed
  */
-export function Local<T>(baseEv: EventType<T>): EventType<T> {
-  return function LocalEvent(user) {
-    let destroyed = false;
-    const d = baseEv(function LocalBaseUser(v) {
-      if (!destroyed) {
-        user(v);
-      }
-    });
-    return () => {
-      destroyed = true;
-      d?.();
-    };
-  };
+export class Local<T> implements EventType<T>, DestroyableType {
+  private destroyed = false;
+
+  public constructor(private $base: EventType<T>) {}
+
+  public event(user: EventUserType<T>): this {
+    this.$base.event(this.user.child(user));
+    return this;
+  }
+
+  private user = new ParentUser((v: T, child: EventUserType<T>) => {
+    if (!this.destroyed) {
+      child.use(v);
+    }
+  });
+
+  public destroy(): this {
+    return this;
+  }
 }
