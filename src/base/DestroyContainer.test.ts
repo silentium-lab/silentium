@@ -7,17 +7,17 @@ describe("DestroyContainer.test", () => {
   test("Destructor always exists", () => {
     const destroyed: number[] = [];
 
-    const e = new Event(() => {
+    const e = Event(() => {
       return () => {
         destroyed.push(1);
       };
     });
 
-    const c = new DestroyContainer();
+    const c = DestroyContainer();
     c.add(e);
     c.add(e);
 
-    e.event(new Void());
+    e.event(Void());
 
     c.destroy();
 

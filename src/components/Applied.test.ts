@@ -4,11 +4,11 @@ import { Applied } from "./Applied";
 
 describe("Applied.test", () => {
   test("event with applied function", () => {
-    const info = new Of(2);
-    const infoDouble = new Applied(info, (x) => x * 2);
+    const info = Of(2);
+    const infoDouble = Applied(info, (x) => x * 2);
 
     const g = vi.fn();
-    infoDouble.event(new User(g));
+    infoDouble.event(User(g));
 
     expect(g).toBeCalledWith(4);
   });

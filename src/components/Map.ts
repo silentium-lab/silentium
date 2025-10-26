@@ -1,4 +1,4 @@
-import { isEvent } from "src/helpers";
+import { isEvent } from "../helpers";
 import { Of, ParentUser } from "../base";
 import { EventType, EventUserType, TransportType } from "../types";
 import { All } from "./All";

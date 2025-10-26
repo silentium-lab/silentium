@@ -6,13 +6,13 @@ describe("Catch.test", () => {
   test("event with applied function", () => {
     const errorUserExecutor = vi.fn();
     const exceptionEvent = new Catch(
-      new Event(() => {
+      Event(() => {
         throw new Error("Occured!");
       }),
-      new User(errorUserExecutor),
+      User(errorUserExecutor),
     );
 
-    exceptionEvent.event(new Void());
+    exceptionEvent.event(Void());
 
     expect(errorUserExecutor).toHaveBeenLastCalledWith("Occured!");
   });

@@ -2,7 +2,14 @@ import { ensureEvent } from "../helpers";
 import { ParentUser } from "../base/User";
 import { ConstructorType, EventType, EventUserType } from "../types";
 
-export class Applied<T, R> implements EventType<R> {
+export function Applied<T, R>(
+  $base: EventType<T>,
+  applier: ConstructorType<[T], R>,
+) {
+  return new TheApplied<T, R>($base, applier);
+}
+
+export class TheApplied<T, R> implements EventType<R> {
   public constructor(
     private $base: EventType<T>,
     private applier: ConstructorType<[T], R>,

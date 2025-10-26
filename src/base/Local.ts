@@ -5,7 +5,11 @@ import { DestroyableType, EventType, EventUserType } from "../types";
 /**
  * Create local copy of source what can be destroyed
  */
-export class Local<T> implements EventType<T>, DestroyableType {
+export function Local<T>($base: EventType<T>) {
+  return new TheLocal<T>($base);
+}
+
+class TheLocal<T> implements EventType<T>, DestroyableType {
   private destroyed = false;
 
   public constructor(private $base: EventType<T>) {

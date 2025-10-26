@@ -1,7 +1,11 @@
 import { ensureEvent } from "../helpers";
 import { EventType, EventUserType } from "../types";
 
-export class Any<T> implements EventType<T> {
+export function Any<T>(...events: EventType<T>[]) {
+  return new TheAny(...events);
+}
+
+class TheAny<T> implements EventType<T> {
   private $events: EventType[];
 
   public constructor(...events: EventType<T>[]) {

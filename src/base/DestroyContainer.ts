@@ -1,6 +1,10 @@
 import { DestroyableType } from "../types";
 
-export class DestroyContainer implements DestroyableType {
+export function DestroyContainer() {
+  return new TheDestroyContainer();
+}
+
+class TheDestroyContainer implements DestroyableType {
   private destructors: DestroyableType[] = [];
 
   public add(e: DestroyableType) {

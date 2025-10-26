@@ -6,9 +6,9 @@ import { User } from "../base/User";
 describe("Local.test", () => {
   test("local event don't react after destroying", () => {
     const ev = new Late(1);
-    const localEv = new Local(ev);
+    const localEv = Local(ev);
     const g = vi.fn();
-    const d = localEv.event(new User(g));
+    const d = localEv.event(User(g));
 
     expect(g).toHaveBeenCalledWith(1);
 

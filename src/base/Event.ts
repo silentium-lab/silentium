@@ -3,7 +3,11 @@ import { DestroyableType, EventType, EventUserType } from "../types";
 
 type EventExecutor<T> = (user: EventUserType<T>) => void | (() => void);
 
-export class Event<T> implements EventType<T>, DestroyableType {
+export function Event<T>(eventExecutor: EventExecutor<T>) {
+  return new TheEvent<T>(eventExecutor);
+}
+
+class TheEvent<T> implements EventType<T>, DestroyableType {
   private mbDestructor: unknown;
 
   public constructor(private eventExecutor: EventExecutor<T>) {

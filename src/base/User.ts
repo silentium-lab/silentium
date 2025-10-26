@@ -1,7 +1,11 @@
 import { ensureFunction } from "../helpers";
 import { EventUserType } from "../types";
 
-export class User<T> implements EventUserType<T> {
+export function User<T>(userExecutor: (v: T) => void) {
+  return new TheUser<T>(userExecutor);
+}
+
+class TheUser<T> implements EventUserType<T> {
   public constructor(private userExecutor: (v: T) => void) {
     ensureFunction(userExecutor, "User: user executor");
   }

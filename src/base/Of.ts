@@ -1,6 +1,10 @@
 import { EventType, EventUserType } from "../types";
 
-export class Of<T> implements EventType<T> {
+export function Of<T>(value: T) {
+  return new TheOf<T>(value);
+}
+
+class TheOf<T> implements EventType<T> {
   public constructor(private value: T) {}
 
   public event(user: EventUserType<T>): this {

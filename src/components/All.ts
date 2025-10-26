@@ -12,7 +12,11 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
   return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
 
-export class All<const T extends EventType[]>
+export function All<const T extends EventType[]>(...events: T) {
+  return new TheAll<T>(...events);
+}
+
+class TheAll<const T extends EventType[]>
   implements EventType<ExtractTypesFromArrayS<T>>
 {
   private keysKnown: Set<string>;

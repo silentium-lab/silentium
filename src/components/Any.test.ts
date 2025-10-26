@@ -6,13 +6,13 @@ import { User } from "../base";
 
 describe("Any.test", () => {
   test("event what responds from any connected event", () => {
-    const l = new Late<number>();
-    const d = new Of("default");
+    const l = Late<number>();
+    const d = Of("default");
 
-    const anyI = new Any<string | number>(l, d);
+    const anyI = Any<string | number>(l, d);
 
     const o = vi.fn();
-    anyI.event(new User(o));
+    anyI.event(User(o));
 
     expect(o).toHaveBeenCalledWith("default");
 

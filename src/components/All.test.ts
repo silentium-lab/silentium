@@ -5,10 +5,10 @@ import { User } from "../base";
 
 describe("All.test", () => {
   test("combined result from many events", () => {
-    const a = new All(new Of(1), new Of(2));
+    const a = All(Of(1), Of(2));
 
     const o = vi.fn();
-    a.event(new User(o));
+    a.event(User(o));
 
     expect(o).toBeCalledWith([1, 2]);
   });
