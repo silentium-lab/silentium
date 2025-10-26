@@ -1,5 +1,5 @@
-import { EventUserType, SourceType } from "../types";
 import { isFilled } from "../helpers";
+import { EventUserType, SourceType } from "../types";
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -7,27 +7,29 @@ import { isFilled } from "../helpers";
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-export function Late<T>(v?: T): SourceType<T> {
-  let lateUser: EventUserType<T> | null = null;
-  const notify = (v?: T) => {
-    if (isFilled(v) && lateUser) {
-      lateUser(v);
+export class Late<T> implements SourceType<T> {
+  private lateUser: EventUserType<T> | null = null;
+  private notify = (v?: T) => {
+    if (isFilled(v) && this.lateUser) {
+      this.lateUser.use(v);
     }
   };
 
-  return {
-    event: function LateEvent(user) {
-      if (lateUser) {
-        throw new Error(
-          "Late component gets new user, when another was already connected!",
-        );
-      }
+  public constructor(private v?: T) {}
 
-      lateUser = user;
-      notify(v);
-    },
-    use: function LateUser(v) {
-      notify(v);
-    },
-  };
+  public event(user: EventUserType<T>): this {
+    if (this.lateUser) {
+      throw new Error(
+        "Late component gets new user, when another was already connected!",
+      );
+    }
+    this.lateUser = user;
+    this.notify(this.v);
+    return this;
+  }
+
+  public use(value: T): this {
+    this.notify(value);
+    return this;
+  }
 }

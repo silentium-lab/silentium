@@ -1,3 +1,4 @@
+import { User } from "../base";
 import { EventUserType } from "../types";
 
 /**
@@ -11,11 +12,11 @@ export class OwnerPool<T> {
 
   public constructor() {
     this.owners = new Set<EventUserType<T>>();
-    this.innerOwner = (v) => {
+    this.innerOwner = new User((v) => {
       this.owners.forEach((g) => {
-        g(v);
+        g.use(v);
       });
-    };
+    });
   }
 
   public owner() {

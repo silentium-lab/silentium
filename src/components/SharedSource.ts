@@ -1,4 +1,4 @@
-import { SourceType } from "../types";
+import { EventType, SourceType } from "../types";
 import { Shared } from "../components/Shared";
 
 export function SharedSource<T>(
@@ -16,4 +16,8 @@ export function SharedSource<T>(
       baseEv.use(v);
     },
   };
+}
+
+export class SharedSource<T> implements EventType<T> {
+
 }
