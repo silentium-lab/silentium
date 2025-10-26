@@ -1,114 +1,112 @@
-import { EventType as EventType$1, EventUserType as EventUserType$1 } from 'src/types';
-
-type EventUserType<T = unknown> = (value: T) => void;
-
-type DestructorType = () => void;
-type EventType<T = unknown> = (user: EventUserType<T>) => DestructorType | void;
-type ExcludeVoidFromReturnType<F extends (...args: any[]) => any> = F extends (...args: infer Args) => infer Return ? (...args: Args) => Exclude<Return, void> : never;
-type EventTypeDestroyable<T = unknown> = ExcludeVoidFromReturnType<EventType<T>>;
-interface DestroyableType {
-    destroy: DestructorType;
-}
-type EventTypeValue<T> = T extends EventType<infer U> ? U : never;
-
-interface EventObjectType<T = unknown> {
-    event: EventType<T>;
-}
-
-interface EventUserObjectType<T = unknown> {
-    use: EventUserType<T>;
-}
-
-type SourceType<T = unknown> = EventObjectType<T> & EventUserObjectType<T>;
-
 /**
  * A function type that takes a value as an argument
  * and returns a specific value
  */
 type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
 
+interface EventUserType<T = unknown> {
+    use(value: T): this;
+}
+
+interface EventType<T = unknown> {
+    event(user: EventUserType<T>): this;
+}
+interface DestroyableType {
+    destroy(): this;
+}
+type EventTypeValue<T> = T extends EventType<infer U> ? U : never;
+
+type SourceType<T = unknown> = EventType<T> & EventUserType<T>;
+
+/**
+ * A function type that takes a value as an argument
+ * and returns a specific value
+ */
+type TransportType<P extends unknown[] = unknown[], T = unknown> = {
+    of(...args: P): EventType<T>;
+};
+
 type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
 type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
-/**
- * Combines multiple information sources into a single unified source
- * represented as an array containing values from all sources
- * https://silentium-lab.github.io/silentium/#/en/information/all
- */
-declare function All<const T extends EventType[]>(...theInfos: T): EventType<ExtractTypesFromArrayS<T>>;
+declare class All<const T extends EventType[]> implements EventType<ExtractTypesFromArrayS<T>> {
+    private keysKnown;
+    private keysFilled;
+    private $events;
+    private result;
+    constructor(...events: T);
+    event(user: EventUserType<ExtractTypesFromArrayS<T>>): this;
+    private user;
+}
 
-/**
- * From a set of information sources we get
- * a common response from any source for a single owner
- * https://silentium-lab.github.io/silentium/#/en/information/any
- */
-declare function Any<T>(...infos: EventType<T>[]): EventType<T>;
+declare class Any<T> implements EventType<T> {
+    private $events;
+    constructor(...events: EventType<T>[]);
+    event(user: EventUserType<T>): this;
+}
 
-/**
- * Information to which the function was applied to change the value
- * https://silentium-lab.github.io/silentium/#/en/information/applied
- */
-declare function Applied<T, R>(baseEv: EventType<T>, applier: ConstructorType<[T], R>): EventType<R>;
+declare class Applied<T, R> implements EventType<R> {
+    private $base;
+    private applier;
+    constructor($base: EventType<T>, applier: ConstructorType<[T], R>);
+    event(user: EventUserType<R>): this;
+    private user;
+}
 
-/**
- * Catches exception and passes
- * exception content to error user
- */
-declare function Catch<T>($base: EventType$1<T>, error: EventUserType$1, errorOriginal?: EventUserType$1): EventType$1<T>;
+declare class Catch<T> implements EventType<T> {
+    private $base;
+    private errorMessage;
+    private errorOriginal?;
+    constructor($base: EventType<T>, errorMessage: EventUserType, errorOriginal?: EventUserType | undefined);
+    event(user: EventUserType<T>): this;
+}
 
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
-/**
- * The set of information sources forms a sequential chain where each source provides
- * an answer. The final answer will be the output result. If any source in the chain
- * provides a new answer, the component's overall response will be repeated.
- * https://silentium-lab.github.io/silentium/#/en/information/applied
- */
-declare function Chain<T extends EventType[]>(...infos: T): Last<T>;
+declare class Chain<T extends EventType[]> implements EventType<EventTypeValue<Last<T>>> {
+    private $events;
+    private lastValue;
+    constructor(...events: T);
+    event(user: EventUserType<EventTypeValue<Last<T>>>): this;
+    private handleEvent;
+    private oneEventUser;
+}
 
-/**
- * Constructor with applied function to its results
- */
-declare function ConstructorApplied<T>(baseConstructor: ConstructorType<any[], EventType>, applier: (i: EventType) => EventType<T>): ConstructorType<EventType[], EventType<T>>;
+declare class ExecutorApplied<T> implements EventType<T> {
+    private $base;
+    private applier;
+    constructor($base: EventType<T>, applier: (executor: EventUserType<T>) => EventUserType<T>);
+    event(user: EventUserType<T>): this;
+}
 
-declare function ConstructorArgs(baseConstructor: ConstructorType<any[], EventType>, args: unknown[], startFromArgIndex?: number): (...runArgs: any[]) => EventType;
+declare class Filtered<T> implements EventType<T> {
+    private $base;
+    private predicate;
+    private defaultValue?;
+    constructor($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
+    event(user: EventUserType<T>): this;
+    private parent;
+}
 
-/**
- * Constructor what can be destroyed
- */
-declare function ConstructorDestroyable(baseConstructor: ConstructorType<any[], (DestroyableType & EventObjectType) | EventType>): {
-    get: ConstructorType<any[], EventType>;
-    destroy: DestructorType;
-};
+declare class FromEvent<T> implements EventType<T>, DestroyableType {
+    private $emitter;
+    private $eventName;
+    private $subscribeMethod;
+    private $unsubscribeMethod?;
+    private lastUser;
+    private handler;
+    constructor($emitter: EventType<any>, $eventName: EventType<string>, $subscribeMethod: EventType<string>, $unsubscribeMethod?: EventType<string> | undefined);
+    event(user: EventUserType<T>): this;
+    private parent;
+    destroy(): this;
+}
 
-/**
- * Information to which a function is applied in order
- * to control the value passing process
- * https://silentium-lab.github.io/silentium/#/en/information/applied
- */
-declare function ExecutorApplied<T>(baseEv: EventType<T>, applier: (executor: EventUserType<T>) => EventUserType<T>): EventType<T>;
-
-/**
- * Information whose value is being validated
- * via a predicate; if the predicate returns true, the value
- * can be passed to the output
- * https://silentium-lab.github.io/silentium/#/en/information/filtered
- */
-declare function Filtered<T>(baseEv: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): EventType<T>;
-
-/**
- * A component that receives data from an event and
- * presents it as an information object
- * https://silentium-lab.github.io/silentium/#/en/information/from-event
- */
-declare function FromEvent<T>(emitterEv: EventType<any>, eventNameEv: EventType<string>, subscribeMethodEv: EventType<string>, unsubscribeMethodEv?: EventType<string>): EventTypeDestroyable<T>;
-
-/**
- * Component that gets a value from a promise and
- * presents it as information
- * https://silentium-lab.github.io/silentium/#/en/information/from-promise
- */
-declare function FromPromise<T>(p: Promise<T>, errorOwner?: EventUserType): EventType<T>;
+declare class FromPromise<T> implements EventType<T> {
+    private p;
+    private errorOwner?;
+    constructor(p: Promise<T>, errorOwner?: EventUserType | undefined);
+    event(user: EventUserType<T>): this;
+}
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -116,16 +114,34 @@ declare function FromPromise<T>(p: Promise<T>, errorOwner?: EventUserType): Even
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare function Late<T>(v?: T): SourceType<T>;
+declare class Late<T> implements SourceType<T> {
+    private v?;
+    private lateUser;
+    private notify;
+    constructor(v?: T | undefined);
+    event(user: EventUserType<T>): this;
+    use(value: T): this;
+}
 
-declare function LateShared<T>(value?: T): SourceType<T>;
+declare class LateShared<T> implements SourceType<T> {
+    private $event;
+    constructor(value?: T);
+    event(user: EventUserType<T>): this;
+    use(value: T): this;
+}
 
 /**
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  * https://silentium-lab.github.io/silentium/#/en/information/map
  */
-declare function Map<T, TG>(baseEv: EventType<T[]>, targetEv: ConstructorType<any[], EventType<TG>>): EventType<TG[]>;
+declare class Map<T, TG> implements EventType<TG[]> {
+    private $base;
+    private $target;
+    constructor($base: EventType<T[]>, $target: TransportType<any[], TG>);
+    event(user: EventUserType<TG[]>): this;
+    private parent;
+}
 
 /**
  * Limits the number of values from the information source
@@ -133,22 +149,47 @@ declare function Map<T, TG>(baseEv: EventType<T[]>, targetEv: ConstructorType<an
  * values are delivered from the source
  * https://silentium-lab.github.io/silentium/#/en/information/once
  */
-declare function Once<T>(baseEv: EventType<T>): EventType<T>;
+declare class Once<T> implements EventType<T> {
+    private $base;
+    private isFilled;
+    constructor($base: EventType<T>);
+    event(user: EventUserType<T>): this;
+    private parent;
+}
 
-declare function Primitive<T>(baseEv: EventType<T>, theValue?: T | null): {
+declare class Primitive<T> {
+    private $base;
+    private theValue;
+    private touched;
+    constructor($base: EventType<T>, theValue?: T | null);
+    private ensureTouched;
     [Symbol.toPrimitive](): T | null;
     primitive(): T | null;
     primitiveWithException(): T & ({} | undefined);
-};
+}
 
 /**
  * A component that takes one value at a time and returns
  * an array of all previous values
  * https://silentium-lab.github.io/silentium/#/en/information/sequence
  */
-declare function Sequence<T>(baseEv: EventType<T>): EventType<T[]>;
+declare class Sequence<T> implements EventType<T[]> {
+    private $base;
+    private result;
+    constructor($base: EventType<T>);
+    event(user: EventUserType<T[]>): this;
+    private parent;
+}
 
 declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
+declare function isEvent<T>(o: T): o is T & EventType;
+declare function isDestroyable<T>(o: T): o is T & DestroyableType;
+declare function isUser<T>(o: T): o is T & EventUserType;
+declare function isTransport<T>(o: T): o is T & TransportType;
+
+declare function ensureFunction(v: unknown, label: string): void;
+declare function ensureEvent(v: unknown, label: string): void;
+declare function ensureUser(v: unknown, label: string): void;
 
 /**
  * Helps maintain an owner list allowing different
@@ -172,44 +213,125 @@ declare class OwnerPool<T> {
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-declare function Shared<T>(baseEv: EventType<T>, stateless?: boolean): SourceType<T> & {
-    pool: () => OwnerPool<T>;
-    touched: () => void;
-} & DestroyableType;
+declare class Shared<T> implements SourceType<T> {
+    private $base;
+    private stateless;
+    private ownersPool;
+    private lastValue;
+    private calls;
+    private firstCall;
+    constructor($base: EventType<T>, stateless?: boolean);
+    event(user: EventUserType<T>): this;
+    use(value: T): this;
+    private firstCallUser;
+    touched(): void;
+    pool(): OwnerPool<T>;
+    destroy(): OwnerPool<T>;
+}
 
-declare function SharedSource<T>(baseEv: SourceType<T>, stateless?: boolean): SourceType<T>;
+declare class SharedSource<T> implements SourceType<T> {
+    private $base;
+    private $sharedBase;
+    constructor($base: SourceType<T>, stateless?: boolean);
+    event(user: EventUserType<T>): this;
+    use(value: T): this;
+}
 
 /**
  * Component that receives a data array and yields values one by one
  * https://silentium-lab.github.io/silentium/#/en/information/stream
  */
-declare function Stream<T>(baseEv: EventType<T[]>): EventType<T>;
+declare class Stream<T> implements EventType<T> {
+    private $base;
+    constructor($base: EventType<T[]>);
+    event(user: EventUserType<T>): this;
+    private parent;
+}
 
-declare function Destructor<T>(baseEv: EventType<T>, destructorUser?: EventUserType<DestructorType>): {
-    event: EventType<T>;
-    destroy: () => void;
-};
+declare class Transport<T> implements TransportType<any[], T> {
+    private executor;
+    constructor(executor: ConstructorType<any[], EventType<T>>);
+    of(...args: any[]): EventType<T>;
+}
+
+declare class TransportApplied<T> implements TransportType {
+    private baseTransport;
+    private applier;
+    constructor(baseTransport: TransportType<any[], T>, applier: ConstructorType<[EventType], EventType<T>>);
+    of(...args: unknown[]): EventType<unknown>;
+}
+
+declare class TransportArgs implements TransportType {
+    private baseTransport;
+    private args;
+    private startFromArgIndex;
+    constructor(baseTransport: TransportType<any[], EventType>, args: unknown[], startFromArgIndex?: number);
+    of(...runArgs: unknown[]): EventType<unknown>;
+}
+
+/**
+ * Constructor what can be destroyed
+ */
+declare class TransportDestroyable<T> implements TransportType, DestroyableType {
+    private baseTransport;
+    private destructors;
+    constructor(baseTransport: TransportType<any[], T>);
+    of(...args: unknown[]): EventType<T>;
+    destroy(): this;
+}
+
+declare class DestroyContainer implements DestroyableType {
+    private destructors;
+    add(e: DestroyableType): this;
+    destroy(): this;
+}
+
+type EventExecutor<T> = (user: EventUserType<T>) => void | (() => void);
+declare class Event<T> implements EventType<T>, DestroyableType {
+    private eventExecutor;
+    private mbDestructor;
+    constructor(eventExecutor: EventExecutor<T>);
+    event(user: EventUserType<T>): this;
+    destroy(): this;
+}
 
 /**
  * Create local copy of source what can be destroyed
  */
-declare function Local<T>(baseEv: EventType<T>): EventType<T>;
+declare class Local<T> implements EventType<T>, DestroyableType {
+    private $base;
+    private destroyed;
+    constructor($base: EventType<T>);
+    event(user: EventUserType<T>): this;
+    private user;
+    destroy(): this;
+}
 
-declare function Of<T>(value: T): EventType<T>;
+declare class Of<T> implements EventType<T> {
+    private value;
+    constructor(value: T);
+    event(user: EventUserType<T>): this;
+}
 
-/**
- * Run data with user
- */
-declare function On<T>(event: EventType<T>, user: EventUserType<T>): void | DestructorType;
+declare class User<T> implements EventUserType<T> {
+    private userExecutor;
+    constructor(userExecutor: (v: T) => void);
+    use(value: T): this;
+}
+declare class ParentUser<T> implements EventUserType<T> {
+    private userExecutor;
+    private args;
+    private childUser?;
+    constructor(userExecutor: (v: T, user: EventUserType, ...args: any[]) => void, args?: any[], childUser?: EventUserType<T> | undefined);
+    use(value: T): this;
+    child(user: EventUserType, ...args: any[]): ParentUser<T>;
+}
 
 /**
  * Silent user
  */
-declare function Void(): EventUserType;
+declare class Void implements EventUserType {
+    use(): this;
+}
 
-declare function DestroyContainer(): {
-    add(e: EventType): EventType<unknown>;
-    destroy(): void;
-};
-
-export { All, Any, Applied, Catch, Chain, ConstructorApplied, ConstructorArgs, ConstructorDestroyable, type ConstructorType, DestroyContainer, type DestroyableType, Destructor, type DestructorType, type EventObjectType, type EventType, type EventTypeDestroyable, type EventTypeValue, type EventUserObjectType, type EventUserType, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, On, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Void, isFilled };
+export { All, Any, Applied, Catch, Chain, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, type EventUserType, ExecutorApplied, type ExtractTypesFromArrayS, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentUser, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportArgs, TransportDestroyable, type TransportType, User, Void, ensureEvent, ensureFunction, ensureUser, isDestroyable, isEvent, isFilled, isTransport, isUser };

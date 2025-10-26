@@ -1,199 +1,129 @@
 'use strict';
 
-const isAllFilled = (keysFilled, keysKnown) => {
-  return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
-};
-function All(...theInfos) {
-  const keysKnown = new Set(Object.keys(theInfos));
-  const keysFilled = /* @__PURE__ */ new Set();
-  return function AllEvent(user) {
-    const result = {};
-    Object.entries(theInfos).forEach(([key, info]) => {
-      keysKnown.add(key);
-      info(function AllItemUser(v) {
-        keysFilled.add(key);
-        result[key] = v;
-        if (isAllFilled(keysFilled, keysKnown)) {
-          user(Object.values(result));
-        }
-      });
-    });
-  };
-}
-
-function Any(...infos) {
-  return function AnyEvent(user) {
-    infos.forEach((info) => {
-      info(user);
-    });
-  };
-}
-
-function Applied(baseEv, applier) {
-  return function AppliedEvent(user) {
-    baseEv(function AppliedBaseUser(v) {
-      user(applier(v));
-    });
-  };
-}
-
-function Catch($base, error, errorOriginal) {
-  return (user) => {
-    try {
-      $base(user);
-    } catch (e) {
-      if (e instanceof Error) {
-        error(e.message);
-      } else {
-        error(e);
-      }
-      if (errorOriginal) {
-        errorOriginal(e);
-      }
-    }
-  };
-}
-
-function Chain(...infos) {
-  return function ChainEvent(user) {
-    let lastValue;
-    const handleI = (index) => {
-      const info = infos[index];
-      const nextI = infos[index + 1];
-      info(function ChainItemUser(v) {
-        if (!nextI) {
-          lastValue = v;
-        }
-        if (lastValue) {
-          user(lastValue);
-        }
-        if (nextI && !lastValue) {
-          handleI(index + 1);
-        }
-      });
-    };
-    handleI(0);
-  };
-}
-
-function ConstructorApplied(baseConstructor, applier) {
-  return function LazyAppliedData(...args) {
-    return applier(baseConstructor(...args));
-  };
-}
-
-function ConstructorArgs(baseConstructor, args, startFromArgIndex = 0) {
-  return function ConstructorArgsEvent(...runArgs) {
-    return baseConstructor(...mergeAtIndex(runArgs, args, startFromArgIndex));
-  };
-}
-function mergeAtIndex(arr1, arr2, index) {
-  const result = arr1.slice(0, index);
-  while (result.length < index) result.push(void 0);
-  return result.concat(arr2);
-}
-
-function ConstructorDestroyable(baseConstructor) {
-  const destructors = [];
-  return {
-    get: function ConstructorDestroyableGet(...args) {
-      const inst = baseConstructor(...args);
-      return (user) => {
-        if ("destroy" in inst) {
-          destructors.push(inst.destroy);
-          inst.event(user);
-        } else {
-          const d = inst(user);
-          if (d) {
-            destructors.push(d);
-          }
-        }
-        return () => {
-          destructors.forEach((i) => i());
-        };
-      };
-    },
-    destroy: function ConstructorDestructor() {
-      destructors.forEach((i) => i());
-    }
-  };
-}
-
-function ExecutorApplied(baseEv, applier) {
-  return function ExecutorAppliedEvent(user) {
-    const ExecutorAppliedBaseUser = applier(user);
-    baseEv(ExecutorAppliedBaseUser);
-  };
-}
-
-function Filtered(baseEv, predicate, defaultValue) {
-  return function FilteredEvent(user) {
-    baseEv(function FilteredBaseUser(v) {
-      if (predicate(v)) {
-        user(v);
-      } else if (defaultValue !== void 0) {
-        user(defaultValue);
-      }
-    });
-  };
-}
-
-function FromEvent(emitterEv, eventNameEv, subscribeMethodEv, unsubscribeMethodEv) {
-  let lastU = null;
-  const handler = function FromEventHandler(v) {
-    if (lastU) {
-      lastU(v);
-    }
-  };
-  return function FromEventEvent(user) {
-    lastU = user;
-    const a = All(emitterEv, eventNameEv, subscribeMethodEv);
-    a(function FromEventAllUser([emitter, eventName, subscribe]) {
-      if (!emitter?.[subscribe]) {
-        return;
-      }
-      emitter[subscribe](eventName, handler);
-    });
-    return function FromEventDestructor() {
-      lastU = null;
-      if (!unsubscribeMethodEv) {
-        return;
-      }
-      const a2 = All(emitterEv, eventNameEv, unsubscribeMethodEv);
-      a2(([emitter, eventName, unsubscribe]) => {
-        emitter?.[unsubscribe]?.(eventName, handler);
-      });
-    };
-  };
-}
-
-function FromPromise(p, errorOwner) {
-  return function FromPromiseEvent(user) {
-    p.then(function FromPromiseThen(v) {
-      user(v);
-    }).catch(function FromPromiseCatch(e) {
-      errorOwner?.(e);
-    });
-  };
-}
+var helpers = require('src/helpers');
 
 const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
+function isEvent(o) {
+  return o !== null && typeof o === "object" && "event" in o && typeof o.event === "function";
+}
+function isDestroyable(o) {
+  return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
+}
+function isUser(o) {
+  return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
+}
+function isTransport(o) {
+  return o !== null && typeof o === "object" && "of" in o && typeof o.of === "function";
+}
 
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+function ensureFunction(v, label) {
+  if (typeof v !== "function") {
+    throw new Error(`${label}: is not function`);
+  }
+}
+function ensureEvent(v, label) {
+  if (!isEvent(v)) {
+    throw new Error(`${label}: is not event`);
+  }
+}
+function ensureUser(v, label) {
+  if (!isUser(v)) {
+    throw new Error(`${label}: is not user`);
+  }
+}
+
+var __defProp$j = Object.defineProperty;
+var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, key + "" , value);
+class DestroyContainer {
+  constructor() {
+    __publicField$j(this, "destructors", []);
+  }
+  add(e) {
+    this.destructors.push(e);
+    return this;
+  }
+  destroy() {
+    this.destructors.forEach((d) => d.destroy());
+    return this;
+  }
+}
+
+var __defProp$i = Object.defineProperty;
+var __defNormalProp$i = (obj, key, value) => key in obj ? __defProp$i(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$i = (obj, key, value) => __defNormalProp$i(obj, key + "" , value);
+class Event {
+  constructor(eventExecutor) {
+    this.eventExecutor = eventExecutor;
+    __publicField$i(this, "mbDestructor");
+    ensureFunction(eventExecutor, "Event: eventExecutor");
+  }
+  event(user) {
+    this.mbDestructor = this.eventExecutor(user);
+    return this;
+  }
+  destroy() {
+    if (typeof this.mbDestructor === "function") {
+      this.mbDestructor?.();
+    }
+    return this;
+  }
+}
+
+var __defProp$h = Object.defineProperty;
+var __defNormalProp$h = (obj, key, value) => key in obj ? __defProp$h(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$h = (obj, key, value) => __defNormalProp$h(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Local {
+  constructor($base) {
+    this.$base = $base;
+    __publicField$h(this, "destroyed", false);
+    __publicField$h(this, "user", new ParentUser((v, child) => {
+      if (!this.destroyed) {
+        child.use(v);
+      }
+    }));
+    ensureEvent($base, "Local: $base");
+  }
+  event(user) {
+    this.$base.event(this.user.child(user));
+    return this;
+  }
+  destroy() {
+    return this;
+  }
+}
+
+class Of {
+  constructor(value) {
+    this.value = value;
+  }
+  event(user) {
+    user.use(this.value);
+    return this;
+  }
+}
+
+class Void {
+  use() {
+    return this;
+  }
+}
+
+var __defProp$g = Object.defineProperty;
+var __defNormalProp$g = (obj, key, value) => key in obj ? __defProp$g(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$g = (obj, key, value) => __defNormalProp$g(obj, typeof key !== "symbol" ? key + "" : key, value);
 class OwnerPool {
   constructor() {
-    __publicField(this, "owners");
-    __publicField(this, "innerOwner");
+    __publicField$g(this, "owners");
+    __publicField$g(this, "innerOwner");
     this.owners = /* @__PURE__ */ new Set();
-    this.innerOwner = (v) => {
+    this.innerOwner = new User((v) => {
       this.owners.forEach((g) => {
-        g(v);
+        g.use(v);
       });
-    };
+    });
   }
   owner() {
     return this.innerOwner;
@@ -220,220 +150,545 @@ class OwnerPool {
   }
 }
 
-function Late(v) {
-  let lateUser = null;
-  const notify = (v2) => {
-    if (isFilled(v2) && lateUser) {
-      lateUser(v2);
+class User {
+  constructor(userExecutor) {
+    this.userExecutor = userExecutor;
+    ensureFunction(userExecutor, "User: user executor");
+  }
+  use(value) {
+    this.userExecutor(value);
+    return this;
+  }
+}
+class ParentUser {
+  constructor(userExecutor, args = [], childUser) {
+    this.userExecutor = userExecutor;
+    this.args = args;
+    this.childUser = childUser;
+    ensureFunction(userExecutor, "ParentUser: executor");
+  }
+  use(value) {
+    if (this.childUser === void 0) {
+      throw new Error("no base user");
     }
-  };
-  return {
-    event: function LateEvent(user) {
-      if (lateUser) {
-        throw new Error(
-          "Late component gets new user, when another was already connected!"
-        );
-      }
-      lateUser = user;
-      notify(v);
-    },
-    use: function LateUser(v2) {
-      notify(v2);
-    }
-  };
+    this.userExecutor(value, this.childUser, ...this.args);
+    return this;
+  }
+  child(user, ...args) {
+    return new ParentUser(this.userExecutor, [...this.args, ...args], user);
+  }
 }
 
-function Once(baseEv) {
-  return function OnceEvent(user) {
-    let isFilled = false;
-    baseEv(function OnceBaseUser(v) {
-      if (!isFilled) {
-        isFilled = true;
-        user(v);
+var __defProp$f = Object.defineProperty;
+var __defNormalProp$f = (obj, key, value) => key in obj ? __defProp$f(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$f = (obj, key, value) => __defNormalProp$f(obj, typeof key !== "symbol" ? key + "" : key, value);
+const isAllFilled = (keysFilled, keysKnown) => {
+  return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
+};
+class All {
+  constructor(...events) {
+    __publicField$f(this, "keysKnown");
+    __publicField$f(this, "keysFilled", /* @__PURE__ */ new Set());
+    __publicField$f(this, "$events");
+    __publicField$f(this, "result", {});
+    __publicField$f(this, "user", new ParentUser((v, child, key) => {
+      this.keysFilled.add(key);
+      this.result[key] = v;
+      if (isAllFilled(this.keysFilled, this.keysKnown)) {
+        child.use(Object.values(this.result));
       }
+    }));
+    this.keysKnown = new Set(Object.keys(events));
+    this.$events = events;
+  }
+  event(user) {
+    Object.entries(this.$events).forEach(([key, event]) => {
+      ensureEvent(event, "All: item");
+      this.keysKnown.add(key);
+      event.event(this.user.child(user, key));
     });
-  };
+    return this;
+  }
 }
 
-function Shared(baseEv, stateless = false) {
-  const ownersPool = new OwnerPool();
-  let lastValue;
-  const calls = Late();
-  Once(calls.event)(function SharedCallsUser() {
-    baseEv(function SharedBaseUser(v) {
-      lastValue = v;
-      ownersPool.owner()(v);
+var __defProp$e = Object.defineProperty;
+var __defNormalProp$e = (obj, key, value) => key in obj ? __defProp$e(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$e = (obj, key, value) => __defNormalProp$e(obj, key + "" , value);
+class Any {
+  constructor(...events) {
+    __publicField$e(this, "$events");
+    this.$events = events;
+  }
+  event(user) {
+    this.$events.forEach((event) => {
+      ensureEvent(event, "Any: item");
+      event.event(user);
     });
-  });
-  return {
-    event: function SharedEvent(user) {
-      calls.use(1);
-      if (!stateless && isFilled(lastValue) && !ownersPool.has(user)) {
-        user(lastValue);
+    return this;
+  }
+}
+
+var __defProp$d = Object.defineProperty;
+var __defNormalProp$d = (obj, key, value) => key in obj ? __defProp$d(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$d = (obj, key, value) => __defNormalProp$d(obj, key + "" , value);
+class Applied {
+  constructor($base, applier) {
+    this.$base = $base;
+    this.applier = applier;
+    __publicField$d(this, "user", new ParentUser((v, child) => {
+      child.use(this.applier(v));
+    }));
+    ensureEvent($base, "Applied: base");
+  }
+  event(user) {
+    this.$base.event(this.user.child(user));
+    return this;
+  }
+}
+
+class Catch {
+  constructor($base, errorMessage, errorOriginal) {
+    this.$base = $base;
+    this.errorMessage = errorMessage;
+    this.errorOriginal = errorOriginal;
+    ensureEvent($base, "Catch: base");
+    ensureUser(errorMessage, "Catch: errorMessage");
+    if (errorOriginal !== void 0) {
+      ensureUser(errorOriginal, "Catch: errorOriginal");
+    }
+  }
+  event(user) {
+    try {
+      this.$base.event(user);
+    } catch (e) {
+      if (e instanceof Error) {
+        this.errorMessage.use(e.message);
+      } else {
+        this.errorMessage.use(e);
       }
-      ownersPool.add(user);
-      return () => {
-        ownersPool.remove(user);
-      };
-    },
-    use: function SharedUser(value) {
-      calls.use(1);
-      lastValue = value;
-      ownersPool.owner()(value);
-    },
-    touched() {
-      calls.use(1);
-    },
-    pool() {
-      return ownersPool;
-    },
-    destroy() {
-      ownersPool.destroy();
+      if (this.errorOriginal) {
+        this.errorOriginal.use(e);
+      }
     }
-  };
+    return this;
+  }
 }
 
-function SharedSource(baseEv, stateless = false) {
-  const sharedEv = Shared(baseEv.event, stateless);
-  return {
-    event: function SharedSourceEvent(user) {
-      sharedEv.event(user);
-    },
-    use: function SharedSourceUser(v) {
-      sharedEv.touched();
-      baseEv.use(v);
-    }
-  };
-}
-
-function LateShared(value) {
-  return SharedSource(Late(value));
-}
-
-function Destructor(baseEv, destructorUser) {
-  let mbDestructor;
-  let theUser = null;
-  const destroy = () => {
-    theUser = null;
-    mbDestructor?.();
-  };
-  return {
-    event: function DestructorEvent(user) {
-      theUser = new WeakRef(user);
-      mbDestructor = baseEv((v) => {
-        if (theUser) {
-          theUser.deref()?.(v);
+var __defProp$c = Object.defineProperty;
+var __defNormalProp$c = (obj, key, value) => key in obj ? __defProp$c(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$c = (obj, key, value) => __defNormalProp$c(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Chain {
+  constructor(...events) {
+    __publicField$c(this, "$events");
+    __publicField$c(this, "lastValue");
+    __publicField$c(this, "handleEvent", (index, user) => {
+      const event = this.$events[index];
+      const nextI = this.$events[index + 1];
+      event.event(this.oneEventUser.child(user, nextI, index));
+    });
+    __publicField$c(this, "oneEventUser", new ParentUser(
+      (v, child, nextI, index) => {
+        if (!nextI) {
+          this.lastValue = v;
         }
-      });
-      if (mbDestructor && destructorUser) {
-        destructorUser(destroy);
+        if (this.lastValue) {
+          child.use(this.lastValue);
+        }
+        if (nextI && !this.lastValue) {
+          this.handleEvent(index + 1, child);
+        }
       }
-      return destroy;
-    },
-    destroy
-  };
+    ));
+    this.$events = events;
+  }
+  event(user) {
+    this.handleEvent(0, user);
+    return this;
+  }
 }
 
-function Local(baseEv) {
-  return function LocalEvent(user) {
-    let destroyed = false;
-    const d = baseEv(function LocalBaseUser(v) {
-      if (!destroyed) {
-        user(v);
+class ExecutorApplied {
+  constructor($base, applier) {
+    this.$base = $base;
+    this.applier = applier;
+    ensureEvent($base, "ExecutorApplied: base");
+  }
+  event(user) {
+    const ExecutorAppliedBaseUser = this.applier(user);
+    this.$base.event(ExecutorAppliedBaseUser);
+    return this;
+  }
+}
+
+var __defProp$b = Object.defineProperty;
+var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, key + "" , value);
+class Filtered {
+  constructor($base, predicate, defaultValue) {
+    this.$base = $base;
+    this.predicate = predicate;
+    this.defaultValue = defaultValue;
+    __publicField$b(this, "parent", new ParentUser((v, child) => {
+      if (this.predicate(v)) {
+        child.use(v);
+      } else if (this.defaultValue !== void 0) {
+        child.use(this.defaultValue);
+      }
+    }));
+  }
+  event(user) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
+}
+
+var __defProp$a = Object.defineProperty;
+var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, typeof key !== "symbol" ? key + "" : key, value);
+class FromEvent {
+  constructor($emitter, $eventName, $subscribeMethod, $unsubscribeMethod) {
+    this.$emitter = $emitter;
+    this.$eventName = $eventName;
+    this.$subscribeMethod = $subscribeMethod;
+    this.$unsubscribeMethod = $unsubscribeMethod;
+    __publicField$a(this, "lastUser", null);
+    __publicField$a(this, "handler", (v) => {
+      if (this.lastUser) {
+        this.lastUser.use(v);
       }
     });
-    return () => {
-      destroyed = true;
-      d?.();
-    };
-  };
-}
-
-function Of(value) {
-  return function OfEvent(user) {
-    return user(value);
-  };
-}
-
-function On(event, user) {
-  return event(user);
-}
-
-function Void() {
-  return function VoidEvent() {
-  };
-}
-
-function DestroyContainer() {
-  const destructors = [];
-  return {
-    add(e) {
-      const d = Destructor(e);
-      destructors.push(d.destroy);
-      return d.event;
-    },
-    destroy() {
-      destructors.forEach((d) => d());
+    __publicField$a(this, "parent", new ParentUser(
+      ([emitter, eventName, subscribe], parent) => {
+        this.lastUser = parent;
+        if (!emitter?.[subscribe]) {
+          return;
+        }
+        emitter[subscribe](eventName, this.handler);
+      }
+    ));
+  }
+  event(user) {
+    const a = new All(this.$emitter, this.$eventName, this.$subscribeMethod);
+    a.event(this.parent.child(user));
+    return this;
+  }
+  destroy() {
+    this.lastUser = null;
+    if (!this.$unsubscribeMethod) {
+      return this;
     }
-  };
+    const a = new All(this.$emitter, this.$eventName, this.$unsubscribeMethod);
+    a.event(
+      new User(([emitter, eventName, unsubscribe]) => {
+        emitter?.[unsubscribe]?.(eventName, this.handler);
+      })
+    );
+    return this;
+  }
 }
 
-function Map(baseEv, targetEv) {
-  return function MapData(user) {
-    baseEv(function MapBaseUser(v) {
+class FromPromise {
+  constructor(p, errorOwner) {
+    this.p = p;
+    this.errorOwner = errorOwner;
+  }
+  event(user) {
+    this.p.then(function FromPromiseThen(v) {
+      user.use(v);
+    }).catch((e) => {
+      this.errorOwner?.use(e);
+    });
+    return this;
+  }
+}
+
+var __defProp$9 = Object.defineProperty;
+var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Late {
+  constructor(v) {
+    this.v = v;
+    __publicField$9(this, "lateUser", null);
+    __publicField$9(this, "notify", (v) => {
+      if (isFilled(v) && this.lateUser) {
+        this.lateUser.use(v);
+      }
+    });
+  }
+  event(user) {
+    if (this.lateUser) {
+      throw new Error(
+        "Late component gets new user, when another was already connected!"
+      );
+    }
+    this.lateUser = user;
+    this.notify(this.v);
+    return this;
+  }
+  use(value) {
+    this.notify(value);
+    return this;
+  }
+}
+
+var __defProp$8 = Object.defineProperty;
+var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Once {
+  constructor($base) {
+    this.$base = $base;
+    __publicField$8(this, "isFilled", false);
+    __publicField$8(this, "parent", new ParentUser((v, child) => {
+      if (!this.isFilled) {
+        this.isFilled = true;
+        child.use(v);
+      }
+    }));
+  }
+  event(user) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
+}
+
+var __defProp$7 = Object.defineProperty;
+var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Shared {
+  constructor($base, stateless = false) {
+    this.$base = $base;
+    this.stateless = stateless;
+    __publicField$7(this, "ownersPool", new OwnerPool());
+    __publicField$7(this, "lastValue");
+    __publicField$7(this, "calls", new Late());
+    __publicField$7(this, "firstCall", new Once(this.calls).event(
+      new User(() => {
+        this.$base.event(this.firstCallUser);
+      })
+    ));
+    __publicField$7(this, "firstCallUser", new User((v) => {
+      this.lastValue = v;
+      this.ownersPool.owner().use(v);
+    }));
+  }
+  event(user) {
+    this.calls.use(1);
+    if (!this.stateless && isFilled(this.lastValue) && !this.ownersPool.has(user)) {
+      user.use(this.lastValue);
+    }
+    this.ownersPool.add(user);
+    return this;
+  }
+  use(value) {
+    this.calls.use(1);
+    this.lastValue = value;
+    this.ownersPool.owner().use(value);
+    return this;
+  }
+  touched() {
+    this.calls.use(1);
+  }
+  pool() {
+    return this.ownersPool;
+  }
+  destroy() {
+    return this.ownersPool.destroy();
+  }
+}
+
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
+class SharedSource {
+  constructor($base, stateless = false) {
+    this.$base = $base;
+    __publicField$6(this, "$sharedBase");
+    this.$sharedBase = new Shared(this.$base, stateless);
+  }
+  event(user) {
+    this.$sharedBase.event(user);
+    return this;
+  }
+  use(value) {
+    this.$sharedBase.touched();
+    this.$base.use(value);
+    return this;
+  }
+}
+
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
+class LateShared {
+  constructor(value) {
+    __publicField$5(this, "$event");
+    this.$event = new SharedSource(new Late(value));
+  }
+  event(user) {
+    this.$event.event(user);
+    return this;
+  }
+  use(value) {
+    this.$event.use(value);
+    return this;
+  }
+}
+
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+class Map {
+  constructor($base, $target) {
+    this.$base = $base;
+    this.$target = $target;
+    __publicField$4(this, "parent", new ParentUser((v, child) => {
       const infos = [];
       v.forEach((val) => {
         let valInfo = val;
-        if (typeof valInfo !== "function") {
-          valInfo = Of(valInfo);
+        if (!helpers.isEvent(valInfo)) {
+          valInfo = new Of(valInfo);
         }
-        const info = targetEv(valInfo);
+        const info = this.$target.of(valInfo);
         infos.push(info);
       });
-      const allI = All(...infos);
-      allI(user);
-    });
-  };
+      const allI = new All(...infos);
+      allI.event(child);
+    }));
+  }
+  event(user) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
 }
 
-function Primitive(baseEv, theValue = null) {
-  baseEv(function PrimitiveBaseUser(v) {
-    theValue = v;
-  });
-  return {
-    [Symbol.toPrimitive]() {
-      return theValue;
-    },
-    primitive() {
-      return theValue;
-    },
-    primitiveWithException() {
-      if (theValue === null) {
-        throw new Error("Primitive value is null");
-      }
-      return theValue;
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+class Primitive {
+  constructor($base, theValue = null) {
+    this.$base = $base;
+    this.theValue = theValue;
+    __publicField$3(this, "touched", false);
+  }
+  ensureTouched() {
+    if (!this.touched) {
+      this.$base.event(
+        new User((v) => {
+          this.theValue = v;
+        })
+      );
     }
-  };
+    this.touched = true;
+  }
+  [Symbol.toPrimitive]() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitive() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitiveWithException() {
+    this.ensureTouched();
+    if (this.theValue === null) {
+      throw new Error("Primitive value is null");
+    }
+    return this.theValue;
+  }
 }
 
-function Sequence(baseEv) {
-  return function SequenceEvent(user) {
-    const result = [];
-    baseEv(function SequenceBaseUser(v) {
-      result.push(v);
-      user(result);
-    });
-  };
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Sequence {
+  constructor($base) {
+    this.$base = $base;
+    __publicField$2(this, "result", []);
+    __publicField$2(this, "parent", new ParentUser((v, child) => {
+      this.result.push(v);
+      child.use(this.result);
+    }));
+  }
+  event(user) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
 }
 
-function Stream(baseEv) {
-  return function StreamEvent(user) {
-    baseEv(function StreamBaseUser(v) {
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
+class Stream {
+  constructor($base) {
+    this.$base = $base;
+    __publicField$1(this, "parent", new ParentUser((v, child) => {
       v.forEach((cv) => {
-        user(cv);
+        child.use(cv);
       });
-    });
-  };
+    }));
+  }
+  event(user) {
+    this.$base.event(this.parent.child(user));
+    return this;
+  }
+}
+
+class Transport {
+  constructor(executor) {
+    this.executor = executor;
+  }
+  of(...args) {
+    return this.executor(...args);
+  }
+}
+
+class TransportApplied {
+  constructor(baseTransport, applier) {
+    this.baseTransport = baseTransport;
+    this.applier = applier;
+  }
+  of(...args) {
+    return this.applier(this.baseTransport.of(...args));
+  }
+}
+
+class TransportArgs {
+  constructor(baseTransport, args, startFromArgIndex = 0) {
+    this.baseTransport = baseTransport;
+    this.args = args;
+    this.startFromArgIndex = startFromArgIndex;
+  }
+  of(...runArgs) {
+    return this.baseTransport.of(
+      ...mergeAtIndex(runArgs, this.args, this.startFromArgIndex)
+    );
+  }
+}
+function mergeAtIndex(arr1, arr2, index) {
+  const result = arr1.slice(0, index);
+  while (result.length < index) result.push(void 0);
+  return result.concat(arr2);
+}
+
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
+class TransportDestroyable {
+  constructor(baseTransport) {
+    this.baseTransport = baseTransport;
+    __publicField(this, "destructors", []);
+  }
+  of(...args) {
+    const inst = this.baseTransport.of(...args);
+    if (isDestroyable(inst)) {
+      this.destructors.push(inst);
+    }
+    return inst;
+  }
+  destroy() {
+    this.destructors.forEach((i) => i.destroy());
+    return this;
+  }
 }
 
 exports.All = All;
@@ -441,11 +696,8 @@ exports.Any = Any;
 exports.Applied = Applied;
 exports.Catch = Catch;
 exports.Chain = Chain;
-exports.ConstructorApplied = ConstructorApplied;
-exports.ConstructorArgs = ConstructorArgs;
-exports.ConstructorDestroyable = ConstructorDestroyable;
 exports.DestroyContainer = DestroyContainer;
-exports.Destructor = Destructor;
+exports.Event = Event;
 exports.ExecutorApplied = ExecutorApplied;
 exports.Filtered = Filtered;
 exports.FromEvent = FromEvent;
@@ -455,14 +707,26 @@ exports.LateShared = LateShared;
 exports.Local = Local;
 exports.Map = Map;
 exports.Of = Of;
-exports.On = On;
 exports.Once = Once;
 exports.OwnerPool = OwnerPool;
+exports.ParentUser = ParentUser;
 exports.Primitive = Primitive;
 exports.Sequence = Sequence;
 exports.Shared = Shared;
 exports.SharedSource = SharedSource;
 exports.Stream = Stream;
+exports.Transport = Transport;
+exports.TransportApplied = TransportApplied;
+exports.TransportArgs = TransportArgs;
+exports.TransportDestroyable = TransportDestroyable;
+exports.User = User;
 exports.Void = Void;
+exports.ensureEvent = ensureEvent;
+exports.ensureFunction = ensureFunction;
+exports.ensureUser = ensureUser;
+exports.isDestroyable = isDestroyable;
+exports.isEvent = isEvent;
 exports.isFilled = isFilled;
+exports.isTransport = isTransport;
+exports.isUser = isUser;
 //# sourceMappingURL=silentium.cjs.map
