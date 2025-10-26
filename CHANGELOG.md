@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.108](https://github.com/silentium-lab/silentium/compare/v0.0.107...v0.0.108) (2025-10-26)
+
+
+### Bug Fixes
+
+* **main:** moving to oop ([ae2c947](https://github.com/silentium-lab/silentium/commit/ae2c947e09d1f63d1fa15d5aa9f38f35b192740a))
+* **main:** oop ([db860a4](https://github.com/silentium-lab/silentium/commit/db860a4542d35820cfb8ee7f4d3ad93ececee0cb))
+* **main:** oOP version ([9758168](https://github.com/silentium-lab/silentium/commit/9758168cdc15ebbef3d19436835b18971467b106))
+
 ### [0.0.107](https://github.com/silentium-lab/silentium/compare/v0.0.106...v0.0.107) (2025-10-21)
 
 
