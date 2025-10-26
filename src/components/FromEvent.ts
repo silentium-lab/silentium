@@ -1,4 +1,4 @@
-import { ParentUser, User } from "src/base/User";
+import { ParentUser, User } from "../base/User";
 import { EventType, EventUserType } from "../types";
 import { DestroyableType } from "../types/EventType";
 import { All } from "./All";

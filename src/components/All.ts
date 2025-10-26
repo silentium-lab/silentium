@@ -1,4 +1,5 @@
-import { ParentUser } from "src/base/User";
+import { ParentUser } from "../base/User";
+import { ensureEvent } from "../helpers";
 import { EventType, EventUserType } from "../types";
 
 type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
@@ -16,18 +17,19 @@ export class All<const T extends EventType[]>
 {
   private keysKnown: Set<string>;
   private keysFilled = new Set<string>();
-  private $infos: T;
+  private $events: T;
   private result: Record<string, unknown> = {};
 
-  public constructor(...theInfos: T) {
-    this.keysKnown = new Set<string>(Object.keys(theInfos));
-    this.$infos = theInfos;
+  public constructor(...events: T) {
+    this.keysKnown = new Set<string>(Object.keys(events));
+    this.$events = events;
   }
 
   public event(user: EventUserType<ExtractTypesFromArrayS<T>>): this {
-    Object.entries(this.$infos).forEach(([key, info]) => {
+    Object.entries(this.$events).forEach(([key, event]) => {
+      ensureEvent(event, "All: item");
       this.keysKnown.add(key);
-      info.event(this.user.child(user, key));
+      event.event(this.user.child(user, key));
     });
     return this;
   }

@@ -3,23 +3,24 @@ import { describe, expect, test } from "vitest";
 import { Late } from "../components/Late";
 import { Diagram } from "../testing";
 import { ExecutorApplied } from "./ExecutorApplied";
+import { User } from "../base";
 
 describe("ExecutorApplied.test", () => {
   test("fn applied to value transferring", () => {
     const d = Diagram();
-    const l = Late<number>(1);
+    const l = new Late<number>(1);
 
     let applierWasCalled = 0;
-    const infoLimited = ExecutorApplied(l.event, (owner) => {
-      return (v) => {
+    const infoLimited = new ExecutorApplied(l, (u) => {
+      return new User((v) => {
         if (applierWasCalled < 2) {
-          owner(v);
+          u.use(v);
         }
         applierWasCalled += 1;
-      };
+      });
     });
 
-    Applied(infoLimited, String)(d.user);
+    new Applied(infoLimited, String).event(d.user);
 
     l.use(2);
     l.use(3);

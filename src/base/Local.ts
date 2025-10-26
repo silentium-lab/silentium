@@ -1,3 +1,4 @@
+import { ensureEvent } from "../helpers";
 import { ParentUser } from "../base/User";
 import { DestroyableType, EventType, EventUserType } from "../types";
 
@@ -7,7 +8,9 @@ import { DestroyableType, EventType, EventUserType } from "../types";
 export class Local<T> implements EventType<T>, DestroyableType {
   private destroyed = false;
 
-  public constructor(private $base: EventType<T>) {}
+  public constructor(private $base: EventType<T>) {
+    ensureEvent($base, "Local: $base");
+  }
 
   public event(user: EventUserType<T>): this {
     this.$base.event(this.user.child(user));

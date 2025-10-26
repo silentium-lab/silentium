@@ -1,23 +1,24 @@
-import { EventType, SourceType } from "../types";
 import { Shared } from "../components/Shared";
+import { EventUserType, SourceType } from "../types";
 
-export function SharedSource<T>(
-  baseEv: SourceType<T>,
-  stateless = false,
-): SourceType<T> {
-  const sharedEv = Shared(baseEv.event, stateless);
+export class SharedSource<T> implements SourceType<T> {
+  private $sharedBase: Shared<T>;
 
-  return {
-    event: function SharedSourceEvent(user) {
-      sharedEv.event(user);
-    },
-    use: function SharedSourceUser(v) {
-      sharedEv.touched();
-      baseEv.use(v);
-    },
-  };
-}
+  public constructor(
+    private $base: SourceType<T>,
+    stateless = false,
+  ) {
+    this.$sharedBase = new Shared(this.$base, stateless);
+  }
 
-export class SharedSource<T> implements EventType<T> {
+  public event(user: EventUserType<T>) {
+    this.$sharedBase.event(user);
+    return this;
+  }
 
+  public use(value: T) {
+    this.$sharedBase.touched();
+    this.$base.use(value);
+    return this;
+  }
 }

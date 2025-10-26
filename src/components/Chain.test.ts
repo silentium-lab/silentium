@@ -6,22 +6,22 @@ import { Late } from "./Late";
 describe("Chain.test", () => {
   test("event connected to over events", () => {
     const d = Diagram();
-    const triggerEv = Late<string>("immediate");
-    const valueEv = Late<string>("the_value");
+    const $trigger = new Late<string>("immediate");
+    const $value = new Late<string>("the_value");
 
-    const chainEv = Chain(triggerEv.event, valueEv.event);
-    chainEv(d.user);
+    const $chain = new Chain($trigger, $value);
+    $chain.event(d.user);
 
     expect(d.toString()).toBe("the_value");
 
-    triggerEv.use("done");
+    $trigger.use("done");
 
     expect(d.toString()).toBe("the_value|the_value");
 
-    valueEv.use("new_value");
+    $value.use("new_value");
     expect(d.toString()).toBe("the_value|the_value|new_value");
 
-    triggerEv.use("done2");
+    $trigger.use("done2");
 
     expect(d.toString()).toBe("the_value|the_value|new_value|new_value");
   });

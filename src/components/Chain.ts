@@ -1,6 +1,6 @@
 import { EventTypeValue } from "../types/EventType";
 import { EventType, EventUserType } from "../types";
-import { ParentUser } from "src/base/User";
+import { ParentUser } from "../base/User";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
@@ -15,7 +15,7 @@ export class Chain<T extends EventType[]>
     this.$events = events;
   }
 
-  public event(user: EventUserType<EventTypeValue<Last<T>>>): this {
+  public event(user: EventUserType<EventTypeValue<Last<T>>>) {
     this.handleEvent(0, user);
     return this;
   }

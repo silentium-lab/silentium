@@ -1,16 +1,19 @@
-import { Void } from "../base";
+import { Event, User, Void } from "../base";
 import { describe, expect, test, vi } from "vitest";
 import { Catch } from "../components/Catch";
 
 describe("Catch.test", () => {
   test("event with applied function", () => {
-    const g = vi.fn();
-    const exceptionEvent = Catch(() => {
-      throw new Error("Occured!");
-    }, g);
+    const errorUserExecutor = vi.fn();
+    const exceptionEvent = new Catch(
+      new Event(() => {
+        throw new Error("Occured!");
+      }),
+      new User(errorUserExecutor),
+    );
 
-    exceptionEvent(Void);
+    exceptionEvent.event(new Void());
 
-    expect(g).toHaveBeenLastCalledWith("Occured!");
+    expect(errorUserExecutor).toHaveBeenLastCalledWith("Occured!");
   });
 });

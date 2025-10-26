@@ -1,4 +1,5 @@
-import { DestroyableType, isDestroyable, TransportType } from "../types";
+import { isDestroyable } from "../helpers";
+import { DestroyableType, TransportType } from "../types";
 
 /**
  * Constructor what can be destroyed

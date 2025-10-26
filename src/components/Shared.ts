@@ -1,55 +1,63 @@
-import { EventType, DestroyableType, SourceType } from "../types";
-import { isFilled, OwnerPool } from "../helpers";
+import { User } from "../base";
 import { Late } from "../components/Late";
 import { Once } from "../components/Once";
+import { isFilled, OwnerPool } from "../helpers";
+import { EventType, EventUserType, SourceType } from "../types";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
  * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export function Shared<T>(
-  baseEv: EventType<T>,
-  stateless = false,
-): SourceType<T> & {
-  pool: () => OwnerPool<T>;
-  touched: () => void;
-} & DestroyableType {
-  const ownersPool = new OwnerPool<T>();
-  let lastValue: T | undefined;
+export class Shared<T> implements SourceType<T> {
+  private ownersPool = new OwnerPool<T>();
+  private lastValue: T | undefined;
+  private calls = new Late();
+  private firstCall = new Once(this.calls).event(
+    new User(() => {
+      this.$base.event(this.firstCallUser);
+    }),
+  );
 
-  const calls = Late();
-  Once(calls.event)(function SharedCallsUser() {
-    baseEv(function SharedBaseUser(v) {
-      lastValue = v;
-      ownersPool.owner()(v);
-    });
+  public constructor(
+    private $base: EventType<T>,
+    private stateless = false,
+  ) {}
+
+  public event(user: EventUserType<T>) {
+    this.calls.use(1);
+    if (
+      !this.stateless &&
+      isFilled(this.lastValue) &&
+      !this.ownersPool.has(user)
+    ) {
+      user.use(this.lastValue);
+    }
+    this.ownersPool.add(user);
+    return this;
+  }
+
+  public use(value: T) {
+    this.calls.use(1);
+    this.lastValue = value;
+    this.ownersPool.owner().use(value);
+    return this;
+  }
+
+  private firstCallUser = new User<T>((v: T) => {
+    this.lastValue = v;
+    this.ownersPool.owner().use(v);
   });
 
-  return {
-    event: function SharedEvent(user) {
-      calls.use(1);
-      if (!stateless && isFilled(lastValue) && !ownersPool.has(user)) {
-        user(lastValue);
-      }
-      ownersPool.add(user);
-      return () => {
-        ownersPool.remove(user);
-      };
-    },
-    use: function SharedUser(value: T) {
-      calls.use(1);
-      lastValue = value;
-      ownersPool.owner()(value);
-    },
-    touched() {
-      calls.use(1);
-    },
-    pool() {
-      return ownersPool;
-    },
-    destroy() {
-      ownersPool.destroy();
-    },
-  };
+  public touched() {
+    this.calls.use(1);
+  }
+
+  public pool() {
+    return this.ownersPool;
+  }
+
+  public destroy() {
+    return this.ownersPool.destroy();
+  }
 }

@@ -1,3 +1,4 @@
+import { ensureEvent } from "../helpers";
 import { ParentUser } from "../base/User";
 import { ConstructorType, EventType, EventUserType } from "../types";
 
@@ -5,7 +6,9 @@ export class Applied<T, R> implements EventType<R> {
   public constructor(
     private $base: EventType<T>,
     private applier: ConstructorType<[T], R>,
-  ) {}
+  ) {
+    ensureEvent($base, "Applied: base");
+  }
 
   public event(user: EventUserType<R>) {
     this.$base.event(this.user.child(user));

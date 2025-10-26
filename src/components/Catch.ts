@@ -1,3 +1,4 @@
+import { ensureEvent, ensureUser } from "../helpers";
 import { EventType, EventUserType } from "../types";
 
 export class Catch<T> implements EventType<T> {
@@ -5,7 +6,13 @@ export class Catch<T> implements EventType<T> {
     private $base: EventType<T>,
     private errorMessage: EventUserType,
     private errorOriginal?: EventUserType,
-  ) {}
+  ) {
+    ensureEvent($base, "Catch: base");
+    ensureUser(errorMessage, "Catch: errorMessage");
+    if (errorOriginal !== undefined) {
+      ensureUser(errorOriginal, "Catch: errorOriginal");
+    }
+  }
 
   public event(user: EventUserType<T>) {
     try {

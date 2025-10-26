@@ -3,19 +3,20 @@ import { Late } from "../components/Late";
 import { SharedSource } from "../components/SharedSource";
 import { describe, expect, test, vi } from "vitest";
 import { Applied } from "../components/Applied";
+import { User } from "../base";
 
 describe("SharedSource.test", () => {
   test("event with many users", () => {
-    const s = SharedSource(Late<number>(1), true);
+    const s = new SharedSource(new Late<number>(1), true);
 
     const g = vi.fn();
-    s.event(g);
+    s.event(new User(g));
     s.use(1);
 
     expect(g).toBeCalledWith(1);
 
     const g2 = vi.fn();
-    s.event(g2);
+    s.event(new User(g2));
     expect(g2).not.toHaveBeenCalled();
 
     s.use(2);
@@ -26,9 +27,9 @@ describe("SharedSource.test", () => {
 
   test("with diagram", () => {
     const d = Diagram();
-    const s = SharedSource(Late<number>(), true);
+    const s = new SharedSource(new Late<number>(), true);
 
-    Applied(s.event, String)(d.user);
+    new Applied(s, String).event(d.user);
 
     s.use(1);
 

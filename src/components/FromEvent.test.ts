@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of } from "../base";
+import { Of, User } from "../base";
 import { FromEvent } from "./FromEvent";
 
 describe("FromEvent.test", () => {
@@ -13,14 +13,19 @@ describe("FromEvent.test", () => {
         unsubscribed = true;
       },
     };
-    const i = FromEvent(Of(emitter), Of("click"), Of("on"), Of("off"));
+    const i = new FromEvent(
+      new Of(emitter),
+      new Of("click"),
+      new Of("on"),
+      new Of("off"),
+    );
 
     const o = vi.fn();
-    const destroy = i(o);
+    i.event(new User(o));
 
     expect(o).toBeCalledWith("click123");
 
-    destroy();
+    i.destroy();
     expect(unsubscribed).toBe(true);
   });
 });
