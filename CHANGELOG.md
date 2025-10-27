@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.109](https://github.com/silentium-lab/silentium/compare/v0.0.108...v0.0.109) (2025-10-27)
+
+
+### Bug Fixes
+
+* **main:** event and transport ([d26ac77](https://github.com/silentium-lab/silentium/commit/d26ac774503e9b137f2d07ad302c5db9e3b8d81f))
+* **main:** fn wrappers ([33bd71b](https://github.com/silentium-lab/silentium/commit/33bd71b50ba849de7bb71083d869570ca9a414a0))
+
 ### [0.0.108](https://github.com/silentium-lab/silentium/compare/v0.0.107...v0.0.108) (2025-10-26)
 
 
