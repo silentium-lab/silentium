@@ -2,17 +2,17 @@ import { describe, expect, test, vi } from "vitest";
 import { Applied } from "./Applied";
 import { LateShared } from "./LateShared";
 import { Primitive } from "./Primitive";
-import { User } from "../base";
+import { Transport } from "../base";
 
 describe("PrimitiveSource.test", () => {
   test("primitive reference change", () => {
-    const l = new LateShared(1);
-    const p = new Primitive(l);
-    const l2 = new LateShared(2);
+    const l = LateShared(1);
+    const p = Primitive(l);
+    const l2 = LateShared(2);
 
-    const r = new Applied(l2, (a) => ["ev", p, a].join("_"));
+    const r = Applied(l2, (a) => ["ev", p, a].join("_"));
     const g = vi.fn();
-    r.event(new User(g));
+    r.event(Transport(g));
 
     expect(g).toHaveBeenLastCalledWith("ev_1_2");
 

@@ -1,9 +1,7 @@
-import { EventType } from "../types/EventType";
-
 /**
- * A function type that takes a value as an argument
- * and returns a specific value
+ * Type representing the process
+ * of passing a value somewhere
  */
-export type TransportType<P extends unknown[] = unknown[], T = unknown> = {
-  of(...args: P): EventType<T>;
-};
+export interface TransportType<T = unknown, R = null> {
+  use(value: T): R extends null ? this : R;
+}

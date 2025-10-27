@@ -1,8 +1,12 @@
 import { ensureFunction } from "../helpers";
-import { DestroyableType, EventType, EventUserType } from "../types";
+import { DestroyableType, EventType, TransportType } from "../types";
 
-type EventExecutor<T> = (user: EventUserType<T>) => void | (() => void);
+type EventExecutor<T> = (transport: TransportType<T>) => void | (() => void);
 
+/**
+ * An event created from an executor function.
+ * The executor function can return an event destruction function.
+ */
 export function Event<T>(eventExecutor: EventExecutor<T>) {
   return new TheEvent<T>(eventExecutor);
 }
@@ -14,8 +18,8 @@ class TheEvent<T> implements EventType<T>, DestroyableType {
     ensureFunction(eventExecutor, "Event: eventExecutor");
   }
 
-  public event(user: EventUserType<T>) {
-    this.mbDestructor = this.eventExecutor(user);
+  public event(transport: TransportType<T>) {
+    this.mbDestructor = this.eventExecutor(transport);
     return this;
   }
 

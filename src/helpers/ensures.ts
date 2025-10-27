@@ -1,4 +1,4 @@
-import { isEvent, isUser } from "../helpers/guards";
+import { isEvent, isTransport } from "../helpers/guards";
 
 export function ensureFunction(v: unknown, label: string) {
   if (typeof v !== "function") {
@@ -12,8 +12,8 @@ export function ensureEvent(v: unknown, label: string) {
   }
 }
 
-export function ensureUser(v: unknown, label: string) {
-  if (!isUser(v)) {
-    throw new Error(`${label}: is not user`);
+export function ensureTransport(v: unknown, label: string) {
+  if (!isTransport(v)) {
+    throw new Error(`${label}: is not transport`);
   }
 }

@@ -1,7 +1,11 @@
 import { ensureEvent } from "../helpers";
-import { ParentUser } from "../base/User";
-import { ConstructorType, EventType, EventUserType } from "../types";
+import { ParentTransport } from "../base/Transport";
+import { ConstructorType, EventType, TransportType } from "../types";
 
+/**
+ * An event that applies a function
+ * to the value of the base event
+ */
 export function Applied<T, R>(
   $base: EventType<T>,
   applier: ConstructorType<[T], R>,
@@ -9,7 +13,7 @@ export function Applied<T, R>(
   return new TheApplied<T, R>($base, applier);
 }
 
-export class TheApplied<T, R> implements EventType<R> {
+class TheApplied<T, R> implements EventType<R> {
   public constructor(
     private $base: EventType<T>,
     private applier: ConstructorType<[T], R>,
@@ -17,12 +21,12 @@ export class TheApplied<T, R> implements EventType<R> {
     ensureEvent($base, "Applied: base");
   }
 
-  public event(user: EventUserType<R>) {
-    this.$base.event(this.user.child(user));
+  public event(transport: TransportType<R>) {
+    this.$base.event(this.transport.child(transport));
     return this;
   }
 
-  private user = new ParentUser((v: T, child) => {
+  private transport = new ParentTransport((v: T, child) => {
     child.use(this.applier(v));
   });
 }

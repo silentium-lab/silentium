@@ -1,7 +1,18 @@
-import { User } from "../base";
+import { Transport } from "../base";
 import { EventType } from "../types";
 
-export class Primitive<T> {
+/**
+ * Helps represent an event as a primitive type, which can be useful
+ * for cases when you need to always have a reference to the current value
+ * without updating the shared value when the current one changes.
+ * For example, this could be used when passing an authorization token.
+ * It can also be useful for testing or logging purposes.
+ */
+export function Primitive<T>($base: EventType<T>, theValue: T | null = null) {
+  return new ThePrimitive<T>($base, theValue);
+}
+
+class ThePrimitive<T> {
   private touched = false;
 
   public constructor(
@@ -12,7 +23,7 @@ export class Primitive<T> {
   private ensureTouched() {
     if (!this.touched) {
       this.$base.event(
-        new User((v) => {
+        Transport((v) => {
           this.theValue = v;
         }),
       );

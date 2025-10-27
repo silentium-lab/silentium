@@ -1,16 +1,26 @@
 import { isDestroyable } from "../helpers";
-import { DestroyableType, TransportType } from "../types";
+import { DestroyableType, EventType, TransportType } from "../types";
+
+export function TransportDestroyable<T>(
+  baseTransport: TransportType<any[], EventType<T>>,
+) {
+  return new TheTransportDestroyable<T>(baseTransport);
+}
 
 /**
  * Constructor what can be destroyed
  */
-export class TransportDestroyable<T> implements TransportType, DestroyableType {
+class TheTransportDestroyable<T>
+  implements TransportType<unknown[], EventType>, DestroyableType
+{
   private destructors: DestroyableType[] = [];
 
-  public constructor(private baseTransport: TransportType<any[], T>) {}
+  public constructor(
+    private baseTransport: TransportType<any[], EventType<T>>,
+  ) {}
 
-  public of(...args: unknown[]) {
-    const inst = this.baseTransport.of(...args);
+  public use(args: unknown[]) {
+    const inst = this.baseTransport.use(args);
     if (isDestroyable(inst)) {
       this.destructors.push(inst);
     }

@@ -1,15 +1,25 @@
 import { EventType, TransportType } from "../types";
 
-export class TransportArgs implements TransportType {
+export function TransportArgs(
+  baseTransport: TransportType<any[], EventType>,
+  args: unknown[],
+  startFromArgIndex: number = 0,
+) {
+  return new TheTransportArgs(baseTransport, args, startFromArgIndex);
+}
+
+export class TheTransportArgs
+  implements TransportType<unknown[], EventType<unknown>>
+{
   public constructor(
     private baseTransport: TransportType<any[], EventType>,
     private args: unknown[],
     private startFromArgIndex: number = 0,
   ) {}
 
-  public of(...runArgs: unknown[]): EventType<unknown> {
-    return this.baseTransport.of(
-      ...mergeAtIndex(runArgs, this.args, this.startFromArgIndex),
+  public use(runArgs: unknown[]): EventType<unknown> {
+    return this.baseTransport.use(
+      mergeAtIndex(runArgs, this.args, this.startFromArgIndex),
     );
   }
 }

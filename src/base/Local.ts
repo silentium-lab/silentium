@@ -1,6 +1,6 @@
 import { ensureEvent } from "../helpers";
-import { ParentUser } from "../base/User";
-import { DestroyableType, EventType, EventUserType } from "../types";
+import { ParentTransport } from "./Transport";
+import { DestroyableType, EventType, TransportType } from "../types";
 
 /**
  * Create local copy of source what can be destroyed
@@ -16,12 +16,12 @@ class TheLocal<T> implements EventType<T>, DestroyableType {
     ensureEvent($base, "Local: $base");
   }
 
-  public event(user: EventUserType<T>): this {
-    this.$base.event(this.user.child(user));
+  public event(transport: TransportType<T>): this {
+    this.$base.event(this.transport.child(transport));
     return this;
   }
 
-  private user = new ParentUser((v: T, child: EventUserType<T>) => {
+  private transport = new ParentTransport((v: T, child: TransportType<T>) => {
     if (!this.destroyed) {
       child.use(v);
     }

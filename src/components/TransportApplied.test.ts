@@ -1,21 +1,20 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of, User } from "../base";
+import { Of, Transport, TransportEvent } from "../base";
 import { Chain } from "./Chain";
 import { Late } from "./Late";
 import { TransportApplied } from "../components/TransportApplied";
-import { Transport } from "../components/Transport";
 
-describe("ConstructorApplied.test", () => {
+describe("TransportApplied.test", () => {
   test("apply fn to result", () => {
-    const l = new Late();
-    const lazyInf = new TransportApplied(
-      new Transport((v) => v),
-      (i) => new Chain(l, i),
+    const l = Late();
+    const lazyInf = TransportApplied(
+      TransportEvent((v) => v),
+      (i) => Chain(l, i),
     );
-    const inf = lazyInf.of(new Of(1));
+    const inf = lazyInf.use(Of(1));
 
     const g = vi.fn();
-    inf.event(new User(g));
+    inf.event(Transport(g));
 
     expect(g).not.toHaveBeenCalled();
 

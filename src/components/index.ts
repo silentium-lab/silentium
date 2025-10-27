@@ -16,7 +16,6 @@ export * from "./Sequence";
 export * from "./Shared";
 export * from "./SharedSource";
 export * from "./Stream";
-export * from "./Transport";
 export * from "./TransportApplied";
 export * from "./TransportArgs";
 export * from "./TransportDestroyable";

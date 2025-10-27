@@ -1,5 +1,5 @@
 import { isFilled } from "../helpers";
-import { EventUserType, SourceType } from "../types";
+import { TransportType, SourceType } from "../types";
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -7,23 +7,27 @@ import { EventUserType, SourceType } from "../types";
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-export class Late<T> implements SourceType<T> {
-  private lateUser: EventUserType<T> | null = null;
+export function Late<T>(v?: T) {
+  return new TheLate<T>(v);
+}
+
+class TheLate<T> implements SourceType<T> {
+  private lateTransport: TransportType<T> | null = null;
   private notify = (v?: T) => {
-    if (isFilled(v) && this.lateUser) {
-      this.lateUser.use(v);
+    if (isFilled(v) && this.lateTransport) {
+      this.lateTransport.use(v);
     }
   };
 
   public constructor(private v?: T) {}
 
-  public event(user: EventUserType<T>): this {
-    if (this.lateUser) {
+  public event(transport: TransportType<T>): this {
+    if (this.lateTransport) {
       throw new Error(
-        "Late component gets new user, when another was already connected!",
+        "Late component gets new transport, when another was already connected!",
       );
     }
-    this.lateUser = user;
+    this.lateTransport = transport;
     this.notify(this.v);
     return this;
   }

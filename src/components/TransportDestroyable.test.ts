@@ -1,15 +1,14 @@
 import { describe, expect, test } from "vitest";
-import { Void } from "../base";
-import { Transport } from "../components/Transport";
+import { TransportEvent, Void } from "../base";
 import { TransportDestroyable } from "../components/TransportDestroyable";
 
 describe("TransportDestroyable.test", () => {
   test("destroy base constructor", () => {
     let isDestroyed = false;
-    const p = new TransportDestroyable(
-      new Transport(() => ({
-        event(u) {
-          u.use(123);
+    const p = TransportDestroyable(
+      TransportEvent(() => ({
+        event(transport) {
+          transport.use([123]);
           return this;
         },
         destroy() {
@@ -18,9 +17,9 @@ describe("TransportDestroyable.test", () => {
         },
       })),
     );
-    const inst = p.of();
+    const inst = p.use([]);
 
-    inst.event(new Void());
+    inst.event(Void());
 
     p.destroy();
 

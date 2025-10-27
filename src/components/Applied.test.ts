@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of, User } from "../base";
+import { Of, Transport } from "../base";
 import { Applied } from "./Applied";
 
 describe("Applied.test", () => {
@@ -8,7 +8,7 @@ describe("Applied.test", () => {
     const infoDouble = Applied(info, (x) => x * 2);
 
     const g = vi.fn();
-    infoDouble.event(User(g));
+    infoDouble.event(Transport(g));
 
     expect(g).toBeCalledWith(4);
   });

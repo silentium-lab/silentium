@@ -1,5 +1,9 @@
 import { DestroyableType } from "../types";
 
+/**
+ * An object that allows collecting all disposable objects and
+ * disposing them later all together
+ */
 export function DestroyContainer() {
   return new TheDestroyContainer();
 }

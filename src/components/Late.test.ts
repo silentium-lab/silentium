@@ -1,13 +1,13 @@
 import { describe, expect, test, vi } from "vitest";
 import { Late } from "./Late";
-import { User } from "../base";
+import { Transport } from "../base";
 
 describe("Late.test", () => {
   test("Begins with empty value", () => {
-    const l = new Late<number>();
+    const l = Late<number>();
 
     const o = vi.fn();
-    l.event(new User(o));
+    l.event(Transport(o));
 
     expect(o).not.toHaveBeenCalled();
 
@@ -21,9 +21,9 @@ describe("Late.test", () => {
   });
 
   test("Begins with 1 value", () => {
-    const l = new Late<number>(1);
+    const l = Late<number>(1);
     const o = vi.fn();
-    l.event(new User(o));
+    l.event(Transport(o));
 
     l.use(2);
 

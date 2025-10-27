@@ -2,15 +2,15 @@ import { describe, expect, test, vi } from "vitest";
 import { Applied } from "./Applied";
 import { Late } from "./Late";
 import { Sequence } from "./Sequence";
-import { User } from "../base";
+import { Transport } from "../base";
 
 describe("Sequence.test", () => {
   test("use one by one values", () => {
-    const l = new Late<number>();
-    const seq = new Applied(new Sequence(l), String);
+    const l = Late<number>();
+    const seq = Applied(Sequence(l), String);
 
     const o = vi.fn();
-    seq.event(new User(o));
+    seq.event(Transport(o));
 
     l.use(1);
     l.use(2);

@@ -1,16 +1,24 @@
 import { Late } from "../components/Late";
 import { SharedSource } from "../components/SharedSource";
-import { EventUserType, SourceType } from "../types";
+import { TransportType, SourceType } from "../types";
 
-export class LateShared<T> implements SourceType<T> {
-  private $event: SharedSource<T>;
+/**
+ * An event with a value that will be set later,
+ * capable of responding to different transports
+ */
+export function LateShared<T>(value?: T) {
+  return new TheLateShared<T>(value);
+}
+
+class TheLateShared<T> implements SourceType<T> {
+  private $event: SourceType<T>;
 
   public constructor(value?: T) {
-    this.$event = new SharedSource(new Late(value));
+    this.$event = SharedSource(Late(value));
   }
 
-  public event(user: EventUserType<T>) {
-    this.$event.event(user);
+  public event(transport: TransportType<T>) {
+    this.$event.event(transport);
     return this;
   }
 

@@ -1,17 +1,36 @@
+import { Transport, TransportExecutor } from "../base";
 import { ensureEvent } from "../helpers";
-import { EventType, EventUserType } from "../types";
+import { EventType, TransportType } from "../types";
 
-export class ExecutorApplied<T> implements EventType<T> {
+type ExecutorApplier<T> = (
+  executor: TransportExecutor<T>,
+) => TransportExecutor<T>;
+
+/**
+ * Applies a value transfer function to the transport
+ * and returns the same value transfer function for the transport
+ * Useful for applying functions like debounced or throttle
+ */
+export function ExecutorApplied<T>(
+  $base: EventType<T>,
+  applier: ExecutorApplier<T>,
+) {
+  return new TheExecutorApplied($base, applier);
+}
+
+class TheExecutorApplied<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
-    private applier: (executor: EventUserType<T>) => EventUserType<T>,
+    private applier: ExecutorApplier<T>,
   ) {
     ensureEvent($base, "ExecutorApplied: base");
   }
 
-  public event(user: EventUserType<T>) {
-    const ExecutorAppliedBaseUser = this.applier(user);
-    this.$base.event(ExecutorAppliedBaseUser);
+  public event(transport: TransportType<T>) {
+    const ExecutorAppliedBaseTransport = this.applier(
+      transport.use.bind(transport),
+    );
+    this.$base.event(Transport(ExecutorAppliedBaseTransport));
     return this;
   }
 }

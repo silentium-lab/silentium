@@ -1,14 +1,14 @@
 import { describe, expect, test, vitest } from "vitest";
 import { Late } from "./Late";
 import { Once } from "./Once";
-import { User } from "../base";
+import { Transport } from "../base";
 
 describe("Once.test", () => {
   test("with not called check", () => {
-    const l = new Late<number>();
-    const info = new Once(l);
+    const l = Late<number>();
+    const info = Once(l);
     const g = vitest.fn();
-    info.event(new User(g));
+    info.event(Transport(g));
 
     expect(g).not.toHaveBeenCalled();
     l.use(111);
@@ -16,10 +16,10 @@ describe("Once.test", () => {
   });
 
   test("once main process", () => {
-    const l = new Late<number>(123);
-    const info = new Once(l);
+    const l = Late<number>(123);
+    const info = Once(l);
     const g = vitest.fn();
-    info.event(new User(g));
+    info.event(Transport(g));
 
     l.use(321);
 

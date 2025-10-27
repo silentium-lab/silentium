@@ -6,7 +6,7 @@ import { Stream } from "./Stream";
 
 test("Stream.test", () => {
   const d = Diagram();
-  new Applied(new Stream(new Of([1, 2, 3, 4, 5])), String).event(d.user);
+  Applied(Stream(Of([1, 2, 3, 4, 5])), String).event(d.transport);
 
   expect(d.toString()).toBe("1|2|3|4|5");
 });

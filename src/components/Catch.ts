@@ -1,22 +1,37 @@
-import { ensureEvent, ensureUser } from "../helpers";
-import { EventType, EventUserType } from "../types";
+import { ensureEvent, ensureTransport } from "../helpers";
+import { EventType, TransportType } from "../types";
 
-export class Catch<T> implements EventType<T> {
+/**
+ * An event representing a base event where
+ * its operation is wrapped in try-catch
+ * and expects exceptions. If an exception
+ * bubbles up, it's passed to the transports
+ * as errorMessage and errorOriginal
+ */
+export function Catch<T>(
+  $base: EventType<T>,
+  errorMessage: TransportType,
+  errorOriginal?: TransportType,
+) {
+  return new TheCatch<T>($base, errorMessage, errorOriginal);
+}
+
+class TheCatch<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
-    private errorMessage: EventUserType,
-    private errorOriginal?: EventUserType,
+    private errorMessage: TransportType,
+    private errorOriginal?: TransportType,
   ) {
     ensureEvent($base, "Catch: base");
-    ensureUser(errorMessage, "Catch: errorMessage");
+    ensureTransport(errorMessage, "Catch: errorMessage");
     if (errorOriginal !== undefined) {
-      ensureUser(errorOriginal, "Catch: errorOriginal");
+      ensureTransport(errorOriginal, "Catch: errorOriginal");
     }
   }
 
-  public event(user: EventUserType<T>) {
+  public event(transport: TransportType<T>) {
     try {
-      this.$base.event(user);
+      this.$base.event(transport);
     } catch (e: any) {
       if (e instanceof Error) {
         this.errorMessage.use(e.message);

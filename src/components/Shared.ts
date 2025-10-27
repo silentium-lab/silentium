@@ -1,39 +1,43 @@
-import { User } from "../base";
+import { Transport } from "../base";
 import { Late } from "../components/Late";
 import { Once } from "../components/Once";
 import { isFilled, OwnerPool } from "../helpers";
-import { EventType, EventUserType, SourceType } from "../types";
+import { EventType, TransportType, SourceType } from "../types";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
- * https://silentium-lab.github.io/silentium/#/en/information/pool
  */
-export class Shared<T> implements SourceType<T> {
+export function Shared<T>($base: EventType<T>, stateless = false) {
+  return new TheShared<T>($base, stateless);
+}
+
+class TheShared<T> implements SourceType<T> {
   private ownersPool = new OwnerPool<T>();
   private lastValue: T | undefined;
-  private calls = new Late();
-  private firstCall = new Once(this.calls).event(
-    new User(() => {
-      this.$base.event(this.firstCallUser);
-    }),
-  );
+  private calls = Late();
 
   public constructor(
     private $base: EventType<T>,
     private stateless = false,
-  ) {}
+  ) {
+    Once(this.calls).event(
+      Transport(() => {
+        this.$base.event(this.firstCallTransport);
+      }),
+    );
+  }
 
-  public event(user: EventUserType<T>) {
+  public event(transport: TransportType<T>) {
     this.calls.use(1);
     if (
       !this.stateless &&
       isFilled(this.lastValue) &&
-      !this.ownersPool.has(user)
+      !this.ownersPool.has(transport)
     ) {
-      user.use(this.lastValue);
+      transport.use(this.lastValue);
     }
-    this.ownersPool.add(user);
+    this.ownersPool.add(transport);
     return this;
   }
 
@@ -44,7 +48,7 @@ export class Shared<T> implements SourceType<T> {
     return this;
   }
 
-  private firstCallUser = new User<T>((v: T) => {
+  private firstCallTransport = Transport<T>((v: T) => {
     this.lastValue = v;
     this.ownersPool.owner().use(v);
   });

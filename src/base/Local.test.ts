@@ -1,14 +1,14 @@
 import { describe, expect, test, vi } from "vitest";
 import { Local } from "../base/Local";
 import { Late } from "../components";
-import { User } from "../base/User";
+import { Transport } from "./Transport";
 
 describe("Local.test", () => {
   test("local event don't react after destroying", () => {
-    const ev = new Late(1);
+    const ev = Late(1);
     const localEv = Local(ev);
     const g = vi.fn();
-    const d = localEv.event(User(g));
+    const d = localEv.event(Transport(g));
 
     expect(g).toHaveBeenCalledWith(1);
 

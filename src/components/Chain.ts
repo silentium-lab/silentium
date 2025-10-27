@@ -1,11 +1,23 @@
 import { EventTypeValue } from "../types/EventType";
-import { EventType, EventUserType } from "../types";
-import { ParentUser } from "../base/User";
+import { EventType, TransportType } from "../types";
+import { ParentTransport } from "../base/Transport";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 
-export class Chain<T extends EventType[]>
+/**
+ * Chains events together and triggers
+ * the last event only when all previous events
+ * have emitted their values. The value of Chain will be the value
+ * of the last event. If any events
+ * emit a value again after the overall Chain response was already returned,
+ * then Chain emits again with the value of the last event.
+ */
+export function Chain<T extends EventType[]>(...events: T) {
+  return new TheChain<T>(...events);
+}
+
+export class TheChain<T extends EventType[]>
   implements EventType<EventTypeValue<Last<T>>>
 {
   private $events: T;
@@ -15,18 +27,18 @@ export class Chain<T extends EventType[]>
     this.$events = events;
   }
 
-  public event(user: EventUserType<EventTypeValue<Last<T>>>) {
-    this.handleEvent(0, user);
+  public event(transport: TransportType<EventTypeValue<Last<T>>>) {
+    this.handleEvent(0, transport);
     return this;
   }
 
-  private handleEvent = (index: number, user: EventUserType) => {
+  private handleEvent = (index: number, transport: TransportType) => {
     const event = this.$events[index] as Last<T>;
     const nextI = this.$events[index + 1] as Last<T> | undefined;
-    event.event(this.oneEventUser.child(user, nextI, index));
+    event.event(this.oneEventTransport.child(transport, nextI, index));
   };
 
-  private oneEventUser = new ParentUser(
+  private oneEventTransport = new ParentTransport(
     (
       v: EventTypeValue<Last<T>>,
       child,
