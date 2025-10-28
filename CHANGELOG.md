@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.111](https://github.com/silentium-lab/silentium/compare/v0.0.110...v0.0.111) (2025-10-28)
+
+
+### Bug Fixes
+
+* **main:** component function created ([c2dfcac](https://github.com/silentium-lab/silentium/commit/c2dfcac90f0c000e5a8e12fcde5bf7fc3a429611))
+
 ### [0.0.110](https://github.com/silentium-lab/silentium/compare/v0.0.109...v0.0.110) (2025-10-27)
 
 ### [0.0.109](https://github.com/silentium-lab/silentium/compare/v0.0.108...v0.0.109) (2025-10-27)
