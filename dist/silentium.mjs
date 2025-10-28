@@ -27,6 +27,24 @@ function ensureTransport(v, label) {
   }
 }
 
+function Component(executor) {
+  return (...args) => {
+    let destructor;
+    return {
+      event(transport) {
+        destructor = executor.call(transport, ...args);
+        return this;
+      },
+      destroy() {
+        if (destructor !== void 0) {
+          destructor();
+        }
+        return this;
+      }
+    };
+  };
+}
+
 var __defProp$j = Object.defineProperty;
 var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, key + "" , value);
@@ -781,5 +799,5 @@ class TheTransportDestroyable {
   }
 }
 
-export { All, Any, Applied, Catch, Chain, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, Component, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.mjs.map

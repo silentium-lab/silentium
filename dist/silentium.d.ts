@@ -121,6 +121,13 @@ declare class TheChain<T extends EventType[]> implements EventType<EventTypeValu
 }
 
 /**
+ * Create a function component that
+ * will emit an event with specified arguments
+ * and specified type
+ */
+declare function Component<T, P extends Array<any>>(executor: (this: TransportType<T>, ...args: P) => void | (() => void)): (...args: P) => EventType<T> & DestroyableType;
+
+/**
  * An object that allows collecting all disposable objects and
  * disposing them later all together
  */
@@ -456,4 +463,4 @@ declare class TheTransportDestroyable<T> implements TransportType<unknown[], Eve
     destroy(): this;
 }
 
-export { All, Any, Applied, Catch, Chain, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, Component, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };

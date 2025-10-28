@@ -29,6 +29,24 @@ function ensureTransport(v, label) {
   }
 }
 
+function Component(executor) {
+  return (...args) => {
+    let destructor;
+    return {
+      event(transport) {
+        destructor = executor.call(transport, ...args);
+        return this;
+      },
+      destroy() {
+        if (destructor !== void 0) {
+          destructor();
+        }
+        return this;
+      }
+    };
+  };
+}
+
 var __defProp$j = Object.defineProperty;
 var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, key + "" , value);
@@ -788,6 +806,7 @@ exports.Any = Any;
 exports.Applied = Applied;
 exports.Catch = Catch;
 exports.Chain = Chain;
+exports.Component = Component;
 exports.DestroyContainer = DestroyContainer;
 exports.Event = Event;
 exports.ExecutorApplied = ExecutorApplied;
