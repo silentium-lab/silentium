@@ -1,7 +1,12 @@
 import { ComponentClass } from "../base/ComponentClass";
 import { describe, expect, test } from "vitest";
 import { expectTypeOf } from "expect-type";
-import { EventType, SourceType, TransportType } from "../types";
+import {
+  DestroyableType,
+  EventType,
+  SourceType,
+  TransportType,
+} from "../types";
 import { Of, Transport } from "../base";
 import { Primitive } from "../components";
 
@@ -21,10 +26,14 @@ describe("ComponentClass.test", () => {
     public use(): this {
       return this;
     }
+
+    public destroy() {
+      return this;
+    }
   }
 
   test("multiplication component", () => {
-    const Tst = ComponentClass(TheEv<string>);
+    const Tst = ComponentClass(TheEv);
 
     const r = Primitive(Tst(Of("123")));
 
@@ -34,10 +43,17 @@ describe("ComponentClass.test", () => {
   test("types of component class", () => {
     const Tst = ComponentClass(TheEv);
 
-    expectTypeOf(Tst(Of("111"))).toEqualTypeOf<TheEv<unknown>>();
+    expectTypeOf(Tst(Of("111"))).toEqualTypeOf<SourceType<string>>();
     expectTypeOf(Tst<number>(Of("111"))).toEqualTypeOf<EventType<number>>();
     expectTypeOf(Tst<SourceType<number>>(Of("111"))).toEqualTypeOf<
       SourceType<number>
     >();
+  });
+
+  test("destroy types", () => {
+    const Tst = ComponentClass(TheEv);
+    const t = Tst<DestroyableType & SourceType>(Of("111"));
+
+    t.destroy();
   });
 });

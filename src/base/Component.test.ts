@@ -1,13 +1,12 @@
 import { Of } from "../base/Of";
 import { Component } from "../base/Component";
 import { All, Applied, Primitive } from "../components";
-import { EventType, TransportType } from "../types";
+import { EventType } from "../types";
 import { describe, expect, test } from "vitest";
 
 describe("Component.test.ts", () => {
   test("multiplication component", () => {
     const TwoOnTwo = Component(function (
-      this: TransportType<number>,
       $a: EventType<number>,
       $b: EventType<number>,
     ) {

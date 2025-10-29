@@ -125,12 +125,12 @@ declare class TheChain<T extends EventType[]> implements EventType<EventTypeValu
  * will emit an event with specified arguments
  * and specified type
  */
-declare function Component<T, P extends Array<any>>(executor: (this: TransportType<T>, ...args: P) => void | (() => void)): (...args: P) => EventType<T> & DestroyableType;
+declare function Component<T, P extends Array<any>>(executor: (this: TransportType<P[0] extends EventType ? EventTypeValue<P[0]> : T>, ...args: P) => void | (() => void)): (...args: P) => (P[0] extends EventType ? EventType<EventTypeValue<P[0]>> : EventType<T>) & DestroyableType;
 
 type ConstructableType = {
     new (...args: any[]): any;
 };
-declare function ComponentClass<T extends ConstructableType>(classConstructor: T): <R = null>(...args: ConstructorParameters<T>) => R extends null ? InstanceType<T> : R extends EventType ? R : EventType<R>;
+declare function ComponentClass<T extends ConstructableType>(classConstructor: T): <R = null>(...args: ConstructorParameters<T>) => R extends null ? ConstructorParameters<T>[0] extends EventType ? InstanceType<T> extends SourceType ? SourceType<EventTypeValue<ConstructorParameters<T>[0]>> : EventType<EventTypeValue<ConstructorParameters<T>[0]>> : InstanceType<T> : R extends EventType ? R : EventType<R>;
 
 /**
  * An object that allows collecting all disposable objects and
