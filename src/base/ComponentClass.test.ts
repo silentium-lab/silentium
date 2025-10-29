@@ -1,5 +1,6 @@
 import { ComponentClass } from "../base/ComponentClass";
 import { describe, expect, test } from "vitest";
+import { expectTypeOf } from "expect-type";
 import { EventType, SourceType, TransportType } from "../types";
 import { Of, Transport } from "../base";
 import { Primitive } from "../components";
@@ -28,5 +29,15 @@ describe("ComponentClass.test", () => {
     const r = Primitive(Tst(Of("123")));
 
     expect(r.primitiveWithException()).toBe("test_123");
+  });
+
+  test("types of component class", () => {
+    const Tst = ComponentClass(TheEv);
+
+    expectTypeOf(Tst(Of("111"))).toEqualTypeOf<TheEv<unknown>>();
+    expectTypeOf(Tst<number>(Of("111"))).toEqualTypeOf<EventType<number>>();
+    expectTypeOf(Tst<SourceType<number>>(Of("111"))).toEqualTypeOf<
+      SourceType<number>
+    >();
   });
 });
