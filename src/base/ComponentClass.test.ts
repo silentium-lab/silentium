@@ -4,7 +4,7 @@ import { EventType, SourceType, TransportType } from "../types";
 import { Of, Transport } from "../base";
 import { Primitive } from "../components";
 
-describe("Component.test.ts", () => {
+describe("ComponentClass.test", () => {
   class TheEv<T> implements SourceType<T> {
     public constructor(private $base: EventType<string>) {}
 
