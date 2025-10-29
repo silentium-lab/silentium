@@ -130,7 +130,7 @@ declare function Component<T, P extends Array<any>>(executor: (this: TransportTy
 type ConstructableType = {
     new (...args: any[]): any;
 };
-declare function ComponentClass<T extends ConstructableType>(classConstructor: T): (...args: ConstructorParameters<T>) => InstanceType<T>;
+declare function ComponentClass<T extends ConstructableType>(classConstructor: T): <R = null>(...args: ConstructorParameters<T>) => R extends null ? InstanceType<T> : R extends EventType ? R : EventType<R>;
 
 /**
  * An object that allows collecting all disposable objects and
