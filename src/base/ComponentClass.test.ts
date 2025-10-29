@@ -26,8 +26,16 @@ describe("ComponentClass.test", () => {
     public use(): this {
       return this;
     }
+  }
 
-    public destroy() {
+  class TheEv2<T> implements EventType<T> {
+    public constructor(private $base: EventType<string>) {}
+
+    public event(): this {
+      return this;
+    }
+
+    public destroy(): this {
       return this;
     }
   }
@@ -51,9 +59,9 @@ describe("ComponentClass.test", () => {
   });
 
   test("destroy types", () => {
-    const Tst = ComponentClass(TheEv);
-    const t = Tst<DestroyableType & SourceType>(Of("111"));
+    const Tst = ComponentClass(TheEv2);
+    const t = Tst(Of("111"));
 
-    t.destroy();
+    expectTypeOf(t).toEqualTypeOf<EventType<string> & DestroyableType>();
   });
 });
