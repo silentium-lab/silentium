@@ -1,4 +1,5 @@
 export * from "./Component";
+export * from "./ComponentClass";
 export * from "./DestroyContainer";
 export * from "./Event";
 export * from "./Local";
