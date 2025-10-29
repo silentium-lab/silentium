@@ -1,7 +1,11 @@
+import { EventType } from "../types";
+
 type ConstructableType = { new (...args: any[]): any };
 
 export function ComponentClass<T extends ConstructableType>(
   classConstructor: T,
-): (...args: ConstructorParameters<T>) => InstanceType<T> {
+): <R = null>(
+  ...args: ConstructorParameters<T>
+) => R extends null ? InstanceType<T> : EventType<R> {
   return (...args) => new classConstructor(...args);
 }

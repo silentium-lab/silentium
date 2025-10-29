@@ -23,7 +23,7 @@ describe("ComponentClass.test", () => {
   }
 
   test("multiplication component", () => {
-    const Tst = ComponentClass(TheEv);
+    const Tst = ComponentClass(TheEv<string>);
 
     const r = Primitive(Tst(Of("123")));
 
