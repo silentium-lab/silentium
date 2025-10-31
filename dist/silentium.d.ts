@@ -440,7 +440,7 @@ declare class TheStream<T> implements EventType<T> {
 }
 
 declare function TransportApplied<T>(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>): TheTransportApplied<T>;
-declare class TheTransportApplied<T> implements TransportType<unknown[], EventType<T>> {
+declare class TheTransportApplied<T> implements TransportType<unknown, EventType<T>> {
     private baseTransport;
     private applier;
     constructor(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>);
@@ -460,11 +460,11 @@ declare function TransportDestroyable<T>(baseTransport: TransportType<any[], Eve
 /**
  * Constructor what can be destroyed
  */
-declare class TheTransportDestroyable<T> implements TransportType<unknown[], EventType>, DestroyableType {
+declare class TheTransportDestroyable<T> implements TransportType<unknown, EventType>, DestroyableType {
     private baseTransport;
     private destructors;
-    constructor(baseTransport: TransportType<any[], EventType<T>>);
-    use(args: unknown[]): EventType<T>;
+    constructor(baseTransport: TransportType<any, EventType<T>>);
+    use(args: unknown): EventType<T>;
     destroy(): this;
 }
 

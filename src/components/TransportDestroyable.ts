@@ -11,15 +11,13 @@ export function TransportDestroyable<T>(
  * Constructor what can be destroyed
  */
 class TheTransportDestroyable<T>
-  implements TransportType<unknown[], EventType>, DestroyableType
+  implements TransportType<unknown, EventType>, DestroyableType
 {
   private destructors: DestroyableType[] = [];
 
-  public constructor(
-    private baseTransport: TransportType<any[], EventType<T>>,
-  ) {}
+  public constructor(private baseTransport: TransportType<any, EventType<T>>) {}
 
-  public use(args: unknown[]) {
+  public use(args: unknown) {
     const inst = this.baseTransport.use(args);
     if (isDestroyable(inst)) {
       this.destructors.push(inst);

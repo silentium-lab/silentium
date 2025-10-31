@@ -8,7 +8,7 @@ export function TransportApplied<T>(
 }
 
 export class TheTransportApplied<T>
-  implements TransportType<unknown[], EventType<T>>
+  implements TransportType<unknown, EventType<T>>
 {
   public constructor(
     private baseTransport: TransportType<any, EventType<T>>,
