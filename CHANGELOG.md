@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.116](https://github.com/silentium-lab/silentium/compare/v0.0.115...v0.0.116) (2025-10-31)
+
+
+### Bug Fixes
+
+* **main:** transport types not arrays ([0171e59](https://github.com/silentium-lab/silentium/commit/0171e594f09c96288827d3430f5017e257ce491c))
+
 ### [0.0.115](https://github.com/silentium-lab/silentium/compare/v0.0.63...v0.0.115) (2025-10-29)
 
 
