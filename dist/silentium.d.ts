@@ -143,7 +143,7 @@ declare function ComponentClass<T extends ConstructableType>(classConstructor: T
 declare function DestroyContainer(): DestroyContainerImpl;
 declare class DestroyContainerImpl implements DestroyableType {
     private destructors;
-    add(e: DestroyableType): this;
+    add<R extends DestroyableType>(e: R): R;
     destroy(): this;
 }
 

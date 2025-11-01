@@ -11,9 +11,9 @@ export function DestroyContainer() {
 class DestroyContainerImpl implements DestroyableType {
   private destructors: DestroyableType[] = [];
 
-  public add(e: DestroyableType) {
+  public add<R extends DestroyableType>(e: R): R {
     this.destructors.push(e);
-    return this;
+    return e;
   }
 
   public destroy() {

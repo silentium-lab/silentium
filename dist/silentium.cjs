@@ -63,7 +63,7 @@ class DestroyContainerImpl {
   }
   add(e) {
     this.destructors.push(e);
-    return this;
+    return e;
   }
   destroy() {
     this.destructors.forEach((d) => d.destroy());
