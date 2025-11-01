@@ -8,10 +8,10 @@ type EventExecutor<T> = (transport: TransportType<T>) => void | (() => void);
  * The executor function can return an event destruction function.
  */
 export function Event<T>(eventExecutor: EventExecutor<T>) {
-  return new TheEvent<T>(eventExecutor);
+  return new EventImpl<T>(eventExecutor);
 }
 
-class TheEvent<T> implements EventType<T>, DestroyableType {
+class EventImpl<T> implements EventType<T>, DestroyableType {
   private mbDestructor: unknown;
 
   public constructor(private eventExecutor: EventExecutor<T>) {

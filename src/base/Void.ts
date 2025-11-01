@@ -5,10 +5,10 @@ import { TransportType } from "../types";
  * needed for silent event triggering
  */
 export function Void() {
-  return new TheVoid();
+  return new VoidImpl();
 }
 
-class TheVoid implements TransportType {
+class VoidImpl implements TransportType {
   public use(): this {
     return this;
   }

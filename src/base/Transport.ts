@@ -11,10 +11,10 @@ export type TransportExecutor<T> = (v: T) => void;
  * acts as a conductor to deliver the value from an event to somewhere
  */
 export function Transport<T>(transportExecutor: TransportExecutor<T>) {
-  return new TheTransport<T>(transportExecutor);
+  return new TransportImpl<T>(transportExecutor);
 }
 
-class TheTransport<T> implements TransportType<T> {
+class TransportImpl<T> implements TransportType<T> {
   public constructor(private transportExecutor: TransportExecutor<T>) {
     ensureFunction(transportExecutor, "Transport: transport executor");
   }
@@ -37,12 +37,12 @@ export type TransportEventExecutor<T, ET = T> = (v: T) => EventType<ET>;
 export function TransportEvent<T, ET = any>(
   transportExecutor: TransportEventExecutor<T, ET>,
 ) {
-  return new TheTransportEvent<T, ET>(transportExecutor);
+  return new TransportEventImpl<T, ET>(transportExecutor);
 }
 
-class TheTransportEvent<T, ET = T> implements TransportType<T, EventType<ET>> {
+class TransportEventImpl<T, ET = T> implements TransportType<T, EventType<ET>> {
   public constructor(private executor: TransportEventExecutor<T, ET>) {
-    ensureFunction(executor, "TheTransportEvent: transport executor");
+    ensureFunction(executor, "TransportEvent: transport executor");
   }
 
   public use(value: T) {
@@ -59,16 +59,16 @@ export function TransportParent<T>(
   executor: (this: TransportType, v: T, ...context: any[]) => void,
   ...args: any[]
 ) {
-  return new TheTransportParent<T>(executor, args);
+  return new TransportParentImpl<T>(executor, args);
 }
 
-class TheTransportParent<T> implements TransportType<T> {
+class TransportParentImpl<T> implements TransportType<T> {
   public constructor(
     private executor: (this: TransportType, v: T, ...context: any[]) => void,
     private args: any[] = [],
     private _child?: TransportType<T>,
   ) {
-    ensureFunction(executor, "ParentTransport: executor");
+    ensureFunction(executor, "TransportParent: executor");
   }
 
   public use(value: T): this {
@@ -80,7 +80,7 @@ class TheTransportParent<T> implements TransportType<T> {
   }
 
   public child(transport: TransportType, ...args: any[]) {
-    return new TheTransportParent(
+    return new TransportParentImpl(
       this.executor,
       [...this.args, ...args],
       transport,

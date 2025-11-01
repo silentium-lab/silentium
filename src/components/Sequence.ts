@@ -1,15 +1,15 @@
 import { TransportParent } from "../base";
 import { EventType, TransportType } from "../types";
 
+/**
+ * Creates a sequence that accumulates all values from the source into an array,
+ * emitting the growing array with each new value.
+ */
 export function Sequence<T>($base: EventType<T>) {
-  return new TheSequence<T>($base);
+  return new SequenceEvent<T>($base);
 }
 
-/**
- * A component that takes one value at a time and returns
- * an array of all previous values
- */
-class TheSequence<T> implements EventType<T[]> {
+class SequenceEvent<T> implements EventType<T[]> {
   private result: T[] = [];
 
   public constructor(private $base: EventType<T>) {}

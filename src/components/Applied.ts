@@ -6,14 +6,14 @@ import { ConstructorType, EventType, TransportType } from "../types";
  * An event that applies a function
  * to the value of the base event
  */
-export function Applied<T, R>(
+export function Applied<const T, R>(
   $base: EventType<T>,
   applier: ConstructorType<[T], R>,
 ) {
-  return new TheApplied<T, R>($base, applier);
+  return new AppliedEvent<T, R>($base, applier);
 }
 
-class TheApplied<T, R> implements EventType<R> {
+class AppliedEvent<T, R> implements EventType<R> {
   public constructor(
     private $base: EventType<T>,
     private applier: ConstructorType<[T], R>,
@@ -26,7 +26,10 @@ class TheApplied<T, R> implements EventType<R> {
     return this;
   }
 
-  private transport = TransportParent(function (v: T, child: TheApplied<T, R>) {
+  private transport = TransportParent(function (
+    v: T,
+    child: AppliedEvent<T, R>,
+  ) {
     this.use(child.applier(v));
   }, this);
 }

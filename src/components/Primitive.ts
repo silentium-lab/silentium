@@ -9,10 +9,10 @@ import { EventType } from "../types";
  * It can also be useful for testing or logging purposes.
  */
 export function Primitive<T>($base: EventType<T>, theValue: T | null = null) {
-  return new ThePrimitive<T>($base, theValue);
+  return new PrimitiveImpl<T>($base, theValue);
 }
 
-class ThePrimitive<T> {
+class PrimitiveImpl<T> {
   private touched = false;
 
   public constructor(

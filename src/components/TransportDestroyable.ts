@@ -1,23 +1,25 @@
 import { isDestroyable } from "../helpers";
 import { DestroyableType, EventType, TransportType } from "../types";
 
+/**
+ * Creates a transport wrapper that automatically manages destruction of created instances
+ */
 export function TransportDestroyable<T>(
   baseTransport: TransportType<any[], EventType<T>>,
 ) {
-  return new TheTransportDestroyable<T>(baseTransport);
+  return new TransportDestroyableEvent<T>(baseTransport);
 }
 
-/**
- * Constructor what can be destroyed
- */
-class TheTransportDestroyable<T>
-  implements TransportType<unknown, EventType>, DestroyableType
+class TransportDestroyableEvent<T>
+  implements TransportType<unknown, EventType<T>>, DestroyableType
 {
   private destructors: DestroyableType[] = [];
 
-  public constructor(private baseTransport: TransportType<any, EventType<T>>) {}
+  public constructor(
+    private baseTransport: TransportType<any[], EventType<T>>,
+  ) {}
 
-  public use(args: unknown) {
+  public use(args: any[]) {
     const inst = this.baseTransport.use(args);
     if (isDestroyable(inst)) {
       this.destructors.push(inst);

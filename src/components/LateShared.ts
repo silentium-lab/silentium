@@ -7,10 +7,10 @@ import { TransportType, SourceType } from "../types";
  * capable of responding to different transports
  */
 export function LateShared<T>(value?: T) {
-  return new TheLateShared<T>(value);
+  return new LateSharedEvent<T>(value);
 }
 
-class TheLateShared<T> implements SourceType<T> {
+class LateSharedEvent<T> implements SourceType<T> {
   private $event: SourceType<T>;
 
   public constructor(value?: T) {

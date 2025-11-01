@@ -7,6 +7,10 @@ import {
 
 type ConstructableType = { new (...args: any[]): any };
 
+/**
+ * Creates a type-safe factory function for instantiating components with proper interface inference
+ * Automatically determines return types based on whether the class implements SourceType, EventType, and DestroyableType
+ */
 export function ComponentClass<T extends ConstructableType>(
   classConstructor: T,
 ): <R = null>(

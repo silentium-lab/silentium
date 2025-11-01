@@ -50,8 +50,8 @@ type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
  * value, the updated array with the new value
  * will be emitted by All.
  */
-declare function All<const T extends EventType[]>(...events: T): TheAll<T>;
-declare class TheAll<const T extends EventType[]> implements EventType<ExtractTypesFromArrayS<T>> {
+declare function All<const T extends EventType[]>(...events: T): AllEvent<T>;
+declare class AllEvent<const T extends EventType[]> implements EventType<ExtractTypesFromArrayS<T>> {
     private known;
     private filled;
     private $events;
@@ -65,8 +65,8 @@ declare class TheAll<const T extends EventType[]> implements EventType<ExtractTy
  * An event that emits values received from
  * any of its bound events
  */
-declare function Any<T>(...events: EventType<T>[]): TheAny<T>;
-declare class TheAny<T> implements EventType<T> {
+declare function Any<const T>(...events: EventType<T>[]): AnyEvent<T>;
+declare class AnyEvent<T> implements EventType<T> {
     private $events;
     constructor(...events: EventType<T>[]);
     event(transport: TransportType<T>): this;
@@ -76,8 +76,8 @@ declare class TheAny<T> implements EventType<T> {
  * An event that applies a function
  * to the value of the base event
  */
-declare function Applied<T, R>($base: EventType<T>, applier: ConstructorType<[T], R>): TheApplied<T, R>;
-declare class TheApplied<T, R> implements EventType<R> {
+declare function Applied<const T, R>($base: EventType<T>, applier: ConstructorType<[T], R>): AppliedEvent<T, R>;
+declare class AppliedEvent<T, R> implements EventType<R> {
     private $base;
     private applier;
     constructor($base: EventType<T>, applier: ConstructorType<[T], R>);
@@ -92,8 +92,8 @@ declare class TheApplied<T, R> implements EventType<R> {
  * bubbles up, it's passed to the transports
  * as errorMessage and errorOriginal
  */
-declare function Catch<T>($base: EventType<T>, errorMessage: TransportType, errorOriginal?: TransportType): TheCatch<T>;
-declare class TheCatch<T> implements EventType<T> {
+declare function Catch<T>($base: EventType<T>, errorMessage: TransportType, errorOriginal?: TransportType): CatchEvent<T>;
+declare class CatchEvent<T> implements EventType<T> {
     private $base;
     private errorMessage;
     private errorOriginal?;
@@ -101,7 +101,7 @@ declare class TheCatch<T> implements EventType<T> {
     event(transport: TransportType<T>): this;
 }
 
-type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
+type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
 /**
  * Chains events together and triggers
  * the last event only when all previous events
@@ -110,8 +110,8 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * emit a value again after the overall Chain response was already returned,
  * then Chain emits again with the value of the last event.
  */
-declare function Chain<T extends EventType[]>(...events: T): TheChain<T>;
-declare class TheChain<T extends EventType[]> implements EventType<EventTypeValue<Last<T>>> {
+declare function Chain<T extends readonly EventType[]>(...events: T): ChainEvent<T>;
+declare class ChainEvent<T extends readonly EventType[]> implements EventType<EventTypeValue<Last<T>>> {
     private $events;
     private $latest;
     constructor(...events: T);
@@ -130,14 +130,18 @@ declare function Component<T, P extends Array<any>>(executor: (this: TransportTy
 type ConstructableType = {
     new (...args: any[]): any;
 };
+/**
+ * Creates a type-safe factory function for instantiating components with proper interface inference
+ * Automatically determines return types based on whether the class implements SourceType, EventType, and DestroyableType
+ */
 declare function ComponentClass<T extends ConstructableType>(classConstructor: T): <R = null>(...args: ConstructorParameters<T>) => R extends null ? ConstructorParameters<T>[0] extends EventType ? InstanceType<T> extends SourceType ? InstanceType<T> extends DestroyableType ? SourceType<EventTypeValue<ConstructorParameters<T>[0]>> & DestroyableType : SourceType<EventTypeValue<ConstructorParameters<T>[0]>> : InstanceType<T> extends DestroyableType ? EventType<EventTypeValue<ConstructorParameters<T>[0]>> & DestroyableType : EventType<EventTypeValue<ConstructorParameters<T>[0]>> : InstanceType<T> : R extends EventType ? R : EventType<R>;
 
 /**
  * An object that allows collecting all disposable objects and
  * disposing them later all together
  */
-declare function DestroyContainer(): TheDestroyContainer;
-declare class TheDestroyContainer implements DestroyableType {
+declare function DestroyContainer(): DestroyContainerImpl;
+declare class DestroyContainerImpl implements DestroyableType {
     private destructors;
     add(e: DestroyableType): this;
     destroy(): this;
@@ -148,8 +152,8 @@ type EventExecutor<T> = (transport: TransportType<T>) => void | (() => void);
  * An event created from an executor function.
  * The executor function can return an event destruction function.
  */
-declare function Event<T>(eventExecutor: EventExecutor<T>): TheEvent<T>;
-declare class TheEvent<T> implements EventType<T>, DestroyableType {
+declare function Event<T>(eventExecutor: EventExecutor<T>): EventImpl<T>;
+declare class EventImpl<T> implements EventType<T>, DestroyableType {
     private eventExecutor;
     private mbDestructor;
     constructor(eventExecutor: EventExecutor<T>);
@@ -160,8 +164,8 @@ declare class TheEvent<T> implements EventType<T>, DestroyableType {
 /**
  * Create local copy of source what can be destroyed
  */
-declare function Local<T>($base: EventType<T>): TheLocal<T>;
-declare class TheLocal<T> implements EventType<T>, DestroyableType {
+declare function Local<T>($base: EventType<T>): LocalEvent<T>;
+declare class LocalEvent<T> implements EventType<T>, DestroyableType {
     private $base;
     private destroyed;
     constructor($base: EventType<T>);
@@ -173,8 +177,8 @@ declare class TheLocal<T> implements EventType<T>, DestroyableType {
 /**
  * Helps convert a value into an event
  */
-declare function Of<T>(value: T): TheOf<T>;
-declare class TheOf<T> implements EventType<T> {
+declare function Of<T>(value: T): OfEvent<T>;
+declare class OfEvent<T> implements EventType<T> {
     private value;
     constructor(value: T);
     event(transport: TransportType<T>): this;
@@ -188,8 +192,8 @@ type TransportExecutor<T> = (v: T) => void;
  * Base transport that accepts the passed value,
  * acts as a conductor to deliver the value from an event to somewhere
  */
-declare function Transport<T>(transportExecutor: TransportExecutor<T>): TheTransport<T>;
-declare class TheTransport<T> implements TransportType<T> {
+declare function Transport<T>(transportExecutor: TransportExecutor<T>): TransportImpl<T>;
+declare class TransportImpl<T> implements TransportType<T> {
     private transportExecutor;
     constructor(transportExecutor: TransportExecutor<T>);
     use(value: T): this;
@@ -202,8 +206,8 @@ type TransportEventExecutor<T, ET = T> = (v: T) => EventType<ET>;
  * A transport that delivers a value from one event
  * and returns another event based on the value
  */
-declare function TransportEvent<T, ET = any>(transportExecutor: TransportEventExecutor<T, ET>): TheTransportEvent<T, ET>;
-declare class TheTransportEvent<T, ET = T> implements TransportType<T, EventType<ET>> {
+declare function TransportEvent<T, ET = any>(transportExecutor: TransportEventExecutor<T, ET>): TransportEventImpl<T, ET>;
+declare class TransportEventImpl<T, ET = T> implements TransportType<T, EventType<ET>> {
     private executor;
     constructor(executor: TransportEventExecutor<T, ET>);
     use(value: T): EventType<ET>;
@@ -213,22 +217,22 @@ declare class TheTransportEvent<T, ET = T> implements TransportType<T, EventType
  * to perform some transformation on the value
  * during its transmission
  */
-declare function TransportParent<T>(executor: (this: TransportType, v: T, ...context: any[]) => void, ...args: any[]): TheTransportParent<T>;
-declare class TheTransportParent<T> implements TransportType<T> {
+declare function TransportParent<T>(executor: (this: TransportType, v: T, ...context: any[]) => void, ...args: any[]): TransportParentImpl<T>;
+declare class TransportParentImpl<T> implements TransportType<T> {
     private executor;
     private args;
     private _child?;
     constructor(executor: (this: TransportType, v: T, ...context: any[]) => void, args?: any[], _child?: TransportType<T> | undefined);
     use(value: T): this;
-    child(transport: TransportType, ...args: any[]): TheTransportParent<T>;
+    child(transport: TransportType, ...args: any[]): TransportParentImpl<T>;
 }
 
 /**
  * Transport that does nothing with the passed value,
  * needed for silent event triggering
  */
-declare function Void(): TheVoid;
-declare class TheVoid implements TransportType {
+declare function Void(): VoidImpl;
+declare class VoidImpl implements TransportType {
     use(): this;
 }
 
@@ -238,16 +242,20 @@ type ExecutorApplier<T> = (executor: TransportExecutor<T>) => TransportExecutor<
  * and returns the same value transfer function for the transport
  * Useful for applying functions like debounced or throttle
  */
-declare function ExecutorApplied<T>($base: EventType<T>, applier: ExecutorApplier<T>): TheExecutorApplied<T>;
-declare class TheExecutorApplied<T> implements EventType<T> {
+declare function ExecutorApplied<T>($base: EventType<T>, applier: ExecutorApplier<T>): ExecutorAppliedEvent<T>;
+declare class ExecutorAppliedEvent<T> implements EventType<T> {
     private $base;
     private applier;
     constructor($base: EventType<T>, applier: ExecutorApplier<T>);
     event(transport: TransportType<T>): this;
 }
 
-declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): TheFiltered<T>;
-declare class TheFiltered<T> implements EventType<T> {
+/**
+ * Filters values from the source event based on a predicate function,
+ * optionally providing a default value when the predicate fails.
+ */
+declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): FilteredEvent<T>;
+declare class FilteredEvent<T> implements EventType<T> {
     private $base;
     private predicate;
     private defaultValue?;
@@ -262,8 +270,8 @@ declare class TheFiltered<T> implements EventType<T> {
  * Allows attaching a custom handler to an existing event source
  * and presenting it as a silentium event
  */
-declare function FromEvent<T>($emitter: EventType<any>, $eventName: EventType<string>, $subscribeMethod: EventType<string>, $unsubscribeMethod?: EventType<string>): TheFromEvent<T>;
-declare class TheFromEvent<T> implements EventType<T>, DestroyableType {
+declare function FromEvent<T>($emitter: EventType<any>, $eventName: EventType<string>, $subscribeMethod: EventType<string>, $unsubscribeMethod?: EventType<string>): FromEventAdapter<T>;
+declare class FromEventAdapter<T> implements EventType<T>, DestroyableType {
     private $emitter;
     private $eventName;
     private $subscribeMethod;
@@ -277,13 +285,15 @@ declare class TheFromEvent<T> implements EventType<T>, DestroyableType {
 }
 
 /**
- * Promise event
+ * Creates an event from a Promise, allowing the promise's resolution or rejection
+ * to be handled as an event. The resolved value is emitted to the transport,
+ * and if an error is provided, rejections are forwarded to it.
  */
-declare function FromPromise<T>(p: Promise<T>, errorOwner?: TransportType): TheFromPromise<T>;
-declare class TheFromPromise<T> implements EventType<T> {
+declare function FromPromise<T>(p: Promise<T>, error?: TransportType): FromPromiseEvent<T>;
+declare class FromPromiseEvent<T> implements EventType<T> {
     private p;
-    private errorOwner?;
-    constructor(p: Promise<T>, errorOwner?: TransportType | undefined);
+    private error?;
+    constructor(p: Promise<T>, error?: TransportType | undefined);
     event(transport: TransportType<T>): this;
 }
 
@@ -293,8 +303,8 @@ declare class TheFromPromise<T> implements EventType<T> {
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare function Late<T>(v?: T): TheLate<T>;
-declare class TheLate<T> implements SourceType<T> {
+declare function Late<T>(v?: T): LateEvent<T>;
+declare class LateEvent<T> implements SourceType<T> {
     private v?;
     private lateTransport;
     private notify;
@@ -307,8 +317,8 @@ declare class TheLate<T> implements SourceType<T> {
  * An event with a value that will be set later,
  * capable of responding to different transports
  */
-declare function LateShared<T>(value?: T): TheLateShared<T>;
-declare class TheLateShared<T> implements SourceType<T> {
+declare function LateShared<T>(value?: T): LateSharedEvent<T>;
+declare class LateSharedEvent<T> implements SourceType<T> {
     private $event;
     constructor(value?: T);
     event(transport: TransportType<T>): this;
@@ -319,8 +329,8 @@ declare class TheLateShared<T> implements SourceType<T> {
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  */
-declare function Map<T, TG>($base: EventType<T[]>, $target: TransportType<any, EventType<TG>>): TheMap<T, TG>;
-declare class TheMap<T, TG> implements EventType<TG[]> {
+declare function Map<T, TG>($base: EventType<T[]>, $target: TransportType<any, EventType<TG>>): MapEvent<T, TG>;
+declare class MapEvent<T, TG> implements EventType<TG[]> {
     private $base;
     private $target;
     constructor($base: EventType<T[]>, $target: TransportType<any, EventType<TG>>);
@@ -333,8 +343,8 @@ declare class TheMap<T, TG> implements EventType<TG[]> {
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
  */
-declare function Once<T>($base: EventType<T>): TheOnce<T>;
-declare class TheOnce<T> implements EventType<T> {
+declare function Once<T>($base: EventType<T>): OnceEvent<T>;
+declare class OnceEvent<T> implements EventType<T> {
     private $base;
     private isFilled;
     constructor($base: EventType<T>);
@@ -349,8 +359,8 @@ declare class TheOnce<T> implements EventType<T> {
  * For example, this could be used when passing an authorization token.
  * It can also be useful for testing or logging purposes.
  */
-declare function Primitive<T>($base: EventType<T>, theValue?: T | null): ThePrimitive<T>;
-declare class ThePrimitive<T> {
+declare function Primitive<T>($base: EventType<T>, theValue?: T | null): PrimitiveImpl<T>;
+declare class PrimitiveImpl<T> {
     private $base;
     private theValue;
     private touched;
@@ -361,12 +371,12 @@ declare class ThePrimitive<T> {
     primitiveWithException(): T & ({} | undefined);
 }
 
-declare function Sequence<T>($base: EventType<T>): TheSequence<T>;
 /**
- * A component that takes one value at a time and returns
- * an array of all previous values
+ * Creates a sequence that accumulates all values from the source into an array,
+ * emitting the growing array with each new value.
  */
-declare class TheSequence<T> implements EventType<T[]> {
+declare function Sequence<T>($base: EventType<T>): SequenceEvent<T>;
+declare class SequenceEvent<T> implements EventType<T[]> {
     private $base;
     private result;
     constructor($base: EventType<T>);
@@ -404,8 +414,8 @@ declare class OwnerPool<T> {
  * An information object that helps multiple owners access
  * a single another information object
  */
-declare function Shared<T>($base: EventType<T>, stateless?: boolean): TheShared<T>;
-declare class TheShared<T> implements SourceType<T> {
+declare function Shared<T>($base: EventType<T>, stateless?: boolean): SharedEvent<T>;
+declare class SharedEvent<T> implements SourceType<T> {
     private $base;
     private stateless;
     private ownersPool;
@@ -420,8 +430,12 @@ declare class TheShared<T> implements SourceType<T> {
     destroy(): OwnerPool<T>;
 }
 
-declare function SharedSource<T>($base: SourceType<T>, stateless?: boolean): TheSharedSource<T>;
-declare class TheSharedSource<T> implements SourceType<T> {
+/**
+ * Creates a shared source that allows multiple transports to subscribe to the same underlying source.
+ * The stateless parameter controls whether the sharing maintains state or not.
+ */
+declare function SharedSource<T>($base: SourceType<T>, stateless?: boolean): SharedSourceEvent<T>;
+declare class SharedSourceEvent<T> implements SourceType<T> {
     private $base;
     private $sharedBase;
     constructor($base: SourceType<T>, stateless?: boolean);
@@ -432,24 +446,31 @@ declare class TheSharedSource<T> implements SourceType<T> {
 /**
  * Component that receives a data array and yields values one by one
  */
-declare function Stream<T>($base: EventType<T[]>): TheStream<T>;
-declare class TheStream<T> implements EventType<T> {
+declare function Stream<T>($base: EventType<T[]>): StreamEvent<T>;
+declare class StreamEvent<T> implements EventType<T> {
     private $base;
     constructor($base: EventType<T[]>);
     event(transport: TransportType<T>): this;
     private parent;
 }
 
-declare function TransportApplied<T>(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>): TheTransportApplied<T>;
-declare class TheTransportApplied<T> implements TransportType<unknown, EventType<T>> {
+/**
+ * Creates a transport that applies a constructor to the result of another transport.
+ */
+declare function TransportApplied<T>(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>): TransportAppliedImpl<T>;
+declare class TransportAppliedImpl<T> implements TransportType<unknown, EventType<T>> {
     private baseTransport;
     private applier;
     constructor(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>);
     use(args: unknown): EventType<T>;
 }
 
-declare function TransportArgs(baseTransport: TransportType<any[], EventType>, args: unknown[], startFromArgIndex?: number): TheTransportArgs;
-declare class TheTransportArgs implements TransportType<unknown[], EventType<unknown>> {
+/**
+ * Creates a transport that merges additional arguments into the base transport's arguments
+ * at a specified index position, allowing for flexible argument composition
+ */
+declare function TransportArgs(baseTransport: TransportType<any[], EventType>, args: unknown[], startFromArgIndex?: number): TransportArgsImpl;
+declare class TransportArgsImpl implements TransportType<unknown[], EventType<unknown>> {
     private baseTransport;
     private args;
     private startFromArgIndex;
@@ -457,16 +478,16 @@ declare class TheTransportArgs implements TransportType<unknown[], EventType<unk
     use(runArgs: unknown[]): EventType<unknown>;
 }
 
-declare function TransportDestroyable<T>(baseTransport: TransportType<any[], EventType<T>>): TheTransportDestroyable<T>;
 /**
- * Constructor what can be destroyed
+ * Creates a transport wrapper that automatically manages destruction of created instances
  */
-declare class TheTransportDestroyable<T> implements TransportType<unknown, EventType>, DestroyableType {
+declare function TransportDestroyable<T>(baseTransport: TransportType<any[], EventType<T>>): TransportDestroyableEvent<T>;
+declare class TransportDestroyableEvent<T> implements TransportType<unknown, EventType<T>>, DestroyableType {
     private baseTransport;
     private destructors;
-    constructor(baseTransport: TransportType<any, EventType<T>>);
-    use(args: unknown): EventType<T>;
+    constructor(baseTransport: TransportType<any[], EventType<T>>);
+    use(args: any[]): EventType<T>;
     destroy(): this;
 }
 
-export { All, Any, Applied, Catch, Chain, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };

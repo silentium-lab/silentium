@@ -1,14 +1,18 @@
 import { EventType, TransportType } from "../types";
 
+/**
+ * Creates a transport that merges additional arguments into the base transport's arguments
+ * at a specified index position, allowing for flexible argument composition
+ */
 export function TransportArgs(
   baseTransport: TransportType<any[], EventType>,
   args: unknown[],
   startFromArgIndex: number = 0,
 ) {
-  return new TheTransportArgs(baseTransport, args, startFromArgIndex);
+  return new TransportArgsImpl(baseTransport, args, startFromArgIndex);
 }
 
-export class TheTransportArgs
+export class TransportArgsImpl
   implements TransportType<unknown[], EventType<unknown>>
 {
   public constructor(

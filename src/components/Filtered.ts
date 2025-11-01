@@ -1,15 +1,19 @@
 import { TransportParent } from "../base/Transport";
 import { ConstructorType, EventType, TransportType } from "../types";
 
+/**
+ * Filters values from the source event based on a predicate function,
+ * optionally providing a default value when the predicate fails.
+ */
 export function Filtered<T>(
   $base: EventType<T>,
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
 ) {
-  return new TheFiltered<T>($base, predicate, defaultValue);
+  return new FilteredEvent<T>($base, predicate, defaultValue);
 }
 
-class TheFiltered<T> implements EventType<T> {
+class FilteredEvent<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
     private predicate: ConstructorType<[T], boolean>,
@@ -21,7 +25,7 @@ class TheFiltered<T> implements EventType<T> {
     return this;
   }
 
-  private parent = TransportParent<T>(function (v, child: TheFiltered<T>) {
+  private parent = TransportParent<T>(function (v, child: FilteredEvent<T>) {
     if (child.predicate(v)) {
       this.use(v);
     } else if (child.defaultValue !== undefined) {

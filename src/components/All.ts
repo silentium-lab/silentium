@@ -22,16 +22,16 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * will be emitted by All.
  */
 export function All<const T extends EventType[]>(...events: T) {
-  return new TheAll<T>(...events);
+  return new AllEvent<T>(...events);
 }
 
-class TheAll<const T extends EventType[]>
+class AllEvent<const T extends EventType[]>
   implements EventType<ExtractTypesFromArrayS<T>>
 {
   private known: Set<string>;
   private filled = new Set<string>();
   private $events: T;
-  private result: Record<string, unknown> = {};
+  private result: unknown[] = [];
 
   public constructor(...events: T) {
     this.known = new Set<string>(Object.keys(events));
@@ -41,21 +41,23 @@ class TheAll<const T extends EventType[]>
   public event(transport: TransportType<ExtractTypesFromArrayS<T>>): this {
     Object.entries(this.$events).forEach(([key, event]) => {
       ensureEvent(event, "All: item");
-      this.known.add(key);
       event.event(this.transport.child(transport, key));
     });
+    if (this.known.size === 0) {
+      transport.use([] as ExtractTypesFromArrayS<T>);
+    }
     return this;
   }
 
   private transport = TransportParent(function (
-    v: T,
-    child: TheAll<T>,
+    v: unknown,
+    child: AllEvent<T>,
     key: string,
   ) {
     child.filled.add(key);
-    child.result[key] = v;
+    child.result[parseInt(key)] = v;
     if (isAllFilled(child.filled, child.known)) {
-      this.use(Object.values(child.result) as ExtractTypesFromArrayS<T>);
+      this.use(child.result as ExtractTypesFromArrayS<T>);
     }
   }, this);
 }

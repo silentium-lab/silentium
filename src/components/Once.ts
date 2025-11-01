@@ -7,10 +7,10 @@ import { EventType, TransportType } from "../types";
  * values are delivered from the source
  */
 export function Once<T>($base: EventType<T>) {
-  return new TheOnce<T>($base);
+  return new OnceEvent<T>($base);
 }
 
-class TheOnce<T> implements EventType<T> {
+class OnceEvent<T> implements EventType<T> {
   private isFilled = false;
 
   public constructor(private $base: EventType<T>) {}

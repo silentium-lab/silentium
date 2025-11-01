@@ -5,12 +5,12 @@ import { EventType, TransportType } from "../types";
  * An event that emits values received from
  * any of its bound events
  */
-export function Any<T>(...events: EventType<T>[]) {
-  return new TheAny(...events);
+export function Any<const T>(...events: EventType<T>[]) {
+  return new AnyEvent<T>(...events);
 }
 
-class TheAny<T> implements EventType<T> {
-  private $events: EventType[];
+class AnyEvent<T> implements EventType<T> {
+  private $events: EventType<T>[];
 
   public constructor(...events: EventType<T>[]) {
     this.$events = events;

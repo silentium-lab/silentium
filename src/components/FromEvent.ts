@@ -15,7 +15,7 @@ export function FromEvent<T>(
   $subscribeMethod: EventType<string>,
   $unsubscribeMethod?: EventType<string>,
 ) {
-  return new TheFromEvent<T>(
+  return new FromEventAdapter<T>(
     $emitter,
     $eventName,
     $subscribeMethod,
@@ -23,7 +23,7 @@ export function FromEvent<T>(
   );
 }
 
-class TheFromEvent<T> implements EventType<T>, DestroyableType {
+class FromEventAdapter<T> implements EventType<T>, DestroyableType {
   private lastTransport: TransportType<T> | null = null;
   private handler = (v: T) => {
     if (this.lastTransport) {
@@ -39,8 +39,9 @@ class TheFromEvent<T> implements EventType<T>, DestroyableType {
   ) {}
 
   public event(transport: TransportType<T>): this {
-    const a = All(this.$emitter, this.$eventName, this.$subscribeMethod);
-    a.event(this.parent.child(transport));
+    All(this.$emitter, this.$eventName, this.$subscribeMethod).event(
+      this.parent.child(transport),
+    );
     return this;
   }
 
@@ -60,8 +61,7 @@ class TheFromEvent<T> implements EventType<T>, DestroyableType {
     if (!this.$unsubscribeMethod) {
       return this;
     }
-    const a = All(this.$emitter, this.$eventName, this.$unsubscribeMethod);
-    a.event(
+    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).event(
       Transport(([emitter, eventName, unsubscribe]) => {
         emitter?.[unsubscribe]?.(eventName, this.handler);
       }),

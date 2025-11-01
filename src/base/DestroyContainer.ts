@@ -5,10 +5,10 @@ import { DestroyableType } from "../types";
  * disposing them later all together
  */
 export function DestroyContainer() {
-  return new TheDestroyContainer();
+  return new DestroyContainerImpl();
 }
 
-class TheDestroyContainer implements DestroyableType {
+class DestroyContainerImpl implements DestroyableType {
   private destructors: DestroyableType[] = [];
 
   public add(e: DestroyableType) {

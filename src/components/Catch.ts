@@ -13,10 +13,10 @@ export function Catch<T>(
   errorMessage: TransportType,
   errorOriginal?: TransportType,
 ) {
-  return new TheCatch<T>($base, errorMessage, errorOriginal);
+  return new CatchEvent<T>($base, errorMessage, errorOriginal);
 }
 
-class TheCatch<T> implements EventType<T> {
+class CatchEvent<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
     private errorMessage: TransportType,
@@ -32,11 +32,11 @@ class TheCatch<T> implements EventType<T> {
   public event(transport: TransportType<T>) {
     try {
       this.$base.event(transport);
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (e instanceof Error) {
         this.errorMessage.use(e.message);
       } else {
-        this.errorMessage.use(e);
+        this.errorMessage.use(String(e));
       }
       if (this.errorOriginal) {
         this.errorOriginal.use(e);

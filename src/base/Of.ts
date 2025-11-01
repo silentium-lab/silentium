@@ -4,10 +4,10 @@ import { EventType, TransportType } from "../types";
  * Helps convert a value into an event
  */
 export function Of<T>(value: T) {
-  return new TheOf<T>(value);
+  return new OfEvent<T>(value);
 }
 
-class TheOf<T> implements EventType<T> {
+class OfEvent<T> implements EventType<T> {
   public constructor(private value: T) {}
 
   public event(transport: TransportType<T>): this {

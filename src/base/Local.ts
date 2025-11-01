@@ -6,10 +6,10 @@ import { TransportParent } from "./Transport";
  * Create local copy of source what can be destroyed
  */
 export function Local<T>($base: EventType<T>) {
-  return new TheLocal<T>($base);
+  return new LocalEvent<T>($base);
 }
 
-class TheLocal<T> implements EventType<T>, DestroyableType {
+class LocalEvent<T> implements EventType<T>, DestroyableType {
   private destroyed = false;
 
   public constructor(private $base: EventType<T>) {
@@ -21,7 +21,7 @@ class TheLocal<T> implements EventType<T>, DestroyableType {
     return this;
   }
 
-  private transport = TransportParent(function (v: T, child: TheLocal<T>) {
+  private transport = TransportParent(function (v: T, child: LocalEvent<T>) {
     if (!child.destroyed) {
       this.use(v);
     }

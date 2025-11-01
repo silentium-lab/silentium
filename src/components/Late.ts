@@ -8,10 +8,10 @@ import { TransportType, SourceType } from "../types";
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
 export function Late<T>(v?: T) {
-  return new TheLate<T>(v);
+  return new LateEvent<T>(v);
 }
 
-class TheLate<T> implements SourceType<T> {
+class LateEvent<T> implements SourceType<T> {
   private lateTransport: TransportType<T> | null = null;
   private notify = (v?: T) => {
     if (isFilled(v) && this.lateTransport) {

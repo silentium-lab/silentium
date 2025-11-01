@@ -1,13 +1,16 @@
 import { EventType, ConstructorType, TransportType } from "../types";
 
+/**
+ * Creates a transport that applies a constructor to the result of another transport.
+ */
 export function TransportApplied<T>(
   baseTransport: TransportType<any, EventType<T>>,
   applier: ConstructorType<[EventType], EventType<T>>,
 ) {
-  return new TheTransportApplied(baseTransport, applier);
+  return new TransportAppliedImpl(baseTransport, applier);
 }
 
-export class TheTransportApplied<T>
+export class TransportAppliedImpl<T>
   implements TransportType<unknown, EventType<T>>
 {
   public constructor(

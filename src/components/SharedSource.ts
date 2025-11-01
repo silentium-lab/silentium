@@ -1,11 +1,15 @@
 import { Shared } from "../components/Shared";
 import { TransportType, SourceType } from "../types";
 
+/**
+ * Creates a shared source that allows multiple transports to subscribe to the same underlying source.
+ * The stateless parameter controls whether the sharing maintains state or not.
+ */
 export function SharedSource<T>($base: SourceType<T>, stateless = false) {
-  return new TheSharedSource<T>($base, stateless);
+  return new SharedSourceEvent<T>($base, stateless);
 }
 
-class TheSharedSource<T> implements SourceType<T> {
+class SharedSourceEvent<T> implements SourceType<T> {
   private $sharedBase: SourceType<T> & { touched: () => void };
 
   public constructor(

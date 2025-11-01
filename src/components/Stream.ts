@@ -5,10 +5,10 @@ import { EventType, TransportType } from "../types";
  * Component that receives a data array and yields values one by one
  */
 export function Stream<T>($base: EventType<T[]>) {
-  return new TheStream<T>($base);
+  return new StreamEvent<T>($base);
 }
 
-class TheStream<T> implements EventType<T> {
+class StreamEvent<T> implements EventType<T> {
   public constructor(private $base: EventType<T[]>) {}
 
   public event(transport: TransportType<T>): this {

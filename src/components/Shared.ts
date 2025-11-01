@@ -9,10 +9,10 @@ import { EventType, TransportType, SourceType } from "../types";
  * a single another information object
  */
 export function Shared<T>($base: EventType<T>, stateless = false) {
-  return new TheShared<T>($base, stateless);
+  return new SharedEvent<T>($base, stateless);
 }
 
-class TheShared<T> implements SourceType<T> {
+class SharedEvent<T> implements SourceType<T> {
   private ownersPool = new OwnerPool<T>();
   private lastValue: T | undefined;
   private calls = Late();

@@ -3,7 +3,9 @@ import { EventType, TransportType } from "../types";
 import { EventTypeValue } from "../types/EventType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
+type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
+  ? L
+  : never;
 
 /**
  * Chains events together and triggers
@@ -13,11 +15,11 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
  * emit a value again after the overall Chain response was already returned,
  * then Chain emits again with the value of the last event.
  */
-export function Chain<T extends EventType[]>(...events: T) {
-  return new TheChain<T>(...events);
+export function Chain<T extends readonly EventType[]>(...events: T) {
+  return new ChainEvent<T>(...events);
 }
 
-export class TheChain<T extends EventType[]>
+export class ChainEvent<T extends readonly EventType[]>
   implements EventType<EventTypeValue<Last<T>>>
 {
   private $events: T;
@@ -40,7 +42,7 @@ export class TheChain<T extends EventType[]>
 
   private oneEventTransport = TransportParent(function (
     v: EventTypeValue<Last<T>>,
-    child: TheChain<T>,
+    child: ChainEvent<T>,
     next: Last<T> | undefined,
     index: number,
   ) {

@@ -11,10 +11,10 @@ export function Map<T, TG>(
   $base: EventType<T[]>,
   $target: TransportType<any, EventType<TG>>,
 ) {
-  return new TheMap<T, TG>($base, $target);
+  return new MapEvent<T, TG>($base, $target);
 }
 
-class TheMap<T, TG> implements EventType<TG[]> {
+class MapEvent<T, TG> implements EventType<TG[]> {
   public constructor(
     private $base: EventType<T[]>,
     private $target: TransportType<any, EventType<TG>>,
