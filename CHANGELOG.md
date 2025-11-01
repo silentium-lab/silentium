@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.119](https://github.com/silentium-lab/silentium/compare/v0.0.118...v0.0.119) (2025-11-01)
+
+
+### Bug Fixes
+
+* **main:** fix lint config after deps update ([1c1be2b](https://github.com/silentium-lab/silentium/commit/1c1be2be33424836a1bcc1698abdd1ea832409f5))
+* **main:** npm audit fixes ([17f326b](https://github.com/silentium-lab/silentium/commit/17f326b6d39e0706d7ee24061f3fd7a56d2e3e9d))
+* **main:** transport type fix ([763306d](https://github.com/silentium-lab/silentium/commit/763306de39f3ed91de06dfc4adc38ce1fca6d4c0))
+
 ### [0.0.118](https://github.com/silentium-lab/silentium/compare/v0.0.117...v0.0.118) (2025-11-01)
 
 
