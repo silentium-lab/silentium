@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.117](https://github.com/silentium-lab/silentium/compare/v0.0.116...v0.0.117) (2025-11-01)
+
+
+### Bug Fixes
+
+* **main:** transport parent component ([686edae](https://github.com/silentium-lab/silentium/commit/686edae2bda0150411f3d9aeb346ca0c0b0d3d7e))
+
 ### [0.0.116](https://github.com/silentium-lab/silentium/compare/v0.0.115...v0.0.116) (2025-10-31)
 
 
