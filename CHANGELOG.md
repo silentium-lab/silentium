@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.118](https://github.com/silentium-lab/silentium/compare/v0.0.117...v0.0.118) (2025-11-01)
+
+
+### Bug Fixes
+
+* **main:** small refactorings ([1b1e720](https://github.com/silentium-lab/silentium/commit/1b1e720a79500b27eaa7e3ccbc1e7f5f379a5aab))
+
 ### [0.0.117](https://github.com/silentium-lab/silentium/compare/v0.0.116...v0.0.117) (2025-11-01)
 
 
