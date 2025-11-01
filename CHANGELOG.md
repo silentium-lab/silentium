@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.120](https://github.com/silentium-lab/silentium/compare/v0.0.119...v0.0.120) (2025-11-01)
+
+
+### Bug Fixes
+
+* **main:** destroy container fixed ([b46a20c](https://github.com/silentium-lab/silentium/commit/b46a20c957f0e91606208310ab8b39fe47e8ed61))
+
 ### [0.0.119](https://github.com/silentium-lab/silentium/compare/v0.0.118...v0.0.119) (2025-11-01)
 
 
