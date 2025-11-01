@@ -1,6 +1,6 @@
 import { ensureEvent } from "../helpers";
-import { ParentTransport } from "./Transport";
 import { DestroyableType, EventType, TransportType } from "../types";
+import { TransportParent } from "./Transport";
 
 /**
  * Create local copy of source what can be destroyed
@@ -21,11 +21,11 @@ class TheLocal<T> implements EventType<T>, DestroyableType {
     return this;
   }
 
-  private transport = new ParentTransport((v: T, child: TransportType<T>) => {
-    if (!this.destroyed) {
-      child.use(v);
+  private transport = TransportParent(function (v: T, child: TheLocal<T>) {
+    if (!child.destroyed) {
+      this.use(v);
     }
-  });
+  }, this);
 
   public destroy(): this {
     return this;

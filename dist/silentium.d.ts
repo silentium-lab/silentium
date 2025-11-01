@@ -52,8 +52,8 @@ type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
  */
 declare function All<const T extends EventType[]>(...events: T): TheAll<T>;
 declare class TheAll<const T extends EventType[]> implements EventType<ExtractTypesFromArrayS<T>> {
-    private keysKnown;
-    private keysFilled;
+    private known;
+    private filled;
     private $events;
     private result;
     constructor(...events: T);
@@ -113,7 +113,7 @@ type Last<T extends any[]> = T extends [...infer _, infer L] ? L : never;
 declare function Chain<T extends EventType[]>(...events: T): TheChain<T>;
 declare class TheChain<T extends EventType[]> implements EventType<EventTypeValue<Last<T>>> {
     private $events;
-    private lastValue;
+    private $latest;
     constructor(...events: T);
     event(transport: TransportType<EventTypeValue<Last<T>>>): this;
     private handleEvent;
@@ -213,13 +213,14 @@ declare class TheTransportEvent<T, ET = T> implements TransportType<T, EventType
  * to perform some transformation on the value
  * during its transmission
  */
-declare class ParentTransport<T> implements TransportType<T> {
+declare function TransportParent<T>(executor: (this: TransportType, v: T, ...context: any[]) => void, ...args: any[]): TheTransportParent<T>;
+declare class TheTransportParent<T> implements TransportType<T> {
     private executor;
     private args;
     private _child?;
-    constructor(executor: (v: T, transport: TransportType, ...args: any[]) => void, args?: any[], _child?: TransportType<T> | undefined);
+    constructor(executor: (this: TransportType, v: T, ...context: any[]) => void, args?: any[], _child?: TransportType<T> | undefined);
     use(value: T): this;
-    child(transport: TransportType, ...args: any[]): ParentTransport<T>;
+    child(transport: TransportType, ...args: any[]): TheTransportParent<T>;
 }
 
 /**
@@ -468,4 +469,4 @@ declare class TheTransportDestroyable<T> implements TransportType<unknown, Event
     destroy(): this;
 }
 
-export { All, Any, Applied, Catch, Chain, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };

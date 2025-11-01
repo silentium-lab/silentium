@@ -1,5 +1,5 @@
+import { TransportParent } from "../base/Transport";
 import { ensureEvent } from "../helpers";
-import { ParentTransport } from "../base/Transport";
 import { ConstructorType, EventType, TransportType } from "../types";
 
 /**
@@ -26,7 +26,7 @@ class TheApplied<T, R> implements EventType<R> {
     return this;
   }
 
-  private transport = new ParentTransport((v: T, child) => {
-    child.use(this.applier(v));
-  });
+  private transport = TransportParent(function (v: T, child: TheApplied<T, R>) {
+    this.use(child.applier(v));
+  }, this);
 }

@@ -55,9 +55,16 @@ class TheTransportEvent<T, ET = T> implements TransportType<T, EventType<ET>> {
  * to perform some transformation on the value
  * during its transmission
  */
-export class ParentTransport<T> implements TransportType<T> {
+export function TransportParent<T>(
+  executor: (this: TransportType, v: T, ...context: any[]) => void,
+  ...args: any[]
+) {
+  return new TheTransportParent<T>(executor, args);
+}
+
+class TheTransportParent<T> implements TransportType<T> {
   public constructor(
-    private executor: (v: T, transport: TransportType, ...args: any[]) => void,
+    private executor: (this: TransportType, v: T, ...context: any[]) => void,
     private args: any[] = [],
     private _child?: TransportType<T>,
   ) {
@@ -68,12 +75,12 @@ export class ParentTransport<T> implements TransportType<T> {
     if (this._child === undefined) {
       throw new Error("no base transport");
     }
-    this.executor(value, this._child, ...this.args);
+    this.executor.call(this._child, value, ...this.args);
     return this;
   }
 
   public child(transport: TransportType, ...args: any[]) {
-    return new ParentTransport(
+    return new TheTransportParent(
       this.executor,
       [...this.args, ...args],
       transport,

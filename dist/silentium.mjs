@@ -103,11 +103,11 @@ class TheLocal {
   constructor($base) {
     this.$base = $base;
     __publicField$h(this, "destroyed", false);
-    __publicField$h(this, "transport", new ParentTransport((v, child) => {
-      if (!this.destroyed) {
-        child.use(v);
+    __publicField$h(this, "transport", TransportParent(function(v, child) {
+      if (!child.destroyed) {
+        this.use(v);
       }
-    }));
+    }, this));
     ensureEvent($base, "Local: $base");
   }
   event(transport) {
@@ -205,7 +205,10 @@ class TheTransportEvent {
     return this.executor(value);
   }
 }
-class ParentTransport {
+function TransportParent(executor, ...args) {
+  return new TheTransportParent(executor, args);
+}
+class TheTransportParent {
   constructor(executor, args = [], _child) {
     this.executor = executor;
     this.args = args;
@@ -216,11 +219,11 @@ class ParentTransport {
     if (this._child === void 0) {
       throw new Error("no base transport");
     }
-    this.executor(value, this._child, ...this.args);
+    this.executor.call(this._child, value, ...this.args);
     return this;
   }
   child(transport, ...args) {
-    return new ParentTransport(
+    return new TheTransportParent(
       this.executor,
       [...this.args, ...args],
       transport
@@ -239,26 +242,24 @@ function All(...events) {
 }
 class TheAll {
   constructor(...events) {
-    __publicField$f(this, "keysKnown");
-    __publicField$f(this, "keysFilled", /* @__PURE__ */ new Set());
+    __publicField$f(this, "known");
+    __publicField$f(this, "filled", /* @__PURE__ */ new Set());
     __publicField$f(this, "$events");
     __publicField$f(this, "result", {});
-    __publicField$f(this, "transport", new ParentTransport(
-      (v, child, key) => {
-        this.keysFilled.add(key);
-        this.result[key] = v;
-        if (isAllFilled(this.keysFilled, this.keysKnown)) {
-          child.use(Object.values(this.result));
-        }
+    __publicField$f(this, "transport", TransportParent(function(v, child, key) {
+      child.filled.add(key);
+      child.result[key] = v;
+      if (isAllFilled(child.filled, child.known)) {
+        this.use(Object.values(child.result));
       }
-    ));
-    this.keysKnown = new Set(Object.keys(events));
+    }, this));
+    this.known = new Set(Object.keys(events));
     this.$events = events;
   }
   event(transport) {
     Object.entries(this.$events).forEach(([key, event]) => {
       ensureEvent(event, "All: item");
-      this.keysKnown.add(key);
+      this.known.add(key);
       event.event(this.transport.child(transport, key));
     });
     return this;
@@ -295,9 +296,9 @@ class TheApplied {
   constructor($base, applier) {
     this.$base = $base;
     this.applier = applier;
-    __publicField$d(this, "transport", new ParentTransport((v, child) => {
-      child.use(this.applier(v));
-    }));
+    __publicField$d(this, "transport", TransportParent(function(v, child) {
+      this.use(child.applier(v));
+    }, this));
     ensureEvent($base, "Applied: base");
   }
   event(transport) {
@@ -346,25 +347,23 @@ function Chain(...events) {
 class TheChain {
   constructor(...events) {
     __publicField$c(this, "$events");
-    __publicField$c(this, "lastValue");
+    __publicField$c(this, "$latest");
     __publicField$c(this, "handleEvent", (index, transport) => {
       const event = this.$events[index];
-      const nextI = this.$events[index + 1];
-      event.event(this.oneEventTransport.child(transport, nextI, index));
+      const next = this.$events[index + 1];
+      event.event(this.oneEventTransport.child(transport, next, index));
     });
-    __publicField$c(this, "oneEventTransport", new ParentTransport(
-      (v, child, nextI, index) => {
-        if (!nextI) {
-          this.lastValue = v;
-        }
-        if (this.lastValue) {
-          child.use(this.lastValue);
-        }
-        if (nextI && !this.lastValue) {
-          this.handleEvent(index + 1, child);
-        }
+    __publicField$c(this, "oneEventTransport", TransportParent(function(v, child, next, index) {
+      if (!next) {
+        child.$latest = v;
       }
-    ));
+      if (child.$latest) {
+        this.use(child.$latest);
+      }
+      if (next && !child.$latest) {
+        child.handleEvent(index + 1, this);
+      }
+    }, this));
     this.$events = events;
   }
   event(transport) {
@@ -402,13 +401,13 @@ class TheFiltered {
     this.$base = $base;
     this.predicate = predicate;
     this.defaultValue = defaultValue;
-    __publicField$b(this, "parent", new ParentTransport((v, child) => {
-      if (this.predicate(v)) {
-        child.use(v);
-      } else if (this.defaultValue !== void 0) {
-        child.use(this.defaultValue);
+    __publicField$b(this, "parent", TransportParent(function(v, child) {
+      if (child.predicate(v)) {
+        this.use(v);
+      } else if (child.defaultValue !== void 0) {
+        this.use(child.defaultValue);
       }
-    }));
+    }, this));
   }
   event(transport) {
     this.$base.event(this.parent.child(transport));
@@ -439,15 +438,13 @@ class TheFromEvent {
         this.lastTransport.use(v);
       }
     });
-    __publicField$a(this, "parent", new ParentTransport(
-      ([emitter, eventName, subscribe], parent) => {
-        this.lastTransport = parent;
-        if (!emitter?.[subscribe]) {
-          return;
-        }
-        emitter[subscribe](eventName, this.handler);
+    __publicField$a(this, "parent", TransportParent(function([emitter, eventName, subscribe], child) {
+      child.lastTransport = this;
+      if (!emitter?.[subscribe]) {
+        return;
       }
-    ));
+      emitter[subscribe](eventName, child.handler);
+    }, this));
   }
   event(transport) {
     const a = All(this.$emitter, this.$eventName, this.$subscribeMethod);
@@ -529,12 +526,12 @@ class TheOnce {
   constructor($base) {
     this.$base = $base;
     __publicField$8(this, "isFilled", false);
-    __publicField$8(this, "parent", new ParentTransport((v, child) => {
-      if (!this.isFilled) {
-        this.isFilled = true;
-        child.use(v);
+    __publicField$8(this, "parent", TransportParent(function(v, child) {
+      if (!child.isFilled) {
+        child.isFilled = true;
+        this.use(v);
       }
-    }));
+    }, this));
   }
   event(transport) {
     this.$base.event(this.parent.child(transport));
@@ -644,19 +641,18 @@ class TheMap {
   constructor($base, $target) {
     this.$base = $base;
     this.$target = $target;
-    __publicField$4(this, "parent", new ParentTransport((v, child) => {
+    __publicField$4(this, "parent", TransportParent(function(v, child) {
       const infos = [];
       v.forEach((val) => {
-        let valInfo = val;
-        if (!isEvent(valInfo)) {
-          valInfo = Of(valInfo);
+        let $val = val;
+        if (!isEvent($val)) {
+          $val = Of($val);
         }
-        const info = this.$target.use(valInfo);
+        const info = child.$target.use($val);
         infos.push(info);
       });
-      const allI = All(...infos);
-      allI.event(child);
-    }));
+      All(...infos).event(this);
+    }, this));
   }
   event(transport) {
     this.$base.event(this.parent.child(transport));
@@ -713,10 +709,10 @@ class TheSequence {
   constructor($base) {
     this.$base = $base;
     __publicField$2(this, "result", []);
-    __publicField$2(this, "parent", new ParentTransport((v, child) => {
-      this.result.push(v);
-      child.use(this.result);
-    }));
+    __publicField$2(this, "parent", TransportParent(function(v, child) {
+      child.result.push(v);
+      this.use(child.result);
+    }, this));
   }
   event(transport) {
     this.$base.event(this.parent.child(transport));
@@ -733,9 +729,9 @@ function Stream($base) {
 class TheStream {
   constructor($base) {
     this.$base = $base;
-    __publicField$1(this, "parent", new ParentTransport((v, child) => {
+    __publicField$1(this, "parent", TransportParent(function(v) {
       v.forEach((cv) => {
-        child.use(cv);
+        this.use(cv);
       });
     }));
   }
@@ -803,5 +799,5 @@ class TheTransportDestroyable {
   }
 }
 
-export { All, Any, Applied, Catch, Chain, Component, ComponentClass, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, ParentTransport, Primitive, Sequence, Shared, SharedSource, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, Component, ComponentClass, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, Stream, TheChain, TheFromPromise, TheTransportApplied, TheTransportArgs, Transport, TransportApplied, TransportArgs, TransportDestroyable, TransportEvent, TransportParent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.mjs.map

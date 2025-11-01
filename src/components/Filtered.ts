@@ -1,5 +1,5 @@
-import { ParentTransport } from "../base/Transport";
-import { EventType, ConstructorType, TransportType } from "../types";
+import { TransportParent } from "../base/Transport";
+import { ConstructorType, EventType, TransportType } from "../types";
 
 export function Filtered<T>(
   $base: EventType<T>,
@@ -21,11 +21,11 @@ class TheFiltered<T> implements EventType<T> {
     return this;
   }
 
-  private parent = new ParentTransport<T>((v, child) => {
-    if (this.predicate(v)) {
-      child.use(v);
-    } else if (this.defaultValue !== undefined) {
-      child.use(this.defaultValue);
+  private parent = TransportParent<T>(function (v, child: TheFiltered<T>) {
+    if (child.predicate(v)) {
+      this.use(v);
+    } else if (child.defaultValue !== undefined) {
+      this.use(child.defaultValue);
     }
-  });
+  }, this);
 }

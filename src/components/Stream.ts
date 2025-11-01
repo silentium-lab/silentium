@@ -1,4 +1,4 @@
-import { ParentTransport } from "../base";
+import { TransportParent } from "../base";
 import { EventType, TransportType } from "../types";
 
 /**
@@ -16,9 +16,9 @@ class TheStream<T> implements EventType<T> {
     return this;
   }
 
-  private parent = new ParentTransport<T[]>((v, child) => {
+  private parent = TransportParent<T[]>(function (v) {
     v.forEach((cv) => {
-      child.use(cv);
+      this.use(cv);
     });
   });
 }

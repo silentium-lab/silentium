@@ -1,4 +1,4 @@
-import { ParentTransport } from "../base";
+import { TransportParent } from "../base";
 import { EventType, TransportType } from "../types";
 
 export function Sequence<T>($base: EventType<T>) {
@@ -19,8 +19,8 @@ class TheSequence<T> implements EventType<T[]> {
     return this;
   }
 
-  private parent = new ParentTransport<T>((v, child) => {
-    this.result.push(v);
-    child.use(this.result);
-  });
+  private parent = TransportParent<T>(function (v, child) {
+    child.result.push(v);
+    this.use(child.result);
+  }, this);
 }

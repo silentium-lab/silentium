@@ -1,5 +1,5 @@
+import { Of, TransportParent } from "../base";
 import { isEvent } from "../helpers";
-import { Of, ParentTransport } from "../base";
 import { EventType, TransportType } from "../types";
 import { All } from "./All";
 
@@ -25,17 +25,16 @@ class TheMap<T, TG> implements EventType<TG[]> {
     return this;
   }
 
-  private parent = new ParentTransport<T[]>((v, child) => {
+  private parent = TransportParent<T[]>(function (v, child) {
     const infos: EventType<TG>[] = [];
     v.forEach((val) => {
-      let valInfo: EventType<T> | T = val;
-      if (!isEvent(valInfo as object)) {
-        valInfo = Of(valInfo);
+      let $val: EventType<T> | T = val;
+      if (!isEvent($val as object)) {
+        $val = Of($val);
       }
-      const info = this.$target.use(valInfo);
+      const info = child.$target.use($val);
       infos.push(info);
     });
-    const allI = All(...infos);
-    allI.event(child);
-  });
+    All(...infos).event(this);
+  }, this);
 }

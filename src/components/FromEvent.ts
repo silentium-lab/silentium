@@ -1,4 +1,4 @@
-import { ParentTransport, Transport } from "../base/Transport";
+import { Transport, TransportParent } from "../base/Transport";
 import { EventType, TransportType } from "../types";
 import { DestroyableType } from "../types/EventType";
 import { All } from "./All";
@@ -44,15 +44,16 @@ class TheFromEvent<T> implements EventType<T>, DestroyableType {
     return this;
   }
 
-  private parent = new ParentTransport<[any, string, string]>(
-    ([emitter, eventName, subscribe], parent) => {
-      this.lastTransport = parent;
-      if (!emitter?.[subscribe]) {
-        return;
-      }
-      emitter[subscribe](eventName, this.handler);
-    },
-  );
+  private parent = TransportParent<[any, string, string]>(function (
+    [emitter, eventName, subscribe],
+    child,
+  ) {
+    child.lastTransport = this;
+    if (!emitter?.[subscribe]) {
+      return;
+    }
+    emitter[subscribe](eventName, child.handler);
+  }, this);
 
   public destroy(): this {
     this.lastTransport = null;

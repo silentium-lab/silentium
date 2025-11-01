@@ -1,4 +1,4 @@
-import { ParentTransport } from "../base/Transport";
+import { TransportParent } from "../base/Transport";
 import { ensureEvent } from "../helpers";
 import { EventType, TransportType } from "../types";
 
@@ -28,32 +28,34 @@ export function All<const T extends EventType[]>(...events: T) {
 class TheAll<const T extends EventType[]>
   implements EventType<ExtractTypesFromArrayS<T>>
 {
-  private keysKnown: Set<string>;
-  private keysFilled = new Set<string>();
+  private known: Set<string>;
+  private filled = new Set<string>();
   private $events: T;
   private result: Record<string, unknown> = {};
 
   public constructor(...events: T) {
-    this.keysKnown = new Set<string>(Object.keys(events));
+    this.known = new Set<string>(Object.keys(events));
     this.$events = events;
   }
 
   public event(transport: TransportType<ExtractTypesFromArrayS<T>>): this {
     Object.entries(this.$events).forEach(([key, event]) => {
       ensureEvent(event, "All: item");
-      this.keysKnown.add(key);
+      this.known.add(key);
       event.event(this.transport.child(transport, key));
     });
     return this;
   }
 
-  private transport = new ParentTransport(
-    (v: T, child: TransportType, key: string) => {
-      this.keysFilled.add(key);
-      this.result[key] = v;
-      if (isAllFilled(this.keysFilled, this.keysKnown)) {
-        child.use(Object.values(this.result) as ExtractTypesFromArrayS<T>);
-      }
-    },
-  );
+  private transport = TransportParent(function (
+    v: T,
+    child: TheAll<T>,
+    key: string,
+  ) {
+    child.filled.add(key);
+    child.result[key] = v;
+    if (isAllFilled(child.filled, child.known)) {
+      this.use(Object.values(child.result) as ExtractTypesFromArrayS<T>);
+    }
+  }, this);
 }

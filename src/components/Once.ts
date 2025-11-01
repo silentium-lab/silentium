@@ -1,4 +1,4 @@
-import { ParentTransport } from "../base";
+import { TransportParent } from "../base";
 import { EventType, TransportType } from "../types";
 
 /**
@@ -20,10 +20,10 @@ class TheOnce<T> implements EventType<T> {
     return this;
   }
 
-  private parent = new ParentTransport<T>((v, child) => {
-    if (!this.isFilled) {
-      this.isFilled = true;
-      child.use(v);
+  private parent = TransportParent<T>(function (v, child) {
+    if (!child.isFilled) {
+      child.isFilled = true;
+      this.use(v);
     }
-  });
+  }, this);
 }
