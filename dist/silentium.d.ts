@@ -8,8 +8,8 @@ type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P
  * Type representing the process
  * of passing a value somewhere
  */
-interface TransportType<T = unknown, R = null> {
-    use(value: T): R extends null ? this : R;
+interface TransportType<T = unknown, R = any> {
+    use(value: T): R;
 }
 
 /**
@@ -402,7 +402,7 @@ declare class OwnerPool<T> {
     private owners;
     private innerOwner;
     constructor();
-    owner(): TransportType<T, null>;
+    owner(): TransportType<T, any>;
     size(): number;
     has(owner: TransportType<T>): boolean;
     add(owner: TransportType<T>): this;
