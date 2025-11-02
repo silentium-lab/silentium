@@ -1,6 +1,7 @@
-import { Transport, TransportExecutor } from "../base";
-import { ensureEvent } from "../helpers";
-import { EventType, TransportType } from "../types";
+import { Transport, TransportExecutor } from "../base/Transport";
+import { ensureEvent } from "../helpers/ensures";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 type ExecutorApplier<T> = (
   executor: TransportExecutor<T>,

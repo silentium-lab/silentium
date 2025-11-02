@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { Applied } from "./Applied";
 import { Late } from "./Late";
 import { Sequence } from "./Sequence";
-import { Transport } from "../base";
+import { Transport } from "../base/Transport";
 
 describe("Sequence.test", () => {
   test("use one by one values", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, test, vitest } from "vitest";
 import { Late } from "./Late";
 import { Once } from "./Once";
-import { Transport } from "../base";
+import { Transport } from "../base/Transport";
 
 describe("Once.test", () => {
   test("with not called check", () => {

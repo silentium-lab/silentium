@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { Local } from "../base/Local";
-import { Late } from "../components";
 import { Transport } from "./Transport";
+import { Late } from "../components/Late";
 
 describe("Local.test", () => {
   test("local event don't react after destroying", () => {

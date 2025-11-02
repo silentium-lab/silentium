@@ -1,9 +1,5 @@
-import {
-  DestroyableType,
-  EventType,
-  EventTypeValue,
-  TransportType,
-} from "../types";
+import { DestroyableType, EventType, EventTypeValue } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Create a function component that

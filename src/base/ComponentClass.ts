@@ -1,9 +1,5 @@
-import {
-  DestroyableType,
-  EventType,
-  EventTypeValue,
-  SourceType,
-} from "../types";
+import { DestroyableType, EventType, EventTypeValue } from "../types/EventType";
+import { SourceType } from "../types/SourceType";
 
 type ConstructableType = { new (...args: any[]): any };
 

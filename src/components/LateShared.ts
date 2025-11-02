@@ -1,6 +1,7 @@
+import { SourceType } from "../types/SourceType";
 import { Late } from "../components/Late";
 import { SharedSource } from "../components/SharedSource";
-import { TransportType, SourceType } from "../types";
+import { TransportType } from "../types/TransportType";
 
 /**
  * An event with a value that will be set later,
@@ -11,7 +12,7 @@ export function LateShared<T>(value?: T) {
 }
 
 class LateSharedEvent<T> implements SourceType<T> {
-  private $event: SourceType<T>;
+  public $event: SourceType<T>;
 
   public constructor(value?: T) {
     this.$event = SharedSource(Late(value));

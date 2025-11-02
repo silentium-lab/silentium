@@ -1,5 +1,5 @@
-import { Transport } from "../base";
-import { TransportType } from "../types";
+import { TransportType } from "../types/TransportType";
+import { Transport } from "../base/Transport";
 
 /**
  * Helps maintain an owner list allowing different

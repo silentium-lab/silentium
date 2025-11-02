@@ -1,6 +1,8 @@
-import { Event, Transport, Void } from "../base";
 import { describe, expect, test, vi } from "vitest";
 import { Catch } from "../components/Catch";
+import { Event } from "../base/Event";
+import { Transport } from "../base/Transport";
+import { Void } from "../base/Void";
 
 describe("Catch.test", () => {
   test("event with applied function", () => {

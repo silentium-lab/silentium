@@ -1,4 +1,5 @@
-import { EventType, TransportType } from "../types";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Creates a transport that merges additional arguments into the base transport's arguments

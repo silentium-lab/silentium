@@ -1,4 +1,5 @@
-import { EventType, TransportType } from "../types";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Helps convert a value into an event

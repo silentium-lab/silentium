@@ -1,5 +1,6 @@
-import { ensureEvent, ensureTransport } from "../helpers";
-import { EventType, TransportType } from "../types";
+import { ensureEvent, ensureTransport } from "../helpers/ensures";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * An event representing a base event where

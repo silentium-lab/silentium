@@ -1,6 +1,6 @@
+import { TransportType } from "../types/TransportType";
 import { Transport, TransportParent } from "../base/Transport";
-import { EventType, TransportType } from "../types";
-import { DestroyableType } from "../types/EventType";
+import { DestroyableType, EventType } from "../types/EventType";
 import { All } from "./All";
 
 /**

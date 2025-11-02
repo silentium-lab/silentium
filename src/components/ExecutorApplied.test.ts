@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { Applied } from "../components/Applied";
 import { Late } from "../components/Late";
-import { Diagram } from "../testing";
 import { ExecutorApplied } from "./ExecutorApplied";
+import { Diagram } from "../testing/Diagram";
 
 describe("ExecutorApplied.test", () => {
   test("fn applied to value transferring", () => {

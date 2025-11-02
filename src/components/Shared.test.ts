@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { Diagram } from "../testing";
 import { Late } from "./Late";
 import { Shared } from "./Shared";
-import { Transport } from "../base";
+import { Diagram } from "../testing/Diagram";
+import { Transport } from "../base/Transport";
 
 describe("Shared.test", () => {
   test("many users for one event", () => {

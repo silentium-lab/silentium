@@ -1,5 +1,6 @@
-import { TransportParent } from "../base";
-import { EventType, TransportType } from "../types";
+import { TransportParent } from "../base/Transport";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Component that receives a data array and yields values one by one

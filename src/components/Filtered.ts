@@ -1,5 +1,7 @@
+import { EventType } from "../types/EventType";
 import { TransportParent } from "../base/Transport";
-import { ConstructorType, EventType, TransportType } from "../types";
+import { ConstructorType } from "../types/ConstructorType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Filters values from the source event based on a predicate function,

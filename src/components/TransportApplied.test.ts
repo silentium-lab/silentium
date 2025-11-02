@@ -1,8 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of, Transport, TransportEvent } from "../base";
 import { Chain } from "./Chain";
 import { Late } from "./Late";
 import { TransportApplied } from "../components/TransportApplied";
+import { Transport, TransportEvent } from "../base/Transport";
+import { Of } from "../base/Of";
 
 describe("TransportApplied.test", () => {
   test("apply fn to result", () => {

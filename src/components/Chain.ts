@@ -1,6 +1,6 @@
+import { TransportType } from "../types/TransportType";
 import { TransportParent } from "../base/Transport";
-import { EventType, TransportType } from "../types";
-import { EventTypeValue } from "../types/EventType";
+import { EventType, EventTypeValue } from "../types/EventType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]

@@ -1,6 +1,7 @@
+import { EventType } from "../types/EventType";
 import { TransportParent } from "../base/Transport";
-import { ensureEvent } from "../helpers";
-import { EventType, TransportType } from "../types";
+import { TransportType } from "../types/TransportType";
+import { ensureEvent } from "../helpers/ensures";
 
 type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
 

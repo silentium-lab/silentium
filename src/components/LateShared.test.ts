@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { LateShared } from "../components/LateShared";
-import { Transport } from "../base";
+import { Transport } from "../base/Transport";
 
 describe("LateShared.test", () => {
   test("without value", () => {

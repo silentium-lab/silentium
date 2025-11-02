@@ -1,8 +1,11 @@
-import { Transport } from "../base";
+import { EventType } from "../types/EventType";
 import { Late } from "../components/Late";
 import { Once } from "../components/Once";
-import { isFilled, OwnerPool } from "../helpers";
-import { EventType, TransportType, SourceType } from "../types";
+import { SourceType } from "../types/SourceType";
+import { OwnerPool } from "../helpers/OwnerPool";
+import { TransportType } from "../types/TransportType";
+import { isFilled } from "../helpers/guards";
+import { Transport } from "../base/Transport";
 
 /**
  * An information object that helps multiple owners access

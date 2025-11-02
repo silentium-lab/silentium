@@ -1,9 +1,13 @@
-import { EventType, TransportType } from "../types";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { Event, Of, Transport, TransportEvent } from "../base";
-import { Diagram, wait } from "../testing";
 import { Map } from "./Map";
 import { Applied } from "./Applied";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
+import { wait } from "../testing/wait";
+import { Diagram } from "../testing/Diagram";
+import { Event } from "../base/Event";
+import { Transport, TransportEvent } from "../base/Transport";
+import { Of } from "../base/Of";
 
 function x2(baseNumber: EventType<number>) {
   return Event<number>((o) => {

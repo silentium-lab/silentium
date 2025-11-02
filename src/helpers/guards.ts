@@ -1,4 +1,5 @@
-import { DestroyableType, EventType, TransportType } from "../types";
+import { DestroyableType, EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 export const isFilled = <T>(
   value?: T,

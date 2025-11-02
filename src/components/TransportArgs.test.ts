@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of, Transport, TransportEvent } from "../base";
 import { TransportArgs } from "../components/TransportArgs";
+import { Transport, TransportEvent } from "../base/Transport";
+import { Of } from "../base/Of";
 
 describe("TransportArgs.test", () => {
   test("construct event of needed args", () => {

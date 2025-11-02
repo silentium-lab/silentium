@@ -1,4 +1,5 @@
-import { EventType, TransportType } from "../types";
+import { EventType } from "../types/EventType";
+import { TransportType } from "../types/TransportType";
 
 /**
  * Creates an event from a Promise, allowing the promise's resolution or rejection
