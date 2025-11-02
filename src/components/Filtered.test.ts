@@ -1,7 +1,7 @@
 import { describe, expect, test, vitest } from "vitest";
-import { Filtered } from "./Filtered";
-import { Transport } from "../base/Transport";
-import { Of } from "../base/Of";
+import { Filtered } from "components/Filtered";
+import { Transport } from "base/Transport";
+import { Of } from "base/Of";
 
 describe("Filtered.test", () => {
   test("filtered main process", () => {

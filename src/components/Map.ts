@@ -1,9 +1,9 @@
-import { EventType } from "../types/EventType";
-import { All } from "./All";
-import { TransportType } from "../types/TransportType";
-import { isEvent } from "../helpers/guards";
-import { TransportParent } from "../base/Transport";
-import { Of } from "../base/Of";
+import { EventType } from "types/EventType";
+import { All } from "components/All";
+import { TransportType } from "types/TransportType";
+import { isEvent } from "helpers/guards";
+import { TransportParent } from "base/Transport";
+import { Of } from "base/Of";
 
 /**
  * Component that applies an info object constructor to each data item,

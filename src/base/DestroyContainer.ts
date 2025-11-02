@@ -1,4 +1,4 @@
-import { DestroyableType } from "../types/EventType";
+import { DestroyableType } from "types/EventType";
 
 /**
  * An object that allows collecting all disposable objects and

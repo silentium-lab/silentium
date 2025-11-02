@@ -1,4 +1,4 @@
-import { TransportType } from "./TransportType";
+import { TransportType } from "types/TransportType";
 
 /**
  * The event type from which

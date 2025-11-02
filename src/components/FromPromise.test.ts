@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { FromPromise } from "./FromPromise";
-import { Late } from "./Late";
-import { Transport } from "../base/Transport";
-import { wait } from "../testing/wait";
+import { FromPromise } from "components/FromPromise";
+import { Late } from "components/Late";
+import { Transport } from "base/Transport";
+import { wait } from "testing/wait";
 
 describe("FromPromise.test", () => {
   test("event from promise", async () => {

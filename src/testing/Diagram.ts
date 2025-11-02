@@ -1,5 +1,5 @@
-import { Transport } from "../base/Transport";
-import { TransportType } from "../types/TransportType";
+import { Transport } from "base/Transport";
+import { TransportType } from "types/TransportType";
 
 /**
  * Helps debug the response flow from information sources

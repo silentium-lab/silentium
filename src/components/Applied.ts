@@ -1,8 +1,8 @@
-import { EventType } from "../types/EventType";
-import { TransportParent } from "../base/Transport";
-import { ConstructorType } from "../types/ConstructorType";
-import { ensureEvent } from "../helpers/ensures";
-import { TransportType } from "../types/TransportType";
+import { EventType } from "types/EventType";
+import { TransportParent } from "base/Transport";
+import { ConstructorType } from "types/ConstructorType";
+import { ensureEvent } from "helpers/ensures";
+import { TransportType } from "types/TransportType";
 
 /**
  * An event that applies a function

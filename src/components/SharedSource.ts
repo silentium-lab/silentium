@@ -1,6 +1,6 @@
-import { SourceType } from "../types/SourceType";
-import { Shared } from "../components/Shared";
-import { TransportType } from "../types/TransportType";
+import { SourceType } from "types/SourceType";
+import { Shared } from "components/Shared";
+import { TransportType } from "types/TransportType";
 
 /**
  * Creates a shared source that allows multiple transports to subscribe to the same underlying source.

@@ -13,6 +13,13 @@
     "sourceMap": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "paths": {
+      "base/*": ["src/base/*"],
+      "components/*": ["src/components/*"],
+      "helpers/*": ["src/helpers/*"],
+      "types/*": ["src/types/*"],
+      "testing/*": ["src/testing/*"]
+    },
     "lib": [
       "es2022",
       "dom"

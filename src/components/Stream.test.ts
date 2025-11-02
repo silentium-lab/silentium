@@ -1,8 +1,8 @@
-import { Applied } from "../components/Applied";
+import { Applied } from "components/Applied";
 import { expect, test } from "vitest";
-import { Stream } from "./Stream";
-import { Diagram } from "../testing/Diagram";
-import { Of } from "../base/Of";
+import { Stream } from "components/Stream";
+import { Diagram } from "testing/Diagram";
+import { Of } from "base/Of";
 
 test("Stream.test", () => {
   const d = Diagram();

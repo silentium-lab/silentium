@@ -1,6 +1,6 @@
-import { ensureFunction } from "../helpers/ensures";
-import { EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
+import { ensureFunction } from "helpers/ensures";
+import { EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * Type of value transfer logic executor

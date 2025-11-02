@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of } from "../base/Of";
-import { Any } from "./Any";
-import { Late } from "./Late";
-import { Transport } from "../base/Transport";
+import { Of } from "base/Of";
+import { Any } from "components/Any";
+import { Late } from "components/Late";
+import { Transport } from "base/Transport";
 
 describe("Any.test", () => {
   test("event what responds from any connected event", () => {

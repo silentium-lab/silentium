@@ -1,5 +1,5 @@
-import { EventType } from "../types/EventType";
-import { TransportType } from "./TransportType";
+import { EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * A type that serves as both

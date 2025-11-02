@@ -1,4 +1,4 @@
-import { isEvent, isTransport } from "../helpers/guards";
+import { isEvent, isTransport } from "helpers/guards";
 
 export function ensureFunction(v: unknown, label: string) {
   if (typeof v !== "function") {

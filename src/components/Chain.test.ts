@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { Chain } from "./Chain";
-import { Late } from "./Late";
-import { Diagram } from "../testing/Diagram";
+import { Chain } from "components/Chain";
+import { Late } from "components/Late";
+import { Diagram } from "testing/Diagram";
 
 describe("Chain.test", () => {
   test("event connected to over events", () => {

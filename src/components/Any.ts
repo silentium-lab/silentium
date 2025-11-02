@@ -1,6 +1,6 @@
-import { ensureEvent } from "../helpers/ensures";
-import { EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
+import { ensureEvent } from "helpers/ensures";
+import { EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * An event that emits values received from

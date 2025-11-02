@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { Late } from "./Late";
-import { Transport } from "../base/Transport";
+import { Late } from "components/Late";
+import { Transport } from "base/Transport";
 
 describe("Late.test", () => {
   test("Begins with empty value", () => {

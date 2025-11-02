@@ -1,7 +1,7 @@
-import { TransportType } from "../types/TransportType";
-import { Transport, TransportParent } from "../base/Transport";
-import { DestroyableType, EventType } from "../types/EventType";
-import { All } from "./All";
+import { TransportType } from "types/TransportType";
+import { Transport, TransportParent } from "base/Transport";
+import { DestroyableType, EventType } from "types/EventType";
+import { All } from "components/All";
 
 /**
  * An event derived from another event with a different

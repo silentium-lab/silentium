@@ -1,6 +1,6 @@
-import { TransportParent } from "../base/Transport";
-import { EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
+import { TransportParent } from "base/Transport";
+import { EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * Limits the number of values from the information source

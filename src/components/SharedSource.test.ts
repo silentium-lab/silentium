@@ -1,9 +1,9 @@
-import { Late } from "../components/Late";
-import { SharedSource } from "../components/SharedSource";
+import { Late } from "components/Late";
+import { SharedSource } from "components/SharedSource";
 import { describe, expect, test, vi } from "vitest";
-import { Applied } from "../components/Applied";
-import { Diagram } from "../testing/Diagram";
-import { Transport } from "../base/Transport";
+import { Applied } from "components/Applied";
+import { Diagram } from "testing/Diagram";
+import { Transport } from "base/Transport";
 
 describe("SharedSource.test", () => {
   test("event with many transports", () => {

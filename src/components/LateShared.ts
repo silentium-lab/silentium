@@ -1,7 +1,7 @@
-import { SourceType } from "../types/SourceType";
-import { Late } from "../components/Late";
-import { SharedSource } from "../components/SharedSource";
-import { TransportType } from "../types/TransportType";
+import { SourceType } from "types/SourceType";
+import { Late } from "components/Late";
+import { SharedSource } from "components/SharedSource";
+import { TransportType } from "types/TransportType";
 
 /**
  * An event with a value that will be set later,

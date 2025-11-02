@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { Applied } from "./Applied";
-import { LateShared } from "./LateShared";
-import { Primitive } from "./Primitive";
-import { Transport } from "../base/Transport";
+import { Applied } from "components/Applied";
+import { LateShared } from "components/LateShared";
+import { Primitive } from "components/Primitive";
+import { Transport } from "base/Transport";
 
 describe("PrimitiveSource.test", () => {
   test("primitive reference change", () => {

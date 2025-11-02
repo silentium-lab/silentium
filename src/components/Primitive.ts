@@ -1,5 +1,5 @@
-import { Transport } from "../base/Transport";
-import { EventType } from "../types/EventType";
+import { Transport } from "base/Transport";
+import { EventType } from "types/EventType";
 
 /**
  * Helps represent an event as a primitive type, which can be useful

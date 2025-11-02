@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
-import { Of } from "../base/Of";
-import { All } from "./All";
-import { Transport } from "../base/Transport";
+import { Of } from "base/Of";
+import { All } from "components/All";
+import { Transport } from "base/Transport";
 
 describe("All.test", () => {
   test("combined result from many events", () => {

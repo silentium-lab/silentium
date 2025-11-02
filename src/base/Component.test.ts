@@ -1,10 +1,10 @@
-import { Of } from "../base/Of";
-import { Component } from "../base/Component";
+import { Of } from "base/Of";
+import { Component } from "base/Component";
 import { describe, expect, test } from "vitest";
-import { EventType } from "../types/EventType";
-import { Applied } from "../components/Applied";
-import { All } from "../components/All";
-import { Primitive } from "../components/Primitive";
+import { EventType } from "types/EventType";
+import { Applied } from "components/Applied";
+import { All } from "components/All";
+import { Primitive } from "components/Primitive";
 
 describe("Component.test.ts", () => {
   test("multiplication component", () => {

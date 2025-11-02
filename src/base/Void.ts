@@ -1,4 +1,4 @@
-import { TransportType } from "../types/TransportType";
+import { TransportType } from "types/TransportType";
 
 /**
  * Transport that does nothing with the passed value,

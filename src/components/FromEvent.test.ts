@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
-import { FromEvent } from "./FromEvent";
-import { Transport } from "../base/Transport";
-import { Of } from "../base/Of";
+import { FromEvent } from "components/FromEvent";
+import { Transport } from "base/Transport";
+import { Of } from "base/Of";
 
 describe("FromEvent.test", () => {
   test("from event with destructor", () => {

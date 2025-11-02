@@ -1,6 +1,6 @@
-import { Event } from "../base/Event";
-import { DestroyContainer } from "../base/DestroyContainer";
-import { Void } from "../base/Void";
+import { Event } from "base/Event";
+import { DestroyContainer } from "base/DestroyContainer";
+import { Void } from "base/Void";
 import { describe, expect, test } from "vitest";
 
 describe("DestroyContainer.test", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
-import { Applied } from "./Applied";
-import { Of } from "../base/Of";
-import { Transport } from "../base/Transport";
+import { Applied } from "components/Applied";
+import { Of } from "base/Of";
+import { Transport } from "base/Transport";
 
 describe("Applied.test", () => {
   test("event with applied function", () => {

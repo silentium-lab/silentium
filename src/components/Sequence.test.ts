@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { Applied } from "./Applied";
-import { Late } from "./Late";
-import { Sequence } from "./Sequence";
-import { Transport } from "../base/Transport";
+import { Applied } from "components/Applied";
+import { Late } from "components/Late";
+import { Sequence } from "components/Sequence";
+import { Transport } from "base/Transport";
 
 describe("Sequence.test", () => {
   test("use one by one values", () => {

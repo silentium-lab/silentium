@@ -1,6 +1,6 @@
-import { ConstructorType } from "../types/ConstructorType";
-import { EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
+import { ConstructorType } from "types/ConstructorType";
+import { EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * Creates a transport that applies a constructor to the result of another transport.

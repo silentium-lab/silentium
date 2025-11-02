@@ -1,6 +1,6 @@
-import { isDestroyable } from "../helpers/guards";
-import { DestroyableType, EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
+import { isDestroyable } from "helpers/guards";
+import { DestroyableType, EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
 
 /**
  * Creates a transport wrapper that automatically manages destruction of created instances

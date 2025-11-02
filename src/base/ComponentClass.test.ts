@@ -1,12 +1,12 @@
-import { ComponentClass } from "../base/ComponentClass";
+import { ComponentClass } from "base/ComponentClass";
 import { describe, expect, test } from "vitest";
 import { expectTypeOf } from "expect-type";
-import { SourceType } from "../types/SourceType";
-import { DestroyableType, EventType } from "../types/EventType";
-import { TransportType } from "../types/TransportType";
-import { Transport } from "../base/Transport";
-import { Primitive } from "../components/Primitive";
-import { Of } from "../base/Of";
+import { SourceType } from "types/SourceType";
+import { DestroyableType, EventType } from "types/EventType";
+import { TransportType } from "types/TransportType";
+import { Transport } from "base/Transport";
+import { Primitive } from "components/Primitive";
+import { Of } from "base/Of";
 
 describe("ComponentClass.test", () => {
   class TheEv<T> implements SourceType<T> {

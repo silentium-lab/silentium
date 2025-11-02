@@ -1,5 +1,5 @@
-import { LateShared } from "../components/LateShared";
-import { TransportType } from "../types/TransportType";
+import { LateShared } from "components/LateShared";
+import { TransportType } from "types/TransportType";
 
 /**
  * Type for passing action requirements

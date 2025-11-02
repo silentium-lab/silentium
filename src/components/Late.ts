@@ -1,6 +1,6 @@
-import { SourceType } from "../types/SourceType";
-import { isFilled } from "../helpers/guards";
-import { TransportType } from "../types/TransportType";
+import { SourceType } from "types/SourceType";
+import { isFilled } from "helpers/guards";
+import { TransportType } from "types/TransportType";
 
 /**
  * A component that allows creating linked objects of information and its owner
