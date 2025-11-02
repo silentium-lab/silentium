@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.121](https://github.com/silentium-lab/silentium/compare/v0.0.120...v0.0.121) (2025-11-02)
+
+
+### Bug Fixes
+
+* **main:** rPCType ([f9e51ff](https://github.com/silentium-lab/silentium/commit/f9e51ffc611ee0d4019328703a35015b5dc80f18))
+
 ### [0.0.120](https://github.com/silentium-lab/silentium/compare/v0.0.119...v0.0.120) (2025-11-01)
 
 
