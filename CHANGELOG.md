@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.122](https://github.com/silentium-lab/silentium/compare/v0.0.121...v0.0.122) (2025-11-02)
+
+
+### Bug Fixes
+
+* **main:** circular deps fix ([bbe0620](https://github.com/silentium-lab/silentium/commit/bbe0620b8b26ffecb2548d55f65f810acf197e21))
+* **main:** exports aliases ([f636127](https://github.com/silentium-lab/silentium/commit/f63612726b3dbb4034f9c84bfbf5cdcb8ad3ae4d))
+* **main:** test fixes ([58544d5](https://github.com/silentium-lab/silentium/commit/58544d5b0848bc0b8d2116156de26aa9208b55da))
+
 ### [0.0.121](https://github.com/silentium-lab/silentium/compare/v0.0.120...v0.0.121) (2025-11-02)
 
 
