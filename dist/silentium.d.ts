@@ -37,6 +37,15 @@ type EventTypeValue<T> = T extends EventType<infer U> ? U : never;
  */
 type SourceType<T = unknown> = EventType<T> & TransportType<T>;
 
+/**
+ * Type for passing action requirements
+ * to an external system
+ */
+interface RPCType {
+    method: string;
+    params?: Record<string, any>;
+}
+
 type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
 type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
@@ -490,4 +499,4 @@ declare class TransportDestroyableEvent<T> implements TransportType<unknown, Eve
     destroy(): this;
 }
 
-export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, type RPCType, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
