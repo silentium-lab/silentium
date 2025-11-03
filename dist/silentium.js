@@ -615,56 +615,6 @@ class SharedSourceEvent {
 var __defProp$6 = Object.defineProperty;
 var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
-function LateShared(value) {
-  return new LateSharedEvent(value);
-}
-class LateSharedEvent {
-  constructor(value) {
-    __publicField$6(this, "$event");
-    this.$event = SharedSource(Late(value));
-  }
-  event(transport) {
-    this.$event.event(transport);
-    return this;
-  }
-  use(value) {
-    this.$event.use(value);
-    return this;
-  }
-}
-
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
-function Map($base, $target) {
-  return new MapEvent($base, $target);
-}
-class MapEvent {
-  constructor($base, $target) {
-    this.$base = $base;
-    this.$target = $target;
-    __publicField$5(this, "parent", TransportParent(function(v, child) {
-      const infos = [];
-      v.forEach((val) => {
-        let $val = val;
-        if (!isEvent($val)) {
-          $val = Of($val);
-        }
-        const info = child.$target.use($val);
-        infos.push(info);
-      });
-      All(...infos).event(this);
-    }, this));
-  }
-  event(transport) {
-    this.$base.event(this.parent.child(transport));
-    return this;
-  }
-}
-
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 function Primitive($base, theValue = null) {
   return new PrimitiveImpl($base, theValue);
 }
@@ -672,7 +622,7 @@ class PrimitiveImpl {
   constructor($base, theValue = null) {
     this.$base = $base;
     this.theValue = theValue;
-    __publicField$4(this, "touched", false);
+    __publicField$6(this, "touched", false);
   }
   ensureTouched() {
     if (!this.touched) {
@@ -698,6 +648,61 @@ class PrimitiveImpl {
       throw new Error("Primitive value is null");
     }
     return this.theValue;
+  }
+}
+
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+function LateShared(value) {
+  return new LateSharedEvent(value);
+}
+class LateSharedEvent {
+  constructor(value) {
+    __publicField$5(this, "$event");
+    __publicField$5(this, "primitive");
+    this.$event = SharedSource(Late(value));
+    this.primitive = Primitive(this, value);
+  }
+  event(transport) {
+    this.$event.event(transport);
+    return this;
+  }
+  use(value) {
+    this.$event.use(value);
+    return this;
+  }
+  value() {
+    return this.primitive;
+  }
+}
+
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+function Map($base, $target) {
+  return new MapEvent($base, $target);
+}
+class MapEvent {
+  constructor($base, $target) {
+    this.$base = $base;
+    this.$target = $target;
+    __publicField$4(this, "parent", TransportParent(function(v, child) {
+      const infos = [];
+      v.forEach((val) => {
+        let $val = val;
+        if (!isEvent($val)) {
+          $val = Of($val);
+        }
+        const info = child.$target.use($val);
+        infos.push(info);
+      });
+      All(...infos).event(this);
+    }, this));
+  }
+  event(transport) {
+    this.$base.event(this.parent.child(transport));
+    return this;
   }
 }
 
@@ -841,5 +846,5 @@ function RPCOf($rpc, transport) {
   return Filtered($rpc, (rpc) => rpc.transport === transport);
 }
 
-export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, RPC, RPCOf, Sequence, Shared, SharedSource, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, TransportParent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, OwnerPool, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportParent, TransportParentImpl, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.js.map

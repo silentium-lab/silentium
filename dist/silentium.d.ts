@@ -255,6 +255,14 @@ declare class ExecutorAppliedEvent<T> implements EventType<T> {
  * optionally providing a default value when the predicate fails.
  */
 declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): EventType<T>;
+declare class FilteredEvent<T> implements EventType<T> {
+    private $base;
+    private predicate;
+    private defaultValue?;
+    constructor($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
+    event(transport: TransportType<T>): this;
+    private parent;
+}
 
 /**
  * An event derived from another event with a different
@@ -306,15 +314,36 @@ declare class LateEvent<T> implements SourceType<T> {
 }
 
 /**
+ * Helps represent an event as a primitive type, which can be useful
+ * for cases when you need to always have a reference to the current value
+ * without updating the shared value when the current one changes.
+ * For example, this could be used when passing an authorization token.
+ * It can also be useful for testing or logging purposes.
+ */
+declare function Primitive<T>($base: EventType<T>, theValue?: T | null): PrimitiveImpl<T>;
+declare class PrimitiveImpl<T> {
+    private $base;
+    private theValue;
+    private touched;
+    constructor($base: EventType<T>, theValue?: T | null);
+    private ensureTouched;
+    [Symbol.toPrimitive](): T | null;
+    primitive(): T | null;
+    primitiveWithException(): T & ({} | undefined);
+}
+
+/**
  * An event with a value that will be set later,
  * capable of responding to different transports
  */
 declare function LateShared<T>(value?: T): LateSharedEvent<T>;
 declare class LateSharedEvent<T> implements SourceType<T> {
     private $event;
+    private primitive;
     constructor(value?: T);
     event(transport: TransportType<T>): this;
     use(value: T): this;
+    value(): PrimitiveImpl<T>;
 }
 
 /**
@@ -342,25 +371,6 @@ declare class OnceEvent<T> implements EventType<T> {
     constructor($base: EventType<T>);
     event(transport: TransportType<T>): this;
     private parent;
-}
-
-/**
- * Helps represent an event as a primitive type, which can be useful
- * for cases when you need to always have a reference to the current value
- * without updating the shared value when the current one changes.
- * For example, this could be used when passing an authorization token.
- * It can also be useful for testing or logging purposes.
- */
-declare function Primitive<T>($base: EventType<T>, theValue?: T | null): PrimitiveImpl<T>;
-declare class PrimitiveImpl<T> {
-    private $base;
-    private theValue;
-    private touched;
-    constructor($base: EventType<T>, theValue?: T | null);
-    private ensureTouched;
-    [Symbol.toPrimitive](): T | null;
-    primitive(): T | null;
-    primitiveWithException(): T & ({} | undefined);
 }
 
 /**
@@ -501,6 +511,14 @@ declare namespace RPC {
         default: SourceType<RPCType>;
     } & Record<string, SourceType<RPCType>>;
 }
+declare class RPCImpl {
+    private $rpc;
+    private $result;
+    private $error;
+    constructor($rpc: EventType<RPCType>);
+    result(): LateSharedEvent<unknown>;
+    error(): LateSharedEvent<unknown>;
+}
 
 /**
  * Event for the arrival of a specific RPC message
@@ -517,4 +535,4 @@ declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureEvent(v: unknown, label: string): void;
 declare function ensureTransport(v: unknown, label: string): void;
 
-export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, RPC, RPCOf, type RPCType, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, type DestroyableType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, OwnerPool, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, TransportParentImpl, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };

@@ -9,7 +9,7 @@ export function Stream<T>($base: EventType<T[]>) {
   return new StreamEvent<T>($base);
 }
 
-class StreamEvent<T> implements EventType<T> {
+export class StreamEvent<T> implements EventType<T> {
   public constructor(private $base: EventType<T[]>) {}
 
   public event(transport: TransportType<T>): this {

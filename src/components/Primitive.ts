@@ -12,7 +12,7 @@ export function Primitive<T>($base: EventType<T>, theValue: T | null = null) {
   return new PrimitiveImpl<T>($base, theValue);
 }
 
-class PrimitiveImpl<T> {
+export class PrimitiveImpl<T> {
   private touched = false;
 
   public constructor(

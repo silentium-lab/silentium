@@ -12,7 +12,7 @@ export function Event<T>(eventExecutor: EventExecutor<T>) {
   return new EventImpl<T>(eventExecutor);
 }
 
-class EventImpl<T> implements EventType<T>, DestroyableType {
+export class EventImpl<T> implements EventType<T>, DestroyableType {
   private mbDestructor: unknown;
 
   public constructor(private eventExecutor: EventExecutor<T>) {

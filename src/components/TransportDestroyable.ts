@@ -11,7 +11,7 @@ export function TransportDestroyable<T>(
   return new TransportDestroyableEvent<T>(baseTransport);
 }
 
-class TransportDestroyableEvent<T>
+export class TransportDestroyableEvent<T>
   implements TransportType<unknown, EventType<T>>, DestroyableType
 {
   private destructors: DestroyableType[] = [];

@@ -24,7 +24,7 @@ RPC.transport = {} as { default: SourceType<RPCType> } & Record<
   SourceType<RPCType>
 >;
 
-class RPCImpl {
+export class RPCImpl {
   private $result = LateShared();
   private $error = LateShared();
 

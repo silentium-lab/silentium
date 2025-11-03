@@ -63,7 +63,7 @@ export function TransportParent<T>(
   return new TransportParentImpl<T>(executor, args);
 }
 
-class TransportParentImpl<T> implements TransportType<T> {
+export class TransportParentImpl<T> implements TransportType<T> {
   public constructor(
     private executor: (this: TransportType, v: T, ...context: any[]) => void,
     private args: any[] = [],

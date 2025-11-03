@@ -15,7 +15,7 @@ export function Filtered<T>(
   return new FilteredEvent<T>($base, predicate, defaultValue);
 }
 
-class FilteredEvent<T> implements EventType<T> {
+export class FilteredEvent<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
     private predicate: ConstructorType<[T], boolean>,

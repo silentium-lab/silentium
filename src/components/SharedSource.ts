@@ -10,7 +10,7 @@ export function SharedSource<T>($base: SourceType<T>, stateless = false) {
   return new SharedSourceEvent<T>($base, stateless);
 }
 
-class SharedSourceEvent<T> implements SourceType<T> {
+export class SharedSourceEvent<T> implements SourceType<T> {
   private $sharedBase: SourceType<T> & { touched: () => void };
 
   public constructor(

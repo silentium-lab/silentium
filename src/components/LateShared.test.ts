@@ -36,4 +36,9 @@ describe("LateShared.test", () => {
 
     expect(o).toHaveBeenLastCalledWith(2);
   });
+
+  test("primitive", () => {
+    const l = LateShared<number>(1);
+    expect(l.value().primitive()).toBe(1);
+  });
 });

@@ -15,7 +15,7 @@ export function Shared<T>($base: EventType<T>, stateless = false) {
   return new SharedEvent<T>($base, stateless);
 }
 
-class SharedEvent<T> implements SourceType<T> {
+export class SharedEvent<T> implements SourceType<T> {
   private ownersPool = new OwnerPool<T>();
   private lastValue: T | undefined;
   private calls = Late();

@@ -8,7 +8,7 @@ export function Void() {
   return new VoidImpl();
 }
 
-class VoidImpl implements TransportType {
+export class VoidImpl implements TransportType {
   public use(): this {
     return this;
   }

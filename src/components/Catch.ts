@@ -17,7 +17,7 @@ export function Catch<T>(
   return new CatchEvent<T>($base, errorMessage, errorOriginal);
 }
 
-class CatchEvent<T> implements EventType<T> {
+export class CatchEvent<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
     private errorMessage: TransportType,

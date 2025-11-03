@@ -10,7 +10,7 @@ export function Sequence<T>($base: EventType<T>) {
   return new SequenceEvent<T>($base);
 }
 
-class SequenceEvent<T> implements EventType<T[]> {
+export class SequenceEvent<T> implements EventType<T[]> {
   private result: T[] = [];
 
   public constructor(private $base: EventType<T>) {}

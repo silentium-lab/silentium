@@ -617,56 +617,6 @@ class SharedSourceEvent {
 var __defProp$6 = Object.defineProperty;
 var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
-function LateShared(value) {
-  return new LateSharedEvent(value);
-}
-class LateSharedEvent {
-  constructor(value) {
-    __publicField$6(this, "$event");
-    this.$event = SharedSource(Late(value));
-  }
-  event(transport) {
-    this.$event.event(transport);
-    return this;
-  }
-  use(value) {
-    this.$event.use(value);
-    return this;
-  }
-}
-
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
-function Map($base, $target) {
-  return new MapEvent($base, $target);
-}
-class MapEvent {
-  constructor($base, $target) {
-    this.$base = $base;
-    this.$target = $target;
-    __publicField$5(this, "parent", TransportParent(function(v, child) {
-      const infos = [];
-      v.forEach((val) => {
-        let $val = val;
-        if (!isEvent($val)) {
-          $val = Of($val);
-        }
-        const info = child.$target.use($val);
-        infos.push(info);
-      });
-      All(...infos).event(this);
-    }, this));
-  }
-  event(transport) {
-    this.$base.event(this.parent.child(transport));
-    return this;
-  }
-}
-
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 function Primitive($base, theValue = null) {
   return new PrimitiveImpl($base, theValue);
 }
@@ -674,7 +624,7 @@ class PrimitiveImpl {
   constructor($base, theValue = null) {
     this.$base = $base;
     this.theValue = theValue;
-    __publicField$4(this, "touched", false);
+    __publicField$6(this, "touched", false);
   }
   ensureTouched() {
     if (!this.touched) {
@@ -700,6 +650,61 @@ class PrimitiveImpl {
       throw new Error("Primitive value is null");
     }
     return this.theValue;
+  }
+}
+
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+function LateShared(value) {
+  return new LateSharedEvent(value);
+}
+class LateSharedEvent {
+  constructor(value) {
+    __publicField$5(this, "$event");
+    __publicField$5(this, "primitive");
+    this.$event = SharedSource(Late(value));
+    this.primitive = Primitive(this, value);
+  }
+  event(transport) {
+    this.$event.event(transport);
+    return this;
+  }
+  use(value) {
+    this.$event.use(value);
+    return this;
+  }
+  value() {
+    return this.primitive;
+  }
+}
+
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+function Map($base, $target) {
+  return new MapEvent($base, $target);
+}
+class MapEvent {
+  constructor($base, $target) {
+    this.$base = $base;
+    this.$target = $target;
+    __publicField$4(this, "parent", TransportParent(function(v, child) {
+      const infos = [];
+      v.forEach((val) => {
+        let $val = val;
+        if (!isEvent($val)) {
+          $val = Of($val);
+        }
+        const info = child.$target.use($val);
+        infos.push(info);
+      });
+      All(...infos).event(this);
+    }, this));
+  }
+  event(transport) {
+    this.$base.event(this.parent.child(transport));
+    return this;
   }
 }
 
@@ -844,43 +849,67 @@ function RPCOf($rpc, transport) {
 }
 
 exports.All = All;
+exports.AllEvent = AllEvent;
 exports.Any = Any;
+exports.AnyEvent = AnyEvent;
 exports.Applied = Applied;
+exports.AppliedEvent = AppliedEvent;
 exports.Catch = Catch;
+exports.CatchEvent = CatchEvent;
 exports.Chain = Chain;
 exports.ChainEvent = ChainEvent;
 exports.Component = Component;
 exports.ComponentClass = ComponentClass;
 exports.DestroyContainer = DestroyContainer;
+exports.DestroyContainerImpl = DestroyContainerImpl;
 exports.Event = Event;
+exports.EventImpl = EventImpl;
 exports.ExecutorApplied = ExecutorApplied;
+exports.ExecutorAppliedEvent = ExecutorAppliedEvent;
 exports.Filtered = Filtered;
+exports.FilteredEvent = FilteredEvent;
 exports.FromEvent = FromEvent;
+exports.FromEventAdapter = FromEventAdapter;
 exports.FromPromise = FromPromise;
 exports.FromPromiseEvent = FromPromiseEvent;
 exports.Late = Late;
+exports.LateEvent = LateEvent;
 exports.LateShared = LateShared;
+exports.LateSharedEvent = LateSharedEvent;
 exports.Local = Local;
+exports.LocalEvent = LocalEvent;
 exports.Map = Map;
+exports.MapEvent = MapEvent;
 exports.Of = Of;
+exports.OfEvent = OfEvent;
 exports.Once = Once;
+exports.OnceEvent = OnceEvent;
 exports.OwnerPool = OwnerPool;
 exports.Primitive = Primitive;
+exports.PrimitiveImpl = PrimitiveImpl;
 exports.RPC = RPC;
+exports.RPCImpl = RPCImpl;
 exports.RPCOf = RPCOf;
 exports.Sequence = Sequence;
+exports.SequenceEvent = SequenceEvent;
 exports.Shared = Shared;
+exports.SharedEvent = SharedEvent;
 exports.SharedSource = SharedSource;
+exports.SharedSourceEvent = SharedSourceEvent;
 exports.Stream = Stream;
+exports.StreamEvent = StreamEvent;
 exports.Transport = Transport;
 exports.TransportApplied = TransportApplied;
 exports.TransportAppliedImpl = TransportAppliedImpl;
 exports.TransportArgs = TransportArgs;
 exports.TransportArgsImpl = TransportArgsImpl;
 exports.TransportDestroyable = TransportDestroyable;
+exports.TransportDestroyableEvent = TransportDestroyableEvent;
 exports.TransportEvent = TransportEvent;
 exports.TransportParent = TransportParent;
+exports.TransportParentImpl = TransportParentImpl;
 exports.Void = Void;
+exports.VoidImpl = VoidImpl;
 exports.ensureEvent = ensureEvent;
 exports.ensureFunction = ensureFunction;
 exports.ensureTransport = ensureTransport;

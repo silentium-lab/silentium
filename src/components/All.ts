@@ -26,7 +26,7 @@ export function All<const T extends EventType[]>(...events: T) {
   return new AllEvent<T>(...events);
 }
 
-class AllEvent<const T extends EventType[]>
+export class AllEvent<const T extends EventType[]>
   implements EventType<ExtractTypesFromArrayS<T>>
 {
   private known: Set<string>;

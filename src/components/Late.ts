@@ -12,7 +12,7 @@ export function Late<T>(v?: T) {
   return new LateEvent<T>(v);
 }
 
-class LateEvent<T> implements SourceType<T> {
+export class LateEvent<T> implements SourceType<T> {
   private lateTransport: TransportType<T> | null = null;
   private notify = (v?: T) => {
     if (isFilled(v) && this.lateTransport) {

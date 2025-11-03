@@ -10,7 +10,7 @@ export function Local<T>($base: EventType<T>) {
   return new LocalEvent<T>($base);
 }
 
-class LocalEvent<T> implements EventType<T>, DestroyableType {
+export class LocalEvent<T> implements EventType<T>, DestroyableType {
   private destroyed = false;
 
   public constructor(private $base: EventType<T>) {

@@ -8,7 +8,7 @@ export function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 
-class DestroyContainerImpl implements DestroyableType {
+export class DestroyContainerImpl implements DestroyableType {
   private destructors: DestroyableType[] = [];
 
   public add<R extends DestroyableType>(e: R): R {

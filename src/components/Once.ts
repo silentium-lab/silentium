@@ -11,7 +11,7 @@ export function Once<T>($base: EventType<T>) {
   return new OnceEvent<T>($base);
 }
 
-class OnceEvent<T> implements EventType<T> {
+export class OnceEvent<T> implements EventType<T> {
   private isFilled = false;
 
   public constructor(private $base: EventType<T>) {}

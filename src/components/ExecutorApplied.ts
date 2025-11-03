@@ -19,7 +19,7 @@ export function ExecutorApplied<T>(
   return new ExecutorAppliedEvent<T>($base, applier);
 }
 
-class ExecutorAppliedEvent<T> implements EventType<T> {
+export class ExecutorAppliedEvent<T> implements EventType<T> {
   public constructor(
     private $base: EventType<T>,
     private applier: ExecutorApplier<T>,

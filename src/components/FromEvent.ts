@@ -23,7 +23,7 @@ export function FromEvent<T>(
   );
 }
 
-class FromEventAdapter<T> implements EventType<T>, DestroyableType {
+export class FromEventAdapter<T> implements EventType<T>, DestroyableType {
   private lastTransport: TransportType<T> | null = null;
   private handler = (v: T) => {
     if (this.lastTransport) {

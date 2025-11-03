@@ -10,7 +10,7 @@ export function Any<const T>(...events: EventType<T>[]) {
   return new AnyEvent<T>(...events);
 }
 
-class AnyEvent<T> implements EventType<T> {
+export class AnyEvent<T> implements EventType<T> {
   private $events: EventType<T>[];
 
   public constructor(...events: EventType<T>[]) {

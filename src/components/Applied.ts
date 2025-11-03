@@ -15,7 +15,7 @@ export function Applied<const T, R>(
   return new AppliedEvent<T, R>($base, applier);
 }
 
-class AppliedEvent<T, R> implements EventType<R> {
+export class AppliedEvent<T, R> implements EventType<R> {
   public constructor(
     private $base: EventType<T>,
     private applier: ConstructorType<[T], R>,
