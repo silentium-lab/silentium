@@ -254,15 +254,7 @@ declare class ExecutorAppliedEvent<T> implements EventType<T> {
  * Filters values from the source event based on a predicate function,
  * optionally providing a default value when the predicate fails.
  */
-declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): FilteredEvent<T>;
-declare class FilteredEvent<T> implements EventType<T> {
-    private $base;
-    private predicate;
-    private defaultValue?;
-    constructor($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
-    event(transport: TransportType<T>): this;
-    private parent;
-}
+declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): EventType<T>;
 
 /**
  * An event derived from another event with a different
@@ -319,7 +311,7 @@ declare class LateEvent<T> implements SourceType<T> {
  */
 declare function LateShared<T>(value?: T): LateSharedEvent<T>;
 declare class LateSharedEvent<T> implements SourceType<T> {
-    $event: SourceType<T>;
+    private $event;
     constructor(value?: T);
     event(transport: TransportType<T>): this;
     use(value: T): this;
@@ -481,6 +473,41 @@ declare class TransportDestroyableEvent<T> implements TransportType<unknown, Eve
     destroy(): this;
 }
 
+/**
+ * Type for passing action requirements
+ * to an external system
+ */
+interface RPCType {
+    method: string;
+    transport?: string;
+    params?: Record<string, any>;
+    result?: TransportType;
+    error?: TransportType;
+}
+
+interface RPCImplType<T> {
+    result(): EventType<T>;
+    error(): EventType<Error | string>;
+}
+/**
+ * The ability to call an external system through
+ * sending a message in a standardized format
+ * RPCType, the list of transports should be defined via
+ * the RPC.transport object
+ */
+declare function RPC<T>($rpc: EventType<RPCType>): RPCImplType<T>;
+declare namespace RPC {
+    var transport: {
+        default: SourceType<RPCType>;
+    } & Record<string, SourceType<RPCType>>;
+}
+
+/**
+ * Event for the arrival of a specific RPC message
+ * for specific transport
+ */
+declare function RPCOf($rpc: EventType<RPCType>, transport: string): EventType<RPCType>;
+
 declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
 declare function isEvent<T>(o: T): o is T & EventType;
 declare function isDestroyable<T>(o: T): o is T & DestroyableType;
@@ -490,26 +517,4 @@ declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureEvent(v: unknown, label: string): void;
 declare function ensureTransport(v: unknown, label: string): void;
 
-/**
- * Type for passing action requirements
- * to an external system
- */
-interface RPCType {
-    transport: string;
-    method: string;
-    params?: Record<string, any>;
-    result: TransportType;
-    error: TransportType;
-}
-/**
- * Common bus for organizing communication with external
- * systems, useful for dependency inversion
- * from external systems
- */
-declare const $rpc: {
-    $event: SourceType<RPCType>;
-    event(transport: TransportType<RPCType, any>): any;
-    use(value: RPCType): any;
-};
-
-export { $rpc, All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, type RPCType, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, type DestroyableType, Event, type EventType, type EventTypeValue, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, RPC, RPCOf, type RPCType, Sequence, Shared, SharedSource, type SourceType, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, type TransportType, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };

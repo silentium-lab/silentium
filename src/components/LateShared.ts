@@ -12,7 +12,7 @@ export function LateShared<T>(value?: T) {
 }
 
 class LateSharedEvent<T> implements SourceType<T> {
-  public $event: SourceType<T>;
+  private $event: SourceType<T>;
 
   public constructor(value?: T) {
     this.$event = SharedSource(Late(value));

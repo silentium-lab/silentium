@@ -20,15 +20,15 @@ function ComponentClass(classConstructor) {
   return (...args) => new classConstructor(...args);
 }
 
-var __defProp$j = Object.defineProperty;
-var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, key + "" , value);
+var __defProp$k = Object.defineProperty;
+var __defNormalProp$k = (obj, key, value) => key in obj ? __defProp$k(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$k = (obj, key, value) => __defNormalProp$k(obj, key + "" , value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
-    __publicField$j(this, "destructors", []);
+    __publicField$k(this, "destructors", []);
   }
   add(e) {
     this.destructors.push(e);
@@ -69,16 +69,16 @@ function ensureTransport(v, label) {
   }
 }
 
-var __defProp$i = Object.defineProperty;
-var __defNormalProp$i = (obj, key, value) => key in obj ? __defProp$i(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$i = (obj, key, value) => __defNormalProp$i(obj, key + "" , value);
+var __defProp$j = Object.defineProperty;
+var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, key + "" , value);
 function Event(eventExecutor) {
   return new EventImpl(eventExecutor);
 }
 class EventImpl {
   constructor(eventExecutor) {
     this.eventExecutor = eventExecutor;
-    __publicField$i(this, "mbDestructor");
+    __publicField$j(this, "mbDestructor");
     ensureFunction(eventExecutor, "Event: eventExecutor");
   }
   event(transport) {
@@ -144,17 +144,17 @@ class TransportParentImpl {
   }
 }
 
-var __defProp$h = Object.defineProperty;
-var __defNormalProp$h = (obj, key, value) => key in obj ? __defProp$h(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$h = (obj, key, value) => __defNormalProp$h(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$i = Object.defineProperty;
+var __defNormalProp$i = (obj, key, value) => key in obj ? __defProp$i(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$i = (obj, key, value) => __defNormalProp$i(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Local($base) {
   return new LocalEvent($base);
 }
 class LocalEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$h(this, "destroyed", false);
-    __publicField$h(this, "transport", TransportParent(function(v, child) {
+    __publicField$i(this, "destroyed", false);
+    __publicField$i(this, "transport", TransportParent(function(v, child) {
       if (!child.destroyed) {
         this.use(v);
       }
@@ -192,9 +192,9 @@ class VoidImpl {
   }
 }
 
-var __defProp$g = Object.defineProperty;
-var __defNormalProp$g = (obj, key, value) => key in obj ? __defProp$g(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$g = (obj, key, value) => __defNormalProp$g(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$h = Object.defineProperty;
+var __defNormalProp$h = (obj, key, value) => key in obj ? __defProp$h(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$h = (obj, key, value) => __defNormalProp$h(obj, typeof key !== "symbol" ? key + "" : key, value);
 const isAllFilled = (keysFilled, keysKnown) => {
   return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
@@ -203,11 +203,11 @@ function All(...events) {
 }
 class AllEvent {
   constructor(...events) {
-    __publicField$g(this, "known");
-    __publicField$g(this, "filled", /* @__PURE__ */ new Set());
-    __publicField$g(this, "$events");
-    __publicField$g(this, "result", []);
-    __publicField$g(this, "transport", TransportParent(function(v, child, key) {
+    __publicField$h(this, "known");
+    __publicField$h(this, "filled", /* @__PURE__ */ new Set());
+    __publicField$h(this, "$events");
+    __publicField$h(this, "result", []);
+    __publicField$h(this, "transport", TransportParent(function(v, child, key) {
       child.filled.add(key);
       child.result[parseInt(key)] = v;
       if (isAllFilled(child.filled, child.known)) {
@@ -229,15 +229,15 @@ class AllEvent {
   }
 }
 
-var __defProp$f = Object.defineProperty;
-var __defNormalProp$f = (obj, key, value) => key in obj ? __defProp$f(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$f = (obj, key, value) => __defNormalProp$f(obj, key + "" , value);
+var __defProp$g = Object.defineProperty;
+var __defNormalProp$g = (obj, key, value) => key in obj ? __defProp$g(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$g = (obj, key, value) => __defNormalProp$g(obj, key + "" , value);
 function Any(...events) {
   return new AnyEvent(...events);
 }
 class AnyEvent {
   constructor(...events) {
-    __publicField$f(this, "$events");
+    __publicField$g(this, "$events");
     this.$events = events;
   }
   event(transport) {
@@ -249,9 +249,9 @@ class AnyEvent {
   }
 }
 
-var __defProp$e = Object.defineProperty;
-var __defNormalProp$e = (obj, key, value) => key in obj ? __defProp$e(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$e = (obj, key, value) => __defNormalProp$e(obj, key + "" , value);
+var __defProp$f = Object.defineProperty;
+var __defNormalProp$f = (obj, key, value) => key in obj ? __defProp$f(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$f = (obj, key, value) => __defNormalProp$f(obj, key + "" , value);
 function Applied($base, applier) {
   return new AppliedEvent($base, applier);
 }
@@ -259,7 +259,7 @@ class AppliedEvent {
   constructor($base, applier) {
     this.$base = $base;
     this.applier = applier;
-    __publicField$e(this, "transport", TransportParent(function(v, child) {
+    __publicField$f(this, "transport", TransportParent(function(v, child) {
       this.use(child.applier(v));
     }, this));
     ensureEvent($base, "Applied: base");
@@ -301,22 +301,22 @@ class CatchEvent {
   }
 }
 
-var __defProp$d = Object.defineProperty;
-var __defNormalProp$d = (obj, key, value) => key in obj ? __defProp$d(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$d = (obj, key, value) => __defNormalProp$d(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$e = Object.defineProperty;
+var __defNormalProp$e = (obj, key, value) => key in obj ? __defProp$e(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$e = (obj, key, value) => __defNormalProp$e(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Chain(...events) {
   return new ChainEvent(...events);
 }
 class ChainEvent {
   constructor(...events) {
-    __publicField$d(this, "$events");
-    __publicField$d(this, "$latest");
-    __publicField$d(this, "handleEvent", (index, transport) => {
+    __publicField$e(this, "$events");
+    __publicField$e(this, "$latest");
+    __publicField$e(this, "handleEvent", (index, transport) => {
       const event = this.$events[index];
       const next = this.$events[index + 1];
       event.event(this.oneEventTransport.child(transport, next, index));
     });
-    __publicField$d(this, "oneEventTransport", TransportParent(function(v, child, next, index) {
+    __publicField$e(this, "oneEventTransport", TransportParent(function(v, child, next, index) {
       if (!next) {
         child.$latest = v;
       }
@@ -353,9 +353,9 @@ class ExecutorAppliedEvent {
   }
 }
 
-var __defProp$c = Object.defineProperty;
-var __defNormalProp$c = (obj, key, value) => key in obj ? __defProp$c(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$c = (obj, key, value) => __defNormalProp$c(obj, key + "" , value);
+var __defProp$d = Object.defineProperty;
+var __defNormalProp$d = (obj, key, value) => key in obj ? __defProp$d(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$d = (obj, key, value) => __defNormalProp$d(obj, key + "" , value);
 function Filtered($base, predicate, defaultValue) {
   return new FilteredEvent($base, predicate, defaultValue);
 }
@@ -364,7 +364,7 @@ class FilteredEvent {
     this.$base = $base;
     this.predicate = predicate;
     this.defaultValue = defaultValue;
-    __publicField$c(this, "parent", TransportParent(function(v, child) {
+    __publicField$d(this, "parent", TransportParent(function(v, child) {
       if (child.predicate(v)) {
         this.use(v);
       } else if (child.defaultValue !== void 0) {
@@ -378,9 +378,9 @@ class FilteredEvent {
   }
 }
 
-var __defProp$b = Object.defineProperty;
-var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$c = Object.defineProperty;
+var __defNormalProp$c = (obj, key, value) => key in obj ? __defProp$c(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$c = (obj, key, value) => __defNormalProp$c(obj, typeof key !== "symbol" ? key + "" : key, value);
 function FromEvent($emitter, $eventName, $subscribeMethod, $unsubscribeMethod) {
   return new FromEventAdapter(
     $emitter,
@@ -395,13 +395,13 @@ class FromEventAdapter {
     this.$eventName = $eventName;
     this.$subscribeMethod = $subscribeMethod;
     this.$unsubscribeMethod = $unsubscribeMethod;
-    __publicField$b(this, "lastTransport", null);
-    __publicField$b(this, "handler", (v) => {
+    __publicField$c(this, "lastTransport", null);
+    __publicField$c(this, "handler", (v) => {
       if (this.lastTransport) {
         this.lastTransport.use(v);
       }
     });
-    __publicField$b(this, "parent", TransportParent(function([emitter, eventName, subscribe], child) {
+    __publicField$c(this, "parent", TransportParent(function([emitter, eventName, subscribe], child) {
       child.lastTransport = this;
       if (!emitter?.[subscribe]) {
         return;
@@ -447,17 +447,17 @@ class FromPromiseEvent {
   }
 }
 
-var __defProp$a = Object.defineProperty;
-var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$b = Object.defineProperty;
+var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Late(v) {
   return new LateEvent(v);
 }
 class LateEvent {
   constructor(v) {
     this.v = v;
-    __publicField$a(this, "lateTransport", null);
-    __publicField$a(this, "notify", (v) => {
+    __publicField$b(this, "lateTransport", null);
+    __publicField$b(this, "notify", (v) => {
       if (isFilled(v) && this.lateTransport) {
         this.lateTransport.use(v);
       }
@@ -479,17 +479,17 @@ class LateEvent {
   }
 }
 
-var __defProp$9 = Object.defineProperty;
-var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$a = Object.defineProperty;
+var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Once($base) {
   return new OnceEvent($base);
 }
 class OnceEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$9(this, "isFilled", false);
-    __publicField$9(this, "parent", TransportParent(function(v, child) {
+    __publicField$a(this, "isFilled", false);
+    __publicField$a(this, "parent", TransportParent(function(v, child) {
       if (!child.isFilled) {
         child.isFilled = true;
         this.use(v);
@@ -502,13 +502,13 @@ class OnceEvent {
   }
 }
 
-var __defProp$8 = Object.defineProperty;
-var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$9 = Object.defineProperty;
+var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
 class OwnerPool {
   constructor() {
-    __publicField$8(this, "owners");
-    __publicField$8(this, "innerOwner");
+    __publicField$9(this, "owners");
+    __publicField$9(this, "innerOwner");
     this.owners = /* @__PURE__ */ new Set();
     this.innerOwner = Transport((v) => {
       this.owners.forEach((g) => {
@@ -541,9 +541,9 @@ class OwnerPool {
   }
 }
 
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$8 = Object.defineProperty;
+var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Shared($base, stateless = false) {
   return new SharedEvent($base, stateless);
 }
@@ -551,10 +551,10 @@ class SharedEvent {
   constructor($base, stateless = false) {
     this.$base = $base;
     this.stateless = stateless;
-    __publicField$7(this, "ownersPool", new OwnerPool());
-    __publicField$7(this, "lastValue");
-    __publicField$7(this, "calls", Late());
-    __publicField$7(this, "firstCallTransport", Transport((v) => {
+    __publicField$8(this, "ownersPool", new OwnerPool());
+    __publicField$8(this, "lastValue");
+    __publicField$8(this, "calls", Late());
+    __publicField$8(this, "firstCallTransport", Transport((v) => {
       this.lastValue = v;
       this.ownersPool.owner().use(v);
     }));
@@ -589,16 +589,16 @@ class SharedEvent {
   }
 }
 
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
+var __defProp$7 = Object.defineProperty;
+var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, key + "" , value);
 function SharedSource($base, stateless = false) {
   return new SharedSourceEvent($base, stateless);
 }
 class SharedSourceEvent {
   constructor($base, stateless = false) {
     this.$base = $base;
-    __publicField$6(this, "$sharedBase");
+    __publicField$7(this, "$sharedBase");
     this.$sharedBase = Shared(this.$base, stateless);
   }
   event(transport) {
@@ -612,15 +612,15 @@ class SharedSourceEvent {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
 function LateShared(value) {
   return new LateSharedEvent(value);
 }
 class LateSharedEvent {
   constructor(value) {
-    __publicField$5(this, "$event");
+    __publicField$6(this, "$event");
     this.$event = SharedSource(Late(value));
   }
   event(transport) {
@@ -633,9 +633,9 @@ class LateSharedEvent {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, key + "" , value);
 function Map($base, $target) {
   return new MapEvent($base, $target);
 }
@@ -643,7 +643,7 @@ class MapEvent {
   constructor($base, $target) {
     this.$base = $base;
     this.$target = $target;
-    __publicField$4(this, "parent", TransportParent(function(v, child) {
+    __publicField$5(this, "parent", TransportParent(function(v, child) {
       const infos = [];
       v.forEach((val) => {
         let $val = val;
@@ -662,9 +662,9 @@ class MapEvent {
   }
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 function Primitive($base, theValue = null) {
   return new PrimitiveImpl($base, theValue);
 }
@@ -672,7 +672,7 @@ class PrimitiveImpl {
   constructor($base, theValue = null) {
     this.$base = $base;
     this.theValue = theValue;
-    __publicField$3(this, "touched", false);
+    __publicField$4(this, "touched", false);
   }
   ensureTouched() {
     if (!this.touched) {
@@ -701,17 +701,17 @@ class PrimitiveImpl {
   }
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Sequence($base) {
   return new SequenceEvent($base);
 }
 class SequenceEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$2(this, "result", []);
-    __publicField$2(this, "parent", TransportParent(function(v, child) {
+    __publicField$3(this, "result", []);
+    __publicField$3(this, "parent", TransportParent(function(v, child) {
       child.result.push(v);
       this.use(child.result);
     }, this));
@@ -722,16 +722,16 @@ class SequenceEvent {
   }
 }
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
 function Stream($base) {
   return new StreamEvent($base);
 }
 class StreamEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$1(this, "parent", TransportParent(function(v) {
+    __publicField$2(this, "parent", TransportParent(function(v) {
       v.forEach((cv) => {
         this.use(cv);
       });
@@ -777,16 +777,16 @@ function mergeAtIndex(arr1, arr2, index) {
   return result.concat(arr2);
 }
 
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
 function TransportDestroyable(baseTransport) {
   return new TransportDestroyableEvent(baseTransport);
 }
 class TransportDestroyableEvent {
   constructor(baseTransport) {
     this.baseTransport = baseTransport;
-    __publicField(this, "destructors", []);
+    __publicField$1(this, "destructors", []);
   }
   use(args) {
     const inst = this.baseTransport.use(args);
@@ -801,7 +801,45 @@ class TransportDestroyableEvent {
   }
 }
 
-const $rpc = LateShared();
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+function RPC($rpc) {
+  return new RPCImpl($rpc);
+}
+RPC.transport = {};
+class RPCImpl {
+  constructor($rpc) {
+    this.$rpc = $rpc;
+    __publicField(this, "$result", LateShared());
+    __publicField(this, "$error", LateShared());
+  }
+  result() {
+    this.$rpc.event(
+      Transport((rpc) => {
+        const transport = rpc.transport === void 0 ? RPC.transport.default : RPC.transport[rpc.transport] || RPC.transport.default;
+        if (!transport) {
+          throw new Error(`RPCImpl: Transport not found ${rpc.transport}`);
+        }
+        if (!rpc.result) {
+          rpc.result = this.$result;
+        }
+        if (!rpc.error) {
+          rpc.error = this.$error;
+        }
+        transport.use(rpc);
+      })
+    );
+    return this.$result;
+  }
+  error() {
+    return this.$error;
+  }
+}
 
-export { $rpc, All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, Sequence, Shared, SharedSource, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, TransportParent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+function RPCOf($rpc, transport) {
+  return Filtered($rpc, (rpc) => rpc.transport === transport);
+}
+
+export { All, Any, Applied, Catch, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, Event, ExecutorApplied, Filtered, FromEvent, FromPromise, FromPromiseEvent, Late, LateShared, Local, Map, Of, Once, OwnerPool, Primitive, RPC, RPCOf, Sequence, Shared, SharedSource, Stream, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportEvent, TransportParent, Void, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.js.map

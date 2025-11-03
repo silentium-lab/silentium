@@ -72,6 +72,7 @@ export default [
       {
         file: `${name}.min.js`,
         format: "iife",
+        name: "silentium",
         plugins: [terser()],
       },
     ],

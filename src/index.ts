@@ -27,6 +27,8 @@ export * from "./components/Stream";
 export * from "./components/TransportApplied";
 export * from "./components/TransportArgs";
 export * from "./components/TransportDestroyable";
+export * from "./components/RPC";
+export * from "./components/RPCOf";
 export * from "./helpers/guards";
 export * from "./helpers/ensures";
 export * from "./helpers/OwnerPool";

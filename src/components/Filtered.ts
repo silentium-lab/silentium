@@ -11,7 +11,7 @@ export function Filtered<T>(
   $base: EventType<T>,
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
-) {
+): EventType<T> {
   return new FilteredEvent<T>($base, predicate, defaultValue);
 }
 
