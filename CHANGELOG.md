@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.124](https://github.com/silentium-lab/silentium/compare/v0.0.123...v0.0.124) (2025-11-03)
+
+
+### Bug Fixes
+
+* **main:** late shared with value primitive ([a530850](https://github.com/silentium-lab/silentium/commit/a5308503b883927464b70b28c2df5d9d53cf9270))
+
 ### [0.0.123](https://github.com/silentium-lab/silentium/compare/v0.0.122...v0.0.123) (2025-11-03)
 
 
