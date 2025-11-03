@@ -2,7 +2,7 @@ import { Transport } from "base/Transport";
 import { LateShared } from "components/LateShared";
 import { EventType } from "types/EventType";
 import { RPCType } from "types/RPCType";
-import { SourceType } from "types/SourceType";
+import { TransportType } from "types/TransportType";
 
 interface RPCImplType<T> {
   result(): EventType<T>;
@@ -19,9 +19,9 @@ export function RPC<T>($rpc: EventType<RPCType>): RPCImplType<T> {
   return new RPCImpl($rpc);
 }
 
-RPC.transport = {} as { default: SourceType<RPCType> } & Record<
+RPC.transport = {} as { default: TransportType<RPCType> } & Record<
   string,
-  SourceType<RPCType>
+  TransportType<RPCType>
 >;
 
 export class RPCImpl {

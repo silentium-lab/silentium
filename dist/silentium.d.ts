@@ -508,8 +508,8 @@ interface RPCImplType<T> {
 declare function RPC<T>($rpc: EventType<RPCType>): RPCImplType<T>;
 declare namespace RPC {
     var transport: {
-        default: SourceType<RPCType>;
-    } & Record<string, SourceType<RPCType>>;
+        default: TransportType<RPCType>;
+    } & Record<string, TransportType<RPCType, any>>;
 }
 declare class RPCImpl {
     private $rpc;
