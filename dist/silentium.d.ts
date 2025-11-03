@@ -487,7 +487,7 @@ declare class TransportDestroyableEvent<T> implements TransportType<unknown, Eve
  * Type for passing action requirements
  * to an external system
  */
-interface RPCType {
+interface RPCType extends Record<string, any> {
     method: string;
     transport?: string;
     params?: Record<string, any>;
