@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.128](https://github.com/silentium-lab/silentium/compare/v0.0.127...v0.0.128) (2025-11-04)
+
+
+### Bug Fixes
+
+* **main:** destroyable transport ([6fd4961](https://github.com/silentium-lab/silentium/commit/6fd4961091ed2b0b6e992244d0865baf72bb3560))
+* **main:** refactor destroyable imports ([1895ef0](https://github.com/silentium-lab/silentium/commit/1895ef025e64c8e021e0da3aee88eb50b440a232))
+
 ### [0.0.127](https://github.com/silentium-lab/silentium/compare/v0.0.126...v0.0.127) (2025-11-03)
 
 ### [0.0.126](https://github.com/silentium-lab/silentium/compare/v0.0.125...v0.0.126) (2025-11-03)
