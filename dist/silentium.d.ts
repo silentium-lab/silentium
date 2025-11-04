@@ -1,10 +1,29 @@
 /**
+ * Type of an object that can
+ * be destroyed
+ */
+interface DestroyableType {
+    destroy(): this;
+}
+/**
+ * Represents an object that can provide an answer
+ * whether it was destroyed
+ */
+interface DestroyedType {
+    destroyed(): boolean;
+}
+
+/**
  * Type representing the process
  * of passing a value somewhere
  */
 interface TransportType<T = unknown, R = any> {
     use(value: T): R;
 }
+/**
+ * Transport that can be destroyed
+ */
+type TransportDestroyableType<T = any, R = any> = TransportType<T, R> & DestroyableType & DestroyedType;
 
 /**
  * The event type from which
@@ -12,13 +31,6 @@ interface TransportType<T = unknown, R = any> {
  */
 interface EventType<T = unknown> {
     event(user: TransportType<T>): this;
-}
-/**
- * Type of an object that can
- * be destroyed
- */
-interface DestroyableType {
-    destroy(): this;
 }
 /**
  * Value type from event
@@ -391,11 +403,11 @@ declare class SequenceEvent<T> implements EventType<T[]> {
  * owners to get information from a common source
  * https://silentium-lab.github.io/silentium/#/en/utils/owner-pool
  */
-declare class OwnerPool<T> {
-    private owners;
-    private innerOwner;
+declare class TransportPool<T> {
+    private transports;
+    private innerTransport;
     constructor();
-    owner(): TransportType<T, any>;
+    transport(): TransportType<T, any>;
     size(): number;
     has(owner: TransportType<T>): boolean;
     add(owner: TransportType<T>): this;
@@ -411,7 +423,7 @@ declare function Shared<T>($base: EventType<T>, stateless?: boolean): SharedEven
 declare class SharedEvent<T> implements SourceType<T> {
     private $base;
     private stateless;
-    private ownersPool;
+    private transportPool;
     private lastValue;
     private calls;
     constructor($base: EventType<T>, stateless?: boolean);
@@ -419,8 +431,8 @@ declare class SharedEvent<T> implements SourceType<T> {
     use(value: T): this;
     private firstCallTransport;
     touched(): void;
-    pool(): OwnerPool<T>;
-    destroy(): OwnerPool<T>;
+    pool(): TransportPool<T>;
+    destroy(): TransportPool<T>;
 }
 
 /**
@@ -526,13 +538,29 @@ declare class RPCImpl {
  */
 declare function RPCOf($rpc: EventType<RPCType>, transport: string): EventType<RPCType>;
 
+/**
+ * Checks that the value is neither undefined nor null
+ */
 declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
+/**
+ * Checks that the object is an event
+ */
 declare function isEvent<T>(o: T): o is T & EventType;
+/**
+ * Checks that the object is destroyable
+ */
 declare function isDestroyable<T>(o: T): o is T & DestroyableType;
+/**
+ * Checks that the object can indicate whether it has been destroyed or not
+ */
+declare function isDestroyed<T>(o: T): o is T & DestroyedType;
+/**
+ * Checks that the object is a transport
+ */
 declare function isTransport<T>(o: T): o is T & TransportType;
 
 declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureEvent(v: unknown, label: string): void;
 declare function ensureTransport(v: unknown, label: string): void;
 
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, type DestroyableType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, OwnerPool, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, TransportParentImpl, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };

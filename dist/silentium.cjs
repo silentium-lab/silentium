@@ -51,6 +51,9 @@ function isEvent(o) {
 function isDestroyable(o) {
   return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
 }
+function isDestroyed(o) {
+  return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroy === "function";
+}
 function isTransport(o) {
   return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
 }
@@ -507,36 +510,40 @@ class OnceEvent {
 var __defProp$9 = Object.defineProperty;
 var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
-class OwnerPool {
+class TransportPool {
   constructor() {
-    __publicField$9(this, "owners");
-    __publicField$9(this, "innerOwner");
-    this.owners = /* @__PURE__ */ new Set();
-    this.innerOwner = Transport((v) => {
-      this.owners.forEach((g) => {
-        g.use(v);
+    __publicField$9(this, "transports");
+    __publicField$9(this, "innerTransport");
+    this.transports = /* @__PURE__ */ new Set();
+    this.innerTransport = Transport((v) => {
+      this.transports.forEach((transport) => {
+        if (isDestroyed(transport) && transport.destroyed()) {
+          this.transports.delete(transport);
+          return;
+        }
+        transport.use(v);
       });
     });
   }
-  owner() {
-    return this.innerOwner;
+  transport() {
+    return this.innerTransport;
   }
   size() {
-    return this.owners.size;
+    return this.transports.size;
   }
   has(owner) {
-    return this.owners.has(owner);
+    return this.transports.has(owner);
   }
   add(owner) {
-    this.owners.add(owner);
+    this.transports.add(owner);
     return this;
   }
   remove(g) {
-    this.owners.delete(g);
+    this.transports.delete(g);
     return this;
   }
   destroy() {
-    this.owners.forEach((g) => {
+    this.transports.forEach((g) => {
       this.remove(g);
     });
     return this;
@@ -553,12 +560,12 @@ class SharedEvent {
   constructor($base, stateless = false) {
     this.$base = $base;
     this.stateless = stateless;
-    __publicField$8(this, "ownersPool", new OwnerPool());
+    __publicField$8(this, "transportPool", new TransportPool());
     __publicField$8(this, "lastValue");
     __publicField$8(this, "calls", Late());
     __publicField$8(this, "firstCallTransport", Transport((v) => {
       this.lastValue = v;
-      this.ownersPool.owner().use(v);
+      this.transportPool.transport().use(v);
     }));
     Once(this.calls).event(
       Transport(() => {
@@ -568,26 +575,26 @@ class SharedEvent {
   }
   event(transport) {
     this.calls.use(1);
-    if (!this.stateless && isFilled(this.lastValue) && !this.ownersPool.has(transport)) {
+    if (!this.stateless && isFilled(this.lastValue) && !this.transportPool.has(transport)) {
       transport.use(this.lastValue);
     }
-    this.ownersPool.add(transport);
+    this.transportPool.add(transport);
     return this;
   }
   use(value) {
     this.calls.use(1);
     this.lastValue = value;
-    this.ownersPool.owner().use(value);
+    this.transportPool.transport().use(value);
     return this;
   }
   touched() {
     this.calls.use(1);
   }
   pool() {
-    return this.ownersPool;
+    return this.transportPool;
   }
   destroy() {
-    return this.ownersPool.destroy();
+    return this.transportPool.destroy();
   }
 }
 
@@ -884,7 +891,6 @@ exports.Of = Of;
 exports.OfEvent = OfEvent;
 exports.Once = Once;
 exports.OnceEvent = OnceEvent;
-exports.OwnerPool = OwnerPool;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.RPC = RPC;
@@ -908,12 +914,14 @@ exports.TransportDestroyableEvent = TransportDestroyableEvent;
 exports.TransportEvent = TransportEvent;
 exports.TransportParent = TransportParent;
 exports.TransportParentImpl = TransportParentImpl;
+exports.TransportPool = TransportPool;
 exports.Void = Void;
 exports.VoidImpl = VoidImpl;
 exports.ensureEvent = ensureEvent;
 exports.ensureFunction = ensureFunction;
 exports.ensureTransport = ensureTransport;
 exports.isDestroyable = isDestroyable;
+exports.isDestroyed = isDestroyed;
 exports.isEvent = isEvent;
 exports.isFilled = isFilled;
 exports.isTransport = isTransport;

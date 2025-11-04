@@ -1,5 +1,6 @@
 import { isDestroyable } from "helpers/guards";
-import { DestroyableType, EventType } from "types/EventType";
+import { DestroyableType } from "types/DestroyableType";
+import { EventType } from "types/EventType";
 import { TransportType } from "types/TransportType";
 
 /**

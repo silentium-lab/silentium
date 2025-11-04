@@ -1,7 +1,8 @@
-import { DestroyableType, EventType } from "types/EventType";
+import { EventType } from "types/EventType";
 import { TransportParent } from "base/Transport";
 import { ensureEvent } from "helpers/ensures";
 import { TransportType } from "types/TransportType";
+import { DestroyableType } from "types/DestroyableType";
 
 /**
  * Create local copy of source what can be destroyed

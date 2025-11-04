@@ -1,4 +1,5 @@
-import { DestroyableType, EventType, EventTypeValue } from "types/EventType";
+import { DestroyableType } from "types/DestroyableType";
+import { EventType, EventTypeValue } from "types/EventType";
 import { TransportType } from "types/TransportType";
 
 /**

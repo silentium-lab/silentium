@@ -1,5 +1,6 @@
 import { ensureFunction } from "helpers/ensures";
-import { DestroyableType, EventType } from "types/EventType";
+import { DestroyableType } from "types/DestroyableType";
+import { EventType } from "types/EventType";
 import { TransportType } from "types/TransportType";
 
 type EventExecutor<T> = (transport: TransportType<T>) => void | (() => void);
