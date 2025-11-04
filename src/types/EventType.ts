@@ -9,14 +9,6 @@ export interface EventType<T = unknown> {
 }
 
 /**
- * Type of an object that can
- * be destroyed
- */
-export interface DestroyableType {
-  destroy(): this;
-}
-
-/**
  * Value type from event
  */
 export type EventTypeValue<T> = T extends EventType<infer U> ? U : never;

@@ -2,7 +2,7 @@ import { EventType } from "types/EventType";
 import { Late } from "components/Late";
 import { Once } from "components/Once";
 import { SourceType } from "types/SourceType";
-import { OwnerPool } from "helpers/OwnerPool";
+import { TransportPool } from "helpers/TransportPool";
 import { TransportType } from "types/TransportType";
 import { isFilled } from "helpers/guards";
 import { Transport } from "base/Transport";
@@ -16,7 +16,7 @@ export function Shared<T>($base: EventType<T>, stateless = false) {
 }
 
 export class SharedEvent<T> implements SourceType<T> {
-  private ownersPool = new OwnerPool<T>();
+  private transportPool = new TransportPool<T>();
   private lastValue: T | undefined;
   private calls = Late();
 
@@ -36,24 +36,24 @@ export class SharedEvent<T> implements SourceType<T> {
     if (
       !this.stateless &&
       isFilled(this.lastValue) &&
-      !this.ownersPool.has(transport)
+      !this.transportPool.has(transport)
     ) {
       transport.use(this.lastValue);
     }
-    this.ownersPool.add(transport);
+    this.transportPool.add(transport);
     return this;
   }
 
   public use(value: T) {
     this.calls.use(1);
     this.lastValue = value;
-    this.ownersPool.owner().use(value);
+    this.transportPool.transport().use(value);
     return this;
   }
 
   private firstCallTransport = Transport<T>((v: T) => {
     this.lastValue = v;
-    this.ownersPool.owner().use(v);
+    this.transportPool.transport().use(v);
   });
 
   public touched() {
@@ -61,10 +61,10 @@ export class SharedEvent<T> implements SourceType<T> {
   }
 
   public pool() {
-    return this.ownersPool;
+    return this.transportPool;
   }
 
   public destroy() {
-    return this.ownersPool.destroy();
+    return this.transportPool.destroy();
   }
 }
