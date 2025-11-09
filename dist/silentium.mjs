@@ -849,8 +849,12 @@ class RPCImpl {
   }
 }
 
-function RPCOf($rpc, transport) {
-  return Filtered($rpc, (rpc) => rpc.transport === transport);
+function RPCOf(transport) {
+  const $transport = LateShared();
+  RPC.transport[transport] = $transport;
+  return Event((transport2) => {
+    $transport.event(transport2);
+  });
 }
 
 export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };

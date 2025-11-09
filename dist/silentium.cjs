@@ -851,8 +851,12 @@ class RPCImpl {
   }
 }
 
-function RPCOf($rpc, transport) {
-  return Filtered($rpc, (rpc) => rpc.transport === transport);
+function RPCOf(transport) {
+  const $transport = LateShared();
+  RPC.transport[transport] = $transport;
+  return Event((transport2) => {
+    $transport.event(transport2);
+  });
 }
 
 exports.All = All;

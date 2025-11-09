@@ -536,7 +536,7 @@ declare class RPCImpl {
  * Event for the arrival of a specific RPC message
  * for specific transport
  */
-declare function RPCOf($rpc: EventType<RPCType>, transport: string): EventType<RPCType>;
+declare function RPCOf(transport: string): EventImpl<RPCType>;
 
 /**
  * Checks that the value is neither undefined nor null
