@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.131](https://github.com/silentium-lab/silentium/compare/v0.0.130...v0.0.131) (2025-11-09)
+
+
+### Features
+
+* **main:** transport optional comonent ([ed1f79f](https://github.com/silentium-lab/silentium/commit/ed1f79f6193a3c98f99a41f080d01c2d571c6d0e))
+
 ### [0.0.130](https://github.com/silentium-lab/silentium/compare/v0.0.129...v0.0.130) (2025-11-09)
 
 
