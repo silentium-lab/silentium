@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.130](https://github.com/silentium-lab/silentium/compare/v0.0.129...v0.0.130) (2025-11-09)
+
+
+### Bug Fixes
+
+* **main:** rPCOf component ([b4d8afc](https://github.com/silentium-lab/silentium/commit/b4d8afc15a33587ba9bc339f7ce1d9f8ef13fd7f))
+* **main:** transport component test ([2d3f676](https://github.com/silentium-lab/silentium/commit/2d3f6769060dbc41cdf834cc4846a5926143c5cc))
+* **main:** void component test ([2342daf](https://github.com/silentium-lab/silentium/commit/2342daf7b870986f1b7401133b6816cd04cf615e))
+
 ### [0.0.129](https://github.com/silentium-lab/silentium/compare/v0.0.128...v0.0.129) (2025-11-04)
 
 ### [0.0.128](https://github.com/silentium-lab/silentium/compare/v0.0.127...v0.0.128) (2025-11-04)
