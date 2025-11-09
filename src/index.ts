@@ -5,6 +5,7 @@ export * from "./base/Event";
 export * from "./base/Local";
 export * from "./base/Of";
 export * from "./base/Transport";
+export * from "./base/TransportOptional";
 export * from "./base/Void";
 export * from "./components/All";
 export * from "./components/Any";
