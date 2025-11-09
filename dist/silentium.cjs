@@ -188,6 +188,21 @@ class OfEvent {
   }
 }
 
+function TransportOptional(base) {
+  return new TransportOptionalImpl(base);
+}
+class TransportOptionalImpl {
+  constructor(base) {
+    this.base = base;
+  }
+  wait(event) {
+    if (this.base !== void 0) {
+      event.event(this.base);
+    }
+    return this;
+  }
+}
+
 function Void() {
   return new VoidImpl();
 }
@@ -916,6 +931,8 @@ exports.TransportArgsImpl = TransportArgsImpl;
 exports.TransportDestroyable = TransportDestroyable;
 exports.TransportDestroyableEvent = TransportDestroyableEvent;
 exports.TransportEvent = TransportEvent;
+exports.TransportOptional = TransportOptional;
+exports.TransportOptionalImpl = TransportOptionalImpl;
 exports.TransportParent = TransportParent;
 exports.TransportParentImpl = TransportParentImpl;
 exports.TransportPool = TransportPool;

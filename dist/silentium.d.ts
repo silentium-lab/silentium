@@ -151,6 +151,18 @@ declare class TransportParentImpl<T> implements TransportType<T> {
 }
 
 /**
+ * Allows subscribing a transport to an event
+ * even if the transport reference does not exist,
+ * helps avoid unnecessary conditions in application code
+ */
+declare function TransportOptional(base?: TransportType): TransportOptionalImpl;
+declare class TransportOptionalImpl {
+    private base?;
+    constructor(base?: TransportType | undefined);
+    wait(event: EventType): this;
+}
+
+/**
  * Transport that does nothing with the passed value,
  * needed for silent event triggering
  */
@@ -563,4 +575,4 @@ declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureEvent(v: unknown, label: string): void;
 declare function ensureTransport(v: unknown, label: string): void;
 
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };

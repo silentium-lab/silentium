@@ -186,6 +186,21 @@ class OfEvent {
   }
 }
 
+function TransportOptional(base) {
+  return new TransportOptionalImpl(base);
+}
+class TransportOptionalImpl {
+  constructor(base) {
+    this.base = base;
+  }
+  wait(event) {
+    if (this.base !== void 0) {
+      event.event(this.base);
+    }
+    return this;
+  }
+}
+
 function Void() {
   return new VoidImpl();
 }
@@ -857,5 +872,5 @@ function RPCOf(transport) {
   });
 }
 
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.mjs.map
