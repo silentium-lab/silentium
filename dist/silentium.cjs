@@ -194,6 +194,12 @@ class LocalEvent {
   }
 }
 
+function New(construct) {
+  return Event((transport) => {
+    transport.use(construct());
+  });
+}
+
 function Of(value) {
   return new OfEvent(value);
 }
@@ -307,6 +313,12 @@ class AppliedEvent {
     this.$base.event(this.transport.child(transport));
     return this;
   }
+}
+
+function AppliedDestructured($base, applier) {
+  return Applied($base, (args) => {
+    return applier(...args);
+  });
 }
 
 function Catch($base, errorMessage, errorOriginal) {
@@ -898,6 +910,7 @@ exports.AllEvent = AllEvent;
 exports.Any = Any;
 exports.AnyEvent = AnyEvent;
 exports.Applied = Applied;
+exports.AppliedDestructured = AppliedDestructured;
 exports.AppliedEvent = AppliedEvent;
 exports.Catch = Catch;
 exports.CatchEvent = CatchEvent;
@@ -927,6 +940,7 @@ exports.Local = Local;
 exports.LocalEvent = LocalEvent;
 exports.Map = Map;
 exports.MapEvent = MapEvent;
+exports.New = New;
 exports.Of = Of;
 exports.OfEvent = OfEvent;
 exports.Once = Once;

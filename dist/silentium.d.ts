@@ -109,6 +109,18 @@ declare class LocalEvent<T> implements EventType<T>, DestroyableType {
 }
 
 /**
+ * Type that takes a value as an argument
+ * and returns a specific value
+ */
+type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
+
+/**
+ * A component that, on each access, returns a new instance
+ * of a reference type based on the constructor function
+ */
+declare function New<T>(construct: ConstructorType<[], T>): EventImpl<T>;
+
+/**
  * Helps convert a value into an event
  */
 declare function Of<T>(value: T): OfEvent<T>;
@@ -218,12 +230,6 @@ declare class AnyEvent<T> implements EventType<T> {
 }
 
 /**
- * Type that takes a value as an argument
- * and returns a specific value
- */
-type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P) => T;
-
-/**
  * An event that applies a function
  * to the value of the base event
  */
@@ -235,6 +241,12 @@ declare class AppliedEvent<T, R> implements EventType<R> {
     event(transport: TransportType<R>): this;
     private transport;
 }
+
+/**
+ * Allows applying variables from an event that passes an array to a function,
+ * where each element of the array will be passed as a separate argument
+ */
+declare function AppliedDestructured<const T extends any[], R>($base: EventType<T>, applier: ConstructorType<T[number][], R>): AppliedEvent<T, R>;
 
 /**
  * An event representing a base event where
@@ -586,4 +598,4 @@ declare function isDestroyed<T>(o: T): o is T & DestroyedType;
  */
 declare function isTransport<T>(o: T): o is T & TransportType;
 
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedDestructured, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, New, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, type TransportExecutor, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
