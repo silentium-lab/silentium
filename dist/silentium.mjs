@@ -36,6 +36,21 @@ function isTransport(o) {
   return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
 }
 
+function Destroyable(base) {
+  return new DestroyableImpl(base);
+}
+class DestroyableImpl {
+  constructor(base) {
+    this.base = base;
+  }
+  destroy() {
+    if (isDestroyable(this.base)) {
+      this.base.destroy();
+    }
+    return this;
+  }
+}
+
 var __defProp$k = Object.defineProperty;
 var __defNormalProp$k = (obj, key, value) => key in obj ? __defProp$k(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$k = (obj, key, value) => __defNormalProp$k(obj, key + "" , value);
@@ -735,14 +750,58 @@ class MapEvent {
 var __defProp$3 = Object.defineProperty;
 var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !== "symbol" ? key + "" : key, value);
+function RPC($rpc) {
+  return new RPCImpl($rpc);
+}
+RPC.transport = {};
+class RPCImpl {
+  constructor($rpc) {
+    this.$rpc = $rpc;
+    __publicField$3(this, "$result", LateShared());
+    __publicField$3(this, "$error", LateShared());
+  }
+  result() {
+    this.$rpc.event(
+      Transport((rpc) => {
+        const transport = rpc.transport === void 0 ? RPC.transport.default : RPC.transport[rpc.transport] || RPC.transport.default;
+        if (!transport) {
+          throw new Error(`RPCImpl: Transport not found ${rpc.transport}`);
+        }
+        if (!rpc.result) {
+          rpc.result = this.$result;
+        }
+        if (!rpc.error) {
+          rpc.error = this.$error;
+        }
+        transport.use(rpc);
+      })
+    );
+    return this.$result;
+  }
+  error() {
+    return this.$error;
+  }
+}
+
+function RPCOf(transport) {
+  const $transport = LateShared();
+  RPC.transport[transport] = $transport;
+  return Event((transport2) => {
+    $transport.event(transport2);
+  });
+}
+
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Sequence($base) {
   return new SequenceEvent($base);
 }
 class SequenceEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$3(this, "result", []);
-    __publicField$3(this, "parent", TransportParent(function(v, child) {
+    __publicField$2(this, "result", []);
+    __publicField$2(this, "parent", TransportParent(function(v, child) {
       child.result.push(v);
       this.use(child.result);
     }, this));
@@ -753,16 +812,16 @@ class SequenceEvent {
   }
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
 function Stream($base) {
   return new StreamEvent($base);
 }
 class StreamEvent {
   constructor($base) {
     this.$base = $base;
-    __publicField$2(this, "parent", TransportParent(function(v) {
+    __publicField$1(this, "parent", TransportParent(function(v) {
       v.forEach((cv) => {
         this.use(cv);
       });
@@ -808,16 +867,16 @@ function mergeAtIndex(arr1, arr2, index) {
   return result.concat(arr2);
 }
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
 function TransportDestroyable(baseTransport) {
   return new TransportDestroyableEvent(baseTransport);
 }
 class TransportDestroyableEvent {
   constructor(baseTransport) {
     this.baseTransport = baseTransport;
-    __publicField$1(this, "destructors", []);
+    __publicField(this, "destructors", []);
   }
   use(args) {
     const inst = this.baseTransport.use(args);
@@ -832,49 +891,5 @@ class TransportDestroyableEvent {
   }
 }
 
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-function RPC($rpc) {
-  return new RPCImpl($rpc);
-}
-RPC.transport = {};
-class RPCImpl {
-  constructor($rpc) {
-    this.$rpc = $rpc;
-    __publicField(this, "$result", LateShared());
-    __publicField(this, "$error", LateShared());
-  }
-  result() {
-    this.$rpc.event(
-      Transport((rpc) => {
-        const transport = rpc.transport === void 0 ? RPC.transport.default : RPC.transport[rpc.transport] || RPC.transport.default;
-        if (!transport) {
-          throw new Error(`RPCImpl: Transport not found ${rpc.transport}`);
-        }
-        if (!rpc.result) {
-          rpc.result = this.$result;
-        }
-        if (!rpc.error) {
-          rpc.error = this.$error;
-        }
-        transport.use(rpc);
-      })
-    );
-    return this.$result;
-  }
-  error() {
-    return this.$error;
-  }
-}
-
-function RPCOf(transport) {
-  const $transport = LateShared();
-  RPC.transport[transport] = $transport;
-  return Event((transport2) => {
-    $transport.event(transport2);
-  });
-}
-
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
+export { All, AllEvent, Any, AnyEvent, Applied, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Event, EventImpl, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCImpl, RPCOf, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, TransportEvent, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
 //# sourceMappingURL=silentium.mjs.map
