@@ -30,6 +30,7 @@ export class LocalEvent<T> implements EventType<T>, DestroyableType {
   }, this);
 
   public destroy(): this {
+    this.destroyed = true;
     return this;
   }
 }
