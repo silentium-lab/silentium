@@ -171,6 +171,7 @@ class LocalEvent {
     return this;
   }
   destroy() {
+    this.destroyed = true;
     return this;
   }
 }
