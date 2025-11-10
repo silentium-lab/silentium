@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.134](https://github.com/silentium-lab/silentium/compare/v0.0.133...v0.0.134) (2025-11-10)
+
+
+### Bug Fixes
+
+* **main:** destroyContainer not only destroyable can be added ([a80e22e](https://github.com/silentium-lab/silentium/commit/a80e22ef5aaccd0093807af26675fa7ef0cee4a5))
+
 ### [0.0.133](https://github.com/silentium-lab/silentium/compare/v0.0.132...v0.0.133) (2025-11-10)
 
 
