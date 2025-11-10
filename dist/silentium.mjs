@@ -36,6 +36,7 @@ class DestroyContainerImpl {
   }
   destroy() {
     this.destructors.forEach((d) => d.destroy());
+    this.destructors.length = 0;
     return this;
   }
 }
