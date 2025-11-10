@@ -22,27 +22,6 @@ function ComponentClass(classConstructor) {
   return (...args) => new classConstructor(...args);
 }
 
-var __defProp$k = Object.defineProperty;
-var __defNormalProp$k = (obj, key, value) => key in obj ? __defProp$k(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$k = (obj, key, value) => __defNormalProp$k(obj, key + "" , value);
-function DestroyContainer() {
-  return new DestroyContainerImpl();
-}
-class DestroyContainerImpl {
-  constructor() {
-    __publicField$k(this, "destructors", []);
-  }
-  add(e) {
-    this.destructors.push(e);
-    return e;
-  }
-  destroy() {
-    this.destructors.forEach((d) => d.destroy());
-    this.destructors.length = 0;
-    return this;
-  }
-}
-
 const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
@@ -57,6 +36,29 @@ function isDestroyed(o) {
 }
 function isTransport(o) {
   return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
+}
+
+var __defProp$k = Object.defineProperty;
+var __defNormalProp$k = (obj, key, value) => key in obj ? __defProp$k(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$k = (obj, key, value) => __defNormalProp$k(obj, key + "" , value);
+function DestroyContainer() {
+  return new DestroyContainerImpl();
+}
+class DestroyContainerImpl {
+  constructor() {
+    __publicField$k(this, "destructors", []);
+  }
+  add(e) {
+    if (isDestroyable(e)) {
+      this.destructors.push(e);
+    }
+    return e;
+  }
+  destroy() {
+    this.destructors.forEach((d) => d.destroy());
+    this.destructors.length = 0;
+    return this;
+  }
 }
 
 function ensureFunction(v, label) {

@@ -66,7 +66,7 @@ declare function ComponentClass<T extends ConstructableType>(classConstructor: T
 declare function DestroyContainer(): DestroyContainerImpl;
 declare class DestroyContainerImpl implements DestroyableType {
     private destructors;
-    add<R extends DestroyableType>(e: R): R;
+    add<R>(e: R): R;
     destroy(): this;
 }
 
