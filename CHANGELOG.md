@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.136](https://github.com/silentium-lab/silentium/compare/v0.0.135...v0.0.136) (2025-11-10)
+
+
+### Bug Fixes
+
+* **main:** appliedDestructured and New components ([b2ca808](https://github.com/silentium-lab/silentium/commit/b2ca8081a04fb10a16ae50167ae63f1578e72854))
+
 ### [0.0.135](https://github.com/silentium-lab/silentium/compare/v0.0.134...v0.0.135) (2025-11-10)
 
 
