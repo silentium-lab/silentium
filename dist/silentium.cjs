@@ -797,6 +797,15 @@ class RPCImpl {
   }
 }
 
+function RPCChain($base) {
+  return Transport((rpc) => {
+    if (!rpc.result) {
+      throw new Error("RPCChain did not find result in rpc message");
+    }
+    $base.event(rpc.result);
+  });
+}
+
 function RPCOf(transport) {
   const $transport = LateShared();
   RPC.transport[transport] = $transport;
@@ -948,6 +957,7 @@ exports.OnceEvent = OnceEvent;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.RPC = RPC;
+exports.RPCChain = RPCChain;
 exports.RPCImpl = RPCImpl;
 exports.RPCOf = RPCOf;
 exports.Sequence = Sequence;
@@ -966,6 +976,8 @@ exports.TransportArgsImpl = TransportArgsImpl;
 exports.TransportDestroyable = TransportDestroyable;
 exports.TransportDestroyableEvent = TransportDestroyableEvent;
 exports.TransportEvent = TransportEvent;
+exports.TransportEventImpl = TransportEventImpl;
+exports.TransportImpl = TransportImpl;
 exports.TransportOptional = TransportOptional;
 exports.TransportOptionalImpl = TransportOptionalImpl;
 exports.TransportParent = TransportParent;

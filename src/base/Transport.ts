@@ -15,7 +15,7 @@ export function Transport<T>(transportExecutor: TransportExecutor<T>) {
   return new TransportImpl<T>(transportExecutor);
 }
 
-class TransportImpl<T> implements TransportType<T> {
+export class TransportImpl<T> implements TransportType<T> {
   public constructor(private transportExecutor: TransportExecutor<T>) {
     ensureFunction(transportExecutor, "Transport: transport executor");
   }
@@ -41,7 +41,7 @@ export function TransportEvent<T, ET = any>(
   return new TransportEventImpl<T, ET>(transportExecutor);
 }
 
-class TransportEventImpl<T, ET = T> implements TransportType<T, EventType<ET>> {
+export class TransportEventImpl<T, ET = T> implements TransportType<T, EventType<ET>> {
   public constructor(private executor: TransportEventExecutor<T, ET>) {
     ensureFunction(executor, "TransportEvent: transport executor");
   }
