@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.137](https://github.com/silentium-lab/silentium/compare/v0.0.136...v0.0.137) (2025-11-11)
+
+
+### Bug Fixes
+
+* **main:** eslint fix ([03fd0d9](https://github.com/silentium-lab/silentium/commit/03fd0d949375b5a513070cb6676911ce81942abc))
+* **main:** rPC chain component ([7f21acc](https://github.com/silentium-lab/silentium/commit/7f21accd9a1316f3ab56a64fbdc2a6d89ff6ecab))
+
 ### [0.0.136](https://github.com/silentium-lab/silentium/compare/v0.0.135...v0.0.136) (2025-11-10)
 
 
