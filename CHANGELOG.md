@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.138](https://github.com/silentium-lab/silentium/compare/v0.0.137...v0.0.138) (2025-11-15)
+
+
+### Bug Fixes
+
+* **main:** rename events to messages ([35f6aa8](https://github.com/silentium-lab/silentium/commit/35f6aa8dac1880a209bcf2cdfb286f2a977ef08d))
+
 ### [0.0.137](https://github.com/silentium-lab/silentium/compare/v0.0.136...v0.0.137) (2025-11-11)
 
 
