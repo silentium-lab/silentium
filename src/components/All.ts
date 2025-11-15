@@ -1,11 +1,11 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { TransportType } from "types/TransportType";
-import { ensureEvent } from "helpers/ensures";
+import { ensureMessage } from "helpers/ensures";
 
-type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends MessageType<infer U> ? U : never;
 
-type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
+type ExtractTypesFromArrayS<T extends MessageType<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
@@ -14,35 +14,35 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
 };
 
 /**
- * An event that represents values from
- * all provided events as an array.
- * When all events emit their values,
+ * A message that represents values from
+ * all provided messages as an array.
+ * When all messages emit their values,
  * the combined value will be returned.
- * If at least one event later emits a new
+ * If at least one message later emits a new
  * value, the updated array with the new value
  * will be emitted by All.
  */
-export function All<const T extends EventType[]>(...events: T) {
-  return new AllEvent<T>(...events);
+export function All<const T extends MessageType[]>(...messages: T) {
+  return new AllImpl<T>(...messages);
 }
 
-export class AllEvent<const T extends EventType[]>
-  implements EventType<ExtractTypesFromArrayS<T>>
+export class AllImpl<const T extends MessageType[]>
+  implements MessageType<ExtractTypesFromArrayS<T>>
 {
   private known: Set<string>;
   private filled = new Set<string>();
-  private $events: T;
+  private $messages: T;
   private result: unknown[] = [];
 
-  public constructor(...events: T) {
-    this.known = new Set<string>(Object.keys(events));
-    this.$events = events;
+  public constructor(...messages: T) {
+    this.known = new Set<string>(Object.keys(messages));
+    this.$messages = messages;
   }
 
-  public event(transport: TransportType<ExtractTypesFromArrayS<T>>): this {
-    Object.entries(this.$events).forEach(([key, event]) => {
-      ensureEvent(event, "All: item");
-      event.event(this.transport.child(transport, key));
+  public to(transport: TransportType<ExtractTypesFromArrayS<T>>): this {
+    Object.entries(this.$messages).forEach(([key, message]) => {
+      ensureMessage(message, "All: item");
+      message.to(this.transport.child(transport, key));
     });
     if (this.known.size === 0) {
       transport.use([] as ExtractTypesFromArrayS<T>);
@@ -52,7 +52,7 @@ export class AllEvent<const T extends EventType[]>
 
   private transport = TransportParent(function (
     v: unknown,
-    child: AllEvent<T>,
+    child: AllImpl<T>,
     key: string,
   ) {
     child.filled.add(key);

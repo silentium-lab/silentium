@@ -1,5 +1,5 @@
 import { TransportParent } from "base/Transport";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
@@ -7,17 +7,17 @@ import { TransportType } from "types/TransportType";
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
  */
-export function Once<T>($base: EventType<T>) {
-  return new OnceEvent<T>($base);
+export function Once<T>($base: MessageType<T>) {
+  return new OnceImpl<T>($base);
 }
 
-export class OnceEvent<T> implements EventType<T> {
+export class OnceImpl<T> implements MessageType<T> {
   private isFilled = false;
 
-  public constructor(private $base: EventType<T>) {}
+  public constructor(private $base: MessageType<T>) {}
 
-  public event(transport: TransportType<T>): this {
-    this.$base.event(this.parent.child(transport));
+  public to(transport: TransportType<T>): this {
+    this.$base.to(this.parent.child(transport));
     return this;
   }
 

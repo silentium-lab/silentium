@@ -14,52 +14,6 @@ interface DestroyedType {
 }
 
 /**
- * Type representing the process
- * of passing a value somewhere
- */
-interface TransportType<T = unknown, R = any> {
-    use(value: T): R;
-}
-/**
- * Transport that can be destroyed
- */
-type TransportDestroyableType<T = any, R = any> = TransportType<T, R> & DestroyableType & DestroyedType;
-
-/**
- * The event type from which
- * values should be received
- */
-interface EventType<T = unknown> {
-    event(user: TransportType<T>): this;
-}
-/**
- * Value type from event
- */
-type EventTypeValue<T> = T extends EventType<infer U> ? U : never;
-
-/**
- * Create a function component that
- * will emit an event with specified arguments
- * and specified type
- */
-declare function Component<T, P extends Array<any>>(executor: (this: TransportType<P[0] extends EventType ? EventTypeValue<P[0]> : T>, ...args: P) => void | (() => void)): (...args: P) => (P[0] extends EventType ? EventType<EventTypeValue<P[0]>> : EventType<T>) & DestroyableType;
-
-/**
- * A type that serves as both
- * an event and a transport
- */
-type SourceType<T = unknown> = EventType<T> & TransportType<T>;
-
-type ConstructableType = {
-    new (...args: any[]): any;
-};
-/**
- * Creates a type-safe factory function for instantiating components with proper interface inference
- * Automatically determines return types based on whether the class implements SourceType, EventType, and DestroyableType
- */
-declare function ComponentClass<T extends ConstructableType>(classConstructor: T): <R = null>(...args: ConstructorParameters<T>) => R extends null ? ConstructorParameters<T>[0] extends EventType ? InstanceType<T> extends SourceType ? InstanceType<T> extends DestroyableType ? SourceType<EventTypeValue<ConstructorParameters<T>[0]>> & DestroyableType : SourceType<EventTypeValue<ConstructorParameters<T>[0]>> : InstanceType<T> extends DestroyableType ? EventType<EventTypeValue<ConstructorParameters<T>[0]>> & DestroyableType : EventType<EventTypeValue<ConstructorParameters<T>[0]>> : InstanceType<T> : R extends EventType ? R : EventType<R>;
-
-/**
  * Allows creating an object that definitely has a destructor,
  * useful to avoid creating unnecessary conditions
  */
@@ -81,29 +35,53 @@ declare class DestroyContainerImpl implements DestroyableType {
     destroy(): this;
 }
 
-type EventExecutor<T> = (transport: TransportType<T>) => void | (() => void);
 /**
- * An event created from an executor function.
- * The executor function can return an event destruction function.
+ * Type representing the process
+ * of passing a value somewhere
  */
-declare function Event<T>(eventExecutor: EventExecutor<T>): EventImpl<T>;
-declare class EventImpl<T> implements EventType<T>, DestroyableType {
-    private eventExecutor;
+interface TransportType<T = unknown, R = any> {
+    use(value: T): R;
+}
+/**
+ * Transport that can be destroyed
+ */
+type TransportDestroyableType<T = any, R = any> = TransportType<T, R> & DestroyableType & DestroyedType;
+
+/**
+ * The message type from which
+ * values should be received
+ */
+interface MessageType<T = unknown> {
+    to(user: TransportType<T>): this;
+}
+/**
+ * Value type from message
+ */
+type MessageTypeValue<T> = T extends MessageType<infer U> ? U : never;
+
+type MessageExecutorType<T> = (transport: TransportType<T>) => void | (() => void);
+/**
+ * A message created from an executor function.
+ * The executor function can return a message destruction function.
+ */
+declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
+declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
+    private executor;
     private mbDestructor;
-    constructor(eventExecutor: EventExecutor<T>);
-    event(transport: TransportType<T>): this;
+    constructor(executor: MessageExecutorType<T>);
+    to(transport: TransportType<T>): this;
     destroy(): this;
 }
 
 /**
  * Create local copy of source what can be destroyed
  */
-declare function Local<T>($base: EventType<T>): LocalEvent<T>;
-declare class LocalEvent<T> implements EventType<T>, DestroyableType {
+declare function Local<T>($base: MessageType<T>): LocalImpl<T>;
+declare class LocalImpl<T> implements MessageType<T>, DestroyableType {
     private $base;
     private destroyed;
-    constructor($base: EventType<T>);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>);
+    to(transport: TransportType<T>): this;
     private transport;
     destroy(): this;
 }
@@ -118,16 +96,16 @@ type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P
  * A component that, on each access, returns a new instance
  * of a reference type based on the constructor function
  */
-declare function New<T>(construct: ConstructorType<[], T>): EventImpl<T>;
+declare function New<T>(construct: ConstructorType<[], T>): MessageImpl<T>;
 
 /**
- * Helps convert a value into an event
+ * Helps convert a value into a message
  */
-declare function Of<T>(value: T): OfEvent<T>;
-declare class OfEvent<T> implements EventType<T> {
+declare function Of<T>(value: T): OfImpl<T>;
+declare class OfImpl<T> implements MessageType<T> {
     private value;
     constructor(value: T);
-    event(transport: TransportType<T>): this;
+    to(transport: TransportType<T>): this;
 }
 
 /**
@@ -136,27 +114,27 @@ declare class OfEvent<T> implements EventType<T> {
 type TransportExecutor<T> = (v: T) => void;
 /**
  * Base transport that accepts the passed value,
- * acts as a conductor to deliver the value from an event to somewhere
+ * acts as a conductor to deliver the value from a message to somewhere
  */
 declare function Transport<T>(transportExecutor: TransportExecutor<T>): TransportImpl<T>;
 declare class TransportImpl<T> implements TransportType<T> {
-    private transportExecutor;
-    constructor(transportExecutor: TransportExecutor<T>);
+    private executor;
+    constructor(executor: TransportExecutor<T>);
     use(value: T): this;
 }
 /**
- * Type of executor for value passing logic and event returning
+ * Type of executor for value passing logic and message returning
  */
-type TransportEventExecutor<T, ET = T> = (v: T) => EventType<ET>;
+type TransportMessageExecutor<T, ET = T> = (v: T) => MessageType<ET>;
 /**
- * A transport that delivers a value from one event
- * and returns another event based on the value
+ * A transport that delivers a value from one message
+ * and returns another message based on the value
  */
-declare function TransportEvent<T, ET = any>(transportExecutor: TransportEventExecutor<T, ET>): TransportEventImpl<T, ET>;
-declare class TransportEventImpl<T, ET = T> implements TransportType<T, EventType<ET>> {
+declare function TransportMessage<T, ET = any>(executor: TransportMessageExecutor<T, ET>): TransportMessageImpl<T, ET>;
+declare class TransportMessageImpl<T, ET = T> implements TransportType<T, MessageType<ET>> {
     private executor;
-    constructor(executor: TransportEventExecutor<T, ET>);
-    use(value: T): EventType<ET>;
+    constructor(executor: TransportMessageExecutor<T, ET>);
+    use(value: T): MessageType<ET>;
 }
 /**
  * A transport that accepts a child transport
@@ -174,7 +152,7 @@ declare class TransportParentImpl<T> implements TransportType<T> {
 }
 
 /**
- * Allows subscribing a transport to an event
+ * Allows subscribing a transport to a message
  * even if the transport reference does not exist,
  * helps avoid unnecessary conditions in application code
  */
@@ -182,105 +160,105 @@ declare function TransportOptional(base?: TransportType): TransportOptionalImpl;
 declare class TransportOptionalImpl {
     private base?;
     constructor(base?: TransportType | undefined);
-    wait(event: EventType): this;
+    wait(m: MessageType): this;
 }
 
 /**
  * Transport that does nothing with the passed value,
- * needed for silent event triggering
+ * needed for silent message triggering
  */
 declare function Void(): VoidImpl;
 declare class VoidImpl implements TransportType {
     use(): this;
 }
 
-type ExtractTypeS<T> = T extends EventType<infer U> ? U : never;
-type ExtractTypesFromArrayS<T extends EventType<any>[]> = {
+type ExtractTypeS<T> = T extends MessageType<infer U> ? U : never;
+type ExtractTypesFromArrayS<T extends MessageType<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
 /**
- * An event that represents values from
- * all provided events as an array.
- * When all events emit their values,
+ * A message that represents values from
+ * all provided messages as an array.
+ * When all messages emit their values,
  * the combined value will be returned.
- * If at least one event later emits a new
+ * If at least one message later emits a new
  * value, the updated array with the new value
  * will be emitted by All.
  */
-declare function All<const T extends EventType[]>(...events: T): AllEvent<T>;
-declare class AllEvent<const T extends EventType[]> implements EventType<ExtractTypesFromArrayS<T>> {
+declare function All<const T extends MessageType[]>(...messages: T): AllImpl<T>;
+declare class AllImpl<const T extends MessageType[]> implements MessageType<ExtractTypesFromArrayS<T>> {
     private known;
     private filled;
-    private $events;
+    private $messages;
     private result;
-    constructor(...events: T);
-    event(transport: TransportType<ExtractTypesFromArrayS<T>>): this;
+    constructor(...messages: T);
+    to(transport: TransportType<ExtractTypesFromArrayS<T>>): this;
     private transport;
 }
 
 /**
- * An event that emits values received from
- * any of its bound events
+ * A message that emits values received from
+ * any of its bound messages
  */
-declare function Any<const T>(...events: EventType<T>[]): AnyEvent<T>;
-declare class AnyEvent<T> implements EventType<T> {
-    private $events;
-    constructor(...events: EventType<T>[]);
-    event(transport: TransportType<T>): this;
+declare function Any<const T>(...messages: MessageType<T>[]): AnyImpl<T>;
+declare class AnyImpl<T> implements MessageType<T> {
+    private $messages;
+    constructor(...messages: MessageType<T>[]);
+    to(transport: TransportType<T>): this;
 }
 
 /**
- * An event that applies a function
- * to the value of the base event
+ * An message that applies a function
+ * to the value of the base message
  */
-declare function Applied<const T, R>($base: EventType<T>, applier: ConstructorType<[T], R>): AppliedEvent<T, R>;
-declare class AppliedEvent<T, R> implements EventType<R> {
+declare function Applied<const T, R>($base: MessageType<T>, applier: ConstructorType<[T], R>): AppliedImpl<T, R>;
+declare class AppliedImpl<T, R> implements MessageType<R> {
     private $base;
     private applier;
-    constructor($base: EventType<T>, applier: ConstructorType<[T], R>);
-    event(transport: TransportType<R>): this;
+    constructor($base: MessageType<T>, applier: ConstructorType<[T], R>);
+    to(transport: TransportType<R>): this;
     private transport;
 }
 
 /**
- * Allows applying variables from an event that passes an array to a function,
+ * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
  */
-declare function AppliedDestructured<const T extends any[], R>($base: EventType<T>, applier: ConstructorType<T[number][], R>): AppliedEvent<T, R>;
+declare function AppliedDestructured<const T extends any[], R>($base: MessageType<T>, applier: ConstructorType<T[number][], R>): AppliedImpl<T, R>;
 
 /**
- * An event representing a base event where
+ * An message representing a base message where
  * its operation is wrapped in try-catch
  * and expects exceptions. If an exception
  * bubbles up, it's passed to the transports
  * as errorMessage and errorOriginal
  */
-declare function Catch<T>($base: EventType<T>, errorMessage: TransportType, errorOriginal?: TransportType): CatchEvent<T>;
-declare class CatchEvent<T> implements EventType<T> {
+declare function Catch<T>($base: MessageType<T>, errorMessage: TransportType, errorOriginal?: TransportType): CatchImpl<T>;
+declare class CatchImpl<T> implements MessageType<T> {
     private $base;
     private errorMessage;
     private errorOriginal?;
-    constructor($base: EventType<T>, errorMessage: TransportType, errorOriginal?: TransportType | undefined);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>, errorMessage: TransportType, errorOriginal?: TransportType | undefined);
+    to(transport: TransportType<T>): this;
 }
 
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
 /**
- * Chains events together and triggers
- * the last event only when all previous events
+ * Chains messages together and triggers
+ * the last message only when all previous messages
  * have emitted their values. The value of Chain will be the value
- * of the last event. If any events
+ * of the last message. If any messages
  * emit a value again after the overall Chain response was already returned,
- * then Chain emits again with the value of the last event.
+ * then Chain emits again with the value of the last message.
  */
-declare function Chain<T extends readonly EventType[]>(...events: T): ChainEvent<T>;
-declare class ChainEvent<T extends readonly EventType[]> implements EventType<EventTypeValue<Last<T>>> {
-    private $events;
+declare function Chain<T extends readonly MessageType[]>(...messages: T): ChainImpl<T>;
+declare class ChainImpl<T extends readonly MessageType[]> implements MessageType<MessageTypeValue<Last<T>>> {
+    private $messages;
     private $latest;
-    constructor(...events: T);
-    event(transport: TransportType<EventTypeValue<Last<T>>>): this;
-    private handleEvent;
-    private oneEventTransport;
+    constructor(...messages: T);
+    to(transport: TransportType<MessageTypeValue<Last<T>>>): this;
+    private handleMessage;
+    private oneMessageTransport;
 }
 
 type ExecutorApplier<T> = (executor: TransportExecutor<T>) => TransportExecutor<T>;
@@ -289,60 +267,66 @@ type ExecutorApplier<T> = (executor: TransportExecutor<T>) => TransportExecutor<
  * and returns the same value transfer function for the transport
  * Useful for applying functions like debounced or throttle
  */
-declare function ExecutorApplied<T>($base: EventType<T>, applier: ExecutorApplier<T>): ExecutorAppliedEvent<T>;
-declare class ExecutorAppliedEvent<T> implements EventType<T> {
+declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorApplier<T>): ExecutorAppliedImpl<T>;
+declare class ExecutorAppliedImpl<T> implements MessageType<T> {
     private $base;
     private applier;
-    constructor($base: EventType<T>, applier: ExecutorApplier<T>);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>, applier: ExecutorApplier<T>);
+    to(transport: TransportType<T>): this;
 }
 
 /**
- * Filters values from the source event based on a predicate function,
+ * Filters values from the source message based on a predicate function,
  * optionally providing a default value when the predicate fails.
  */
-declare function Filtered<T>($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): EventType<T>;
-declare class FilteredEvent<T> implements EventType<T> {
+declare function Filtered<T>($base: MessageType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): MessageType<T>;
+declare class FilteredImpl<T> implements MessageType<T> {
     private $base;
     private predicate;
     private defaultValue?;
-    constructor($base: EventType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
+    to(transport: TransportType<T>): this;
     private parent;
 }
 
 /**
- * An event derived from another event with a different
+ * A message derived from event with a different
  * method call interface, based on callbacks.
  * Allows attaching a custom handler to an existing event source
- * and presenting it as a silentium event
+ * and presenting it as a silentium message
  */
-declare function FromEvent<T>($emitter: EventType<any>, $eventName: EventType<string>, $subscribeMethod: EventType<string>, $unsubscribeMethod?: EventType<string>): FromEventAdapter<T>;
-declare class FromEventAdapter<T> implements EventType<T>, DestroyableType {
+declare function FromEvent<T>($emitter: MessageType<any>, $eventName: MessageType<string>, $subscribeMethod: MessageType<string>, $unsubscribeMethod?: MessageType<string>): FromEventImpl<T>;
+declare class FromEventImpl<T> implements MessageType<T>, DestroyableType {
     private $emitter;
     private $eventName;
     private $subscribeMethod;
     private $unsubscribeMethod?;
     private lastTransport;
     private handler;
-    constructor($emitter: EventType<any>, $eventName: EventType<string>, $subscribeMethod: EventType<string>, $unsubscribeMethod?: EventType<string> | undefined);
-    event(transport: TransportType<T>): this;
+    constructor($emitter: MessageType<any>, $eventName: MessageType<string>, $subscribeMethod: MessageType<string>, $unsubscribeMethod?: MessageType<string> | undefined);
+    to(transport: TransportType<T>): this;
     private parent;
     destroy(): this;
 }
 
 /**
- * Creates an event from a Promise, allowing the promise's resolution or rejection
- * to be handled as an event. The resolved value is emitted to the transport,
+ * Creates an message from a Promise, allowing the promise's resolution or rejection
+ * to be handled as an message. The resolved value is emitted to the transport,
  * and if an error is provided, rejections are forwarded to it.
  */
-declare function FromPromise<T>(p: Promise<T>, error?: TransportType): FromPromiseEvent<T>;
-declare class FromPromiseEvent<T> implements EventType<T> {
+declare function FromPromise<T>(p: Promise<T>, error?: TransportType): FromPromiseImpl<T>;
+declare class FromPromiseImpl<T> implements MessageType<T> {
     private p;
     private error?;
     constructor(p: Promise<T>, error?: TransportType | undefined);
-    event(transport: TransportType<T>): this;
+    to(transport: TransportType<T>): this;
 }
+
+/**
+ * A type that serves as both
+ * an message and a transport
+ */
+type SourceType<T = unknown> = MessageType<T> & TransportType<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -350,29 +334,29 @@ declare class FromPromiseEvent<T> implements EventType<T> {
  * will become the value of the linked information source
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare function Late<T>(v?: T): LateEvent<T>;
-declare class LateEvent<T> implements SourceType<T> {
+declare function Late<T>(v?: T): LateImpl<T>;
+declare class LateImpl<T> implements SourceType<T> {
     private v?;
     private lateTransport;
     private notify;
     constructor(v?: T | undefined);
-    event(transport: TransportType<T>): this;
+    to(transport: TransportType<T>): this;
     use(value: T): this;
 }
 
 /**
- * Helps represent an event as a primitive type, which can be useful
+ * Helps represent an message as a primitive type, which can be useful
  * for cases when you need to always have a reference to the current value
  * without updating the shared value when the current one changes.
  * For example, this could be used when passing an authorization token.
  * It can also be useful for testing or logging purposes.
  */
-declare function Primitive<T>($base: EventType<T>, theValue?: T | null): PrimitiveImpl<T>;
+declare function Primitive<T>($base: MessageType<T>, theValue?: T | null): PrimitiveImpl<T>;
 declare class PrimitiveImpl<T> {
     private $base;
     private theValue;
     private touched;
-    constructor($base: EventType<T>, theValue?: T | null);
+    constructor($base: MessageType<T>, theValue?: T | null);
     private ensureTouched;
     [Symbol.toPrimitive](): T | null;
     primitive(): T | null;
@@ -380,15 +364,15 @@ declare class PrimitiveImpl<T> {
 }
 
 /**
- * An event with a value that will be set later,
+ * An message with a value that will be set later,
  * capable of responding to different transports
  */
-declare function LateShared<T>(value?: T): LateSharedEvent<T>;
-declare class LateSharedEvent<T> implements SourceType<T> {
-    private $event;
+declare function LateShared<T>(value?: T): LateSharedImpl<T>;
+declare class LateSharedImpl<T> implements SourceType<T> {
+    private $msg;
     private primitive;
     constructor(value?: T);
-    event(transport: TransportType<T>): this;
+    to(transport: TransportType<T>): this;
     use(value: T): this;
     value(): PrimitiveImpl<T>;
 }
@@ -397,12 +381,12 @@ declare class LateSharedEvent<T> implements SourceType<T> {
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  */
-declare function Map<T, TG>($base: EventType<T[]>, $target: TransportType<any, EventType<TG>>): MapEvent<T, TG>;
-declare class MapEvent<T, TG> implements EventType<TG[]> {
+declare function Map<T, TG>($base: MessageType<T[]>, $target: TransportType<any, MessageType<TG>>): MapImpl<T, TG>;
+declare class MapImpl<T, TG> implements MessageType<TG[]> {
     private $base;
     private $target;
-    constructor($base: EventType<T[]>, $target: TransportType<any, EventType<TG>>);
-    event(transport: TransportType<TG[]>): this;
+    constructor($base: MessageType<T[]>, $target: TransportType<any, MessageType<TG>>);
+    to(transport: TransportType<TG[]>): this;
     private parent;
 }
 
@@ -411,12 +395,12 @@ declare class MapEvent<T, TG> implements EventType<TG[]> {
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
  */
-declare function Once<T>($base: EventType<T>): OnceEvent<T>;
-declare class OnceEvent<T> implements EventType<T> {
+declare function Once<T>($base: MessageType<T>): OnceImpl<T>;
+declare class OnceImpl<T> implements MessageType<T> {
     private $base;
     private isFilled;
-    constructor($base: EventType<T>);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>);
+    to(transport: TransportType<T>): this;
     private parent;
 }
 
@@ -433,8 +417,8 @@ interface RPCType extends Record<string, any> {
 }
 
 interface RPCImplType<T> {
-    result(): EventType<T>;
-    error(): EventType<Error | string>;
+    result(): MessageType<T>;
+    error(): MessageType<Error | string>;
 }
 /**
  * The ability to call an external system through
@@ -442,7 +426,7 @@ interface RPCImplType<T> {
  * RPCType, the list of transports should be defined via
  * the RPC.transport object
  */
-declare function RPC<T>($rpc: EventType<RPCType>): RPCImplType<T>;
+declare function RPC<T>($rpc: MessageType<RPCType>): RPCImplType<T>;
 declare namespace RPC {
     var transport: {
         default: TransportType<RPCType>;
@@ -452,32 +436,32 @@ declare class RPCImpl {
     private $rpc;
     private $result;
     private $error;
-    constructor($rpc: EventType<RPCType>);
-    result(): LateSharedEvent<unknown>;
-    error(): LateSharedEvent<unknown>;
+    constructor($rpc: MessageType<RPCType>);
+    result(): LateSharedImpl<unknown>;
+    error(): LateSharedImpl<unknown>;
 }
 
 /**
- * Connects an external event to an RPC message chain
+ * Connects an external message to an RPC message chain
  */
-declare function RPCChain($base: EventType): TransportImpl<RPCType>;
+declare function RPCChain($base: MessageType): TransportImpl<RPCType>;
 
 /**
- * Event for the arrival of a specific RPC message
+ * Message for the arrival of a specific RPC message
  * for specific transport
  */
-declare function RPCOf(transport: string): EventImpl<RPCType>;
+declare function RPCOf(transport: string): MessageImpl<RPCType>;
 
 /**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
  */
-declare function Sequence<T>($base: EventType<T>): SequenceEvent<T>;
-declare class SequenceEvent<T> implements EventType<T[]> {
+declare function Sequence<T>($base: MessageType<T>): SequenceImpl<T>;
+declare class SequenceImpl<T> implements MessageType<T[]> {
     private $base;
     private result;
-    constructor($base: EventType<T>);
-    event(transport: TransportType<T[]>): this;
+    constructor($base: MessageType<T>);
+    to(transport: TransportType<T[]>): this;
     private parent;
 }
 
@@ -502,15 +486,15 @@ declare class TransportPool<T> {
  * An information object that helps multiple owners access
  * a single another information object
  */
-declare function Shared<T>($base: EventType<T>, stateless?: boolean): SharedEvent<T>;
-declare class SharedEvent<T> implements SourceType<T> {
+declare function Shared<T>($base: MessageType<T>, stateless?: boolean): SharedImpl<T>;
+declare class SharedImpl<T> implements SourceType<T> {
     private $base;
     private stateless;
     private transportPool;
     private lastValue;
     private calls;
-    constructor($base: EventType<T>, stateless?: boolean);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>, stateless?: boolean);
+    to(transport: TransportType<T>): this;
     use(value: T): this;
     private firstCallTransport;
     touched(): void;
@@ -522,64 +506,64 @@ declare class SharedEvent<T> implements SourceType<T> {
  * Creates a shared source that allows multiple transports to subscribe to the same underlying source.
  * The stateless parameter controls whether the sharing maintains state or not.
  */
-declare function SharedSource<T>($base: SourceType<T>, stateless?: boolean): SharedSourceEvent<T>;
-declare class SharedSourceEvent<T> implements SourceType<T> {
+declare function SharedSource<T>($base: SourceType<T>, stateless?: boolean): SharedSourceImpl<T>;
+declare class SharedSourceImpl<T> implements SourceType<T> {
     private $base;
     private $sharedBase;
     constructor($base: SourceType<T>, stateless?: boolean);
-    event(transport: TransportType<T>): this;
+    to(transport: TransportType<T>): this;
     use(value: T): this;
 }
 
 /**
  * Component that receives a data array and yields values one by one
  */
-declare function Stream<T>($base: EventType<T[]>): StreamEvent<T>;
-declare class StreamEvent<T> implements EventType<T> {
+declare function Stream<T>($base: MessageType<T[]>): StreamImpl<T>;
+declare class StreamImpl<T> implements MessageType<T> {
     private $base;
-    constructor($base: EventType<T[]>);
-    event(transport: TransportType<T>): this;
+    constructor($base: MessageType<T[]>);
+    to(transport: TransportType<T>): this;
     private parent;
 }
 
 /**
  * Creates a transport that applies a constructor to the result of another transport.
  */
-declare function TransportApplied<T>(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>): TransportAppliedImpl<T>;
-declare class TransportAppliedImpl<T> implements TransportType<unknown, EventType<T>> {
+declare function TransportApplied<T>(baseTransport: TransportType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>): TransportAppliedImpl<T>;
+declare class TransportAppliedImpl<T> implements TransportType<unknown, MessageType<T>> {
     private baseTransport;
     private applier;
-    constructor(baseTransport: TransportType<any, EventType<T>>, applier: ConstructorType<[EventType], EventType<T>>);
-    use(args: unknown): EventType<T>;
+    constructor(baseTransport: TransportType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>);
+    use(args: unknown): MessageType<T>;
 }
 
 /**
  * Creates a transport that merges additional arguments into the base transport's arguments
  * at a specified index position, allowing for flexible argument composition
  */
-declare function TransportArgs(baseTransport: TransportType<any[], EventType>, args: unknown[], startFromArgIndex?: number): TransportArgsImpl;
-declare class TransportArgsImpl implements TransportType<unknown[], EventType<unknown>> {
+declare function TransportArgs(baseTransport: TransportType<any[], MessageType>, args: unknown[], startFromArgIndex?: number): TransportArgsImpl;
+declare class TransportArgsImpl implements TransportType<unknown[], MessageType<unknown>> {
     private baseTransport;
     private args;
     private startFromArgIndex;
-    constructor(baseTransport: TransportType<any[], EventType>, args: unknown[], startFromArgIndex?: number);
-    use(runArgs: unknown[]): EventType<unknown>;
+    constructor(baseTransport: TransportType<any[], MessageType>, args: unknown[], startFromArgIndex?: number);
+    use(runArgs: unknown[]): MessageType<unknown>;
 }
 
 /**
  * Creates a transport wrapper that automatically manages destruction of created instances
  */
-declare function TransportDestroyable<T>(baseTransport: TransportType<any[], EventType<T>>): TransportDestroyableEvent<T>;
-declare class TransportDestroyableEvent<T> implements TransportType<unknown, EventType<T>>, DestroyableType {
+declare function TransportDestroyable<T>(baseTransport: TransportType<any[], MessageType<T>>): TransportDestroyableImpl<T>;
+declare class TransportDestroyableImpl<T> implements TransportType<unknown, MessageType<T>>, DestroyableType {
     private baseTransport;
     private destructors;
-    constructor(baseTransport: TransportType<any[], EventType<T>>);
-    use(args: any[]): EventType<T>;
+    constructor(baseTransport: TransportType<any[], MessageType<T>>);
+    use(args: any[]): MessageType<T>;
     destroy(): this;
 }
 
 declare function ensureFunction(v: unknown, label: string): void;
-declare function ensureEvent(v: unknown, label: string): void;
+declare function ensureMessage(v: unknown, label: string): void;
 declare function ensureTransport(v: unknown, label: string): void;
 
 /**
@@ -587,9 +571,9 @@ declare function ensureTransport(v: unknown, label: string): void;
  */
 declare const isFilled: <T>(value?: T) => value is Exclude<T, null | undefined>;
 /**
- * Checks that the object is an event
+ * Checks that the object is an message
  */
-declare function isEvent<T>(o: T): o is T & EventType;
+declare function isMessage<T>(o: T): o is T & MessageType;
 /**
  * Checks that the object is destroyable
  */
@@ -603,4 +587,4 @@ declare function isDestroyed<T>(o: T): o is T & DestroyedType;
  */
 declare function isTransport<T>(o: T): o is T & TransportType;
 
-export { All, AllEvent, Any, AnyEvent, Applied, AppliedDestructured, AppliedEvent, Catch, CatchEvent, Chain, ChainEvent, Component, ComponentClass, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Event, EventImpl, type EventType, type EventTypeValue, ExecutorApplied, ExecutorAppliedEvent, Filtered, FilteredEvent, FromEvent, FromEventAdapter, FromPromise, FromPromiseEvent, Late, LateEvent, LateShared, LateSharedEvent, Local, LocalEvent, Map, MapEvent, New, Of, OfEvent, Once, OnceEvent, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceEvent, Shared, SharedEvent, SharedSource, SharedSourceEvent, type SourceType, Stream, StreamEvent, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableEvent, type TransportDestroyableType, TransportEvent, type TransportEventExecutor, TransportEventImpl, type TransportExecutor, TransportImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureEvent, ensureFunction, ensureTransport, isDestroyable, isDestroyed, isEvent, isFilled, isTransport };
+export { All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, Message, MessageImpl, type MessageType, type MessageTypeValue, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, type SourceType, Stream, StreamImpl, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableImpl, type TransportDestroyableType, type TransportExecutor, TransportImpl, TransportMessage, type TransportMessageExecutor, TransportMessageImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureFunction, ensureMessage, ensureTransport, isDestroyable, isDestroyed, isFilled, isMessage, isTransport };

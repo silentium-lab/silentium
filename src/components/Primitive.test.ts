@@ -12,7 +12,7 @@ describe("PrimitiveSource.test", () => {
 
     const r = Applied(l2, (a) => ["ev", p, a].join("_"));
     const g = vi.fn();
-    r.event(Transport(g));
+    r.to(Transport(g));
 
     expect(g).toHaveBeenLastCalledWith("ev_1_2");
 

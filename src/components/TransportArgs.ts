@@ -1,4 +1,4 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
@@ -6,7 +6,7 @@ import { TransportType } from "types/TransportType";
  * at a specified index position, allowing for flexible argument composition
  */
 export function TransportArgs(
-  baseTransport: TransportType<any[], EventType>,
+  baseTransport: TransportType<any[], MessageType>,
   args: unknown[],
   startFromArgIndex: number = 0,
 ) {
@@ -14,15 +14,15 @@ export function TransportArgs(
 }
 
 export class TransportArgsImpl
-  implements TransportType<unknown[], EventType<unknown>>
+  implements TransportType<unknown[], MessageType<unknown>>
 {
   public constructor(
-    private baseTransport: TransportType<any[], EventType>,
+    private baseTransport: TransportType<any[], MessageType>,
     private args: unknown[],
     private startFromArgIndex: number = 0,
   ) {}
 
-  public use(runArgs: unknown[]): EventType<unknown> {
+  public use(runArgs: unknown[]): MessageType<unknown> {
     return this.baseTransport.use(
       mergeAtIndex(runArgs, this.args, this.startFromArgIndex),
     );

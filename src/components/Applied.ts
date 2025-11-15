@@ -1,36 +1,36 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { ConstructorType } from "types/ConstructorType";
-import { ensureEvent } from "helpers/ensures";
+import { ensureMessage } from "helpers/ensures";
 import { TransportType } from "types/TransportType";
 
 /**
- * An event that applies a function
- * to the value of the base event
+ * An message that applies a function
+ * to the value of the base message
  */
 export function Applied<const T, R>(
-  $base: EventType<T>,
+  $base: MessageType<T>,
   applier: ConstructorType<[T], R>,
 ) {
-  return new AppliedEvent<T, R>($base, applier);
+  return new AppliedImpl<T, R>($base, applier);
 }
 
-export class AppliedEvent<T, R> implements EventType<R> {
+export class AppliedImpl<T, R> implements MessageType<R> {
   public constructor(
-    private $base: EventType<T>,
+    private $base: MessageType<T>,
     private applier: ConstructorType<[T], R>,
   ) {
-    ensureEvent($base, "Applied: base");
+    ensureMessage($base, "Applied: base");
   }
 
-  public event(transport: TransportType<R>) {
-    this.$base.event(this.transport.child(transport));
+  public to(transport: TransportType<R>) {
+    this.$base.to(this.transport.child(transport));
     return this;
   }
 
   private transport = TransportParent(function (
     v: T,
-    child: AppliedEvent<T, R>,
+    child: AppliedImpl<T, R>,
   ) {
     this.use(child.applier(v));
   }, this);

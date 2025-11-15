@@ -1,15 +1,15 @@
 import { Transport } from "base/Transport";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { RPCType } from "types/RPCType";
 
 /**
- * Connects an external event to an RPC message chain
+ * Connects an external message to an RPC message chain
  */
-export function RPCChain($base: EventType) {
+export function RPCChain($base: MessageType) {
   return Transport<RPCType>((rpc) => {
     if (!rpc.result) {
       throw new Error("RPCChain did not find result in rpc message");
     }
-    $base.event(rpc.result);
+    $base.to(rpc.result);
   });
 }

@@ -1,17 +1,17 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
- * Helps convert a value into an event
+ * Helps convert a value into a message
  */
 export function Of<T>(value: T) {
-  return new OfEvent<T>(value);
+  return new OfImpl<T>(value);
 }
 
-export class OfEvent<T> implements EventType<T> {
+export class OfImpl<T> implements MessageType<T> {
   public constructor(private value: T) {}
 
-  public event(transport: TransportType<T>): this {
+  public to(transport: TransportType<T>): this {
     transport.use(this.value);
     return this;
   }

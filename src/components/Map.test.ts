@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { Map } from "components/Map";
 import { Applied } from "components/Applied";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 import { wait } from "testing/wait";
 import { Diagram } from "testing/Diagram";
-import { Event } from "base/Event";
-import { Transport, TransportEvent } from "base/Transport";
+import { Message } from "base/Message";
+import { Transport, TransportMessage } from "base/Transport";
 import { Of } from "base/Of";
 
-function x2(baseNumber: EventType<number>) {
-  return Event<number>((o) => {
-    baseNumber.event(
+function x2(baseNumber: MessageType<number>) {
+  return Message<number>((o) => {
+    baseNumber.to(
       Transport((v) => {
         o.use(v * 2);
       }),
@@ -31,16 +31,16 @@ describe("Map.test", () => {
 
   test("map async", async () => {
     const infoDeferred = (val: number) =>
-      Event((o: TransportType<number>) => {
+      Message((o: TransportType<number>) => {
         wait(5).then(() => {
           o.use(val);
         });
       });
     const info = Of([1, 2, 3, 9].map(infoDeferred));
-    const infoMapped = Map(info, TransportEvent(x2));
+    const infoMapped = Map(info, TransportMessage(x2));
 
     const callFn = vi.fn();
-    infoMapped.event(
+    infoMapped.to(
       Transport((v) => {
         callFn(v.join());
       }),
@@ -53,9 +53,9 @@ describe("Map.test", () => {
 
   test("map twice", () => {
     const d = Diagram();
-    const infoMapped = Map(Of([1, 2, 3, 9]), TransportEvent(x2));
+    const infoMapped = Map(Of([1, 2, 3, 9]), TransportMessage(x2));
 
-    Applied(infoMapped, String).event(d.transport);
+    Applied(infoMapped, String).to(d.transport);
 
     expect(d.toString()).toBe("2,4,6,18");
   });

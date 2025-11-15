@@ -8,7 +8,7 @@ describe("Once.test", () => {
     const l = Late<number>();
     const info = Once(l);
     const g = vitest.fn();
-    info.event(Transport(g));
+    info.to(Transport(g));
 
     expect(g).not.toHaveBeenCalled();
     l.use(111);
@@ -19,7 +19,7 @@ describe("Once.test", () => {
     const l = Late<number>(123);
     const info = Once(l);
     const g = vitest.fn();
-    info.event(Transport(g));
+    info.to(Transport(g));
 
     l.use(321);
 

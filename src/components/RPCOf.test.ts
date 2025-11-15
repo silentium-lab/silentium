@@ -5,9 +5,9 @@ import { RPCOf } from "components/RPCOf";
 import { describe, expect, test, vi } from "vitest";
 
 describe("RPCOf.test", () => {
-  test("creates event for specific transport and forwards RPC call", () => {
+  test("creates message for specific transport and forwards RPC call", () => {
     const callback = vi.fn();
-    RPCOf("testTransport").event(Transport(callback));
+    RPCOf("testTransport").to(Transport(callback));
 
     RPC(
       Of({

@@ -1,6 +1,6 @@
 import { TransportType } from "types/TransportType";
 import { TransportParent } from "base/Transport";
-import { EventType, EventTypeValue } from "types/EventType";
+import { MessageType, MessageTypeValue } from "types/MessageType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
@@ -8,52 +8,52 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
   : never;
 
 /**
- * Chains events together and triggers
- * the last event only when all previous events
+ * Chains messages together and triggers
+ * the last message only when all previous messages
  * have emitted their values. The value of Chain will be the value
- * of the last event. If any events
+ * of the last message. If any messages
  * emit a value again after the overall Chain response was already returned,
- * then Chain emits again with the value of the last event.
+ * then Chain emits again with the value of the last message.
  */
-export function Chain<T extends readonly EventType[]>(...events: T) {
-  return new ChainEvent<T>(...events);
+export function Chain<T extends readonly MessageType[]>(...messages: T) {
+  return new ChainImpl<T>(...messages);
 }
 
-export class ChainEvent<T extends readonly EventType[]>
-  implements EventType<EventTypeValue<Last<T>>>
+export class ChainImpl<T extends readonly MessageType[]>
+  implements MessageType<MessageTypeValue<Last<T>>>
 {
-  private $events: T;
-  private $latest: EventTypeValue<Last<T>> | undefined;
+  private $messages: T;
+  private $latest: MessageTypeValue<Last<T>> | undefined;
 
-  public constructor(...events: T) {
-    this.$events = events;
+  public constructor(...messages: T) {
+    this.$messages = messages;
   }
 
-  public event(transport: TransportType<EventTypeValue<Last<T>>>) {
-    this.handleEvent(0, transport);
+  public to(transport: TransportType<MessageTypeValue<Last<T>>>) {
+    this.handleMessage(0, transport);
     return this;
   }
 
-  private handleEvent = (index: number, transport: TransportType) => {
-    const event = this.$events[index] as Last<T>;
-    const next = this.$events[index + 1] as Last<T> | undefined;
-    event.event(this.oneEventTransport.child(transport, next, index));
+  private handleMessage = (index: number, transport: TransportType) => {
+    const message = this.$messages[index] as Last<T>;
+    const next = this.$messages[index + 1] as Last<T> | undefined;
+    message.to(this.oneMessageTransport.child(transport, next, index));
   };
 
-  private oneEventTransport = TransportParent(function (
-    v: EventTypeValue<Last<T>>,
-    child: ChainEvent<T>,
+  private oneMessageTransport = TransportParent(function (
+    v: MessageTypeValue<Last<T>>,
+    child: ChainImpl<T>,
     next: Last<T> | undefined,
     index: number,
   ) {
     if (!next) {
-      child.$latest = v as EventTypeValue<Last<T>>;
+      child.$latest = v as MessageTypeValue<Last<T>>;
     }
     if (child.$latest) {
       this.use(child.$latest);
     }
     if (next && !child.$latest) {
-      child.handleEvent(index + 1, this);
+      child.handleMessage(index + 1, this);
     }
   }, this);
 }

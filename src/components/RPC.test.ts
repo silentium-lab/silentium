@@ -1,25 +1,25 @@
 import { describe, expect, test, vi } from "vitest";
 import { RPC } from "components/RPC";
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 import { Transport } from "base/Transport";
 import { RPCType } from "types/RPCType";
 
 describe("RPC.test", () => {
-  test("result() calls transport and returns result event", () => {
+  test("result() calls transport and returns result message", () => {
     const mockTransport = {
       use: vi.fn(),
     };
     RPC.transport.default = mockTransport as any;
 
-    const rpcEvent = Event<RPCType>((transport) => {
+    const $rpc = Message<RPCType>((transport) => {
       transport.use({
         method: "testMethod",
         params: { key: "value" },
       });
     });
 
-    const rpcImpl = RPC(rpcEvent);
-    const resultEvent = rpcImpl.result();
+    const rpcImpl = RPC($rpc);
+    const $result = rpcImpl.result();
 
     expect(mockTransport.use).toHaveBeenCalledWith({
       method: "testMethod",
@@ -28,41 +28,41 @@ describe("RPC.test", () => {
       error: expect.any(Object),
     });
 
-    // Test that result event can be subscribed to
+    // Test that result message can be subscribed to
     const resultCallback = vi.fn();
-    resultEvent.event(Transport(resultCallback));
+    $result.to(Transport(resultCallback));
 
     // Since LateShared is used, it should not call immediately
     expect(resultCallback).not.toHaveBeenCalled();
 
     // Use the result
-    (resultEvent as any).use("testResult");
+    ($result as any).use("testResult");
     expect(resultCallback).toHaveBeenCalledWith("testResult");
   });
 
-  test("error() returns error event", () => {
+  test("error() returns error message", () => {
     const mockTransport = {
       use: vi.fn(),
     };
     RPC.transport.default = mockTransport as any;
 
-    const rpcEvent = Event<RPCType>((transport) => {
+    const $rpc = Message<RPCType>((transport) => {
       transport.use({
         method: "testMethod",
       });
     });
 
-    const rpcImpl = RPC(rpcEvent);
-    const errorEvent = rpcImpl.error();
+    const rpcImpl = RPC($rpc);
+    const $error = rpcImpl.error();
 
-    // Test that error event can be subscribed to
+    // Test that error message can be subscribed to
     const errorCallback = vi.fn();
-    errorEvent.event(Transport(errorCallback));
+    $error.to(Transport(errorCallback));
 
     expect(errorCallback).not.toHaveBeenCalled();
 
     // Use the error
-    (errorEvent as any).use("testError");
+    ($error as any).use("testError");
     expect(errorCallback).toHaveBeenCalledWith("testError");
   });
 
@@ -76,15 +76,15 @@ describe("RPC.test", () => {
     RPC.transport.default = defaultTransport as any;
     RPC.transport.custom = customTransport as any;
 
-    const rpcEvent = Event<RPCType>((transport) => {
+    const $msg = Message<RPCType>((transport) => {
       transport.use({
         method: "testMethod",
         transport: "custom",
       });
     });
 
-    const rpcImpl = RPC(rpcEvent);
-    rpcImpl.result();
+    const $rpc = RPC($msg);
+    $rpc.result();
 
     expect(customTransport.use).toHaveBeenCalled();
     expect(defaultTransport.use).not.toHaveBeenCalled();
@@ -94,16 +94,16 @@ describe("RPC.test", () => {
     // Reset transports
     RPC.transport = {} as any;
 
-    const rpcEvent = Event<RPCType>((transport) => {
+    const $msg = Message<RPCType>((transport) => {
       transport.use({
         method: "testMethod",
         transport: "nonexistent",
       });
     });
 
-    const rpcImpl = RPC(rpcEvent);
+    const $rpc = RPC($msg);
 
-    expect(() => rpcImpl.result()).toThrow(
+    expect(() => $rpc.result()).toThrow(
       "RPCImpl: Transport not found nonexistent",
     );
   });

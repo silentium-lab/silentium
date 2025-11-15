@@ -17,7 +17,7 @@ describe("FromEvent.test", () => {
     const i = FromEvent(Of(emitter), Of("click"), Of("on"), Of("off"));
 
     const o = vi.fn();
-    i.event(Transport(o));
+    i.to(Transport(o));
 
     expect(o).toBeCalledWith("click123");
 

@@ -1,23 +1,23 @@
 import { ConstructorType } from "types/ConstructorType";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
  * Creates a transport that applies a constructor to the result of another transport.
  */
 export function TransportApplied<T>(
-  baseTransport: TransportType<any, EventType<T>>,
-  applier: ConstructorType<[EventType], EventType<T>>,
+  baseTransport: TransportType<any, MessageType<T>>,
+  applier: ConstructorType<[MessageType], MessageType<T>>,
 ) {
   return new TransportAppliedImpl(baseTransport, applier);
 }
 
 export class TransportAppliedImpl<T>
-  implements TransportType<unknown, EventType<T>>
+  implements TransportType<unknown, MessageType<T>>
 {
   public constructor(
-    private baseTransport: TransportType<any, EventType<T>>,
-    private applier: ConstructorType<[EventType], EventType<T>>,
+    private baseTransport: TransportType<any, MessageType<T>>,
+    private applier: ConstructorType<[MessageType], MessageType<T>>,
   ) {}
 
   public use(args: unknown) {

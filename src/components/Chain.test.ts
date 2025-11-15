@@ -4,13 +4,13 @@ import { Late } from "components/Late";
 import { Diagram } from "testing/Diagram";
 
 describe("Chain.test", () => {
-  test("event connected to over events", () => {
+  test("message connected to over messages", () => {
     const d = Diagram();
     const $trigger = Late<string>("immediate");
     const $value = Late<string>("the_value");
 
     const $chain = Chain($trigger, $value);
-    $chain.event(d.transport);
+    $chain.to(d.transport);
 
     expect(d.toString()).toBe("the_value");
 

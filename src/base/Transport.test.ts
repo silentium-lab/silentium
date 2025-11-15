@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { Transport, TransportEvent, TransportParent } from "base/Transport";
-import { EventType } from "types/EventType";
+import { Transport, TransportMessage, TransportParent } from "base/Transport";
+import { MessageType } from "types/MessageType";
 
 describe("Transport.test.ts", () => {
   describe("Transport", () => {
@@ -21,21 +21,21 @@ describe("Transport.test.ts", () => {
     });
   });
 
-  describe("TransportEvent", () => {
-    test("calls executor with value and returns the event", () => {
-      const mockEvent = { event: vi.fn() } as EventType<string>;
-      const executor = vi.fn(() => mockEvent);
-      const transport = TransportEvent(executor);
+  describe("TransportMessage", () => {
+    test("calls executor with value and returns the message", () => {
+      const m = { to: vi.fn() } as MessageType<string>;
+      const executor = vi.fn(() => m);
+      const transport = TransportMessage(executor);
 
       const result = transport.use("test");
 
       expect(executor).toHaveBeenCalledWith("test");
-      expect(result).toBe(mockEvent);
+      expect(result).toBe(m);
     });
 
     test("throws if executor is not a function", () => {
-      expect(() => TransportEvent("not a function" as any)).toThrow(
-        "TransportEvent: transport executor: is not function",
+      expect(() => TransportMessage("not a function" as any)).toThrow(
+        "TransportMessage: transport executor: is not function",
       );
     });
   });

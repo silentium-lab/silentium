@@ -1,7 +1,7 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { All } from "components/All";
 import { TransportType } from "types/TransportType";
-import { isEvent } from "helpers/guards";
+import { isMessage } from "helpers/guards";
 import { TransportParent } from "base/Transport";
 import { Of } from "base/Of";
 
@@ -10,33 +10,33 @@ import { Of } from "base/Of";
  * producing an information source with new values
  */
 export function Map<T, TG>(
-  $base: EventType<T[]>,
-  $target: TransportType<any, EventType<TG>>,
+  $base: MessageType<T[]>,
+  $target: TransportType<any, MessageType<TG>>,
 ) {
-  return new MapEvent<T, TG>($base, $target);
+  return new MapImpl<T, TG>($base, $target);
 }
 
-export class MapEvent<T, TG> implements EventType<TG[]> {
+export class MapImpl<T, TG> implements MessageType<TG[]> {
   public constructor(
-    private $base: EventType<T[]>,
-    private $target: TransportType<any, EventType<TG>>,
+    private $base: MessageType<T[]>,
+    private $target: TransportType<any, MessageType<TG>>,
   ) {}
 
-  public event(transport: TransportType<TG[]>): this {
-    this.$base.event(this.parent.child(transport));
+  public to(transport: TransportType<TG[]>): this {
+    this.$base.to(this.parent.child(transport));
     return this;
   }
 
   private parent = TransportParent<T[]>(function (v, child) {
-    const infos: EventType<TG>[] = [];
+    const infos: MessageType<TG>[] = [];
     v.forEach((val) => {
-      let $val: EventType<T> | T = val;
-      if (!isEvent($val as object)) {
+      let $val: MessageType<T> | T = val;
+      if (!isMessage($val as object)) {
         $val = Of($val);
       }
       const info = child.$target.use($val);
       infos.push(info);
     });
-    All(...infos).event(this);
+    All(...infos).to(this);
   }, this);
 }

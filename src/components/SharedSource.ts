@@ -7,10 +7,10 @@ import { TransportType } from "types/TransportType";
  * The stateless parameter controls whether the sharing maintains state or not.
  */
 export function SharedSource<T>($base: SourceType<T>, stateless = false) {
-  return new SharedSourceEvent<T>($base, stateless);
+  return new SharedSourceImpl<T>($base, stateless);
 }
 
-export class SharedSourceEvent<T> implements SourceType<T> {
+export class SharedSourceImpl<T> implements SourceType<T> {
   private $sharedBase: SourceType<T> & { touched: () => void };
 
   public constructor(
@@ -20,8 +20,8 @@ export class SharedSourceEvent<T> implements SourceType<T> {
     this.$sharedBase = Shared(this.$base, stateless);
   }
 
-  public event(transport: TransportType<T>) {
-    this.$sharedBase.event(transport);
+  public to(transport: TransportType<T>) {
+    this.$sharedBase.to(transport);
     return this;
   }
 

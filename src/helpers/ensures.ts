@@ -1,4 +1,4 @@
-import { isEvent, isTransport } from "helpers/guards";
+import { isMessage, isTransport } from "helpers/guards";
 
 export function ensureFunction(v: unknown, label: string) {
   if (typeof v !== "function") {
@@ -6,9 +6,9 @@ export function ensureFunction(v: unknown, label: string) {
   }
 }
 
-export function ensureEvent(v: unknown, label: string) {
-  if (!isEvent(v)) {
-    throw new Error(`${label}: is not event`);
+export function ensureMessage(v: unknown, label: string) {
+  if (!isMessage(v)) {
+    throw new Error(`${label}: is not message`);
   }
 }
 

@@ -1,4 +1,4 @@
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 import { DestroyContainer } from "base/DestroyContainer";
 import { Void } from "base/Void";
 import { describe, expect, test } from "vitest";
@@ -7,7 +7,7 @@ describe("DestroyContainer.test", () => {
   test("Destructor always exists", () => {
     const destroyed: number[] = [];
 
-    const e = Event(() => {
+    const e = Message(() => {
       return () => {
         destroyed.push(1);
       };
@@ -17,7 +17,7 @@ describe("DestroyContainer.test", () => {
     c.add(e);
     c.add(e);
 
-    e.event(Void());
+    e.to(Void());
 
     c.destroy();
 

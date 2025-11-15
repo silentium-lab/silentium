@@ -5,17 +5,17 @@ import { Diagram } from "testing/Diagram";
 import { Transport } from "base/Transport";
 
 describe("Shared.test", () => {
-  test("many users for one event", () => {
+  test("many users for one message", () => {
     const d = Diagram();
     const l = Late<number>(1);
     const s = Shared(l);
 
-    s.event(
+    s.to(
       Transport((v) => {
         d.transport.use(`g1_${v}`);
       }),
     );
-    s.event(
+    s.to(
       Transport((v) => {
         d.transport.use(`g2_${v}`);
       }),
@@ -38,13 +38,13 @@ describe("Shared.test", () => {
     const s = Shared(l, true);
 
     const g = vi.fn();
-    s.event(Transport(g));
+    s.to(Transport(g));
     l.use(1);
 
     expect(g).toBeCalledWith(1);
 
     const g2 = vi.fn();
-    s.event(Transport(g2));
+    s.to(Transport(g2));
     expect(g2).not.toHaveBeenCalled();
 
     l.use(2);

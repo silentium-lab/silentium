@@ -1,20 +1,20 @@
 import { describe, expect, test, vi } from "vitest";
 import { Catch } from "components/Catch";
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 import { Transport } from "base/Transport";
 import { Void } from "base/Void";
 
 describe("Catch.test", () => {
-  test("event with applied function", () => {
+  test("message with applied function", () => {
     const errorUserExecutor = vi.fn();
-    const exceptionEvent = Catch(
-      Event(() => {
+    const $exception = Catch(
+      Message(() => {
         throw new Error("Occured!");
       }),
       Transport(errorUserExecutor),
     );
 
-    exceptionEvent.event(Void());
+    $exception.to(Void());
 
     expect(errorUserExecutor).toHaveBeenLastCalledWith("Occured!");
   });

@@ -8,12 +8,12 @@ function createTestObject() {
 
 describe("New.test.ts", () => {
   describe("New", () => {
-    test("returns an event that creates new instances", () => {
-      const event = New(createTestObject);
+    test("returns an msg that creates new instances", () => {
+      const msg = New(createTestObject);
       const transportExecutor = vi.fn();
       const transport = Transport(transportExecutor);
 
-      event.event(transport);
+      msg.to(transport);
 
       expect(transportExecutor).toHaveBeenCalledTimes(1);
       const instance = transportExecutor.mock.calls[0][0];
@@ -22,14 +22,14 @@ describe("New.test.ts", () => {
     });
 
     test("creates new instance on each call", () => {
-      const event = New(createTestObject);
+      const msg = New(createTestObject);
       const transportExecutor1 = vi.fn();
       const transportExecutor2 = vi.fn();
       const transport1 = Transport(transportExecutor1);
       const transport2 = Transport(transportExecutor2);
 
-      event.event(transport1);
-      event.event(transport2);
+      msg.to(transport1);
+      msg.to(transport2);
 
       expect(transportExecutor1).toHaveBeenCalledTimes(1);
       expect(transportExecutor2).toHaveBeenCalledTimes(1);

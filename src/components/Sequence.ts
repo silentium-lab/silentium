@@ -1,22 +1,22 @@
 import { TransportParent } from "base/Transport";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
  */
-export function Sequence<T>($base: EventType<T>) {
-  return new SequenceEvent<T>($base);
+export function Sequence<T>($base: MessageType<T>) {
+  return new SequenceImpl<T>($base);
 }
 
-export class SequenceEvent<T> implements EventType<T[]> {
+export class SequenceImpl<T> implements MessageType<T[]> {
   private result: T[] = [];
 
-  public constructor(private $base: EventType<T>) {}
+  public constructor(private $base: MessageType<T>) {}
 
-  public event(transport: TransportType<T[]>): this {
-    this.$base.event(this.parent.child(transport));
+  public to(transport: TransportType<T[]>): this {
+    this.$base.to(this.parent.child(transport));
     return this;
   }
 

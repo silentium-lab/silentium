@@ -1,22 +1,22 @@
 import { TransportType } from "types/TransportType";
 import { Transport, TransportParent } from "base/Transport";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { All } from "components/All";
 import { DestroyableType } from "types/DestroyableType";
 
 /**
- * An event derived from another event with a different
+ * A message derived from event with a different
  * method call interface, based on callbacks.
  * Allows attaching a custom handler to an existing event source
- * and presenting it as a silentium event
+ * and presenting it as a silentium message
  */
 export function FromEvent<T>(
-  $emitter: EventType<any>,
-  $eventName: EventType<string>,
-  $subscribeMethod: EventType<string>,
-  $unsubscribeMethod?: EventType<string>,
+  $emitter: MessageType<any>,
+  $eventName: MessageType<string>,
+  $subscribeMethod: MessageType<string>,
+  $unsubscribeMethod?: MessageType<string>,
 ) {
-  return new FromEventAdapter<T>(
+  return new FromEventImpl<T>(
     $emitter,
     $eventName,
     $subscribeMethod,
@@ -24,7 +24,7 @@ export function FromEvent<T>(
   );
 }
 
-export class FromEventAdapter<T> implements EventType<T>, DestroyableType {
+export class FromEventImpl<T> implements MessageType<T>, DestroyableType {
   private lastTransport: TransportType<T> | null = null;
   private handler = (v: T) => {
     if (this.lastTransport) {
@@ -33,14 +33,14 @@ export class FromEventAdapter<T> implements EventType<T>, DestroyableType {
   };
 
   public constructor(
-    private $emitter: EventType<any>,
-    private $eventName: EventType<string>,
-    private $subscribeMethod: EventType<string>,
-    private $unsubscribeMethod?: EventType<string>,
+    private $emitter: MessageType<any>,
+    private $eventName: MessageType<string>,
+    private $subscribeMethod: MessageType<string>,
+    private $unsubscribeMethod?: MessageType<string>,
   ) {}
 
-  public event(transport: TransportType<T>): this {
-    All(this.$emitter, this.$eventName, this.$subscribeMethod).event(
+  public to(transport: TransportType<T>): this {
+    All(this.$emitter, this.$eventName, this.$subscribeMethod).to(
       this.parent.child(transport),
     );
     return this;
@@ -62,7 +62,7 @@ export class FromEventAdapter<T> implements EventType<T>, DestroyableType {
     if (!this.$unsubscribeMethod) {
       return this;
     }
-    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).event(
+    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).to(
       Transport(([emitter, eventName, unsubscribe]) => {
         emitter?.[unsubscribe]?.(eventName, this.handler);
       }),

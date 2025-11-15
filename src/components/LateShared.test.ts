@@ -7,10 +7,10 @@ describe("LateShared.test", () => {
     const l = LateShared<number>();
 
     const o = vi.fn();
-    l.event(Transport(o));
+    l.to(Transport(o));
 
     const o2 = vi.fn();
-    l.event(Transport(o2));
+    l.to(Transport(o2));
 
     expect(o).not.toHaveBeenCalled();
     expect(o2).not.toHaveBeenCalled();
@@ -32,7 +32,7 @@ describe("LateShared.test", () => {
     l.use(2);
 
     const o = vi.fn();
-    l.event(Transport(o));
+    l.to(Transport(o));
 
     expect(o).toHaveBeenLastCalledWith(2);
   });

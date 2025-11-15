@@ -5,29 +5,29 @@ import { TransportType } from "types/TransportType";
 import { Primitive, PrimitiveImpl } from "components/Primitive";
 
 /**
- * An event with a value that will be set later,
+ * An message with a value that will be set later,
  * capable of responding to different transports
  */
 export function LateShared<T>(value?: T) {
-  return new LateSharedEvent<T>(value);
+  return new LateSharedImpl<T>(value);
 }
 
-export class LateSharedEvent<T> implements SourceType<T> {
-  private $event: SourceType<T>;
+export class LateSharedImpl<T> implements SourceType<T> {
+  private $msg: SourceType<T>;
   private primitive: PrimitiveImpl<T>;
 
   public constructor(value?: T) {
-    this.$event = SharedSource(Late(value));
+    this.$msg = SharedSource(Late(value));
     this.primitive = Primitive(this, value);
   }
 
-  public event(transport: TransportType<T>) {
-    this.$event.event(transport);
+  public to(transport: TransportType<T>) {
+    this.$msg.to(transport);
     return this;
   }
 
   public use(value: T) {
-    this.$event.use(value);
+    this.$msg.use(value);
     return this;
   }
 

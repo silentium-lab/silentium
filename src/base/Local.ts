@@ -1,29 +1,29 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
-import { ensureEvent } from "helpers/ensures";
+import { ensureMessage } from "helpers/ensures";
 import { TransportType } from "types/TransportType";
 import { DestroyableType } from "types/DestroyableType";
 
 /**
  * Create local copy of source what can be destroyed
  */
-export function Local<T>($base: EventType<T>) {
-  return new LocalEvent<T>($base);
+export function Local<T>($base: MessageType<T>) {
+  return new LocalImpl<T>($base);
 }
 
-export class LocalEvent<T> implements EventType<T>, DestroyableType {
+export class LocalImpl<T> implements MessageType<T>, DestroyableType {
   private destroyed = false;
 
-  public constructor(private $base: EventType<T>) {
-    ensureEvent($base, "Local: $base");
+  public constructor(private $base: MessageType<T>) {
+    ensureMessage($base, "Local: $base");
   }
 
-  public event(transport: TransportType<T>): this {
-    this.$base.event(this.transport.child(transport));
+  public to(transport: TransportType<T>): this {
+    this.$base.to(this.transport.child(transport));
     return this;
   }
 
-  private transport = TransportParent(function (v: T, child: LocalEvent<T>) {
+  private transport = TransportParent(function (v: T, child: LocalImpl<T>) {
     if (!child.destroyed) {
       this.use(v);
     }

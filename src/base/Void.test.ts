@@ -1,16 +1,16 @@
 import { describe, expect, test, vi } from "vitest";
 import { Void } from "base/Void";
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 
 describe("Void.test.ts", () => {
   describe("Void", () => {
-    test("triggers event executor lazily when event is called", () => {
-      const eventExecutor = vi.fn();
-      const event = Event(eventExecutor);
+    test("triggers message executor lazily when message is called", () => {
+      const e = vi.fn();
+      const m = Message(e);
 
-      event.event(Void());
+      m.to(Void());
 
-      expect(eventExecutor).toHaveBeenCalled();
+      expect(e).toHaveBeenCalled();
     });
 
     test("use method returns the transport for chaining", () => {

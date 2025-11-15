@@ -1,16 +1,16 @@
 import { describe, expect, test, vi } from "vitest";
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 import { TransportType } from "types/TransportType";
 import { Transport } from "base/Transport";
 
-describe("Event.test.ts", () => {
-  test("value passed from eventExecutor is the same as value of event", () => {
-    const event = Event((transport: TransportType<string>) => {
+describe("Message.test.ts", () => {
+  test("value passed from executor is the same as value of event", () => {
+    const event = Message((transport: TransportType<string>) => {
       transport.use("123");
     });
 
     const g = vi.fn();
-    event.event(Transport(g));
+    event.to(Transport(g));
 
     expect(g).toHaveBeenLastCalledWith("123");
   });

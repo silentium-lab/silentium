@@ -9,10 +9,10 @@ import { TransportType } from "types/TransportType";
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
 export function Late<T>(v?: T) {
-  return new LateEvent<T>(v);
+  return new LateImpl<T>(v);
 }
 
-export class LateEvent<T> implements SourceType<T> {
+export class LateImpl<T> implements SourceType<T> {
   private lateTransport: TransportType<T> | null = null;
   private notify = (v?: T) => {
     if (isFilled(v) && this.lateTransport) {
@@ -22,7 +22,7 @@ export class LateEvent<T> implements SourceType<T> {
 
   public constructor(private v?: T) {}
 
-  public event(transport: TransportType<T>): this {
+  public to(transport: TransportType<T>): this {
     if (this.lateTransport) {
       throw new Error(
         "Late component gets new transport, when another was already connected!",

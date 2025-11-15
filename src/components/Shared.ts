@@ -1,4 +1,4 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { Late } from "components/Late";
 import { Once } from "components/Once";
 import { SourceType } from "types/SourceType";
@@ -11,27 +11,27 @@ import { Transport } from "base/Transport";
  * An information object that helps multiple owners access
  * a single another information object
  */
-export function Shared<T>($base: EventType<T>, stateless = false) {
-  return new SharedEvent<T>($base, stateless);
+export function Shared<T>($base: MessageType<T>, stateless = false) {
+  return new SharedImpl<T>($base, stateless);
 }
 
-export class SharedEvent<T> implements SourceType<T> {
+export class SharedImpl<T> implements SourceType<T> {
   private transportPool = new TransportPool<T>();
   private lastValue: T | undefined;
   private calls = Late();
 
   public constructor(
-    private $base: EventType<T>,
+    private $base: MessageType<T>,
     private stateless = false,
   ) {
-    Once(this.calls).event(
+    Once(this.calls).to(
       Transport(() => {
-        this.$base.event(this.firstCallTransport);
+        this.$base.to(this.firstCallTransport);
       }),
     );
   }
 
-  public event(transport: TransportType<T>) {
+  public to(transport: TransportType<T>) {
     this.calls.use(1);
     if (
       !this.stateless &&

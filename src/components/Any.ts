@@ -1,26 +1,26 @@
-import { ensureEvent } from "helpers/ensures";
-import { EventType } from "types/EventType";
+import { ensureMessage } from "helpers/ensures";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
- * An event that emits values received from
- * any of its bound events
+ * A message that emits values received from
+ * any of its bound messages
  */
-export function Any<const T>(...events: EventType<T>[]) {
-  return new AnyEvent<T>(...events);
+export function Any<const T>(...messages: MessageType<T>[]) {
+  return new AnyImpl<T>(...messages);
 }
 
-export class AnyEvent<T> implements EventType<T> {
-  private $events: EventType<T>[];
+export class AnyImpl<T> implements MessageType<T> {
+  private $messages: MessageType<T>[];
 
-  public constructor(...events: EventType<T>[]) {
-    this.$events = events;
+  public constructor(...messages: MessageType<T>[]) {
+    this.$messages = messages;
   }
 
-  public event(transport: TransportType<T>): this {
-    this.$events.forEach((event) => {
-      ensureEvent(event, "Any: item");
-      event.event(transport);
+  public to(transport: TransportType<T>): this {
+    this.$messages.forEach((message) => {
+      ensureMessage(message, "Any: item");
+      message.to(transport);
     });
     return this;
   }

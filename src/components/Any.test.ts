@@ -5,14 +5,14 @@ import { Late } from "components/Late";
 import { Transport } from "base/Transport";
 
 describe("Any.test", () => {
-  test("event what responds from any connected event", () => {
+  test("message what responds from any connected message", () => {
     const l = Late<number>();
     const d = Of("default");
 
     const anyI = Any<string | number>(l, d);
 
     const o = vi.fn();
-    anyI.event(Transport(o));
+    anyI.to(Transport(o));
 
     expect(o).toHaveBeenCalledWith("default");
 

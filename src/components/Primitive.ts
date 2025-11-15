@@ -1,14 +1,14 @@
 import { Transport } from "base/Transport";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 
 /**
- * Helps represent an event as a primitive type, which can be useful
+ * Helps represent an message as a primitive type, which can be useful
  * for cases when you need to always have a reference to the current value
  * without updating the shared value when the current one changes.
  * For example, this could be used when passing an authorization token.
  * It can also be useful for testing or logging purposes.
  */
-export function Primitive<T>($base: EventType<T>, theValue: T | null = null) {
+export function Primitive<T>($base: MessageType<T>, theValue: T | null = null) {
   return new PrimitiveImpl<T>($base, theValue);
 }
 
@@ -16,13 +16,13 @@ export class PrimitiveImpl<T> {
   private touched = false;
 
   public constructor(
-    private $base: EventType<T>,
+    private $base: MessageType<T>,
     private theValue: T | null = null,
   ) {}
 
   private ensureTouched() {
     if (!this.touched) {
-      this.$base.event(
+      this.$base.to(
         Transport((v) => {
           this.theValue = v;
         }),

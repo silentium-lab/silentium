@@ -1,4 +1,4 @@
-import { Event } from "base/Event";
+import { Message } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
 
 /**
@@ -6,7 +6,7 @@ import { ConstructorType } from "types/ConstructorType";
  * of a reference type based on the constructor function
  */
 export function New<T>(construct: ConstructorType<[], T>) {
-  return Event<T>((transport) => {
+  return Message<T>((transport) => {
     transport.use(construct());
   });
 }

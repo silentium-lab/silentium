@@ -1,33 +1,33 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { ConstructorType } from "types/ConstructorType";
 import { TransportType } from "types/TransportType";
 
 /**
- * Filters values from the source event based on a predicate function,
+ * Filters values from the source message based on a predicate function,
  * optionally providing a default value when the predicate fails.
  */
 export function Filtered<T>(
-  $base: EventType<T>,
+  $base: MessageType<T>,
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
-): EventType<T> {
-  return new FilteredEvent<T>($base, predicate, defaultValue);
+): MessageType<T> {
+  return new FilteredImpl<T>($base, predicate, defaultValue);
 }
 
-export class FilteredEvent<T> implements EventType<T> {
+export class FilteredImpl<T> implements MessageType<T> {
   public constructor(
-    private $base: EventType<T>,
+    private $base: MessageType<T>,
     private predicate: ConstructorType<[T], boolean>,
     private defaultValue?: T,
   ) {}
 
-  public event(transport: TransportType<T>) {
-    this.$base.event(this.parent.child(transport));
+  public to(transport: TransportType<T>) {
+    this.$base.to(this.parent.child(transport));
     return this;
   }
 
-  private parent = TransportParent<T>(function (v, child: FilteredEvent<T>) {
+  private parent = TransportParent<T>(function (v, child: FilteredImpl<T>) {
     if (child.predicate(v)) {
       this.use(v);
     } else if (child.defaultValue !== undefined) {

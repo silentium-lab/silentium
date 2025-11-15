@@ -1,6 +1,6 @@
 import { Transport, TransportExecutor } from "base/Transport";
-import { ensureEvent } from "helpers/ensures";
-import { EventType } from "types/EventType";
+import { ensureMessage } from "helpers/ensures";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 type ExecutorApplier<T> = (
@@ -13,25 +13,25 @@ type ExecutorApplier<T> = (
  * Useful for applying functions like debounced or throttle
  */
 export function ExecutorApplied<T>(
-  $base: EventType<T>,
+  $base: MessageType<T>,
   applier: ExecutorApplier<T>,
 ) {
-  return new ExecutorAppliedEvent<T>($base, applier);
+  return new ExecutorAppliedImpl<T>($base, applier);
 }
 
-export class ExecutorAppliedEvent<T> implements EventType<T> {
+export class ExecutorAppliedImpl<T> implements MessageType<T> {
   public constructor(
-    private $base: EventType<T>,
+    private $base: MessageType<T>,
     private applier: ExecutorApplier<T>,
   ) {
-    ensureEvent($base, "ExecutorApplied: base");
+    ensureMessage($base, "ExecutorApplied: base");
   }
 
-  public event(transport: TransportType<T>) {
+  public to(transport: TransportType<T>) {
     const ExecutorAppliedBaseTransport = this.applier(
       transport.use.bind(transport),
     );
-    this.$base.event(Transport(ExecutorAppliedBaseTransport));
+    this.$base.to(Transport(ExecutorAppliedBaseTransport));
     return this;
   }
 }

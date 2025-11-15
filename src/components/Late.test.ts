@@ -7,7 +7,7 @@ describe("Late.test", () => {
     const l = Late<number>();
 
     const o = vi.fn();
-    l.event(Transport(o));
+    l.to(Transport(o));
 
     expect(o).not.toHaveBeenCalled();
 
@@ -23,7 +23,7 @@ describe("Late.test", () => {
   test("Begins with 1 value", () => {
     const l = Late<number>(1);
     const o = vi.fn();
-    l.event(Transport(o));
+    l.to(Transport(o));
 
     l.use(2);
 

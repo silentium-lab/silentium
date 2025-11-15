@@ -1,8 +1,8 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
  * A type that serves as both
- * an event and a transport
+ * an message and a transport
  */
-export type SourceType<T = unknown> = EventType<T> & TransportType<T>;
+export type SourceType<T = unknown> = MessageType<T> & TransportType<T>;

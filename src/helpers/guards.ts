@@ -1,5 +1,5 @@
 import { DestroyableType, DestroyedType } from "types/DestroyableType";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
@@ -12,14 +12,14 @@ export const isFilled = <T>(
 };
 
 /**
- * Checks that the object is an event
+ * Checks that the object is an message
  */
-export function isEvent<T>(o: T): o is T & EventType {
+export function isMessage<T>(o: T): o is T & MessageType {
   return (
     o !== null &&
     typeof o === "object" &&
-    "event" in o &&
-    typeof (o as any).event === "function"
+    "to" in o &&
+    typeof (o as any).to === "function"
   );
 }
 

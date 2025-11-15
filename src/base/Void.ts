@@ -2,7 +2,7 @@ import { TransportType } from "types/TransportType";
 
 /**
  * Transport that does nothing with the passed value,
- * needed for silent event triggering
+ * needed for silent message triggering
  */
 export function Void() {
   return new VoidImpl();

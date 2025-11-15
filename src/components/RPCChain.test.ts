@@ -6,8 +6,8 @@ import { RPCOf } from "components/RPCOf";
 import { describe, expect, test, vi } from "vitest";
 
 describe("RPCChain.test", () => {
-  test("forwards RPC result to base event", () => {
-    RPCOf("config").event(
+  test("forwards RPC result to base message", () => {
+    RPCOf("config").to(
       RPCChain(
         Of({
           name: "TestApp",

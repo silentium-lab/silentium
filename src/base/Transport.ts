@@ -1,5 +1,5 @@
 import { ensureFunction } from "helpers/ensures";
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
@@ -9,43 +9,43 @@ export type TransportExecutor<T> = (v: T) => void;
 
 /**
  * Base transport that accepts the passed value,
- * acts as a conductor to deliver the value from an event to somewhere
+ * acts as a conductor to deliver the value from a message to somewhere
  */
 export function Transport<T>(transportExecutor: TransportExecutor<T>) {
   return new TransportImpl<T>(transportExecutor);
 }
 
 export class TransportImpl<T> implements TransportType<T> {
-  public constructor(private transportExecutor: TransportExecutor<T>) {
-    ensureFunction(transportExecutor, "Transport: transport executor");
+  public constructor(private executor: TransportExecutor<T>) {
+    ensureFunction(executor, "Transport: transport executor");
   }
 
   public use(value: T) {
-    this.transportExecutor(value);
+    this.executor(value);
     return this;
   }
 }
 
 /**
- * Type of executor for value passing logic and event returning
+ * Type of executor for value passing logic and message returning
  */
-export type TransportEventExecutor<T, ET = T> = (v: T) => EventType<ET>;
+export type TransportMessageExecutor<T, ET = T> = (v: T) => MessageType<ET>;
 
 /**
- * A transport that delivers a value from one event
- * and returns another event based on the value
+ * A transport that delivers a value from one message
+ * and returns another message based on the value
  */
-export function TransportEvent<T, ET = any>(
-  transportExecutor: TransportEventExecutor<T, ET>,
+export function TransportMessage<T, ET = any>(
+  executor: TransportMessageExecutor<T, ET>,
 ) {
-  return new TransportEventImpl<T, ET>(transportExecutor);
+  return new TransportMessageImpl<T, ET>(executor);
 }
 
-export class TransportEventImpl<T, ET = T>
-  implements TransportType<T, EventType<ET>>
+export class TransportMessageImpl<T, ET = T>
+  implements TransportType<T, MessageType<ET>>
 {
-  public constructor(private executor: TransportEventExecutor<T, ET>) {
-    ensureFunction(executor, "TransportEvent: transport executor");
+  public constructor(private executor: TransportMessageExecutor<T, ET>) {
+    ensureFunction(executor, "TransportMessage: transport executor");
   }
 
   public use(value: T) {

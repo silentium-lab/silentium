@@ -10,7 +10,7 @@ describe("Sequence.test", () => {
     const seq = Applied(Sequence(l), String);
 
     const o = vi.fn();
-    seq.event(Transport(o));
+    seq.to(Transport(o));
 
     l.use(1);
     l.use(2);

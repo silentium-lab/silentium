@@ -1,22 +1,22 @@
-import { EventType } from "types/EventType";
+import { MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
- * Creates an event from a Promise, allowing the promise's resolution or rejection
- * to be handled as an event. The resolved value is emitted to the transport,
+ * Creates an message from a Promise, allowing the promise's resolution or rejection
+ * to be handled as an message. The resolved value is emitted to the transport,
  * and if an error is provided, rejections are forwarded to it.
  */
 export function FromPromise<T>(p: Promise<T>, error?: TransportType) {
-  return new FromPromiseEvent<T>(p, error);
+  return new FromPromiseImpl<T>(p, error);
 }
 
-export class FromPromiseEvent<T> implements EventType<T> {
+export class FromPromiseImpl<T> implements MessageType<T> {
   public constructor(
     private p: Promise<T>,
     private error?: TransportType,
   ) {}
 
-  public event(transport: TransportType<T>): this {
+  public to(transport: TransportType<T>): this {
     this.p
       .then((v) => {
         transport.use(v);
