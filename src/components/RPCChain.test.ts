@@ -28,4 +28,23 @@ describe("RPCChain.test", () => {
       name: "TestApp",
     });
   });
+
+  test("forwards RPC result to base value", () => {
+    RPCOf("config").to(
+      RPCChain({
+        name: "TestApp",
+      }),
+    );
+
+    const g = vi.fn();
+    RPC({
+      transport: "config",
+      method: "get",
+      result: Transport(g),
+    }).result();
+
+    expect(g).toHaveBeenCalledWith({
+      name: "TestApp",
+    });
+  });
 });

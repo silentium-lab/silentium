@@ -12,4 +12,13 @@ describe("All.test", () => {
 
     expect(o).toBeCalledWith([1, 2]);
   });
+
+  test("combined result from many raw values", () => {
+    const a = All(1, 2, 3);
+
+    const o = vi.fn();
+    a.to(Transport(o));
+
+    expect(o).toBeCalledWith([1, 2, 3]);
+  });
 });

@@ -90,6 +90,26 @@ describe("RPC.test", () => {
     expect(defaultTransport.use).not.toHaveBeenCalled();
   });
 
+  test("uses specified transport", () => {
+    const defaultTransport = {
+      use: vi.fn(),
+    };
+    const customTransport = {
+      use: vi.fn(),
+    };
+    RPC.transport.default = defaultTransport as any;
+    RPC.transport.custom = customTransport as any;
+
+    const $rpc = RPC({
+      method: "testMethod",
+      transport: "custom",
+    });
+    $rpc.result();
+
+    expect(customTransport.use).toHaveBeenCalled();
+    expect(defaultTransport.use).not.toHaveBeenCalled();
+  });
+
   test("throws if transport not found", () => {
     // Reset transports
     RPC.transport = {} as any;

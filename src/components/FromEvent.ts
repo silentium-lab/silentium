@@ -1,8 +1,9 @@
 import { TransportType } from "types/TransportType";
 import { Transport, TransportParent } from "base/Transport";
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { All } from "components/All";
 import { DestroyableType } from "types/DestroyableType";
+import { ActualMessage } from "base/ActualMessage";
 
 /**
  * A message derived from event with a different
@@ -11,16 +12,16 @@ import { DestroyableType } from "types/DestroyableType";
  * and presenting it as a silentium message
  */
 export function FromEvent<T>(
-  $emitter: MessageType<any>,
-  $eventName: MessageType<string>,
-  $subscribeMethod: MessageType<string>,
-  $unsubscribeMethod?: MessageType<string>,
+  $emitter: MaybeMessage<any>,
+  $eventName: MaybeMessage<string>,
+  $subscribeMethod: MaybeMessage<string>,
+  $unsubscribeMethod?: MaybeMessage<string>,
 ) {
   return new FromEventImpl<T>(
-    $emitter,
-    $eventName,
-    $subscribeMethod,
-    $unsubscribeMethod,
+    ActualMessage($emitter),
+    ActualMessage($eventName),
+    ActualMessage($subscribeMethod),
+    ActualMessage($unsubscribeMethod),
   );
 }
 

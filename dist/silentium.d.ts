@@ -14,28 +14,6 @@ interface DestroyedType {
 }
 
 /**
- * Allows creating an object that definitely has a destructor,
- * useful to avoid creating unnecessary conditions
- */
-declare function Destroyable<T>(base: T): DestroyableImpl<T>;
-declare class DestroyableImpl<T> implements DestroyableType {
-    private base;
-    constructor(base: T);
-    destroy(): this;
-}
-
-/**
- * An object that allows collecting all disposable objects and
- * disposing them later all together
- */
-declare function DestroyContainer(): DestroyContainerImpl;
-declare class DestroyContainerImpl implements DestroyableType {
-    private destructors;
-    add<R>(e: R): R;
-    destroy(): this;
-}
-
-/**
  * Type representing the process
  * of passing a value somewhere
  */
@@ -58,6 +36,52 @@ interface MessageType<T = unknown> {
  * Value type from message
  */
 type MessageTypeValue<T> = T extends MessageType<infer U> ? U : never;
+/**
+ * A type that accepts either a message or a raw value
+ */
+type MaybeMessage<T = unknown> = MessageType<T> | T;
+
+/**
+ * A function that helps to ensure that
+ * the message is indeed a message object
+ * and not just a value
+ */
+declare function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T>;
+
+/**
+ * Allows creating an object that definitely has a destructor,
+ * useful to avoid creating unnecessary conditions
+ */
+declare function Destroyable<T>(base: T): DestroyableImpl<T>;
+declare class DestroyableImpl<T> implements DestroyableType {
+    private base;
+    constructor(base: T);
+    destroy(): this;
+}
+
+/**
+ * An object that allows collecting all disposable objects and
+ * disposing them later all together
+ */
+declare function DestroyContainer(): DestroyContainerImpl;
+declare class DestroyContainerImpl implements DestroyableType {
+    private destructors;
+    add<R>(e: R): R;
+    destroy(): this;
+}
+
+/**
+ * Create local copy of source what can be destroyed
+ */
+declare function Local<T>($base: MaybeMessage<T>): LocalImpl<T>;
+declare class LocalImpl<T> implements MessageType<T>, DestroyableType {
+    private $base;
+    private destroyed;
+    constructor($base: MessageType<T>);
+    to(transport: TransportType<T>): this;
+    private transport;
+    destroy(): this;
+}
 
 type MessageExecutorType<T> = (transport: TransportType<T>) => void | (() => void);
 /**
@@ -70,19 +94,6 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private mbDestructor;
     constructor(executor: MessageExecutorType<T>);
     to(transport: TransportType<T>): this;
-    destroy(): this;
-}
-
-/**
- * Create local copy of source what can be destroyed
- */
-declare function Local<T>($base: MessageType<T>): LocalImpl<T>;
-declare class LocalImpl<T> implements MessageType<T>, DestroyableType {
-    private $base;
-    private destroyed;
-    constructor($base: MessageType<T>);
-    to(transport: TransportType<T>): this;
-    private transport;
     destroy(): this;
 }
 
@@ -172,8 +183,8 @@ declare class VoidImpl implements TransportType {
     use(): this;
 }
 
-type ExtractTypeS<T> = T extends MessageType<infer U> ? U : never;
-type ExtractTypesFromArrayS<T extends MessageType<any>[]> = {
+type ExtractTypeS<T> = T extends MaybeMessage<infer U> ? U : never;
+type ExtractTypesFromArrayS<T extends MaybeMessage<any>[]> = {
     [K in keyof T]: ExtractTypeS<T[K]>;
 };
 /**
@@ -185,8 +196,8 @@ type ExtractTypesFromArrayS<T extends MessageType<any>[]> = {
  * value, the updated array with the new value
  * will be emitted by All.
  */
-declare function All<const T extends MessageType[]>(...messages: T): AllImpl<T>;
-declare class AllImpl<const T extends MessageType[]> implements MessageType<ExtractTypesFromArrayS<T>> {
+declare function All<const T extends MaybeMessage[]>(...messages: T): AllImpl<T>;
+declare class AllImpl<const T extends MaybeMessage[]> implements MessageType<ExtractTypesFromArrayS<T>> {
     private known;
     private filled;
     private $messages;
@@ -200,7 +211,7 @@ declare class AllImpl<const T extends MessageType[]> implements MessageType<Extr
  * A message that emits values received from
  * any of its bound messages
  */
-declare function Any<const T>(...messages: MessageType<T>[]): AnyImpl<T>;
+declare function Any<const T>(...messages: MaybeMessage<T>[]): AnyImpl<T>;
 declare class AnyImpl<T> implements MessageType<T> {
     private $messages;
     constructor(...messages: MessageType<T>[]);
@@ -211,7 +222,7 @@ declare class AnyImpl<T> implements MessageType<T> {
  * An message that applies a function
  * to the value of the base message
  */
-declare function Applied<const T, R>($base: MessageType<T>, applier: ConstructorType<[T], R>): AppliedImpl<T, R>;
+declare function Applied<const T, R>($base: MaybeMessage<T>, applier: ConstructorType<[T], R>): AppliedImpl<T, R>;
 declare class AppliedImpl<T, R> implements MessageType<R> {
     private $base;
     private applier;
@@ -224,7 +235,7 @@ declare class AppliedImpl<T, R> implements MessageType<R> {
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
  */
-declare function AppliedDestructured<const T extends any[], R>($base: MessageType<T>, applier: ConstructorType<T[number][], R>): AppliedImpl<T, R>;
+declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<T[number][], R>): AppliedImpl<T, R>;
 
 /**
  * An message representing a base message where
@@ -279,7 +290,7 @@ declare class ExecutorAppliedImpl<T> implements MessageType<T> {
  * Filters values from the source message based on a predicate function,
  * optionally providing a default value when the predicate fails.
  */
-declare function Filtered<T>($base: MessageType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): MessageType<T>;
+declare function Filtered<T>($base: MaybeMessage<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): MessageType<T>;
 declare class FilteredImpl<T> implements MessageType<T> {
     private $base;
     private predicate;
@@ -295,7 +306,7 @@ declare class FilteredImpl<T> implements MessageType<T> {
  * Allows attaching a custom handler to an existing event source
  * and presenting it as a silentium message
  */
-declare function FromEvent<T>($emitter: MessageType<any>, $eventName: MessageType<string>, $subscribeMethod: MessageType<string>, $unsubscribeMethod?: MessageType<string>): FromEventImpl<T>;
+declare function FromEvent<T>($emitter: MaybeMessage<any>, $eventName: MaybeMessage<string>, $subscribeMethod: MaybeMessage<string>, $unsubscribeMethod?: MaybeMessage<string>): FromEventImpl<T>;
 declare class FromEventImpl<T> implements MessageType<T>, DestroyableType {
     private $emitter;
     private $eventName;
@@ -381,7 +392,7 @@ declare class LateSharedImpl<T> implements SourceType<T> {
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  */
-declare function Map<T, TG>($base: MessageType<T[]>, $target: TransportType<any, MessageType<TG>>): MapImpl<T, TG>;
+declare function Map<T, TG>($base: MaybeMessage<T[]>, $target: TransportType<any, MessageType<TG>>): MapImpl<T, TG>;
 declare class MapImpl<T, TG> implements MessageType<TG[]> {
     private $base;
     private $target;
@@ -426,7 +437,7 @@ interface RPCImplType<T> {
  * RPCType, the list of transports should be defined via
  * the RPC.transport object
  */
-declare function RPC<T>($rpc: MessageType<RPCType>): RPCImplType<T>;
+declare function RPC<T>($rpc: MaybeMessage<RPCType>): RPCImplType<T>;
 declare namespace RPC {
     var transport: {
         default: TransportType<RPCType>;
@@ -444,7 +455,7 @@ declare class RPCImpl {
 /**
  * Connects an external message to an RPC message chain
  */
-declare function RPCChain($base: MessageType): TransportImpl<RPCType>;
+declare function RPCChain($base: MaybeMessage): TransportImpl<RPCType>;
 
 /**
  * Message for the arrival of a specific RPC message
@@ -587,4 +598,4 @@ declare function isDestroyed<T>(o: T): o is T & DestroyedType;
  */
 declare function isTransport<T>(o: T): o is T & TransportType;
 
-export { All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, Message, MessageImpl, type MessageType, type MessageTypeValue, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, type SourceType, Stream, StreamImpl, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableImpl, type TransportDestroyableType, type TransportExecutor, TransportImpl, TransportMessage, type TransportMessageExecutor, TransportMessageImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureFunction, ensureMessage, ensureTransport, isDestroyable, isDestroyed, isFilled, isMessage, isTransport };
+export { ActualMessage, All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, type MaybeMessage, Message, MessageImpl, type MessageType, type MessageTypeValue, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, type SourceType, Stream, StreamImpl, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableImpl, type TransportDestroyableType, type TransportExecutor, TransportImpl, TransportMessage, type TransportMessageExecutor, TransportMessageImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureFunction, ensureMessage, ensureTransport, isDestroyable, isDestroyed, isFilled, isMessage, isTransport };

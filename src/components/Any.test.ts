@@ -20,4 +20,13 @@ describe("Any.test", () => {
 
     expect(o).toBeCalledWith(999);
   });
+
+  test("message what responds from any connected raw values", () => {
+    const anyI = Any<string | number>(999, "default");
+
+    const o = vi.fn();
+    anyI.to(Transport(o));
+
+    expect(o).toHaveBeenCalledWith("default");
+  });
 });

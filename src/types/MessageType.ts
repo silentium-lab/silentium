@@ -12,3 +12,8 @@ export interface MessageType<T = unknown> {
  * Value type from message
  */
 export type MessageTypeValue<T> = T extends MessageType<infer U> ? U : never;
+
+/**
+ * A type that accepts either a message or a raw value
+ */
+export type MaybeMessage<T = unknown> = MessageType<T> | T;

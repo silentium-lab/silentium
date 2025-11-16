@@ -1,6 +1,7 @@
+import { ActualMessage } from "base/ActualMessage";
 import { Transport } from "base/Transport";
 import { LateShared } from "components/LateShared";
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { RPCType } from "types/RPCType";
 import { TransportType } from "types/TransportType";
 
@@ -15,8 +16,8 @@ interface RPCImplType<T> {
  * RPCType, the list of transports should be defined via
  * the RPC.transport object
  */
-export function RPC<T>($rpc: MessageType<RPCType>): RPCImplType<T> {
-  return new RPCImpl($rpc);
+export function RPC<T>($rpc: MaybeMessage<RPCType>): RPCImplType<T> {
+  return new RPCImpl(ActualMessage($rpc));
 }
 
 RPC.transport = {} as { default: TransportType<RPCType> } & Record<

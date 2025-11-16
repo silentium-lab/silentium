@@ -1,11 +1,12 @@
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { TransportType } from "types/TransportType";
 import { ensureMessage } from "helpers/ensures";
+import { ActualMessage } from "base/ActualMessage";
 
-type ExtractTypeS<T> = T extends MessageType<infer U> ? U : never;
+type ExtractTypeS<T> = T extends MaybeMessage<infer U> ? U : never;
 
-type ExtractTypesFromArrayS<T extends MessageType<any>[]> = {
+type ExtractTypesFromArrayS<T extends MaybeMessage<any>[]> = {
   [K in keyof T]: ExtractTypeS<T[K]>;
 };
 
@@ -22,21 +23,21 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * value, the updated array with the new value
  * will be emitted by All.
  */
-export function All<const T extends MessageType[]>(...messages: T) {
+export function All<const T extends MaybeMessage[]>(...messages: T) {
   return new AllImpl<T>(...messages);
 }
 
-export class AllImpl<const T extends MessageType[]>
+export class AllImpl<const T extends MaybeMessage[]>
   implements MessageType<ExtractTypesFromArrayS<T>>
 {
   private known: Set<string>;
   private filled = new Set<string>();
-  private $messages: T;
+  private $messages: MessageType[];
   private result: unknown[] = [];
 
   public constructor(...messages: T) {
     this.known = new Set<string>(Object.keys(messages));
-    this.$messages = messages;
+    this.$messages = messages.map(ActualMessage);
   }
 
   public to(transport: TransportType<ExtractTypesFromArrayS<T>>): this {

@@ -1,13 +1,14 @@
+import { ActualMessage } from "base/ActualMessage";
 import { ensureMessage } from "helpers/ensures";
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { TransportType } from "types/TransportType";
 
 /**
  * A message that emits values received from
  * any of its bound messages
  */
-export function Any<const T>(...messages: MessageType<T>[]) {
-  return new AnyImpl<T>(...messages);
+export function Any<const T>(...messages: MaybeMessage<T>[]) {
+  return new AnyImpl<T>(...messages.map(ActualMessage));
 }
 
 export class AnyImpl<T> implements MessageType<T> {

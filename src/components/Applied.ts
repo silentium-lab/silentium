@@ -1,18 +1,19 @@
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { ConstructorType } from "types/ConstructorType";
 import { ensureMessage } from "helpers/ensures";
 import { TransportType } from "types/TransportType";
+import { ActualMessage } from "base/ActualMessage";
 
 /**
  * An message that applies a function
  * to the value of the base message
  */
 export function Applied<const T, R>(
-  $base: MessageType<T>,
+  $base: MaybeMessage<T>,
   applier: ConstructorType<[T], R>,
 ) {
-  return new AppliedImpl<T, R>($base, applier);
+  return new AppliedImpl<T, R>(ActualMessage($base), applier);
 }
 
 export class AppliedImpl<T, R> implements MessageType<R> {

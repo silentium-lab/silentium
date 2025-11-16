@@ -21,4 +21,12 @@ describe("Local.test", () => {
 
     expect(g).toHaveBeenCalledWith(2);
   });
+
+  test("local message of raw value", () => {
+    const localEv = Local(1);
+    const g = vi.fn();
+    localEv.to(Transport(g));
+
+    expect(g).toHaveBeenCalledWith(1);
+  });
 });

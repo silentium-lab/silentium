@@ -1,14 +1,15 @@
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { ensureMessage } from "helpers/ensures";
 import { TransportType } from "types/TransportType";
 import { DestroyableType } from "types/DestroyableType";
+import { ActualMessage } from "base/ActualMessage";
 
 /**
  * Create local copy of source what can be destroyed
  */
-export function Local<T>($base: MessageType<T>) {
-  return new LocalImpl<T>($base);
+export function Local<T>($base: MaybeMessage<T>) {
+  return new LocalImpl<T>(ActualMessage($base));
 }
 
 export class LocalImpl<T> implements MessageType<T>, DestroyableType {

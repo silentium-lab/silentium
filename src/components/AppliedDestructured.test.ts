@@ -13,4 +13,13 @@ describe("AppliedDestructured.test", () => {
 
     expect(g).toBeCalledWith(6);
   });
+
+  test("values with destructured applied function", () => {
+    const sum = AppliedDestructured([1, 2, 3], (a, b, c) => a + b + c);
+
+    const g = vi.fn();
+    sum.to(Transport(g));
+
+    expect(g).toBeCalledWith(6);
+  });
 });

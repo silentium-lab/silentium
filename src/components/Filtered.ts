@@ -1,18 +1,19 @@
-import { MessageType } from "types/MessageType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 import { TransportParent } from "base/Transport";
 import { ConstructorType } from "types/ConstructorType";
 import { TransportType } from "types/TransportType";
+import { ActualMessage } from "base/ActualMessage";
 
 /**
  * Filters values from the source message based on a predicate function,
  * optionally providing a default value when the predicate fails.
  */
 export function Filtered<T>(
-  $base: MessageType<T>,
+  $base: MaybeMessage<T>,
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
 ): MessageType<T> {
-  return new FilteredImpl<T>($base, predicate, defaultValue);
+  return new FilteredImpl<T>(ActualMessage($base), predicate, defaultValue);
 }
 
 export class FilteredImpl<T> implements MessageType<T> {

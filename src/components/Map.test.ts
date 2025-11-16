@@ -59,4 +59,13 @@ describe("Map.test", () => {
 
     expect(d.toString()).toBe("2,4,6,18");
   });
+
+  test("map twice values", () => {
+    const d = Diagram();
+    const infoMapped = Map([1, 2, 3, 9], TransportMessage(x2));
+
+    Applied(infoMapped, String).to(d.transport);
+
+    expect(d.toString()).toBe("2,4,6,18");
+  });
 });
