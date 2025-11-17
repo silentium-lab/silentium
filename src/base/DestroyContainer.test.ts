@@ -17,7 +17,7 @@ describe("DestroyContainer.test", () => {
     c.add(e);
     c.add(e);
 
-    e.to(Void());
+    e.pipe(Void());
 
     c.destroy();
 

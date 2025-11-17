@@ -1,5 +1,5 @@
-import { Transport } from "base/Transport";
-import { TransportType } from "types/TransportType";
+import { Tap } from "base/Tap";
+import { TapType } from "types/TapType";
 
 /**
  * Helps debug the response flow from information sources
@@ -7,7 +7,7 @@ import { TransportType } from "types/TransportType";
  */
 export const Diagram = (joinSymbol = "|") => {
   const responses: unknown[] = [];
-  const transport: TransportType<string> = Transport((v) => {
+  const tap: TapType<string> = Tap((v) => {
     responses.push(v);
   });
 
@@ -15,6 +15,6 @@ export const Diagram = (joinSymbol = "|") => {
     toString() {
       return responses.join(joinSymbol);
     },
-    transport,
+    tap,
   };
 };

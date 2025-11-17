@@ -6,7 +6,7 @@ import { ConstructorType } from "types/ConstructorType";
  * of a reference type based on the constructor function
  */
 export function New<T>(construct: ConstructorType<[], T>) {
-  return Message<T>((transport) => {
-    transport.use(construct());
+  return Message<T>((tap) => {
+    tap.use(construct());
   });
 }

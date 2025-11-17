@@ -1,8 +1,8 @@
 import { MaybeMessage, MessageType } from "types/MessageType";
 import { All } from "components/All";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 import { isMessage } from "helpers/guards";
-import { TransportParent } from "base/Transport";
+import { TapParent } from "base/Tap";
 import { Of } from "base/Of";
 import { ActualMessage } from "base/ActualMessage";
 
@@ -12,7 +12,7 @@ import { ActualMessage } from "base/ActualMessage";
  */
 export function Map<T, TG>(
   $base: MaybeMessage<T[]>,
-  $target: TransportType<any, MessageType<TG>>,
+  $target: TapType<any, MessageType<TG>>,
 ) {
   return new MapImpl<T, TG>(ActualMessage($base), $target);
 }
@@ -20,15 +20,15 @@ export function Map<T, TG>(
 export class MapImpl<T, TG> implements MessageType<TG[]> {
   public constructor(
     private $base: MessageType<T[]>,
-    private $target: TransportType<any, MessageType<TG>>,
+    private $target: TapType<any, MessageType<TG>>,
   ) {}
 
-  public to(transport: TransportType<TG[]>): this {
-    this.$base.to(this.parent.child(transport));
+  public pipe(tap: TapType<TG[]>): this {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 
-  private parent = TransportParent<T[]>(function (v, child) {
+  private parent = TapParent<T[]>(function (v, child) {
     const infos: MessageType<TG>[] = [];
     v.forEach((val) => {
       let $val: MessageType<T> | T = val;
@@ -38,6 +38,6 @@ export class MapImpl<T, TG> implements MessageType<TG[]> {
       const info = child.$target.use($val);
       infos.push(info);
     });
-    All(...infos).to(this);
+    All(...infos).pipe(this);
   }, this);
 }

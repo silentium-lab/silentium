@@ -1,8 +1,8 @@
 import { MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * A type that serves as both
- * an message and a transport
+ * an message and a tap
  */
-export type SourceType<T = unknown> = MessageType<T> & TransportType<T>;
+export type SourceType<T = unknown> = MessageType<T> & TapType<T>;

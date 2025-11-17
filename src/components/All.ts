@@ -1,6 +1,6 @@
 import { MaybeMessage, MessageType } from "types/MessageType";
-import { TransportParent } from "base/Transport";
-import { TransportType } from "types/TransportType";
+import { TapParent } from "base/Tap";
+import { TapType } from "types/TapType";
 import { ensureMessage } from "helpers/ensures";
 import { ActualMessage } from "base/ActualMessage";
 
@@ -40,18 +40,18 @@ export class AllImpl<const T extends MaybeMessage[]>
     this.$messages = messages.map(ActualMessage);
   }
 
-  public to(transport: TransportType<ExtractTypesFromArrayS<T>>): this {
+  public pipe(tap: TapType<ExtractTypesFromArrayS<T>>): this {
     Object.entries(this.$messages).forEach(([key, message]) => {
       ensureMessage(message, "All: item");
-      message.to(this.transport.child(transport, key));
+      message.pipe(this.tap.child(tap, key));
     });
     if (this.known.size === 0) {
-      transport.use([] as ExtractTypesFromArrayS<T>);
+      tap.use([] as ExtractTypesFromArrayS<T>);
     }
     return this;
   }
 
-  private transport = TransportParent(function (
+  private tap = TapParent(function (
     v: unknown,
     child: AllImpl<T>,
     key: string,

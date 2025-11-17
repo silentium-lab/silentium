@@ -1,7 +1,7 @@
 import { ActualMessage } from "base/ActualMessage";
 import { ensureMessage } from "helpers/ensures";
 import { MaybeMessage, MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * A message that emits values received from
@@ -18,10 +18,10 @@ export class AnyImpl<T> implements MessageType<T> {
     this.$messages = messages;
   }
 
-  public to(transport: TransportType<T>): this {
+  public pipe(tap: TapType<T>): this {
     this.$messages.forEach((message) => {
       ensureMessage(message, "Any: item");
-      message.to(transport);
+      message.pipe(tap);
     });
     return this;
   }

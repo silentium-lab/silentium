@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { Applied } from "components/Applied";
 import { Late } from "components/Late";
 import { Sequence } from "components/Sequence";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("Sequence.test", () => {
   test("use one by one values", () => {
@@ -10,7 +10,7 @@ describe("Sequence.test", () => {
     const seq = Applied(Sequence(l), String);
 
     const o = vi.fn();
-    seq.to(Transport(o));
+    seq.pipe(Tap(o));
 
     l.use(1);
     l.use(2);

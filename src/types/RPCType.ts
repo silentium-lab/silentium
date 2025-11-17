@@ -1,4 +1,4 @@
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * Type for passing action requirements
@@ -7,10 +7,10 @@ import { TransportType } from "types/TransportType";
 export interface RPCType extends Record<string, any> {
   // Method name for current call
   method: string;
-  // Transport type name
-  transport?: string;
+  // Tap type name
+  tap?: string;
   // Method params
   params?: Record<string, any>;
-  result?: TransportType;
-  error?: TransportType;
+  result?: TapType;
+  error?: TapType;
 }

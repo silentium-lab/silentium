@@ -1,24 +1,24 @@
 import { Of } from "base/Of";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 import { RPC } from "components/RPC";
 import { RPCOf } from "components/RPCOf";
 import { describe, expect, test, vi } from "vitest";
 
 describe("RPCOf.test", () => {
-  test("creates message for specific transport and forwards RPC call", () => {
+  test("creates message for specific tap and forwards RPC call", () => {
     const callback = vi.fn();
-    RPCOf("testTransport").to(Transport(callback));
+    RPCOf("testTap").pipe(Tap(callback));
 
     RPC(
       Of({
-        transport: "testTransport",
+        tap: "testTap",
         method: "get",
-        result: Transport(() => {}),
+        result: Tap(() => {}),
       }),
     ).result();
 
     expect(callback).toHaveBeenCalledWith({
-      transport: "testTransport",
+      tap: "testTap",
       method: "get",
       result: expect.any(Object),
       error: expect.any(Object),

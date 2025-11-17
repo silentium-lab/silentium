@@ -1,7 +1,7 @@
 import { MaybeMessage, MessageType } from "types/MessageType";
-import { TransportParent } from "base/Transport";
+import { TapParent } from "base/Tap";
 import { ConstructorType } from "types/ConstructorType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 import { ActualMessage } from "base/ActualMessage";
 
 /**
@@ -23,12 +23,12 @@ export class FilteredImpl<T> implements MessageType<T> {
     private defaultValue?: T,
   ) {}
 
-  public to(transport: TransportType<T>) {
-    this.$base.to(this.parent.child(transport));
+  public pipe(tap: TapType<T>) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 
-  private parent = TransportParent<T>(function (v, child: FilteredImpl<T>) {
+  private parent = TapParent<T>(function (v, child: FilteredImpl<T>) {
     if (child.predicate(v)) {
       this.use(v);
     } else if (child.defaultValue !== undefined) {

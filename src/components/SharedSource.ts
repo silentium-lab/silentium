@@ -1,9 +1,9 @@
 import { SourceType } from "types/SourceType";
 import { Shared } from "components/Shared";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
- * Creates a shared source that allows multiple transports to subscribe to the same underlying source.
+ * Creates a shared source that allows multiple taps to subscribe to the same underlying source.
  * The stateless parameter controls whether the sharing maintains state or not.
  */
 export function SharedSource<T>($base: SourceType<T>, stateless = false) {
@@ -20,8 +20,8 @@ export class SharedSourceImpl<T> implements SourceType<T> {
     this.$sharedBase = Shared(this.$base, stateless);
   }
 
-  public to(transport: TransportType<T>) {
-    this.$sharedBase.to(transport);
+  public pipe(tap: TapType<T>) {
+    this.$sharedBase.pipe(tap);
     return this;
   }
 

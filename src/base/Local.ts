@@ -1,7 +1,7 @@
 import { MaybeMessage, MessageType } from "types/MessageType";
-import { TransportParent } from "base/Transport";
+import { TapParent } from "base/Tap";
 import { ensureMessage } from "helpers/ensures";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 import { DestroyableType } from "types/DestroyableType";
 import { ActualMessage } from "base/ActualMessage";
 
@@ -19,12 +19,12 @@ export class LocalImpl<T> implements MessageType<T>, DestroyableType {
     ensureMessage($base, "Local: $base");
   }
 
-  public to(transport: TransportType<T>): this {
-    this.$base.to(this.transport.child(transport));
+  public pipe(tap: TapType<T>): this {
+    this.$base.pipe(this.tap.child(tap));
     return this;
   }
 
-  private transport = TransportParent(function (v: T, child: LocalImpl<T>) {
+  private tap = TapParent(function (v: T, child: LocalImpl<T>) {
     if (!child.destroyed) {
       this.use(v);
     }

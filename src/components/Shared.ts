@@ -2,10 +2,10 @@ import { MessageType } from "types/MessageType";
 import { Late } from "components/Late";
 import { Once } from "components/Once";
 import { SourceType } from "types/SourceType";
-import { TransportPool } from "helpers/TransportPool";
-import { TransportType } from "types/TransportType";
+import { TapPool } from "helpers/TapPool";
+import { TapType } from "types/TapType";
 import { isFilled } from "helpers/guards";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 /**
  * An information object that helps multiple owners access
@@ -16,7 +16,7 @@ export function Shared<T>($base: MessageType<T>, stateless = false) {
 }
 
 export class SharedImpl<T> implements SourceType<T> {
-  private transportPool = new TransportPool<T>();
+  private tapPool = new TapPool<T>();
   private lastValue: T | undefined;
   private calls = Late();
 
@@ -24,36 +24,32 @@ export class SharedImpl<T> implements SourceType<T> {
     private $base: MessageType<T>,
     private stateless = false,
   ) {
-    Once(this.calls).to(
-      Transport(() => {
-        this.$base.to(this.firstCallTransport);
+    Once(this.calls).pipe(
+      Tap(() => {
+        this.$base.pipe(this.firstCallTap);
       }),
     );
   }
 
-  public to(transport: TransportType<T>) {
+  public pipe(tap: TapType<T>) {
     this.calls.use(1);
-    if (
-      !this.stateless &&
-      isFilled(this.lastValue) &&
-      !this.transportPool.has(transport)
-    ) {
-      transport.use(this.lastValue);
+    if (!this.stateless && isFilled(this.lastValue) && !this.tapPool.has(tap)) {
+      tap.use(this.lastValue);
     }
-    this.transportPool.add(transport);
+    this.tapPool.add(tap);
     return this;
   }
 
   public use(value: T) {
     this.calls.use(1);
     this.lastValue = value;
-    this.transportPool.transport().use(value);
+    this.tapPool.tap().use(value);
     return this;
   }
 
-  private firstCallTransport = Transport<T>((v: T) => {
+  private firstCallTap = Tap<T>((v: T) => {
     this.lastValue = v;
-    this.transportPool.transport().use(v);
+    this.tapPool.tap().use(v);
   });
 
   public touched() {
@@ -61,10 +57,10 @@ export class SharedImpl<T> implements SourceType<T> {
   }
 
   public pool() {
-    return this.transportPool;
+    return this.tapPool;
   }
 
   public destroy() {
-    return this.transportPool.destroy();
+    return this.tapPool.destroy();
   }
 }

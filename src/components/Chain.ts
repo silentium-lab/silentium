@@ -1,5 +1,5 @@
-import { TransportType } from "types/TransportType";
-import { TransportParent } from "base/Transport";
+import { TapType } from "types/TapType";
+import { TapParent } from "base/Tap";
 import { MessageType, MessageTypeValue } from "types/MessageType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,18 +29,18 @@ export class ChainImpl<T extends readonly MessageType[]>
     this.$messages = messages;
   }
 
-  public to(transport: TransportType<MessageTypeValue<Last<T>>>) {
-    this.handleMessage(0, transport);
+  public pipe(tap: TapType<MessageTypeValue<Last<T>>>) {
+    this.handleMessage(0, tap);
     return this;
   }
 
-  private handleMessage = (index: number, transport: TransportType) => {
+  private handleMessage = (index: number, tap: TapType) => {
     const message = this.$messages[index] as Last<T>;
     const next = this.$messages[index + 1] as Last<T> | undefined;
-    message.to(this.oneMessageTransport.child(transport, next, index));
+    message.pipe(this.oneMessageTap.child(tap, next, index));
   };
 
-  private oneMessageTransport = TransportParent(function (
+  private oneMessageTap = TapParent(function (
     v: MessageTypeValue<Last<T>>,
     child: ChainImpl<T>,
     next: Last<T> | undefined,

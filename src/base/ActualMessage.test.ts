@@ -1,31 +1,31 @@
 import { describe, expect, test, vi } from "vitest";
 import { ActualMessage } from "base/ActualMessage";
 import { Message } from "base/Message";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("ActualMessage.test.ts", () => {
   test("ActualMessage wraps raw values into messages", () => {
     const rawValue = 42;
     const msg = ActualMessage(rawValue);
 
-    const mockTransport = vi.fn();
-    msg.to(Transport(mockTransport));
+    const mockTap = vi.fn();
+    msg.pipe(Tap(mockTap));
 
-    expect(mockTransport).toHaveBeenCalledWith(rawValue);
+    expect(mockTap).toHaveBeenCalledWith(rawValue);
   });
 
   test("ActualMessage returns message objects unchanged", () => {
     const messageValue = "test";
-    const existingMessage = Message((transport) => transport.use(messageValue));
+    const existingMessage = Message((tap) => tap.use(messageValue));
 
     const msg = ActualMessage(existingMessage);
 
     // Ensure it's the same instance
     expect(msg).toBe(existingMessage);
 
-    const mockTransport = vi.fn();
-    msg.to(Transport(mockTransport));
+    const mockTap = vi.fn();
+    msg.pipe(Tap(mockTap));
 
-    expect(mockTransport).toHaveBeenCalledWith(messageValue);
+    expect(mockTap).toHaveBeenCalledWith(messageValue);
   });
 });

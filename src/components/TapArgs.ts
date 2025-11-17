@@ -1,29 +1,27 @@
 import { MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
- * Creates a transport that merges additional arguments into the base transport's arguments
+ * Creates a tap that merges additional arguments into the base tap's arguments
  * at a specified index position, allowing for flexible argument composition
  */
-export function TransportArgs(
-  baseTransport: TransportType<any[], MessageType>,
+export function TapArgs(
+  baseTap: TapType<any[], MessageType>,
   args: unknown[],
   startFromArgIndex: number = 0,
 ) {
-  return new TransportArgsImpl(baseTransport, args, startFromArgIndex);
+  return new TapArgsImpl(baseTap, args, startFromArgIndex);
 }
 
-export class TransportArgsImpl
-  implements TransportType<unknown[], MessageType<unknown>>
-{
+export class TapArgsImpl implements TapType<unknown[], MessageType<unknown>> {
   public constructor(
-    private baseTransport: TransportType<any[], MessageType>,
+    private baseTap: TapType<any[], MessageType>,
     private args: unknown[],
     private startFromArgIndex: number = 0,
   ) {}
 
   public use(runArgs: unknown[]): MessageType<unknown> {
-    return this.baseTransport.use(
+    return this.baseTap.use(
       mergeAtIndex(runArgs, this.args, this.startFromArgIndex),
     );
   }

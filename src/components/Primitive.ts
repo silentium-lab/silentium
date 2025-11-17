@@ -1,4 +1,4 @@
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 import { MessageType } from "types/MessageType";
 
 /**
@@ -22,8 +22,8 @@ export class PrimitiveImpl<T> {
 
   private ensureTouched() {
     if (!this.touched) {
-      this.$base.to(
-        Transport((v) => {
+      this.$base.pipe(
+        Tap((v) => {
           this.theValue = v;
         }),
       );

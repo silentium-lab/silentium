@@ -19,7 +19,7 @@ describe("ExecutorApplied.test", () => {
       };
     });
 
-    Applied(infoLimited, String).to(d.transport);
+    Applied(infoLimited, String).pipe(d.tap);
 
     l.use(2);
     l.use(3);

@@ -1,8 +1,8 @@
 import { MaybeMessage, MessageType } from "types/MessageType";
-import { TransportParent } from "base/Transport";
+import { TapParent } from "base/Tap";
 import { ConstructorType } from "types/ConstructorType";
 import { ensureMessage } from "helpers/ensures";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 import { ActualMessage } from "base/ActualMessage";
 
 /**
@@ -24,15 +24,12 @@ export class AppliedImpl<T, R> implements MessageType<R> {
     ensureMessage($base, "Applied: base");
   }
 
-  public to(transport: TransportType<R>) {
-    this.$base.to(this.transport.child(transport));
+  public pipe(tap: TapType<R>) {
+    this.$base.pipe(this.tap.child(tap));
     return this;
   }
 
-  private transport = TransportParent(function (
-    v: T,
-    child: AppliedImpl<T, R>,
-  ) {
+  private tap = TapParent(function (v: T, child: AppliedImpl<T, R>) {
     this.use(child.applier(v));
   }, this);
 }

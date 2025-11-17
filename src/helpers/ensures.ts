@@ -1,4 +1,4 @@
-import { isMessage, isTransport } from "helpers/guards";
+import { isMessage, isTap } from "helpers/guards";
 
 export function ensureFunction(v: unknown, label: string) {
   if (typeof v !== "function") {
@@ -12,8 +12,8 @@ export function ensureMessage(v: unknown, label: string) {
   }
 }
 
-export function ensureTransport(v: unknown, label: string) {
-  if (!isTransport(v)) {
-    throw new Error(`${label}: is not transport`);
+export function ensureTap(v: unknown, label: string) {
+  if (!isTap(v)) {
+    throw new Error(`${label}: is not tap`);
   }
 }

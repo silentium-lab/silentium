@@ -3,20 +3,20 @@ import { SharedSource } from "components/SharedSource";
 import { describe, expect, test, vi } from "vitest";
 import { Applied } from "components/Applied";
 import { Diagram } from "testing/Diagram";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("SharedSource.test", () => {
-  test("message with many transports", () => {
+  test("message with many taps", () => {
     const s = SharedSource(Late<number>(1), true);
 
     const g = vi.fn();
-    s.to(Transport(g));
+    s.pipe(Tap(g));
     s.use(1);
 
     expect(g).toBeCalledWith(1);
 
     const g2 = vi.fn();
-    s.to(Transport(g2));
+    s.pipe(Tap(g2));
     expect(g2).not.toHaveBeenCalled();
 
     s.use(2);
@@ -29,7 +29,7 @@ describe("SharedSource.test", () => {
     const d = Diagram();
     const s = SharedSource(Late<number>(), true);
 
-    Applied(s, String).to(d.transport);
+    Applied(s, String).pipe(d.tap);
 
     s.use(1);
 

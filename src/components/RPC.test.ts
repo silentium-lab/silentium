@@ -1,18 +1,18 @@
 import { describe, expect, test, vi } from "vitest";
 import { RPC } from "components/RPC";
 import { Message } from "base/Message";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 import { RPCType } from "types/RPCType";
 
 describe("RPC.test", () => {
-  test("result() calls transport and returns result message", () => {
-    const mockTransport = {
+  test("result() calls tap and returns result message", () => {
+    const mockTap = {
       use: vi.fn(),
     };
-    RPC.transport.default = mockTransport as any;
+    RPC.tap.default = mockTap as any;
 
-    const $rpc = Message<RPCType>((transport) => {
-      transport.use({
+    const $rpc = Message<RPCType>((tap) => {
+      tap.use({
         method: "testMethod",
         params: { key: "value" },
       });
@@ -21,7 +21,7 @@ describe("RPC.test", () => {
     const rpcImpl = RPC($rpc);
     const $result = rpcImpl.result();
 
-    expect(mockTransport.use).toHaveBeenCalledWith({
+    expect(mockTap.use).toHaveBeenCalledWith({
       method: "testMethod",
       params: { key: "value" },
       result: expect.any(Object),
@@ -30,7 +30,7 @@ describe("RPC.test", () => {
 
     // Test that result message can be subscribed to
     const resultCallback = vi.fn();
-    $result.to(Transport(resultCallback));
+    $result.pipe(Tap(resultCallback));
 
     // Since LateShared is used, it should not call immediately
     expect(resultCallback).not.toHaveBeenCalled();
@@ -41,13 +41,13 @@ describe("RPC.test", () => {
   });
 
   test("error() returns error message", () => {
-    const mockTransport = {
+    const mockTap = {
       use: vi.fn(),
     };
-    RPC.transport.default = mockTransport as any;
+    RPC.tap.default = mockTap as any;
 
-    const $rpc = Message<RPCType>((transport) => {
-      transport.use({
+    const $rpc = Message<RPCType>((tap) => {
+      tap.use({
         method: "testMethod",
       });
     });
@@ -57,7 +57,7 @@ describe("RPC.test", () => {
 
     // Test that error message can be subscribed to
     const errorCallback = vi.fn();
-    $error.to(Transport(errorCallback));
+    $error.pipe(Tap(errorCallback));
 
     expect(errorCallback).not.toHaveBeenCalled();
 
@@ -66,65 +66,63 @@ describe("RPC.test", () => {
     expect(errorCallback).toHaveBeenCalledWith("testError");
   });
 
-  test("uses specified transport", () => {
-    const defaultTransport = {
+  test("uses specified tap", () => {
+    const defaultTap = {
       use: vi.fn(),
     };
-    const customTransport = {
+    const customTap = {
       use: vi.fn(),
     };
-    RPC.transport.default = defaultTransport as any;
-    RPC.transport.custom = customTransport as any;
+    RPC.tap.default = defaultTap as any;
+    RPC.tap.custom = customTap as any;
 
-    const $msg = Message<RPCType>((transport) => {
-      transport.use({
+    const $msg = Message<RPCType>((tap) => {
+      tap.use({
         method: "testMethod",
-        transport: "custom",
+        tap: "custom",
       });
     });
 
     const $rpc = RPC($msg);
     $rpc.result();
 
-    expect(customTransport.use).toHaveBeenCalled();
-    expect(defaultTransport.use).not.toHaveBeenCalled();
+    expect(customTap.use).toHaveBeenCalled();
+    expect(defaultTap.use).not.toHaveBeenCalled();
   });
 
-  test("uses specified transport", () => {
-    const defaultTransport = {
+  test("uses specified tap", () => {
+    const defaultTap = {
       use: vi.fn(),
     };
-    const customTransport = {
+    const customTap = {
       use: vi.fn(),
     };
-    RPC.transport.default = defaultTransport as any;
-    RPC.transport.custom = customTransport as any;
+    RPC.tap.default = defaultTap as any;
+    RPC.tap.custom = customTap as any;
 
     const $rpc = RPC({
       method: "testMethod",
-      transport: "custom",
+      tap: "custom",
     });
     $rpc.result();
 
-    expect(customTransport.use).toHaveBeenCalled();
-    expect(defaultTransport.use).not.toHaveBeenCalled();
+    expect(customTap.use).toHaveBeenCalled();
+    expect(defaultTap.use).not.toHaveBeenCalled();
   });
 
-  test("throws if transport not found", () => {
-    // Reset transports
-    RPC.transport = {} as any;
+  test("throws if tap not found", () => {
+    // Reset taps
+    RPC.tap = {} as any;
 
-    const $msg = Message<RPCType>((transport) => {
-      transport.use({
+    const $msg = Message<RPCType>((tap) => {
+      tap.use({
         method: "testMethod",
-        transport: "nonexistent",
+        tap: "nonexistent",
       });
     });
 
     const $rpc = RPC($msg);
 
-    expect(() => $rpc.result()).toThrow(
-      "RPCImpl: Transport not found nonexistent",
-    );
+    expect(() => $rpc.result()).toThrow("RPCImpl: Tap not found nonexistent");
   });
 });

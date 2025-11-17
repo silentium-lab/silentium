@@ -1,11 +1,11 @@
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * The message type from which
  * values should be received
  */
 export interface MessageType<T = unknown> {
-  to(user: TransportType<T>): this;
+  pipe(t: TapType<T>): this;
 }
 
 /**

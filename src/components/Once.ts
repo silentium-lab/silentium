@@ -1,6 +1,6 @@
-import { TransportParent } from "base/Transport";
+import { TapParent } from "base/Tap";
 import { MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * Limits the number of values from the information source
@@ -16,12 +16,12 @@ export class OnceImpl<T> implements MessageType<T> {
 
   public constructor(private $base: MessageType<T>) {}
 
-  public to(transport: TransportType<T>): this {
-    this.$base.to(this.parent.child(transport));
+  public pipe(tap: TapType<T>): this {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 
-  private parent = TransportParent<T>(function (v, child) {
+  private parent = TapParent<T>(function (v, child) {
     if (!child.isFilled) {
       child.isFilled = true;
       this.use(v);

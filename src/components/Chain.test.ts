@@ -10,7 +10,7 @@ describe("Chain.test", () => {
     const $value = Late<string>("the_value");
 
     const $chain = Chain($trigger, $value);
-    $chain.to(d.transport);
+    $chain.pipe(d.tap);
 
     expect(d.toString()).toBe("the_value");
 

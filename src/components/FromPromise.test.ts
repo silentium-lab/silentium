@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { FromPromise } from "components/FromPromise";
 import { Late } from "components/Late";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 import { wait } from "testing/wait";
 
 describe("FromPromise.test", () => {
@@ -9,7 +9,7 @@ describe("FromPromise.test", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const i = FromPromise(Promise.resolve(345));
     const o = vi.fn();
-    i.to(Transport(o));
+    i.pipe(Tap(o));
 
     await wait(50);
 
@@ -18,10 +18,10 @@ describe("FromPromise.test", () => {
     const err = Late();
     const i2 = FromPromise(Promise.reject(111), err);
     const o2 = vi.fn();
-    i2.to(Transport(o2));
+    i2.pipe(Tap(o2));
 
     const oError = vi.fn();
-    err.to(Transport(oError));
+    err.pipe(Tap(oError));
 
     await wait(50);
 

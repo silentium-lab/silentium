@@ -1,16 +1,15 @@
-import { describe, expect, test, vi } from "vitest";
 import { Message } from "base/Message";
-import { TransportType } from "types/TransportType";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
+import { describe, expect, test, vi } from "vitest";
 
 describe("Message.test.ts", () => {
   test("value passed from executor is the same as value of event", () => {
-    const event = Message((transport: TransportType<string>) => {
-      transport.use("123");
+    const event = Message<string>(function () {
+      this.use("123");
     });
 
     const g = vi.fn();
-    event.to(Transport(g));
+    event.pipe(Tap(g));
 
     expect(g).toHaveBeenLastCalledWith("123");
   });

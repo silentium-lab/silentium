@@ -1,6 +1,6 @@
 import { DestroyableType, DestroyedType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * Checks that the value is neither undefined nor null
@@ -18,8 +18,8 @@ export function isMessage<T>(o: T): o is T & MessageType {
   return (
     o !== null &&
     typeof o === "object" &&
-    "to" in o &&
-    typeof (o as any).to === "function"
+    "pipe" in o &&
+    typeof (o as any).pipe === "function"
   );
 }
 
@@ -43,14 +43,14 @@ export function isDestroyed<T>(o: T): o is T & DestroyedType {
     o !== null &&
     typeof o === "object" &&
     "destroyed" in o &&
-    typeof (o as any).destroy === "function"
+    typeof (o as any).destroyed === "function"
   );
 }
 
 /**
- * Checks that the object is a transport
+ * Checks that the object is a tap
  */
-export function isTransport<T>(o: T): o is T & TransportType {
+export function isTap<T>(o: T): o is T & TapType {
   return (
     o !== null &&
     typeof o === "object" &&

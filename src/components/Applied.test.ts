@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { Applied } from "components/Applied";
 import { Of } from "base/Of";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("Applied.test", () => {
   test("message with applied function", () => {
@@ -9,7 +9,7 @@ describe("Applied.test", () => {
     const doubled = Applied(info, (x) => x * 2);
 
     const g = vi.fn();
-    doubled.to(Transport(g));
+    doubled.pipe(Tap(g));
 
     expect(g).toBeCalledWith(4);
   });
@@ -18,7 +18,7 @@ describe("Applied.test", () => {
     const doubled = Applied(2, (x) => x * 2);
 
     const g = vi.fn();
-    doubled.to(Transport(g));
+    doubled.pipe(Tap(g));
 
     expect(g).toBeCalledWith(4);
   });

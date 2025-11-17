@@ -5,12 +5,12 @@ import { RPCType } from "types/RPCType";
 
 /**
  * Message for the arrival of a specific RPC message
- * for specific transport
+ * for specific tap
  */
-export function RPCOf(transport: string) {
-  const $transport = LateShared<RPCType>();
-  RPC.transport[transport] = $transport;
-  return Message<RPCType>((transport) => {
-    $transport.to(transport);
+export function RPCOf(tap: string) {
+  const $tap = LateShared<RPCType>();
+  RPC.tap[tap] = $tap;
+  return Message<RPCType>((tap) => {
+    $tap.pipe(tap);
   });
 }

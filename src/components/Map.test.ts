@@ -1,18 +1,17 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { Map } from "components/Map";
-import { Applied } from "components/Applied";
-import { MessageType } from "types/MessageType";
-import { TransportType } from "types/TransportType";
-import { wait } from "testing/wait";
-import { Diagram } from "testing/Diagram";
 import { Message } from "base/Message";
-import { Transport, TransportMessage } from "base/Transport";
 import { Of } from "base/Of";
+import { Tap, TapMessage } from "base/Tap";
+import { Applied } from "components/Applied";
+import { Map } from "components/Map";
+import { Diagram } from "testing/Diagram";
+import { wait } from "testing/wait";
+import { MessageType } from "types/MessageType";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 function x2(baseNumber: MessageType<number>) {
   return Message<number>((o) => {
-    baseNumber.to(
-      Transport((v) => {
+    baseNumber.pipe(
+      Tap((v) => {
         o.use(v * 2);
       }),
     );
@@ -31,17 +30,17 @@ describe("Map.test", () => {
 
   test("map async", async () => {
     const infoDeferred = (val: number) =>
-      Message((o: TransportType<number>) => {
+      Message(function () {
         wait(5).then(() => {
-          o.use(val);
+          this.use(val);
         });
       });
     const info = Of([1, 2, 3, 9].map(infoDeferred));
-    const infoMapped = Map(info, TransportMessage(x2));
+    const infoMapped = Map(info, TapMessage(x2));
 
     const callFn = vi.fn();
-    infoMapped.to(
-      Transport((v) => {
+    infoMapped.pipe(
+      Tap((v) => {
         callFn(v.join());
       }),
     );
@@ -53,18 +52,18 @@ describe("Map.test", () => {
 
   test("map twice", () => {
     const d = Diagram();
-    const infoMapped = Map(Of([1, 2, 3, 9]), TransportMessage(x2));
+    const infoMapped = Map(Of([1, 2, 3, 9]), TapMessage(x2));
 
-    Applied(infoMapped, String).to(d.transport);
+    Applied(infoMapped, String).pipe(d.tap);
 
     expect(d.toString()).toBe("2,4,6,18");
   });
 
   test("map twice values", () => {
     const d = Diagram();
-    const infoMapped = Map([1, 2, 3, 9], TransportMessage(x2));
+    const infoMapped = Map([1, 2, 3, 9], TapMessage(x2));
 
-    Applied(infoMapped, String).to(d.transport);
+    Applied(infoMapped, String).pipe(d.tap);
 
     expect(d.toString()).toBe("2,4,6,18");
   });

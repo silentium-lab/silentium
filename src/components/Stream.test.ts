@@ -1,12 +1,11 @@
 import { Applied } from "components/Applied";
-import { expect, test } from "vitest";
 import { Stream } from "components/Stream";
 import { Diagram } from "testing/Diagram";
-import { Of } from "base/Of";
+import { expect, test } from "vitest";
 
 test("Stream.test", () => {
   const d = Diagram();
-  Applied(Stream(Of([1, 2, 3, 4, 5])), String).to(d.transport);
+  Applied(Stream([1, 2, 3, 4, 5]), String).pipe(d.tap);
 
   expect(d.toString()).toBe("1|2|3|4|5");
 });

@@ -8,17 +8,17 @@ describe("Void.test.ts", () => {
       const e = vi.fn();
       const m = Message(e);
 
-      m.to(Void());
+      m.pipe(Void());
 
       expect(e).toHaveBeenCalled();
     });
 
-    test("use method returns the transport for chaining", () => {
-      const voidTransport = Void();
+    test("use method returns the tap for chaining", () => {
+      const voidTap = Void();
 
-      const result = voidTransport.use();
+      const result = voidTap.use();
 
-      expect(result).toBe(voidTransport);
+      expect(result).toBe(voidTap);
     });
   });
 });

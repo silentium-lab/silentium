@@ -1,15 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { TransportDestroyable } from "components/TransportDestroyable";
-import { TransportMessage } from "base/Transport";
+import { TapDestroyable } from "components/TapDestroyable";
+import { TapMessage } from "base/Tap";
 import { Void } from "base/Void";
 
-describe("TransportDestroyable.test", () => {
+describe("TapDestroyable.test", () => {
   test("destroy base constructor", () => {
     let isDestroyed = false;
-    const p = TransportDestroyable(
-      TransportMessage(() => ({
-        to(transport) {
-          transport.use([123]);
+    const p = TapDestroyable(
+      TapMessage(() => ({
+        pipe(tap) {
+          tap.use([123]);
           return this;
         },
         destroy() {
@@ -20,7 +20,7 @@ describe("TransportDestroyable.test", () => {
     );
     const inst = p.use([]);
 
-    inst.to(Void());
+    inst.pipe(Void());
 
     p.destroy();
 

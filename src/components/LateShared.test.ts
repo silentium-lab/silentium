@@ -1,16 +1,16 @@
 import { describe, expect, test, vi } from "vitest";
 import { LateShared } from "components/LateShared";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("LateShared.test", () => {
   test("without value", () => {
     const l = LateShared<number>();
 
     const o = vi.fn();
-    l.to(Transport(o));
+    l.pipe(Tap(o));
 
     const o2 = vi.fn();
-    l.to(Transport(o2));
+    l.pipe(Tap(o2));
 
     expect(o).not.toHaveBeenCalled();
     expect(o2).not.toHaveBeenCalled();
@@ -32,7 +32,7 @@ describe("LateShared.test", () => {
     l.use(2);
 
     const o = vi.fn();
-    l.to(Transport(o));
+    l.pipe(Tap(o));
 
     expect(o).toHaveBeenLastCalledWith(2);
   });

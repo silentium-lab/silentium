@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { Late } from "components/Late";
 import { Shared } from "components/Shared";
 import { Diagram } from "testing/Diagram";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 
 describe("Shared.test", () => {
   test("many users for one message", () => {
@@ -10,14 +10,14 @@ describe("Shared.test", () => {
     const l = Late<number>(1);
     const s = Shared(l);
 
-    s.to(
-      Transport((v) => {
-        d.transport.use(`g1_${v}`);
+    s.pipe(
+      Tap((v) => {
+        d.tap.use(`g1_${v}`);
       }),
     );
-    s.to(
-      Transport((v) => {
-        d.transport.use(`g2_${v}`);
+    s.pipe(
+      Tap((v) => {
+        d.tap.use(`g2_${v}`);
       }),
     );
 
@@ -38,13 +38,13 @@ describe("Shared.test", () => {
     const s = Shared(l, true);
 
     const g = vi.fn();
-    s.to(Transport(g));
+    s.pipe(Tap(g));
     l.use(1);
 
     expect(g).toBeCalledWith(1);
 
     const g2 = vi.fn();
-    s.to(Transport(g2));
+    s.pipe(Tap(g2));
     expect(g2).not.toHaveBeenCalled();
 
     l.use(2);

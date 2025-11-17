@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { Local } from "base/Local";
-import { Transport } from "base/Transport";
+import { Tap } from "base/Tap";
 import { Late } from "components/Late";
 
 describe("Local.test", () => {
@@ -8,7 +8,7 @@ describe("Local.test", () => {
     const ev = Late(1);
     const localEv = Local(ev);
     const g = vi.fn();
-    const d = localEv.to(Transport(g));
+    const d = localEv.pipe(Tap(g));
 
     expect(g).toHaveBeenCalledWith(1);
 
@@ -25,7 +25,7 @@ describe("Local.test", () => {
   test("local message of raw value", () => {
     const localEv = Local(1);
     const g = vi.fn();
-    localEv.to(Transport(g));
+    localEv.pipe(Tap(g));
 
     expect(g).toHaveBeenCalledWith(1);
   });

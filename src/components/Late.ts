@@ -1,6 +1,6 @@
 import { SourceType } from "types/SourceType";
 import { isFilled } from "helpers/guards";
-import { TransportType } from "types/TransportType";
+import { TapType } from "types/TapType";
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -13,22 +13,22 @@ export function Late<T>(v?: T) {
 }
 
 export class LateImpl<T> implements SourceType<T> {
-  private lateTransport: TransportType<T> | null = null;
+  private lateTap: TapType<T> | null = null;
   private notify = (v?: T) => {
-    if (isFilled(v) && this.lateTransport) {
-      this.lateTransport.use(v);
+    if (isFilled(v) && this.lateTap) {
+      this.lateTap.use(v);
     }
   };
 
   public constructor(private v?: T) {}
 
-  public to(transport: TransportType<T>): this {
-    if (this.lateTransport) {
+  public pipe(tap: TapType<T>): this {
+    if (this.lateTap) {
       throw new Error(
-        "Late component gets new transport, when another was already connected!",
+        "Late component gets new tap, when another was already connected!",
       );
     }
-    this.lateTransport = transport;
+    this.lateTap = tap;
     this.notify(this.v);
     return this;
   }
