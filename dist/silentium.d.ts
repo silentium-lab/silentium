@@ -17,20 +17,20 @@ interface DestroyedType {
  * Type representing the process
  * of passing a value somewhere
  */
-interface TransportType<T = unknown, R = any> {
+interface TapType<T = unknown, R = any> {
     use(value: T): R;
 }
 /**
- * Transport that can be destroyed
+ * Tap that can be destroyed
  */
-type TransportDestroyableType<T = any, R = any> = TransportType<T, R> & DestroyableType & DestroyedType;
+type TapDestroyableType<T = any, R = any> = TapType<T, R> & DestroyableType & DestroyedType;
 
 /**
  * The message type from which
  * values should be received
  */
 interface MessageType<T = unknown> {
-    to(user: TransportType<T>): this;
+    pipe(t: TapType<T>): this;
 }
 /**
  * Value type from message
@@ -78,12 +78,12 @@ declare class LocalImpl<T> implements MessageType<T>, DestroyableType {
     private $base;
     private destroyed;
     constructor($base: MessageType<T>);
-    to(transport: TransportType<T>): this;
-    private transport;
+    pipe(tap: TapType<T>): this;
+    private tap;
     destroy(): this;
 }
 
-type MessageExecutorType<T> = (transport: TransportType<T>) => void | (() => void);
+type MessageExecutorType<T> = (this: TapType<T>, tap: TapType<T>) => void | (() => void);
 /**
  * A message created from an executor function.
  * The executor function can return a message destruction function.
@@ -93,7 +93,7 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private executor;
     private mbDestructor;
     constructor(executor: MessageExecutorType<T>);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     destroy(): this;
 }
 
@@ -116,70 +116,70 @@ declare function Of<T>(value: T): OfImpl<T>;
 declare class OfImpl<T> implements MessageType<T> {
     private value;
     constructor(value: T);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
 }
 
 /**
  * Type of value transfer logic executor
  */
-type TransportExecutor<T> = (v: T) => void;
+type TapExecutor<T> = (v: T) => void;
 /**
- * Base transport that accepts the passed value,
+ * Base tap that accepts the passed value,
  * acts as a conductor to deliver the value from a message to somewhere
  */
-declare function Transport<T>(transportExecutor: TransportExecutor<T>): TransportImpl<T>;
-declare class TransportImpl<T> implements TransportType<T> {
+declare function Tap<T>(executor: TapExecutor<T>): TapImpl<T>;
+declare class TapImpl<T> implements TapType<T> {
     private executor;
-    constructor(executor: TransportExecutor<T>);
+    constructor(executor: TapExecutor<T>);
     use(value: T): this;
 }
 /**
  * Type of executor for value passing logic and message returning
  */
-type TransportMessageExecutor<T, ET = T> = (v: T) => MessageType<ET>;
+type TapMessageExecutor<T, ET = T> = (v: T) => MessageType<ET>;
 /**
- * A transport that delivers a value from one message
+ * A tap that delivers a value from one message
  * and returns another message based on the value
  */
-declare function TransportMessage<T, ET = any>(executor: TransportMessageExecutor<T, ET>): TransportMessageImpl<T, ET>;
-declare class TransportMessageImpl<T, ET = T> implements TransportType<T, MessageType<ET>> {
+declare function TapMessage<T, ET = any>(executor: TapMessageExecutor<T, ET>): TapMessageImpl<T, ET>;
+declare class TapMessageImpl<T, ET = T> implements TapType<T, MessageType<ET>> {
     private executor;
-    constructor(executor: TransportMessageExecutor<T, ET>);
+    constructor(executor: TapMessageExecutor<T, ET>);
     use(value: T): MessageType<ET>;
 }
 /**
- * A transport that accepts a child transport
+ * A tap that accepts a child tap
  * to perform some transformation on the value
  * during its transmission
  */
-declare function TransportParent<T>(executor: (this: TransportType, v: T, ...context: any[]) => void, ...args: any[]): TransportParentImpl<T>;
-declare class TransportParentImpl<T> implements TransportType<T> {
+declare function TapParent<T>(executor: (this: TapType, v: T, ...context: any[]) => void, ...args: any[]): TapParentImpl<T>;
+declare class TapParentImpl<T> implements TapType<T> {
     private executor;
     private args;
     private _child?;
-    constructor(executor: (this: TransportType, v: T, ...context: any[]) => void, args?: any[], _child?: TransportType<T> | undefined);
+    constructor(executor: (this: TapType, v: T, ...context: any[]) => void, args?: any[], _child?: TapType<T> | undefined);
     use(value: T): this;
-    child(transport: TransportType, ...args: any[]): TransportParentImpl<T>;
+    child(tap: TapType, ...args: any[]): TapParentImpl<T>;
 }
 
 /**
- * Allows subscribing a transport to a message
- * even if the transport reference does not exist,
+ * Allows subscribing a tap to a message
+ * even if the tap reference does not exist,
  * helps avoid unnecessary conditions in application code
  */
-declare function TransportOptional(base?: TransportType): TransportOptionalImpl;
-declare class TransportOptionalImpl {
+declare function TapOptional(base?: TapType): TapOptionalImpl;
+declare class TapOptionalImpl {
     private base?;
-    constructor(base?: TransportType | undefined);
+    constructor(base?: TapType | undefined);
     wait(m: MessageType): this;
 }
 
 /**
- * Transport that does nothing with the passed value,
+ * Tap that does nothing with the passed value,
  * needed for silent message triggering
  */
 declare function Void(): VoidImpl;
-declare class VoidImpl implements TransportType {
+declare class VoidImpl implements TapType {
     use(): this;
 }
 
@@ -203,8 +203,8 @@ declare class AllImpl<const T extends MaybeMessage[]> implements MessageType<Ext
     private $messages;
     private result;
     constructor(...messages: T);
-    to(transport: TransportType<ExtractTypesFromArrayS<T>>): this;
-    private transport;
+    pipe(tap: TapType<ExtractTypesFromArrayS<T>>): this;
+    private tap;
 }
 
 /**
@@ -215,7 +215,7 @@ declare function Any<const T>(...messages: MaybeMessage<T>[]): AnyImpl<T>;
 declare class AnyImpl<T> implements MessageType<T> {
     private $messages;
     constructor(...messages: MessageType<T>[]);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
 }
 
 /**
@@ -227,8 +227,8 @@ declare class AppliedImpl<T, R> implements MessageType<R> {
     private $base;
     private applier;
     constructor($base: MessageType<T>, applier: ConstructorType<[T], R>);
-    to(transport: TransportType<R>): this;
-    private transport;
+    pipe(tap: TapType<R>): this;
+    private tap;
 }
 
 /**
@@ -241,16 +241,16 @@ declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessa
  * An message representing a base message where
  * its operation is wrapped in try-catch
  * and expects exceptions. If an exception
- * bubbles up, it's passed to the transports
+ * bubbles up, it's passed to the taps
  * as errorMessage and errorOriginal
  */
-declare function Catch<T>($base: MessageType<T>, errorMessage: TransportType, errorOriginal?: TransportType): CatchImpl<T>;
+declare function Catch<T>($base: MessageType<T>, errorMessage: TapType, errorOriginal?: TapType): CatchImpl<T>;
 declare class CatchImpl<T> implements MessageType<T> {
     private $base;
     private errorMessage;
     private errorOriginal?;
-    constructor($base: MessageType<T>, errorMessage: TransportType, errorOriginal?: TransportType | undefined);
-    to(transport: TransportType<T>): this;
+    constructor($base: MessageType<T>, errorMessage: TapType, errorOriginal?: TapType | undefined);
+    pipe(tap: TapType<T>): this;
 }
 
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
@@ -267,15 +267,15 @@ declare class ChainImpl<T extends readonly MessageType[]> implements MessageType
     private $messages;
     private $latest;
     constructor(...messages: T);
-    to(transport: TransportType<MessageTypeValue<Last<T>>>): this;
+    pipe(tap: TapType<MessageTypeValue<Last<T>>>): this;
     private handleMessage;
-    private oneMessageTransport;
+    private oneMessageTap;
 }
 
-type ExecutorApplier<T> = (executor: TransportExecutor<T>) => TransportExecutor<T>;
+type ExecutorApplier<T> = (executor: TapExecutor<T>) => TapExecutor<T>;
 /**
- * Applies a value transfer function to the transport
- * and returns the same value transfer function for the transport
+ * Applies a value transfer function to the tap
+ * and returns the same value transfer function for the tap
  * Useful for applying functions like debounced or throttle
  */
 declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorApplier<T>): ExecutorAppliedImpl<T>;
@@ -283,7 +283,7 @@ declare class ExecutorAppliedImpl<T> implements MessageType<T> {
     private $base;
     private applier;
     constructor($base: MessageType<T>, applier: ExecutorApplier<T>);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
 }
 
 /**
@@ -296,7 +296,7 @@ declare class FilteredImpl<T> implements MessageType<T> {
     private predicate;
     private defaultValue?;
     constructor($base: MessageType<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T | undefined);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     private parent;
 }
 
@@ -312,32 +312,32 @@ declare class FromEventImpl<T> implements MessageType<T>, DestroyableType {
     private $eventName;
     private $subscribeMethod;
     private $unsubscribeMethod?;
-    private lastTransport;
+    private lastTap;
     private handler;
     constructor($emitter: MessageType<any>, $eventName: MessageType<string>, $subscribeMethod: MessageType<string>, $unsubscribeMethod?: MessageType<string> | undefined);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     private parent;
     destroy(): this;
 }
 
 /**
  * Creates an message from a Promise, allowing the promise's resolution or rejection
- * to be handled as an message. The resolved value is emitted to the transport,
+ * to be handled as an message. The resolved value is emitted to the tap,
  * and if an error is provided, rejections are forwarded to it.
  */
-declare function FromPromise<T>(p: Promise<T>, error?: TransportType): FromPromiseImpl<T>;
+declare function FromPromise<T>(p: Promise<T>, error?: TapType): FromPromiseImpl<T>;
 declare class FromPromiseImpl<T> implements MessageType<T> {
     private p;
     private error?;
-    constructor(p: Promise<T>, error?: TransportType | undefined);
-    to(transport: TransportType<T>): this;
+    constructor(p: Promise<T>, error?: TapType | undefined);
+    pipe(tap: TapType<T>): this;
 }
 
 /**
  * A type that serves as both
- * an message and a transport
+ * an message and a tap
  */
-type SourceType<T = unknown> = MessageType<T> & TransportType<T>;
+type SourceType<T = unknown> = MessageType<T> & TapType<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -348,10 +348,10 @@ type SourceType<T = unknown> = MessageType<T> & TransportType<T>;
 declare function Late<T>(v?: T): LateImpl<T>;
 declare class LateImpl<T> implements SourceType<T> {
     private v?;
-    private lateTransport;
+    private lateTap;
     private notify;
     constructor(v?: T | undefined);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     use(value: T): this;
 }
 
@@ -376,14 +376,14 @@ declare class PrimitiveImpl<T> {
 
 /**
  * An message with a value that will be set later,
- * capable of responding to different transports
+ * capable of responding to different taps
  */
 declare function LateShared<T>(value?: T): LateSharedImpl<T>;
 declare class LateSharedImpl<T> implements SourceType<T> {
     private $msg;
     private primitive;
     constructor(value?: T);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     use(value: T): this;
     value(): PrimitiveImpl<T>;
 }
@@ -392,12 +392,12 @@ declare class LateSharedImpl<T> implements SourceType<T> {
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  */
-declare function Map<T, TG>($base: MaybeMessage<T[]>, $target: TransportType<any, MessageType<TG>>): MapImpl<T, TG>;
+declare function Map<T, TG>($base: MaybeMessage<T[]>, $target: TapType<any, MessageType<TG>>): MapImpl<T, TG>;
 declare class MapImpl<T, TG> implements MessageType<TG[]> {
     private $base;
     private $target;
-    constructor($base: MessageType<T[]>, $target: TransportType<any, MessageType<TG>>);
-    to(transport: TransportType<TG[]>): this;
+    constructor($base: MessageType<T[]>, $target: TapType<any, MessageType<TG>>);
+    pipe(tap: TapType<TG[]>): this;
     private parent;
 }
 
@@ -411,7 +411,7 @@ declare class OnceImpl<T> implements MessageType<T> {
     private $base;
     private isFilled;
     constructor($base: MessageType<T>);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     private parent;
 }
 
@@ -421,10 +421,10 @@ declare class OnceImpl<T> implements MessageType<T> {
  */
 interface RPCType extends Record<string, any> {
     method: string;
-    transport?: string;
+    tap?: string;
     params?: Record<string, any>;
-    result?: TransportType;
-    error?: TransportType;
+    result?: TapType;
+    error?: TapType;
 }
 
 interface RPCImplType<T> {
@@ -434,14 +434,14 @@ interface RPCImplType<T> {
 /**
  * The ability to call an external system through
  * sending a message in a standardized format
- * RPCType, the list of transports should be defined via
- * the RPC.transport object
+ * RPCType, the list of taps should be defined via
+ * the RPC.tap object
  */
 declare function RPC<T>($rpc: MaybeMessage<RPCType>): RPCImplType<T>;
 declare namespace RPC {
-    var transport: {
-        default: TransportType<RPCType>;
-    } & Record<string, TransportType<RPCType, any>>;
+    var tap: {
+        default: TapType<RPCType>;
+    } & Record<string, TapType<RPCType, any>>;
 }
 declare class RPCImpl {
     private $rpc;
@@ -455,13 +455,13 @@ declare class RPCImpl {
 /**
  * Connects an external message to an RPC message chain
  */
-declare function RPCChain($base: MaybeMessage): TransportImpl<RPCType>;
+declare function RPCChain($base: MaybeMessage): TapImpl<RPCType>;
 
 /**
  * Message for the arrival of a specific RPC message
- * for specific transport
+ * for specific tap
  */
-declare function RPCOf(transport: string): MessageImpl<RPCType>;
+declare function RPCOf(tap: string): MessageImpl<RPCType>;
 
 /**
  * Creates a sequence that accumulates all values from the source into an array,
@@ -472,7 +472,7 @@ declare class SequenceImpl<T> implements MessageType<T[]> {
     private $base;
     private result;
     constructor($base: MessageType<T>);
-    to(transport: TransportType<T[]>): this;
+    pipe(tap: TapType<T[]>): this;
     private parent;
 }
 
@@ -481,15 +481,15 @@ declare class SequenceImpl<T> implements MessageType<T[]> {
  * owners to get information from a common source
  * https://silentium-lab.github.io/silentium/#/en/utils/owner-pool
  */
-declare class TransportPool<T> {
-    private transports;
-    private innerTransport;
+declare class TapPool<T> {
+    private taps;
+    private innerTap;
     constructor();
-    transport(): TransportType<T, any>;
+    tap(): TapType<T, any>;
     size(): number;
-    has(owner: TransportType<T>): boolean;
-    add(owner: TransportType<T>): this;
-    remove(g: TransportType<T>): this;
+    has(owner: TapType<T>): boolean;
+    add(owner: TapType<T>): this;
+    remove(g: TapType<T>): this;
     destroy(): this;
 }
 
@@ -501,20 +501,20 @@ declare function Shared<T>($base: MessageType<T>, stateless?: boolean): SharedIm
 declare class SharedImpl<T> implements SourceType<T> {
     private $base;
     private stateless;
-    private transportPool;
+    private tapPool;
     private lastValue;
     private calls;
     constructor($base: MessageType<T>, stateless?: boolean);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     use(value: T): this;
-    private firstCallTransport;
+    private firstCallTap;
     touched(): void;
-    pool(): TransportPool<T>;
-    destroy(): TransportPool<T>;
+    pool(): TapPool<T>;
+    destroy(): TapPool<T>;
 }
 
 /**
- * Creates a shared source that allows multiple transports to subscribe to the same underlying source.
+ * Creates a shared source that allows multiple taps to subscribe to the same underlying source.
  * The stateless parameter controls whether the sharing maintains state or not.
  */
 declare function SharedSource<T>($base: SourceType<T>, stateless?: boolean): SharedSourceImpl<T>;
@@ -522,60 +522,60 @@ declare class SharedSourceImpl<T> implements SourceType<T> {
     private $base;
     private $sharedBase;
     constructor($base: SourceType<T>, stateless?: boolean);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     use(value: T): this;
 }
 
 /**
  * Component that receives a data array and yields values one by one
  */
-declare function Stream<T>($base: MessageType<T[]>): StreamImpl<T>;
+declare function Stream<T>($base: MaybeMessage<T[]>): StreamImpl<T>;
 declare class StreamImpl<T> implements MessageType<T> {
     private $base;
     constructor($base: MessageType<T[]>);
-    to(transport: TransportType<T>): this;
+    pipe(tap: TapType<T>): this;
     private parent;
 }
 
 /**
- * Creates a transport that applies a constructor to the result of another transport.
+ * Creates a tap that applies a constructor to the result of another tap.
  */
-declare function TransportApplied<T>(baseTransport: TransportType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>): TransportAppliedImpl<T>;
-declare class TransportAppliedImpl<T> implements TransportType<unknown, MessageType<T>> {
-    private baseTransport;
+declare function TapApplied<T>(baseTap: TapType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>): TapAppliedImpl<T>;
+declare class TapAppliedImpl<T> implements TapType<unknown, MessageType<T>> {
+    private baseTap;
     private applier;
-    constructor(baseTransport: TransportType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>);
+    constructor(baseTap: TapType<any, MessageType<T>>, applier: ConstructorType<[MessageType], MessageType<T>>);
     use(args: unknown): MessageType<T>;
 }
 
 /**
- * Creates a transport that merges additional arguments into the base transport's arguments
+ * Creates a tap that merges additional arguments into the base tap's arguments
  * at a specified index position, allowing for flexible argument composition
  */
-declare function TransportArgs(baseTransport: TransportType<any[], MessageType>, args: unknown[], startFromArgIndex?: number): TransportArgsImpl;
-declare class TransportArgsImpl implements TransportType<unknown[], MessageType<unknown>> {
-    private baseTransport;
+declare function TapArgs(baseTap: TapType<any[], MessageType>, args: unknown[], startFromArgIndex?: number): TapArgsImpl;
+declare class TapArgsImpl implements TapType<unknown[], MessageType<unknown>> {
+    private baseTap;
     private args;
     private startFromArgIndex;
-    constructor(baseTransport: TransportType<any[], MessageType>, args: unknown[], startFromArgIndex?: number);
+    constructor(baseTap: TapType<any[], MessageType>, args: unknown[], startFromArgIndex?: number);
     use(runArgs: unknown[]): MessageType<unknown>;
 }
 
 /**
- * Creates a transport wrapper that automatically manages destruction of created instances
+ * Creates a tap wrapper that automatically manages destruction of created instances
  */
-declare function TransportDestroyable<T>(baseTransport: TransportType<any[], MessageType<T>>): TransportDestroyableImpl<T>;
-declare class TransportDestroyableImpl<T> implements TransportType<unknown, MessageType<T>>, DestroyableType {
-    private baseTransport;
+declare function TapDestroyable<T>(baseTap: TapType<any[], MessageType<T>>): TapDestroyableImpl<T>;
+declare class TapDestroyableImpl<T> implements TapType<unknown, MessageType<T>>, DestroyableType {
+    private baseTap;
     private destructors;
-    constructor(baseTransport: TransportType<any[], MessageType<T>>);
+    constructor(baseTap: TapType<any[], MessageType<T>>);
     use(args: any[]): MessageType<T>;
     destroy(): this;
 }
 
 declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureMessage(v: unknown, label: string): void;
-declare function ensureTransport(v: unknown, label: string): void;
+declare function ensureTap(v: unknown, label: string): void;
 
 /**
  * Checks that the value is neither undefined nor null
@@ -594,8 +594,8 @@ declare function isDestroyable<T>(o: T): o is T & DestroyableType;
  */
 declare function isDestroyed<T>(o: T): o is T & DestroyedType;
 /**
- * Checks that the object is a transport
+ * Checks that the object is a tap
  */
-declare function isTransport<T>(o: T): o is T & TransportType;
+declare function isTap<T>(o: T): o is T & TapType;
 
-export { ActualMessage, All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, type MaybeMessage, Message, MessageImpl, type MessageType, type MessageTypeValue, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, type SourceType, Stream, StreamImpl, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableImpl, type TransportDestroyableType, type TransportExecutor, TransportImpl, TransportMessage, type TransportMessageExecutor, TransportMessageImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, type TransportType, Void, VoidImpl, ensureFunction, ensureMessage, ensureTransport, isDestroyable, isDestroyed, isFilled, isMessage, isTransport };
+export { ActualMessage, All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, type ConstructorType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, type MaybeMessage, Message, MessageImpl, type MessageType, type MessageTypeValue, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, type RPCType, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, type SourceType, Stream, StreamImpl, Tap, TapApplied, TapAppliedImpl, TapArgs, TapArgsImpl, TapDestroyable, TapDestroyableImpl, type TapDestroyableType, type TapExecutor, TapImpl, TapMessage, type TapMessageExecutor, TapMessageImpl, TapOptional, TapOptionalImpl, TapParent, TapParentImpl, TapPool, type TapType, Void, VoidImpl, ensureFunction, ensureMessage, ensureTap, isDestroyable, isDestroyed, isFilled, isMessage, isTap };

@@ -5,8 +5,8 @@ class OfImpl {
   constructor(value) {
     this.value = value;
   }
-  to(transport) {
-    transport.use(this.value);
+  pipe(tap) {
+    tap.use(this.value);
     return this;
   }
 }
@@ -15,15 +15,15 @@ const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
 function isMessage(o) {
-  return o !== null && typeof o === "object" && "to" in o && typeof o.to === "function";
+  return o !== null && typeof o === "object" && "pipe" in o && typeof o.pipe === "function";
 }
 function isDestroyable(o) {
   return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
 }
 function isDestroyed(o) {
-  return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroy === "function";
+  return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroyed === "function";
 }
-function isTransport(o) {
+function isTap(o) {
   return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
 }
 
@@ -79,60 +79,56 @@ function ensureMessage(v, label) {
     throw new Error(`${label}: is not message`);
   }
 }
-function ensureTransport(v, label) {
-  if (!isTransport(v)) {
-    throw new Error(`${label}: is not transport`);
+function ensureTap(v, label) {
+  if (!isTap(v)) {
+    throw new Error(`${label}: is not tap`);
   }
 }
 
-function Transport(transportExecutor) {
-  return new TransportImpl(transportExecutor);
+function Tap(executor) {
+  return new TapImpl(executor);
 }
-class TransportImpl {
+class TapImpl {
   constructor(executor) {
     this.executor = executor;
-    ensureFunction(executor, "Transport: transport executor");
+    ensureFunction(executor, "Tap: tap executor");
   }
   use(value) {
     this.executor(value);
     return this;
   }
 }
-function TransportMessage(executor) {
-  return new TransportMessageImpl(executor);
+function TapMessage(executor) {
+  return new TapMessageImpl(executor);
 }
-class TransportMessageImpl {
+class TapMessageImpl {
   constructor(executor) {
     this.executor = executor;
-    ensureFunction(executor, "TransportMessage: transport executor");
+    ensureFunction(executor, "TapMessage: tap executor");
   }
   use(value) {
     return this.executor(value);
   }
 }
-function TransportParent(executor, ...args) {
-  return new TransportParentImpl(executor, args);
+function TapParent(executor, ...args) {
+  return new TapParentImpl(executor, args);
 }
-class TransportParentImpl {
+class TapParentImpl {
   constructor(executor, args = [], _child) {
     this.executor = executor;
     this.args = args;
     this._child = _child;
-    ensureFunction(executor, "TransportParent: executor");
+    ensureFunction(executor, "TapParent: executor");
   }
   use(value) {
     if (this._child === void 0) {
-      throw new Error("no base transport");
+      throw new Error("no base tap");
     }
     this.executor.call(this._child, value, ...this.args);
     return this;
   }
-  child(transport, ...args) {
-    return new TransportParentImpl(
-      this.executor,
-      [...this.args, ...args],
-      transport
-    );
+  child(tap, ...args) {
+    return new TapParentImpl(this.executor, [...this.args, ...args], tap);
   }
 }
 
@@ -146,15 +142,15 @@ class LocalImpl {
   constructor($base) {
     this.$base = $base;
     __publicField$j(this, "destroyed", false);
-    __publicField$j(this, "transport", TransportParent(function(v, child) {
+    __publicField$j(this, "tap", TapParent(function(v, child) {
       if (!child.destroyed) {
         this.use(v);
       }
     }, this));
     ensureMessage($base, "Local: $base");
   }
-  to(transport) {
-    this.$base.to(this.transport.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.tap.child(tap));
     return this;
   }
   destroy() {
@@ -175,8 +171,8 @@ class MessageImpl {
     __publicField$i(this, "mbDestructor");
     ensureFunction(executor, "Message: executor");
   }
-  to(transport) {
-    this.mbDestructor = this.executor(transport);
+  pipe(tap) {
+    this.mbDestructor = this.executor.call(tap, tap);
     return this;
   }
   destroy() {
@@ -188,21 +184,21 @@ class MessageImpl {
 }
 
 function New(construct) {
-  return Message((transport) => {
-    transport.use(construct());
+  return Message((tap) => {
+    tap.use(construct());
   });
 }
 
-function TransportOptional(base) {
-  return new TransportOptionalImpl(base);
+function TapOptional(base) {
+  return new TapOptionalImpl(base);
 }
-class TransportOptionalImpl {
+class TapOptionalImpl {
   constructor(base) {
     this.base = base;
   }
   wait(m) {
     if (this.base !== void 0) {
-      m.to(this.base);
+      m.pipe(this.base);
     }
     return this;
   }
@@ -232,7 +228,7 @@ class AllImpl {
     __publicField$h(this, "filled", /* @__PURE__ */ new Set());
     __publicField$h(this, "$messages");
     __publicField$h(this, "result", []);
-    __publicField$h(this, "transport", TransportParent(function(v, child, key) {
+    __publicField$h(this, "tap", TapParent(function(v, child, key) {
       child.filled.add(key);
       child.result[parseInt(key)] = v;
       if (isAllFilled(child.filled, child.known)) {
@@ -242,13 +238,13 @@ class AllImpl {
     this.known = new Set(Object.keys(messages));
     this.$messages = messages.map(ActualMessage);
   }
-  to(transport) {
+  pipe(tap) {
     Object.entries(this.$messages).forEach(([key, message]) => {
       ensureMessage(message, "All: item");
-      message.to(this.transport.child(transport, key));
+      message.pipe(this.tap.child(tap, key));
     });
     if (this.known.size === 0) {
-      transport.use([]);
+      tap.use([]);
     }
     return this;
   }
@@ -265,10 +261,10 @@ class AnyImpl {
     __publicField$g(this, "$messages");
     this.$messages = messages;
   }
-  to(transport) {
+  pipe(tap) {
     this.$messages.forEach((message) => {
       ensureMessage(message, "Any: item");
-      message.to(transport);
+      message.pipe(tap);
     });
     return this;
   }
@@ -284,13 +280,13 @@ class AppliedImpl {
   constructor($base, applier) {
     this.$base = $base;
     this.applier = applier;
-    __publicField$f(this, "transport", TransportParent(function(v, child) {
+    __publicField$f(this, "tap", TapParent(function(v, child) {
       this.use(child.applier(v));
     }, this));
     ensureMessage($base, "Applied: base");
   }
-  to(transport) {
-    this.$base.to(this.transport.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.tap.child(tap));
     return this;
   }
 }
@@ -310,14 +306,14 @@ class CatchImpl {
     this.errorMessage = errorMessage;
     this.errorOriginal = errorOriginal;
     ensureMessage($base, "Catch: base");
-    ensureTransport(errorMessage, "Catch: errorMessage");
+    ensureTap(errorMessage, "Catch: errorMessage");
     if (errorOriginal !== void 0) {
-      ensureTransport(errorOriginal, "Catch: errorOriginal");
+      ensureTap(errorOriginal, "Catch: errorOriginal");
     }
   }
-  to(transport) {
+  pipe(tap) {
     try {
-      this.$base.to(transport);
+      this.$base.pipe(tap);
     } catch (e) {
       if (e instanceof Error) {
         this.errorMessage.use(e.message);
@@ -342,12 +338,12 @@ class ChainImpl {
   constructor(...messages) {
     __publicField$e(this, "$messages");
     __publicField$e(this, "$latest");
-    __publicField$e(this, "handleMessage", (index, transport) => {
+    __publicField$e(this, "handleMessage", (index, tap) => {
       const message = this.$messages[index];
       const next = this.$messages[index + 1];
-      message.to(this.oneMessageTransport.child(transport, next, index));
+      message.pipe(this.oneMessageTap.child(tap, next, index));
     });
-    __publicField$e(this, "oneMessageTransport", TransportParent(function(v, child, next, index) {
+    __publicField$e(this, "oneMessageTap", TapParent(function(v, child, next, index) {
       if (!next) {
         child.$latest = v;
       }
@@ -360,8 +356,8 @@ class ChainImpl {
     }, this));
     this.$messages = messages;
   }
-  to(transport) {
-    this.handleMessage(0, transport);
+  pipe(tap) {
+    this.handleMessage(0, tap);
     return this;
   }
 }
@@ -375,11 +371,8 @@ class ExecutorAppliedImpl {
     this.applier = applier;
     ensureMessage($base, "ExecutorApplied: base");
   }
-  to(transport) {
-    const ExecutorAppliedBaseTransport = this.applier(
-      transport.use.bind(transport)
-    );
-    this.$base.to(Transport(ExecutorAppliedBaseTransport));
+  pipe(tap) {
+    this.$base.pipe(Tap(this.applier(tap.use.bind(tap))));
     return this;
   }
 }
@@ -395,7 +388,7 @@ class FilteredImpl {
     this.$base = $base;
     this.predicate = predicate;
     this.defaultValue = defaultValue;
-    __publicField$d(this, "parent", TransportParent(function(v, child) {
+    __publicField$d(this, "parent", TapParent(function(v, child) {
       if (child.predicate(v)) {
         this.use(v);
       } else if (child.defaultValue !== void 0) {
@@ -403,8 +396,8 @@ class FilteredImpl {
       }
     }, this));
   }
-  to(transport) {
-    this.$base.to(this.parent.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 }
@@ -426,33 +419,33 @@ class FromEventImpl {
     this.$eventName = $eventName;
     this.$subscribeMethod = $subscribeMethod;
     this.$unsubscribeMethod = $unsubscribeMethod;
-    __publicField$c(this, "lastTransport", null);
+    __publicField$c(this, "lastTap", null);
     __publicField$c(this, "handler", (v) => {
-      if (this.lastTransport) {
-        this.lastTransport.use(v);
+      if (this.lastTap) {
+        this.lastTap.use(v);
       }
     });
-    __publicField$c(this, "parent", TransportParent(function([emitter, eventName, subscribe], child) {
-      child.lastTransport = this;
+    __publicField$c(this, "parent", TapParent(function([emitter, eventName, subscribe], child) {
+      child.lastTap = this;
       if (!emitter?.[subscribe]) {
         return;
       }
       emitter[subscribe](eventName, child.handler);
     }, this));
   }
-  to(transport) {
-    All(this.$emitter, this.$eventName, this.$subscribeMethod).to(
-      this.parent.child(transport)
+  pipe(tap) {
+    All(this.$emitter, this.$eventName, this.$subscribeMethod).pipe(
+      this.parent.child(tap)
     );
     return this;
   }
   destroy() {
-    this.lastTransport = null;
+    this.lastTap = null;
     if (!this.$unsubscribeMethod) {
       return this;
     }
-    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).to(
-      Transport(([emitter, eventName, unsubscribe]) => {
+    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).pipe(
+      Tap(([emitter, eventName, unsubscribe]) => {
         emitter?.[unsubscribe]?.(eventName, this.handler);
       })
     );
@@ -468,9 +461,9 @@ class FromPromiseImpl {
     this.p = p;
     this.error = error;
   }
-  to(transport) {
+  pipe(tap) {
     this.p.then((v) => {
-      transport.use(v);
+      tap.use(v);
     }).catch((e) => {
       this.error?.use(e);
     });
@@ -487,20 +480,20 @@ function Late(v) {
 class LateImpl {
   constructor(v) {
     this.v = v;
-    __publicField$b(this, "lateTransport", null);
+    __publicField$b(this, "lateTap", null);
     __publicField$b(this, "notify", (v) => {
-      if (isFilled(v) && this.lateTransport) {
-        this.lateTransport.use(v);
+      if (isFilled(v) && this.lateTap) {
+        this.lateTap.use(v);
       }
     });
   }
-  to(transport) {
-    if (this.lateTransport) {
+  pipe(tap) {
+    if (this.lateTap) {
       throw new Error(
-        "Late component gets new transport, when another was already connected!"
+        "Late component gets new tap, when another was already connected!"
       );
     }
-    this.lateTransport = transport;
+    this.lateTap = tap;
     this.notify(this.v);
     return this;
   }
@@ -520,15 +513,15 @@ class OnceImpl {
   constructor($base) {
     this.$base = $base;
     __publicField$a(this, "isFilled", false);
-    __publicField$a(this, "parent", TransportParent(function(v, child) {
+    __publicField$a(this, "parent", TapParent(function(v, child) {
       if (!child.isFilled) {
         child.isFilled = true;
         this.use(v);
       }
     }, this));
   }
-  to(transport) {
-    this.$base.to(this.parent.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 }
@@ -536,40 +529,40 @@ class OnceImpl {
 var __defProp$9 = Object.defineProperty;
 var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
-class TransportPool {
+class TapPool {
   constructor() {
-    __publicField$9(this, "transports");
-    __publicField$9(this, "innerTransport");
-    this.transports = /* @__PURE__ */ new Set();
-    this.innerTransport = Transport((v) => {
-      this.transports.forEach((transport) => {
-        if (isDestroyed(transport) && transport.destroyed()) {
-          this.transports.delete(transport);
+    __publicField$9(this, "taps");
+    __publicField$9(this, "innerTap");
+    this.taps = /* @__PURE__ */ new Set();
+    this.innerTap = Tap((v) => {
+      this.taps.forEach((tap) => {
+        if (isDestroyed(tap) && tap.destroyed()) {
+          this.taps.delete(tap);
           return;
         }
-        transport.use(v);
+        tap.use(v);
       });
     });
   }
-  transport() {
-    return this.innerTransport;
+  tap() {
+    return this.innerTap;
   }
   size() {
-    return this.transports.size;
+    return this.taps.size;
   }
   has(owner) {
-    return this.transports.has(owner);
+    return this.taps.has(owner);
   }
   add(owner) {
-    this.transports.add(owner);
+    this.taps.add(owner);
     return this;
   }
   remove(g) {
-    this.transports.delete(g);
+    this.taps.delete(g);
     return this;
   }
   destroy() {
-    this.transports.forEach((g) => {
+    this.taps.forEach((g) => {
       this.remove(g);
     });
     return this;
@@ -586,41 +579,41 @@ class SharedImpl {
   constructor($base, stateless = false) {
     this.$base = $base;
     this.stateless = stateless;
-    __publicField$8(this, "transportPool", new TransportPool());
+    __publicField$8(this, "tapPool", new TapPool());
     __publicField$8(this, "lastValue");
     __publicField$8(this, "calls", Late());
-    __publicField$8(this, "firstCallTransport", Transport((v) => {
+    __publicField$8(this, "firstCallTap", Tap((v) => {
       this.lastValue = v;
-      this.transportPool.transport().use(v);
+      this.tapPool.tap().use(v);
     }));
-    Once(this.calls).to(
-      Transport(() => {
-        this.$base.to(this.firstCallTransport);
+    Once(this.calls).pipe(
+      Tap(() => {
+        this.$base.pipe(this.firstCallTap);
       })
     );
   }
-  to(transport) {
+  pipe(tap) {
     this.calls.use(1);
-    if (!this.stateless && isFilled(this.lastValue) && !this.transportPool.has(transport)) {
-      transport.use(this.lastValue);
+    if (!this.stateless && isFilled(this.lastValue) && !this.tapPool.has(tap)) {
+      tap.use(this.lastValue);
     }
-    this.transportPool.add(transport);
+    this.tapPool.add(tap);
     return this;
   }
   use(value) {
     this.calls.use(1);
     this.lastValue = value;
-    this.transportPool.transport().use(value);
+    this.tapPool.tap().use(value);
     return this;
   }
   touched() {
     this.calls.use(1);
   }
   pool() {
-    return this.transportPool;
+    return this.tapPool;
   }
   destroy() {
-    return this.transportPool.destroy();
+    return this.tapPool.destroy();
   }
 }
 
@@ -636,8 +629,8 @@ class SharedSourceImpl {
     __publicField$7(this, "$sharedBase");
     this.$sharedBase = Shared(this.$base, stateless);
   }
-  to(transport) {
-    this.$sharedBase.to(transport);
+  pipe(tap) {
+    this.$sharedBase.pipe(tap);
     return this;
   }
   use(value) {
@@ -661,8 +654,8 @@ class PrimitiveImpl {
   }
   ensureTouched() {
     if (!this.touched) {
-      this.$base.to(
-        Transport((v) => {
+      this.$base.pipe(
+        Tap((v) => {
           this.theValue = v;
         })
       );
@@ -699,8 +692,8 @@ class LateSharedImpl {
     this.$msg = SharedSource(Late(value));
     this.primitive = Primitive(this, value);
   }
-  to(transport) {
-    this.$msg.to(transport);
+  pipe(tap) {
+    this.$msg.pipe(tap);
     return this;
   }
   use(value) {
@@ -722,7 +715,7 @@ class MapImpl {
   constructor($base, $target) {
     this.$base = $base;
     this.$target = $target;
-    __publicField$4(this, "parent", TransportParent(function(v, child) {
+    __publicField$4(this, "parent", TapParent(function(v, child) {
       const infos = [];
       v.forEach((val) => {
         let $val = val;
@@ -732,11 +725,11 @@ class MapImpl {
         const info = child.$target.use($val);
         infos.push(info);
       });
-      All(...infos).to(this);
+      All(...infos).pipe(this);
     }, this));
   }
-  to(transport) {
-    this.$base.to(this.parent.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 }
@@ -747,7 +740,7 @@ var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !==
 function RPC($rpc) {
   return new RPCImpl(ActualMessage($rpc));
 }
-RPC.transport = {};
+RPC.tap = {};
 class RPCImpl {
   constructor($rpc) {
     this.$rpc = $rpc;
@@ -755,11 +748,11 @@ class RPCImpl {
     __publicField$3(this, "$error", LateShared());
   }
   result() {
-    this.$rpc.to(
-      Transport((rpc) => {
-        const transport = rpc.transport === void 0 ? RPC.transport.default : RPC.transport[rpc.transport] || RPC.transport.default;
-        if (!transport) {
-          throw new Error(`RPCImpl: Transport not found ${rpc.transport}`);
+    this.$rpc.pipe(
+      Tap((rpc) => {
+        const tap = rpc.tap === void 0 ? RPC.tap.default : RPC.tap[rpc.tap] || RPC.tap.default;
+        if (!tap) {
+          throw new Error(`RPCImpl: Tap not found ${rpc.tap}`);
         }
         if (!rpc.result) {
           rpc.result = this.$result;
@@ -767,7 +760,7 @@ class RPCImpl {
         if (!rpc.error) {
           rpc.error = this.$error;
         }
-        transport.use(rpc);
+        tap.use(rpc);
       })
     );
     return this.$result;
@@ -778,19 +771,19 @@ class RPCImpl {
 }
 
 function RPCChain($base) {
-  return Transport((rpc) => {
+  return Tap((rpc) => {
     if (!rpc.result) {
       throw new Error("RPCChain did not find result in rpc message");
     }
-    ActualMessage($base).to(rpc.result);
+    ActualMessage($base).pipe(rpc.result);
   });
 }
 
-function RPCOf(transport) {
-  const $transport = LateShared();
-  RPC.transport[transport] = $transport;
-  return Message((transport2) => {
-    $transport.to(transport2);
+function RPCOf(tap) {
+  const $tap = LateShared();
+  RPC.tap[tap] = $tap;
+  return Message((tap2) => {
+    $tap.pipe(tap2);
   });
 }
 
@@ -804,13 +797,13 @@ class SequenceImpl {
   constructor($base) {
     this.$base = $base;
     __publicField$2(this, "result", []);
-    __publicField$2(this, "parent", TransportParent(function(v, child) {
+    __publicField$2(this, "parent", TapParent(function(v, child) {
       child.result.push(v);
       this.use(child.result);
     }, this));
   }
-  to(transport) {
-    this.$base.to(this.parent.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 }
@@ -819,47 +812,47 @@ var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
 function Stream($base) {
-  return new StreamImpl($base);
+  return new StreamImpl(ActualMessage($base));
 }
 class StreamImpl {
   constructor($base) {
     this.$base = $base;
-    __publicField$1(this, "parent", TransportParent(function(v) {
+    __publicField$1(this, "parent", TapParent(function(v) {
       v.forEach((cv) => {
         this.use(cv);
       });
     }));
   }
-  to(transport) {
-    this.$base.to(this.parent.child(transport));
+  pipe(tap) {
+    this.$base.pipe(this.parent.child(tap));
     return this;
   }
 }
 
-function TransportApplied(baseTransport, applier) {
-  return new TransportAppliedImpl(baseTransport, applier);
+function TapApplied(baseTap, applier) {
+  return new TapAppliedImpl(baseTap, applier);
 }
-class TransportAppliedImpl {
-  constructor(baseTransport, applier) {
-    this.baseTransport = baseTransport;
+class TapAppliedImpl {
+  constructor(baseTap, applier) {
+    this.baseTap = baseTap;
     this.applier = applier;
   }
   use(args) {
-    return this.applier(this.baseTransport.use(args));
+    return this.applier(this.baseTap.use(args));
   }
 }
 
-function TransportArgs(baseTransport, args, startFromArgIndex = 0) {
-  return new TransportArgsImpl(baseTransport, args, startFromArgIndex);
+function TapArgs(baseTap, args, startFromArgIndex = 0) {
+  return new TapArgsImpl(baseTap, args, startFromArgIndex);
 }
-class TransportArgsImpl {
-  constructor(baseTransport, args, startFromArgIndex = 0) {
-    this.baseTransport = baseTransport;
+class TapArgsImpl {
+  constructor(baseTap, args, startFromArgIndex = 0) {
+    this.baseTap = baseTap;
     this.args = args;
     this.startFromArgIndex = startFromArgIndex;
   }
   use(runArgs) {
-    return this.baseTransport.use(
+    return this.baseTap.use(
       mergeAtIndex(runArgs, this.args, this.startFromArgIndex)
     );
   }
@@ -873,16 +866,16 @@ function mergeAtIndex(arr1, arr2, index) {
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
-function TransportDestroyable(baseTransport) {
-  return new TransportDestroyableImpl(baseTransport);
+function TapDestroyable(baseTap) {
+  return new TapDestroyableImpl(baseTap);
 }
-class TransportDestroyableImpl {
-  constructor(baseTransport) {
-    this.baseTransport = baseTransport;
+class TapDestroyableImpl {
+  constructor(baseTap) {
+    this.baseTap = baseTap;
     __publicField(this, "destructors", []);
   }
   use(args) {
-    const inst = this.baseTransport.use(args);
+    const inst = this.baseTap.use(args);
     if (isDestroyable(inst)) {
       this.destructors.push(inst);
     }
@@ -894,5 +887,5 @@ class TransportDestroyableImpl {
   }
 }
 
-export { ActualMessage, All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, Message, MessageImpl, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, Stream, StreamImpl, Transport, TransportApplied, TransportAppliedImpl, TransportArgs, TransportArgsImpl, TransportDestroyable, TransportDestroyableImpl, TransportImpl, TransportMessage, TransportMessageImpl, TransportOptional, TransportOptionalImpl, TransportParent, TransportParentImpl, TransportPool, Void, VoidImpl, ensureFunction, ensureMessage, ensureTransport, isDestroyable, isDestroyed, isFilled, isMessage, isTransport };
+export { ActualMessage, All, AllImpl, Any, AnyImpl, Applied, AppliedDestructured, AppliedImpl, Catch, CatchImpl, Chain, ChainImpl, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, ExecutorAppliedImpl, Filtered, FilteredImpl, FromEvent, FromEventImpl, FromPromise, FromPromiseImpl, Late, LateImpl, LateShared, LateSharedImpl, Local, LocalImpl, Map, MapImpl, Message, MessageImpl, New, Of, OfImpl, Once, OnceImpl, Primitive, PrimitiveImpl, RPC, RPCChain, RPCImpl, RPCOf, Sequence, SequenceImpl, Shared, SharedImpl, SharedSource, SharedSourceImpl, Stream, StreamImpl, Tap, TapApplied, TapAppliedImpl, TapArgs, TapArgsImpl, TapDestroyable, TapDestroyableImpl, TapImpl, TapMessage, TapMessageImpl, TapOptional, TapOptionalImpl, TapParent, TapParentImpl, TapPool, Void, VoidImpl, ensureFunction, ensureMessage, ensureTap, isDestroyable, isDestroyed, isFilled, isMessage, isTap };
 //# sourceMappingURL=silentium.mjs.map
