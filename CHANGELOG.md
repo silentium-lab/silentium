@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.140](https://github.com/silentium-lab/silentium/compare/v0.0.139...v0.0.140) (2025-11-17)
+
+
+### Bug Fixes
+
+* **main:** tap instead transport ([d2069de](https://github.com/silentium-lab/silentium/commit/d2069def637fa90538496e29aee0f458d73f7bbb))
+
 ### [0.0.139](https://github.com/silentium-lab/silentium/compare/v0.0.138...v0.0.139) (2025-11-16)
 
 
