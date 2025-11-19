@@ -1,9 +1,9 @@
-import { MaybeMessage, MessageType } from "types/MessageType";
-import { TapParent } from "base/Tap";
-import { ensureMessage } from "helpers/ensures";
-import { TapType } from "types/TapType";
-import { DestroyableType } from "types/DestroyableType";
 import { ActualMessage } from "base/ActualMessage";
+import { MessageActor } from "base/MessageActor";
+import { ensureMessage } from "helpers/ensures";
+import { ConstructorType } from "types/ConstructorType";
+import { DestroyableType } from "types/DestroyableType";
+import { MaybeMessage, MessageType } from "types/MessageType";
 
 /**
  * Create local copy of source what can be destroyed
@@ -14,21 +14,21 @@ export function Local<T>($base: MaybeMessage<T>) {
 
 export class LocalImpl<T> implements MessageType<T>, DestroyableType {
   private destroyed = false;
+  private actor: MessageType<T>;
 
-  public constructor(private $base: MessageType<T>) {
+  public constructor($base: MessageType<T>) {
     ensureMessage($base, "Local: $base");
+    this.actor = MessageActor($base, (a, v) => {
+      if (!this.destroyed) {
+        a.use(v);
+      }
+    });
   }
 
-  public pipe(tap: TapType<T>): this {
-    this.$base.pipe(this.tap.child(tap));
+  public then(resolve: ConstructorType<[T]>): this {
+    this.actor.then(resolve);
     return this;
   }
-
-  private tap = TapParent(function (v: T, child: LocalImpl<T>) {
-    if (!child.destroyed) {
-      this.use(v);
-    }
-  }, this);
 
   public destroy(): this {
     this.destroyed = true;
