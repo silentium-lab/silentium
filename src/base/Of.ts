@@ -11,8 +11,8 @@ export function Of<T>(value: T) {
 export class OfImpl<T> implements MessageType<T> {
   public constructor(private value: T) {}
 
-  public then(tap: ConstructorType<[T]>): this {
-    tap(this.value);
+  public then(r: ConstructorType<[T]>): this {
+    r(this.value);
     return this;
   }
 }
