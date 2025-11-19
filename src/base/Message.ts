@@ -1,11 +1,10 @@
 import { ensureFunction } from "helpers/ensures";
+import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
-import { TapType } from "types/TapType";
 
 type MessageExecutorType<T> = (
-  this: TapType<T>,
-  tap: TapType<T>,
+  resolve: ConstructorType<[T]>,
 ) => void | (() => void);
 
 /**
@@ -23,8 +22,8 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     ensureFunction(executor, "Message: executor");
   }
 
-  public pipe(tap: TapType<T>) {
-    this.mbDestructor = this.executor.call(tap, tap);
+  public then(resolve: ConstructorType<[T]>) {
+    this.mbDestructor = this.executor(resolve);
     return this;
   }
 

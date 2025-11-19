@@ -1,11 +1,11 @@
-import { TapType } from "types/TapType";
+import { ConstructorType } from "types/ConstructorType";
 
 /**
  * The message type from which
  * values should be received
  */
 export interface MessageType<T = unknown> {
-  pipe(t: TapType<T>): this;
+  then(resolve: ConstructorType<[T]>): this;
 }
 
 /**
