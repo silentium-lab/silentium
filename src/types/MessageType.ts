@@ -5,7 +5,7 @@ import { ConstructorType } from "types/ConstructorType";
  * values should be received
  */
 export interface MessageType<T = unknown> {
-  then(resolve: ConstructorType<[T]>): this;
+  then(r: ConstructorType<[T]>): this;
 }
 
 /**

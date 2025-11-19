@@ -14,19 +14,19 @@ export const isFilled = <T>(
 /**
  * Checks that the object is an message
  */
-export function isMessage<T>(o: T): o is T & MessageType {
+export function isMessage(o: unknown): o is MessageType {
   return (
     o !== null &&
     typeof o === "object" &&
-    "pipe" in o &&
-    typeof (o as any).pipe === "function"
+    "then" in o &&
+    typeof (o as any).then === "function"
   );
 }
 
 /**
  * Checks that the object is destroyable
  */
-export function isDestroyable<T>(o: T): o is T & DestroyableType {
+export function isDestroyable(o: unknown): o is DestroyableType {
   return (
     o !== null &&
     typeof o === "object" &&
@@ -38,7 +38,7 @@ export function isDestroyable<T>(o: T): o is T & DestroyableType {
 /**
  * Checks that the object can indicate whether it has been destroyed or not
  */
-export function isDestroyed<T>(o: T): o is T & DestroyedType {
+export function isDestroyed(o: unknown): o is DestroyedType {
   return (
     o !== null &&
     typeof o === "object" &&
@@ -50,7 +50,7 @@ export function isDestroyed<T>(o: T): o is T & DestroyedType {
 /**
  * Checks that the object is a tap
  */
-export function isTap<T>(o: T): o is T & TapType {
+export function isTap(o: unknown): o is TapType {
   return (
     o !== null &&
     typeof o === "object" &&
