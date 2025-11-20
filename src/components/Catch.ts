@@ -1,6 +1,6 @@
-import { ensureMessage, ensureTap } from "helpers/ensures";
+import { Message } from "base/Message";
+import { ConstructorType } from "types/ConstructorType";
 import { MessageType } from "types/MessageType";
-import { TapType } from "types/TapType";
 
 /**
  * An message representing a base message where
@@ -11,38 +11,21 @@ import { TapType } from "types/TapType";
  */
 export function Catch<T>(
   $base: MessageType<T>,
-  errorMessage: TapType,
-  errorOriginal?: TapType,
+  errorMessage: ConstructorType<[unknown]>,
+  errorOriginal?: ConstructorType<[unknown]>,
 ) {
-  return new CatchImpl<T>($base, errorMessage, errorOriginal);
-}
-
-export class CatchImpl<T> implements MessageType<T> {
-  public constructor(
-    private $base: MessageType<T>,
-    private errorMessage: TapType,
-    private errorOriginal?: TapType,
-  ) {
-    ensureMessage($base, "Catch: base");
-    ensureTap(errorMessage, "Catch: errorMessage");
-    if (errorOriginal !== undefined) {
-      ensureTap(errorOriginal, "Catch: errorOriginal");
-    }
-  }
-
-  public pipe(tap: TapType<T>) {
+  return Message<T>((r) => {
     try {
-      this.$base.pipe(tap);
+      $base.then(r);
     } catch (e: unknown) {
       if (e instanceof Error) {
-        this.errorMessage.use(e.message);
+        errorMessage(e.message);
       } else {
-        this.errorMessage.use(String(e));
+        errorMessage(String(e));
       }
-      if (this.errorOriginal) {
-        this.errorOriginal.use(e);
+      if (errorOriginal) {
+        errorOriginal(e);
       }
     }
-    return this;
-  }
+  });
 }

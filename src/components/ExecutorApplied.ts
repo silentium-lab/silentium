@@ -1,9 +1,7 @@
-import { Tap, TapExecutor } from "base/Tap";
-import { ensureMessage } from "helpers/ensures";
+import { Message } from "base/Message";
 import { MessageType } from "types/MessageType";
-import { TapType } from "types/TapType";
 
-type ExecutorApplier<T> = (executor: TapExecutor<T>) => TapExecutor<T>;
+type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 
 /**
  * Applies a value transfer function to the tap
@@ -14,19 +12,7 @@ export function ExecutorApplied<T>(
   $base: MessageType<T>,
   applier: ExecutorApplier<T>,
 ) {
-  return new ExecutorAppliedImpl<T>($base, applier);
-}
-
-export class ExecutorAppliedImpl<T> implements MessageType<T> {
-  public constructor(
-    private $base: MessageType<T>,
-    private applier: ExecutorApplier<T>,
-  ) {
-    ensureMessage($base, "ExecutorApplied: base");
-  }
-
-  public pipe(tap: TapType<T>) {
-    this.$base.pipe(Tap(this.applier(tap.use.bind(tap))));
-    return this;
-  }
+  return Message<T>((r) => {
+    $base.then(applier(r));
+  });
 }

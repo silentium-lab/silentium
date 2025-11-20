@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { Catch } from "components/Catch";
 import { Message } from "base/Message";
-import { Tap } from "base/Tap";
 import { Void } from "base/Void";
 
 describe("Catch.test", () => {
@@ -11,10 +10,10 @@ describe("Catch.test", () => {
       Message(() => {
         throw new Error("Occured!");
       }),
-      Tap(errorUserExecutor),
+      errorUserExecutor,
     );
 
-    $exception.pipe(Void());
+    $exception.then(Void());
 
     expect(errorUserExecutor).toHaveBeenLastCalledWith("Occured!");
   });

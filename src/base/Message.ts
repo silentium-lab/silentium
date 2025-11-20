@@ -5,7 +5,7 @@ import { MessageType } from "types/MessageType";
 
 type MessageExecutorType<T> = (
   resolve: ConstructorType<[T]>,
-) => void | (() => void);
+) => unknown | (() => void);
 
 /**
  * A message created from an executor function.

@@ -1,6 +1,5 @@
-import { describe, expect, test, vi } from "vitest";
 import { New } from "base/New";
-import { Tap } from "base/Tap";
+import { describe, expect, test, vi } from "vitest";
 
 function createTestObject() {
   return { value: Math.random() };
@@ -11,9 +10,8 @@ describe("New.test.ts", () => {
     test("returns an msg that creates new instances", () => {
       const msg = New(createTestObject);
       const tapExecutor = vi.fn();
-      const tap = Tap(tapExecutor);
 
-      msg.pipe(tap);
+      msg.then(tapExecutor);
 
       expect(tapExecutor).toHaveBeenCalledTimes(1);
       const instance = tapExecutor.mock.calls[0][0];
@@ -25,11 +23,9 @@ describe("New.test.ts", () => {
       const msg = New(createTestObject);
       const tapExecutor1 = vi.fn();
       const tapExecutor2 = vi.fn();
-      const tap1 = Tap(tapExecutor1);
-      const tap2 = Tap(tapExecutor2);
 
-      msg.pipe(tap1);
-      msg.pipe(tap2);
+      msg.then(tapExecutor1);
+      msg.then(tapExecutor2);
 
       expect(tapExecutor1).toHaveBeenCalledTimes(1);
       expect(tapExecutor2).toHaveBeenCalledTimes(1);

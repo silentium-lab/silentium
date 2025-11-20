@@ -8,17 +8,9 @@ describe("Void.test.ts", () => {
       const e = vi.fn();
       const m = Message(e);
 
-      m.pipe(Void());
+      m.then(Void());
 
       expect(e).toHaveBeenCalled();
-    });
-
-    test("use method returns the tap for chaining", () => {
-      const voidTap = Void();
-
-      const result = voidTap.use();
-
-      expect(result).toBe(voidTap);
     });
   });
 });

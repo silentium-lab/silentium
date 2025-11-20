@@ -1,6 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
 import { Of } from "base/Of";
-import { Tap } from "base/Tap";
 
 describe("Of.test.ts", () => {
   test("Of works with different types", () => {
@@ -8,7 +7,7 @@ describe("Of.test.ts", () => {
     const msg = Of(numberValue);
 
     const mockTap = vi.fn();
-    msg.pipe(Tap(mockTap));
+    msg.then(mockTap);
 
     expect(mockTap).toHaveBeenCalledWith(numberValue);
   });
@@ -18,7 +17,7 @@ describe("Of.test.ts", () => {
     const msg = Of(objectValue);
 
     const mockTap = vi.fn();
-    msg.pipe(Tap(mockTap));
+    msg.then(mockTap);
 
     expect(mockTap).toHaveBeenCalledWith(objectValue);
   });
