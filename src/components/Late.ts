@@ -1,3 +1,4 @@
+import { Rejections } from "base/Rejections";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { SourceType } from "types/SourceType";
@@ -13,10 +14,15 @@ export function Late<T>(v?: T) {
 }
 
 export class LateImpl<T> implements SourceType<T> {
+  private rejections = new Rejections();
   private lateR: ConstructorType<[T]> | null = null;
-  private notify = (v?: T) => {
-    if (isFilled(v) && this.lateR) {
-      this.lateR(v);
+  private notify = () => {
+    if (isFilled(this.v) && this.lateR) {
+      try {
+        this.lateR(this.v);
+      } catch (e: any) {
+        this.rejections.reject(e);
+      }
     }
   };
 
@@ -29,12 +35,18 @@ export class LateImpl<T> implements SourceType<T> {
       );
     }
     this.lateR = r;
-    this.notify(this.v);
+    this.notify();
     return this;
   }
 
   public use(value: T): this {
-    this.notify(value);
+    this.v = value;
+    this.notify();
+    return this;
+  }
+
+  public catch(rejected: ConstructorType<[unknown]>) {
+    this.rejections.catch(rejected);
     return this;
   }
 }

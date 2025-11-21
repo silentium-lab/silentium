@@ -1,3 +1,4 @@
+import { Rejections } from "base/Rejections";
 import { ensureFunction } from "helpers/ensures";
 import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
@@ -5,6 +6,7 @@ import { MessageType } from "types/MessageType";
 
 type MessageExecutorType<T> = (
   resolve: ConstructorType<[T]>,
+  reject: ConstructorType<[unknown]>,
 ) => unknown | (() => void);
 
 /**
@@ -12,18 +14,31 @@ type MessageExecutorType<T> = (
  * The executor function can return a message destruction function.
  */
 export function Message<T>(executor: MessageExecutorType<T>) {
-  return new MessageImpl<T>(executor);
+  return new MessageRx<T>(executor);
 }
 
-export class MessageImpl<T> implements MessageType<T>, DestroyableType {
+/**
+ * Reactive message implementation
+ */
+export class MessageRx<T> implements MessageType<T>, DestroyableType {
   private mbDestructor: unknown;
+  private rejections = new Rejections();
 
   public constructor(private executor: MessageExecutorType<T>) {
     ensureFunction(executor, "Message: executor");
   }
 
   public then(resolve: ConstructorType<[T]>) {
-    this.mbDestructor = this.executor(resolve);
+    try {
+      this.mbDestructor = this.executor(resolve, this.rejections.reject);
+    } catch (e: any) {
+      this.rejections.reject(e);
+    }
+    return this;
+  }
+
+  public catch(rejected: ConstructorType<[unknown]>) {
+    this.rejections.catch(rejected);
     return this;
   }
 
@@ -31,6 +46,7 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     if (typeof this.mbDestructor === "function") {
       this.mbDestructor?.();
     }
+    this.rejections.destroy();
     return this;
   }
 }

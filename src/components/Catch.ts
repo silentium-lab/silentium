@@ -1,31 +1,18 @@
-import { Message } from "base/Message";
-import { ConstructorType } from "types/ConstructorType";
+import { Rejections } from "base/Rejections";
+import { Late } from "components/Late";
 import { MessageType } from "types/MessageType";
 
 /**
- * An message representing a base message where
- * its operation is wrapped in try-catch
- * and expects exceptions. If an exception
- * bubbles up, it's passed to the taps
- * as errorMessage and errorOriginal
+ * Message with error catched
+ * inside another message
  */
-export function Catch<T>(
-  $base: MessageType<T>,
-  errorMessage: ConstructorType<[unknown]>,
-  errorOriginal?: ConstructorType<[unknown]>,
-) {
-  return Message<T>((r) => {
-    try {
-      $base.then(r);
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        errorMessage(e.message);
-      } else {
-        errorMessage(String(e));
-      }
-      if (errorOriginal) {
-        errorOriginal(e);
-      }
-    }
+export function Catch<T>($base: MessageType) {
+  const rejections = new Rejections();
+  $base.catch(rejections.reject);
+  const $error = Late<T>();
+  rejections.catch((e) => {
+    $error.use(e as T);
   });
+
+  return $error;
 }

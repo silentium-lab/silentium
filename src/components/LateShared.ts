@@ -21,7 +21,7 @@ export class LateSharedImpl<T> implements SourceType<T> {
     this.primitive = Primitive(this, value);
   }
 
-  public pipe(tap: TapType<T>) {
+  public then(tap: TapType<T>) {
     this.$msg.pipe(tap);
     return this;
   }
