@@ -2,7 +2,6 @@ import { describe, expect, test, vi } from "vitest";
 import { Applied } from "components/Applied";
 import { LateShared } from "components/LateShared";
 import { Primitive } from "components/Primitive";
-import { Tap } from "base/Tap";
 
 describe("PrimitiveSource.test", () => {
   test("primitive reference change", () => {
@@ -12,7 +11,7 @@ describe("PrimitiveSource.test", () => {
 
     const r = Applied(l2, (a) => ["ev", p, a].join("_"));
     const g = vi.fn();
-    r.pipe(Tap(g));
+    r.then(g);
 
     expect(g).toHaveBeenLastCalledWith("ev_1_2");
 

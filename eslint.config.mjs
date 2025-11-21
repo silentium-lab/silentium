@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import unusedImports from "eslint-plugin-unused-imports";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,12 +44,16 @@ export default [
   {
     plugins: {
       "@typescript-eslint": typescriptEslint,
+      "unused-imports": unusedImports,
     },
     languageOptions: {
       parser: tsParser,
       globals: {
         window: "readonly",
       },
+    },
+    rules: {
+      "unused-imports/no-unused-imports": "error",
     },
   },
   eslintPluginPrettierRecommended,

@@ -1,14 +1,13 @@
 import { Of } from "base/Of";
-import { Tap } from "base/Tap";
-import { RPC } from "components/RPC";
-import { RPCChain } from "components/RPCChain";
-import { RPCOf } from "components/RPCOf";
+import { Context } from "components/Context";
+import { ContextChain } from "components/ContextChain";
+import { ContextOf } from "components/ContextOf";
 import { describe, expect, test, vi } from "vitest";
 
-describe("RPCChain.test", () => {
+describe("ContextChain.test", () => {
   test("forwards RPC result to base message", () => {
-    RPCOf("config").pipe(
-      RPCChain(
+    ContextOf("config").then(
+      ContextChain(
         Of({
           name: "TestApp",
         }),
@@ -16,13 +15,10 @@ describe("RPCChain.test", () => {
     );
 
     const g = vi.fn();
-    RPC(
-      Of({
-        tap: "config",
-        method: "get",
-        result: Tap(g),
-      }),
-    ).result();
+    Context({
+      transport: "config",
+      method: "get",
+    }).then(g);
 
     expect(g).toHaveBeenCalledWith({
       name: "TestApp",
@@ -30,18 +26,17 @@ describe("RPCChain.test", () => {
   });
 
   test("forwards RPC result to base value", () => {
-    RPCOf("config").pipe(
-      RPCChain({
+    ContextOf("config").then(
+      ContextChain({
         name: "TestApp",
       }),
     );
 
     const g = vi.fn();
-    RPC({
-      tap: "config",
+    Context({
+      transport: "config",
       method: "get",
-      result: Tap(g),
-    }).result();
+    }).then(g);
 
     expect(g).toHaveBeenCalledWith({
       name: "TestApp",

@@ -1,6 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
 import { FromEvent } from "components/FromEvent";
-import { Tap } from "base/Tap";
 import { Of } from "base/Of";
 
 describe("FromEvent.test", () => {
@@ -17,7 +16,7 @@ describe("FromEvent.test", () => {
     const i = FromEvent(Of(emitter), Of("click"), Of("on"), Of("off"));
 
     const o = vi.fn();
-    i.pipe(Tap(o));
+    i.then(o);
 
     expect(o).toBeCalledWith("click123");
 
@@ -38,7 +37,7 @@ describe("FromEvent.test", () => {
     const i = FromEvent(emitter, "click", "on", "off");
 
     const o = vi.fn();
-    i.pipe(Tap(o));
+    i.then(o);
 
     expect(o).toBeCalledWith("click123");
 

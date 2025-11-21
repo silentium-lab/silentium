@@ -1,6 +1,5 @@
 import { DestroyableType, DestroyedType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
-import { TapType } from "types/TapType";
 
 /**
  * Checks that the value is neither undefined nor null
@@ -44,17 +43,5 @@ export function isDestroyed(o: unknown): o is DestroyedType {
     typeof o === "object" &&
     "destroyed" in o &&
     typeof (o as any).destroyed === "function"
-  );
-}
-
-/**
- * Checks that the object is a tap
- */
-export function isTap(o: unknown): o is TapType {
-  return (
-    o !== null &&
-    typeof o === "object" &&
-    "use" in o &&
-    typeof (o as any).use === "function"
   );
 }

@@ -1,66 +1,62 @@
 import { MessageType } from "types/MessageType";
-import { Late } from "components/Late";
-import { Once } from "components/Once";
-import { SourceType } from "types/SourceType";
-import { TapPool } from "helpers/TapPool";
-import { TapType } from "types/TapType";
+import { MessageSourceType, SourceType } from "types/SourceType";
+import { ConstructorType } from "types/ConstructorType";
 import { isFilled } from "helpers/guards";
-import { Tap } from "base/Tap";
+import { Primitive } from "components/Primitive";
 
 /**
  * An information object that helps multiple owners access
  * a single another information object
  */
-export function Shared<T>($base: MessageType<T>, stateless = false) {
-  return new SharedImpl<T>($base, stateless);
+export function Shared<T>($base: MessageType<T>, source?: SourceType<T>) {
+  return new SharedImpl<T>($base, source);
 }
 
-export class SharedImpl<T> implements SourceType<T> {
-  private tapPool = new TapPool<T>();
-  private lastValue: T | undefined;
-  private calls = Late();
+export class SharedImpl<T> implements MessageSourceType<T> {
+  private resolver = (v: T) => {
+    this.lastV = v;
+    this.resolvers.forEach((r) => {
+      r(v);
+    });
+  };
+  private lastV: T | undefined;
+  private resolvers = new Set<ConstructorType<[T]>>();
 
   public constructor(
     private $base: MessageType<T>,
-    private stateless = false,
-  ) {
-    Once(this.calls).pipe(
-      Tap(() => {
-        this.$base.pipe(this.firstCallTap);
-      }),
-    );
-  }
+    private source?: SourceType<T>,
+  ) {}
 
-  public pipe(tap: TapType<T>) {
-    this.calls.use(1);
-    if (!this.stateless && isFilled(this.lastValue) && !this.tapPool.has(tap)) {
-      tap.use(this.lastValue);
+  public then(resolved: ConstructorType<[T]>) {
+    this.resolvers.add(resolved);
+    if (this.resolvers.size === 1) {
+      this.$base.then(this.resolver);
+    } else if (isFilled(this.lastV)) {
+      resolved(this.lastV);
     }
-    this.tapPool.add(tap);
     return this;
   }
 
   public use(value: T) {
-    this.calls.use(1);
-    this.lastValue = value;
-    this.tapPool.tap().use(value);
+    if (this.source) {
+      this.source.use(value);
+    } else {
+      this.resolver(value);
+    }
     return this;
   }
 
-  private firstCallTap = Tap<T>((v: T) => {
-    this.lastValue = v;
-    this.tapPool.tap().use(v);
-  });
-
-  public touched() {
-    this.calls.use(1);
-  }
-
-  public pool() {
-    return this.tapPool;
+  public catch(rejected: ConstructorType<[unknown]>) {
+    this.$base.catch(rejected);
+    return this;
   }
 
   public destroy() {
-    return this.tapPool.destroy();
+    this.resolvers.clear();
+    return this;
+  }
+
+  public value() {
+    return Primitive(this);
   }
 }

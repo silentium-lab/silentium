@@ -1,8 +1,14 @@
 import { MessageType } from "types/MessageType";
-import { TapType } from "types/TapType";
 
 /**
  * A type that serves as both
  * an message and a tap
  */
-export type SourceType<T = unknown> = MessageType<T> & TapType<T>;
+export interface SourceType<T = unknown> {
+  use(value: T): this;
+}
+
+/**
+ * Message and source at same time
+ */
+export type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;

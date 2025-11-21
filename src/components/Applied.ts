@@ -12,7 +12,7 @@ export function Applied<const T, R>(
   applier: ConstructorType<[T], R>,
 ) {
   const $base = ActualMessage(base);
-  return Message(function AppliedImpl(r) {
+  return Message<R>(function AppliedImpl(r) {
     $base.then((v) => {
       r(applier(v));
     });

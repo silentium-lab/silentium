@@ -1,7 +1,7 @@
 import { Rejections } from "base/Rejections";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
-import { SourceType } from "types/SourceType";
+import { MessageSourceType } from "types/SourceType";
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -13,7 +13,7 @@ export function Late<T>(v?: T) {
   return new LateImpl<T>(v);
 }
 
-export class LateImpl<T> implements SourceType<T> {
+export class LateImpl<T> implements MessageSourceType<T> {
   private rejections = new Rejections();
   private lateR: ConstructorType<[T]> | null = null;
   private notify = () => {

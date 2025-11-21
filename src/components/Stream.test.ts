@@ -5,7 +5,7 @@ import { expect, test } from "vitest";
 
 test("Stream.test", () => {
   const d = Diagram();
-  Applied(Stream([1, 2, 3, 4, 5]), String).pipe(d.tap);
+  Applied(Stream([1, 2, 3, 4, 5]), String).then(d.tap);
 
   expect(d.toString()).toBe("1|2|3|4|5");
 });
