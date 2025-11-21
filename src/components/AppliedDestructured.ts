@@ -10,7 +10,7 @@ export function AppliedDestructured<const T extends any[], R>(
   $base: MaybeMessage<T>,
   applier: ConstructorType<T[number][], R>,
 ) {
-  return Applied($base, (args) => {
+  return Applied($base, function AppliedDestructuredImpl(args) {
     return applier(...args);
   });
 }

@@ -12,7 +12,7 @@ export function ExecutorApplied<T>(
   $base: MessageType<T>,
   applier: ExecutorApplier<T>,
 ) {
-  return Message<T>((r) => {
+  return Message<T>(function ExecutorAppliedImpl(r) {
     $base.then(applier(r));
   });
 }

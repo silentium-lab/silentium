@@ -13,7 +13,7 @@ export function Filtered<T>(
   defaultValue?: T,
 ): MessageType<T> {
   const $base = ActualMessage(base);
-  return Message<T>((r) => {
+  return Message<T>(function FilteredImpl(r) {
     $base.then((v) => {
       if (predicate(v)) {
         r(v);
