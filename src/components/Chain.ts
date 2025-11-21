@@ -17,7 +17,7 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
  */
 export function Chain<T extends readonly MessageType[]>(...messages: T) {
   const $messages = messages.map(ActualMessage);
-  return Message<MessageTypeValue<Last<T>>>(function CatchImpl(r) {
+  return Message<MessageTypeValue<Last<T>>>(function ChainImpl(r) {
     let $latest: MessageTypeValue<Last<T>> | undefined;
     const handleMessage = (index: number) => {
       const message = $messages[index] as Last<T>;

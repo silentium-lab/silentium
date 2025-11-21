@@ -23,7 +23,7 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  */
 export function All<const T extends MaybeMessage[]>(...messages: T) {
   const $messages = messages.map(ActualMessage);
-  return Message<ExtractTypesFromArrayS<T>>((r) => {
+  return Message<ExtractTypesFromArrayS<T>>(function AllImpl(r) {
     const known = new Set<string>(Object.keys(messages));
     const filled = new Set<string>();
     const result: unknown[] = [];

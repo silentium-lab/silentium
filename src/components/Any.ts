@@ -8,7 +8,7 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function Any<const T>(...messages: MaybeMessage<T>[]) {
   const $messages = messages.map(ActualMessage);
-  return Message((r) => {
+  return Message(function AnyImpl(r) {
     $messages.forEach((message) => {
       message.then(r);
     });

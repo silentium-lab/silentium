@@ -12,8 +12,7 @@ describe("Catch.test", () => {
 
     $msg.then(Void());
 
-    const exc = await $exception;
-
-    expect(exc.message).toBe("Occured!");
+    const error = await $exception;
+    expect(error.message).toBe("Occured!");
   });
 });
