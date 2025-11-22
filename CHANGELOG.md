@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.141](https://github.com/silentium-lab/silentium/compare/v0.0.140...v0.0.141) (2025-11-22)
+
+
+### Features
+
+* **main:** new component MessageActor instead of TapParent ([db8f31b](https://github.com/silentium-lab/silentium/commit/db8f31ba3d9133b7681994d8346f2e69e3915763))
+
+
+### Bug Fixes
+
+* **main:** done thenable message ([e9c6d81](https://github.com/silentium-lab/silentium/commit/e9c6d81d635df3ccb66c0bbc1bf1afad5cb32fa9))
+* **main:** guards and types fixed ([53a7a68](https://github.com/silentium-lab/silentium/commit/53a7a68785fd66b166c38f14b1da401d02529864))
+* **main:** inner functions naming ([60810cd](https://github.com/silentium-lab/silentium/commit/60810cd4da03edf739aa9a2ee96b15566d47e21e))
+* **main:** late component refactored ([ad70448](https://github.com/silentium-lab/silentium/commit/ad704481bf1e2959b8121d6cdb89752add158291))
+* **main:** local comopnent refactored ([2a77578](https://github.com/silentium-lab/silentium/commit/2a775784df1c93f3886d35007bcd582c6edb012d))
+* **main:** naming ([3f3a9af](https://github.com/silentium-lab/silentium/commit/3f3a9afa7471b6d93af4595b2b660a46025193f4))
+* **main:** of component refactored ([c26c987](https://github.com/silentium-lab/silentium/commit/c26c98751f3d3531d20697813ef09ad0e068530f))
+* **main:** refactoring to promise like style ([676bbc3](https://github.com/silentium-lab/silentium/commit/676bbc3e47cc8cfbf9b2da620864421772383bb0))
+* **main:** thenable ([aa34fe4](https://github.com/silentium-lab/silentium/commit/aa34fe44077c571aa2cca2c23a6b5117519a1607))
+* **main:** thenable refactoring ([8eb6c30](https://github.com/silentium-lab/silentium/commit/8eb6c30a04dc72a62cd292dede43ce0433148891))
+* **main:** working on catch ([4a9bcc2](https://github.com/silentium-lab/silentium/commit/4a9bcc2c4db20a4f96e74d8392e201e12399c3f9))
+
 ### [0.0.140](https://github.com/silentium-lab/silentium/compare/v0.0.139...v0.0.140) (2025-11-17)
 
 
