@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.143](https://github.com/silentium-lab/silentium/compare/v0.0.142...v0.0.143) (2025-11-22)
+
+
+### Bug Fixes
+
+* **main:** npm run cz ([3a73434](https://github.com/silentium-lab/silentium/commit/3a73434bfc97803b7f47fc0bcc42d4a523687a5f))
+
 ### [0.0.142](https://github.com/silentium-lab/silentium/compare/v0.0.141...v0.0.142) (2025-11-22)
 
 
