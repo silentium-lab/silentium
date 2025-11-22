@@ -5,12 +5,12 @@ import { ContextType } from "types/ContextType";
 
 /**
  * Message for the arrival of a specific RPC message
- * for specific tap
+ * for specific transport
  */
-export function ContextOf(tap: string) {
-  const $tap = LateShared<ContextType>();
-  Context.transport[tap] = $tap.use.bind($tap);
-  return Message<ContextType>((tap) => {
-    $tap.then(tap);
+export function ContextOf(transport: string) {
+  const $msg = LateShared<ContextType>();
+  Context.transport.set(transport, $msg.use.bind($msg));
+  return Message<ContextType>((t) => {
+    $msg.then(t);
   });
 }

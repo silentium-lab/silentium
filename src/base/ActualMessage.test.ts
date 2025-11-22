@@ -7,24 +7,24 @@ describe("ActualMessage.test.ts", () => {
     const rawValue = 42;
     const msg = ActualMessage(rawValue);
 
-    const mockTap = vi.fn();
-    msg.then(mockTap);
+    const m = vi.fn();
+    msg.then(m);
 
-    expect(mockTap).toHaveBeenCalledWith(rawValue);
+    expect(m).toHaveBeenCalledWith(rawValue);
   });
 
   test("ActualMessage returns message objects unchanged", () => {
     const messageValue = "test";
-    const existingMessage = Message((tap) => tap(messageValue));
+    const existingMessage = Message((r) => r(messageValue));
 
     const msg = ActualMessage(existingMessage);
 
     // Ensure it's the same instance
     expect(msg).toBe(existingMessage);
 
-    const mockTap = vi.fn();
-    msg.then(mockTap);
+    const m = vi.fn();
+    msg.then(m);
 
-    expect(mockTap).toHaveBeenCalledWith(messageValue);
+    expect(m).toHaveBeenCalledWith(messageValue);
   });
 });

@@ -19,7 +19,7 @@ describe("ExecutorApplied.test", () => {
       };
     });
 
-    Applied(infoLimited, String).then(d.tap);
+    Applied(infoLimited, String).then(d.resolver);
 
     l.use(2);
     l.use(3);

@@ -4,8 +4,8 @@ import { MessageType } from "types/MessageType";
 type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 
 /**
- * Applies a value transfer function to the tap
- * and returns the same value transfer function for the tap
+ * Applies a value transfer function to the resolver
+ * and returns the same value transfer function for the resolver
  * Useful for applying functions like debounced or throttle
  */
 export function ExecutorApplied<T>(

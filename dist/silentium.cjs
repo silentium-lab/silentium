@@ -1,14 +1,28 @@
 'use strict';
 
-function Of(value) {
-  return new OfImpl(value);
-}
-class OfImpl {
-  constructor(value) {
-    this.value = value;
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+class Rejections {
+  constructor() {
+    __publicField$5(this, "catchers", []);
+    __publicField$5(this, "lastRejectReason", null);
+    __publicField$5(this, "reject", (reason) => {
+      this.lastRejectReason = reason;
+      this.catchers.forEach((catcher) => {
+        catcher(reason);
+      });
+    });
   }
-  pipe(tap) {
-    tap.use(this.value);
+  catch(rejected) {
+    if (this.lastRejectReason !== null) {
+      rejected(this.lastRejectReason);
+    }
+    this.catchers.push(rejected);
+    return this;
+  }
+  destroy() {
+    this.catchers.length = 0;
     return this;
   }
 }
@@ -17,7 +31,7 @@ const isFilled = (value) => {
   return value !== void 0 && value !== null;
 };
 function isMessage(o) {
-  return o !== null && typeof o === "object" && "pipe" in o && typeof o.pipe === "function";
+  return o !== null && typeof o === "object" && "then" in o && typeof o.then === "function";
 }
 function isDestroyable(o) {
   return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
@@ -25,8 +39,56 @@ function isDestroyable(o) {
 function isDestroyed(o) {
   return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroyed === "function";
 }
-function isTap(o) {
-  return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
+
+function ensureFunction(v, label) {
+  if (typeof v !== "function") {
+    throw new Error(`${label}: is not function`);
+  }
+}
+function ensureMessage(v, label) {
+  if (!isMessage(v)) {
+    throw new Error(`${label}: is not message`);
+  }
+}
+
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
+function Message(executor) {
+  return new MessageRx(executor);
+}
+class MessageRx {
+  constructor(executor) {
+    this.executor = executor;
+    __publicField$4(this, "mbDestructor");
+    __publicField$4(this, "rejections", new Rejections());
+    ensureFunction(executor, "Message: executor");
+  }
+  then(resolve) {
+    try {
+      this.mbDestructor = this.executor(resolve, this.rejections.reject);
+    } catch (e) {
+      this.rejections.reject(e);
+    }
+    return this;
+  }
+  catch(rejected) {
+    this.rejections.catch(rejected);
+    return this;
+  }
+  destroy() {
+    if (typeof this.mbDestructor === "function") {
+      this.mbDestructor?.();
+    }
+    this.rejections.destroy();
+    return this;
+  }
+}
+
+function Of(value) {
+  return Message(function OfImpl(r) {
+    r(value);
+  });
 }
 
 function ActualMessage(message) {
@@ -48,15 +110,15 @@ class DestroyableImpl {
   }
 }
 
-var __defProp$k = Object.defineProperty;
-var __defNormalProp$k = (obj, key, value) => key in obj ? __defProp$k(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$k = (obj, key, value) => __defNormalProp$k(obj, key + "" , value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
-    __publicField$k(this, "destructors", []);
+    __publicField$3(this, "destructors", []);
   }
   add(e) {
     if (isDestroyable(e)) {
@@ -71,580 +133,216 @@ class DestroyContainerImpl {
   }
 }
 
-function ensureFunction(v, label) {
-  if (typeof v !== "function") {
-    throw new Error(`${label}: is not function`);
-  }
-}
-function ensureMessage(v, label) {
-  if (!isMessage(v)) {
-    throw new Error(`${label}: is not message`);
-  }
-}
-function ensureTap(v, label) {
-  if (!isTap(v)) {
-    throw new Error(`${label}: is not tap`);
-  }
-}
-
-function Tap(executor) {
-  return new TapImpl(executor);
-}
-class TapImpl {
-  constructor(executor) {
-    this.executor = executor;
-    ensureFunction(executor, "Tap: tap executor");
-  }
-  use(value) {
-    this.executor(value);
-    return this;
-  }
-}
-function TapMessage(executor) {
-  return new TapMessageImpl(executor);
-}
-class TapMessageImpl {
-  constructor(executor) {
-    this.executor = executor;
-    ensureFunction(executor, "TapMessage: tap executor");
-  }
-  use(value) {
-    return this.executor(value);
-  }
-}
-function TapParent(executor, ...args) {
-  return new TapParentImpl(executor, args);
-}
-class TapParentImpl {
-  constructor(executor, args = [], _child) {
-    this.executor = executor;
-    this.args = args;
-    this._child = _child;
-    ensureFunction(executor, "TapParent: executor");
-  }
-  use(value) {
-    if (this._child === void 0) {
-      throw new Error("no base tap");
-    }
-    this.executor.call(this._child, value, ...this.args);
-    return this;
-  }
-  child(tap, ...args) {
-    return new TapParentImpl(this.executor, [...this.args, ...args], tap);
-  }
-}
-
-var __defProp$j = Object.defineProperty;
-var __defNormalProp$j = (obj, key, value) => key in obj ? __defProp$j(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$j = (obj, key, value) => __defNormalProp$j(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Local($base) {
-  return new LocalImpl(ActualMessage($base));
-}
-class LocalImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField$j(this, "destroyed", false);
-    __publicField$j(this, "tap", TapParent(function(v, child) {
-      if (!child.destroyed) {
-        this.use(v);
+function Local(_base) {
+  const $base = ActualMessage(_base);
+  return Message(function LocalImpl(r) {
+    let destroyed = false;
+    $base.then((v) => {
+      if (!destroyed) {
+        r(v);
       }
-    }, this));
-    ensureMessage($base, "Local: $base");
-  }
-  pipe(tap) {
-    this.$base.pipe(this.tap.child(tap));
-    return this;
-  }
-  destroy() {
-    this.destroyed = true;
-    return this;
-  }
-}
-
-var __defProp$i = Object.defineProperty;
-var __defNormalProp$i = (obj, key, value) => key in obj ? __defProp$i(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$i = (obj, key, value) => __defNormalProp$i(obj, key + "" , value);
-function Message(executor) {
-  return new MessageImpl(executor);
-}
-class MessageImpl {
-  constructor(executor) {
-    this.executor = executor;
-    __publicField$i(this, "mbDestructor");
-    ensureFunction(executor, "Message: executor");
-  }
-  pipe(tap) {
-    this.mbDestructor = this.executor.call(tap, tap);
-    return this;
-  }
-  destroy() {
-    if (typeof this.mbDestructor === "function") {
-      this.mbDestructor?.();
-    }
-    return this;
-  }
-}
-
-function New(construct) {
-  return Message((tap) => {
-    tap.use(construct());
+    });
+    return () => {
+      destroyed = true;
+    };
   });
 }
 
-function TapOptional(base) {
-  return new TapOptionalImpl(base);
-}
-class TapOptionalImpl {
-  constructor(base) {
-    this.base = base;
-  }
-  wait(m) {
-    if (this.base !== void 0) {
-      m.pipe(this.base);
-    }
-    return this;
-  }
+function New(construct) {
+  return Message(function NewImpl(resolve) {
+    resolve(construct());
+  });
 }
 
 function Void() {
-  return new VoidImpl();
-}
-class VoidImpl {
-  use() {
-    return this;
-  }
+  return () => {
+  };
 }
 
-var __defProp$h = Object.defineProperty;
-var __defNormalProp$h = (obj, key, value) => key in obj ? __defProp$h(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$h = (obj, key, value) => __defNormalProp$h(obj, typeof key !== "symbol" ? key + "" : key, value);
 const isAllFilled = (keysFilled, keysKnown) => {
   return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
 function All(...messages) {
-  return new AllImpl(...messages);
-}
-class AllImpl {
-  constructor(...messages) {
-    __publicField$h(this, "known");
-    __publicField$h(this, "filled", /* @__PURE__ */ new Set());
-    __publicField$h(this, "$messages");
-    __publicField$h(this, "result", []);
-    __publicField$h(this, "tap", TapParent(function(v, child, key) {
-      child.filled.add(key);
-      child.result[parseInt(key)] = v;
-      if (isAllFilled(child.filled, child.known)) {
-        this.use(child.result);
-      }
-    }, this));
-    this.known = new Set(Object.keys(messages));
-    this.$messages = messages.map(ActualMessage);
-  }
-  pipe(tap) {
-    Object.entries(this.$messages).forEach(([key, message]) => {
-      ensureMessage(message, "All: item");
-      message.pipe(this.tap.child(tap, key));
-    });
-    if (this.known.size === 0) {
-      tap.use([]);
+  const $messages = messages.map(ActualMessage);
+  return Message(function AllImpl(r) {
+    const known = new Set(Object.keys(messages));
+    const filled = /* @__PURE__ */ new Set();
+    const result = [];
+    if (known.size === 0) {
+      r([]);
+      return;
     }
-    return this;
-  }
-}
-
-var __defProp$g = Object.defineProperty;
-var __defNormalProp$g = (obj, key, value) => key in obj ? __defProp$g(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$g = (obj, key, value) => __defNormalProp$g(obj, key + "" , value);
-function Any(...messages) {
-  return new AnyImpl(...messages.map(ActualMessage));
-}
-class AnyImpl {
-  constructor(...messages) {
-    __publicField$g(this, "$messages");
-    this.$messages = messages;
-  }
-  pipe(tap) {
-    this.$messages.forEach((message) => {
-      ensureMessage(message, "Any: item");
-      message.pipe(tap);
+    $messages.map((m, key) => {
+      m.then((v) => {
+        filled.add(key.toString());
+        result[key] = v;
+        if (isAllFilled(filled, known)) {
+          r(result);
+        }
+      });
     });
-    return this;
-  }
+  });
 }
 
-var __defProp$f = Object.defineProperty;
-var __defNormalProp$f = (obj, key, value) => key in obj ? __defProp$f(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$f = (obj, key, value) => __defNormalProp$f(obj, key + "" , value);
-function Applied($base, applier) {
-  return new AppliedImpl(ActualMessage($base), applier);
+function Any(...messages) {
+  const $messages = messages.map(ActualMessage);
+  return Message(function AnyImpl(r) {
+    $messages.forEach((message) => {
+      message.then(r);
+    });
+  });
 }
-class AppliedImpl {
-  constructor($base, applier) {
-    this.$base = $base;
-    this.applier = applier;
-    __publicField$f(this, "tap", TapParent(function(v, child) {
-      this.use(child.applier(v));
-    }, this));
-    ensureMessage($base, "Applied: base");
-  }
-  pipe(tap) {
-    this.$base.pipe(this.tap.child(tap));
-    return this;
-  }
+
+function Applied(base, applier) {
+  const $base = ActualMessage(base);
+  return Message(function AppliedImpl(r) {
+    $base.then((v) => {
+      r(applier(v));
+    });
+  });
 }
 
 function AppliedDestructured($base, applier) {
-  return Applied($base, (args) => {
+  return Applied($base, function AppliedDestructuredImpl(args) {
     return applier(...args);
   });
 }
 
-function Catch($base, errorMessage, errorOriginal) {
-  return new CatchImpl($base, errorMessage, errorOriginal);
-}
-class CatchImpl {
-  constructor($base, errorMessage, errorOriginal) {
-    this.$base = $base;
-    this.errorMessage = errorMessage;
-    this.errorOriginal = errorOriginal;
-    ensureMessage($base, "Catch: base");
-    ensureTap(errorMessage, "Catch: errorMessage");
-    if (errorOriginal !== void 0) {
-      ensureTap(errorOriginal, "Catch: errorOriginal");
-    }
-  }
-  pipe(tap) {
-    try {
-      this.$base.pipe(tap);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.errorMessage.use(e.message);
-      } else {
-        this.errorMessage.use(String(e));
-      }
-      if (this.errorOriginal) {
-        this.errorOriginal.use(e);
-      }
-    }
-    return this;
-  }
-}
-
-var __defProp$e = Object.defineProperty;
-var __defNormalProp$e = (obj, key, value) => key in obj ? __defProp$e(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$e = (obj, key, value) => __defNormalProp$e(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Chain(...messages) {
-  return new ChainImpl(...messages);
-}
-class ChainImpl {
-  constructor(...messages) {
-    __publicField$e(this, "$messages");
-    __publicField$e(this, "$latest");
-    __publicField$e(this, "handleMessage", (index, tap) => {
-      const message = this.$messages[index];
-      const next = this.$messages[index + 1];
-      message.pipe(this.oneMessageTap.child(tap, next, index));
-    });
-    __publicField$e(this, "oneMessageTap", TapParent(function(v, child, next, index) {
-      if (!next) {
-        child.$latest = v;
-      }
-      if (child.$latest) {
-        this.use(child.$latest);
-      }
-      if (next && !child.$latest) {
-        child.handleMessage(index + 1, this);
-      }
-    }, this));
-    this.$messages = messages;
-  }
-  pipe(tap) {
-    this.handleMessage(0, tap);
-    return this;
-  }
-}
-
-function ExecutorApplied($base, applier) {
-  return new ExecutorAppliedImpl($base, applier);
-}
-class ExecutorAppliedImpl {
-  constructor($base, applier) {
-    this.$base = $base;
-    this.applier = applier;
-    ensureMessage($base, "ExecutorApplied: base");
-  }
-  pipe(tap) {
-    this.$base.pipe(Tap(this.applier(tap.use.bind(tap))));
-    return this;
-  }
-}
-
-var __defProp$d = Object.defineProperty;
-var __defNormalProp$d = (obj, key, value) => key in obj ? __defProp$d(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$d = (obj, key, value) => __defNormalProp$d(obj, key + "" , value);
-function Filtered($base, predicate, defaultValue) {
-  return new FilteredImpl(ActualMessage($base), predicate, defaultValue);
-}
-class FilteredImpl {
-  constructor($base, predicate, defaultValue) {
-    this.$base = $base;
-    this.predicate = predicate;
-    this.defaultValue = defaultValue;
-    __publicField$d(this, "parent", TapParent(function(v, child) {
-      if (child.predicate(v)) {
-        this.use(v);
-      } else if (child.defaultValue !== void 0) {
-        this.use(child.defaultValue);
-      }
-    }, this));
-  }
-  pipe(tap) {
-    this.$base.pipe(this.parent.child(tap));
-    return this;
-  }
-}
-
-var __defProp$c = Object.defineProperty;
-var __defNormalProp$c = (obj, key, value) => key in obj ? __defProp$c(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$c = (obj, key, value) => __defNormalProp$c(obj, typeof key !== "symbol" ? key + "" : key, value);
-function FromEvent($emitter, $eventName, $subscribeMethod, $unsubscribeMethod) {
-  return new FromEventImpl(
-    ActualMessage($emitter),
-    ActualMessage($eventName),
-    ActualMessage($subscribeMethod),
-    ActualMessage($unsubscribeMethod)
-  );
-}
-class FromEventImpl {
-  constructor($emitter, $eventName, $subscribeMethod, $unsubscribeMethod) {
-    this.$emitter = $emitter;
-    this.$eventName = $eventName;
-    this.$subscribeMethod = $subscribeMethod;
-    this.$unsubscribeMethod = $unsubscribeMethod;
-    __publicField$c(this, "lastTap", null);
-    __publicField$c(this, "handler", (v) => {
-      if (this.lastTap) {
-        this.lastTap.use(v);
-      }
-    });
-    __publicField$c(this, "parent", TapParent(function([emitter, eventName, subscribe], child) {
-      child.lastTap = this;
-      if (!emitter?.[subscribe]) {
-        return;
-      }
-      emitter[subscribe](eventName, child.handler);
-    }, this));
-  }
-  pipe(tap) {
-    All(this.$emitter, this.$eventName, this.$subscribeMethod).pipe(
-      this.parent.child(tap)
-    );
-    return this;
-  }
-  destroy() {
-    this.lastTap = null;
-    if (!this.$unsubscribeMethod) {
-      return this;
-    }
-    All(this.$emitter, this.$eventName, this.$unsubscribeMethod).pipe(
-      Tap(([emitter, eventName, unsubscribe]) => {
-        emitter?.[unsubscribe]?.(eventName, this.handler);
-      })
-    );
-    return this;
-  }
-}
-
-function FromPromise(p, error) {
-  return new FromPromiseImpl(p, error);
-}
-class FromPromiseImpl {
-  constructor(p, error) {
-    this.p = p;
-    this.error = error;
-  }
-  pipe(tap) {
-    this.p.then((v) => {
-      tap.use(v);
-    }).catch((e) => {
-      this.error?.use(e);
-    });
-    return this;
-  }
-}
-
-var __defProp$b = Object.defineProperty;
-var __defNormalProp$b = (obj, key, value) => key in obj ? __defProp$b(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$b = (obj, key, value) => __defNormalProp$b(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Late(v) {
   return new LateImpl(v);
 }
 class LateImpl {
   constructor(v) {
     this.v = v;
-    __publicField$b(this, "lateTap", null);
-    __publicField$b(this, "notify", (v) => {
-      if (isFilled(v) && this.lateTap) {
-        this.lateTap.use(v);
+    __publicField$2(this, "rejections", new Rejections());
+    __publicField$2(this, "lateR", null);
+    __publicField$2(this, "notify", () => {
+      if (isFilled(this.v) && this.lateR) {
+        try {
+          this.lateR(this.v);
+        } catch (e) {
+          this.rejections.reject(e);
+        }
       }
     });
   }
-  pipe(tap) {
-    if (this.lateTap) {
+  then(r) {
+    if (this.lateR) {
       throw new Error(
-        "Late component gets new tap, when another was already connected!"
+        "Late component gets new resolver, when another was already connected!"
       );
     }
-    this.lateTap = tap;
-    this.notify(this.v);
+    this.lateR = r;
+    this.notify();
     return this;
   }
   use(value) {
-    this.notify(value);
+    this.v = value;
+    this.notify();
+    return this;
+  }
+  catch(rejected) {
+    this.rejections.catch(rejected);
     return this;
   }
 }
 
-var __defProp$a = Object.defineProperty;
-var __defNormalProp$a = (obj, key, value) => key in obj ? __defProp$a(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$a = (obj, key, value) => __defNormalProp$a(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Once($base) {
-  return new OnceImpl($base);
+function Catch($base) {
+  const rejections = new Rejections();
+  $base.catch(rejections.reject);
+  const $error = Late();
+  rejections.catch((e) => {
+    $error.use(e);
+  });
+  return $error;
 }
-class OnceImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField$a(this, "isFilled", false);
-    __publicField$a(this, "parent", TapParent(function(v, child) {
-      if (!child.isFilled) {
-        child.isFilled = true;
-        this.use(v);
+
+function Chain(...messages) {
+  const $messages = messages.map(ActualMessage);
+  return Message(function ChainImpl(r) {
+    let $latest;
+    const handleMessage = (index) => {
+      const message = $messages[index];
+      const next = $messages[index + 1];
+      message.then((v) => {
+        oneMessage(v, next, index);
+      });
+    };
+    function oneMessage(v, next, index) {
+      if (!next) {
+        $latest = v;
       }
-    }, this));
-  }
-  pipe(tap) {
-    this.$base.pipe(this.parent.child(tap));
-    return this;
-  }
+      if ($latest) {
+        r($latest);
+      }
+      if (next && !$latest) {
+        handleMessage(index + 1);
+      }
+    }
+    handleMessage(0);
+  });
 }
 
-var __defProp$9 = Object.defineProperty;
-var __defNormalProp$9 = (obj, key, value) => key in obj ? __defProp$9(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$9 = (obj, key, value) => __defNormalProp$9(obj, typeof key !== "symbol" ? key + "" : key, value);
-class TapPool {
-  constructor() {
-    __publicField$9(this, "taps");
-    __publicField$9(this, "innerTap");
-    this.taps = /* @__PURE__ */ new Set();
-    this.innerTap = Tap((v) => {
-      this.taps.forEach((tap) => {
-        if (isDestroyed(tap) && tap.destroyed()) {
-          this.taps.delete(tap);
+function ExecutorApplied($base, applier) {
+  return Message(function ExecutorAppliedImpl(r) {
+    $base.then(applier(r));
+  });
+}
+
+function Filtered(base, predicate, defaultValue) {
+  const $base = ActualMessage(base);
+  return Message(function FilteredImpl(r) {
+    $base.then((v) => {
+      if (predicate(v)) {
+        r(v);
+      } else if (defaultValue !== void 0) {
+        r(defaultValue);
+      }
+    });
+  });
+}
+
+function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
+  const $emitter = ActualMessage(emitter);
+  const $eventName = ActualMessage(eventName);
+  const $subscribeMethod = ActualMessage(subscribeMethod);
+  const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
+  return Message((r) => {
+    let lastR = null;
+    const handler = (v) => {
+      if (lastR) {
+        lastR(v);
+      }
+    };
+    All($emitter, $eventName, $subscribeMethod).then(
+      ([emitter2, eventName2, subscribe]) => {
+        lastR = r;
+        if (!emitter2?.[subscribe]) {
           return;
         }
-        tap.use(v);
-      });
-    });
-  }
-  tap() {
-    return this.innerTap;
-  }
-  size() {
-    return this.taps.size;
-  }
-  has(owner) {
-    return this.taps.has(owner);
-  }
-  add(owner) {
-    this.taps.add(owner);
-    return this;
-  }
-  remove(g) {
-    this.taps.delete(g);
-    return this;
-  }
-  destroy() {
-    this.taps.forEach((g) => {
-      this.remove(g);
-    });
-    return this;
-  }
-}
-
-var __defProp$8 = Object.defineProperty;
-var __defNormalProp$8 = (obj, key, value) => key in obj ? __defProp$8(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$8 = (obj, key, value) => __defNormalProp$8(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Shared($base, stateless = false) {
-  return new SharedImpl($base, stateless);
-}
-class SharedImpl {
-  constructor($base, stateless = false) {
-    this.$base = $base;
-    this.stateless = stateless;
-    __publicField$8(this, "tapPool", new TapPool());
-    __publicField$8(this, "lastValue");
-    __publicField$8(this, "calls", Late());
-    __publicField$8(this, "firstCallTap", Tap((v) => {
-      this.lastValue = v;
-      this.tapPool.tap().use(v);
-    }));
-    Once(this.calls).pipe(
-      Tap(() => {
-        this.$base.pipe(this.firstCallTap);
-      })
+        emitter2[subscribe](eventName2, handler);
+      }
     );
-  }
-  pipe(tap) {
-    this.calls.use(1);
-    if (!this.stateless && isFilled(this.lastValue) && !this.tapPool.has(tap)) {
-      tap.use(this.lastValue);
-    }
-    this.tapPool.add(tap);
-    return this;
-  }
-  use(value) {
-    this.calls.use(1);
-    this.lastValue = value;
-    this.tapPool.tap().use(value);
-    return this;
-  }
-  touched() {
-    this.calls.use(1);
-  }
-  pool() {
-    return this.tapPool;
-  }
-  destroy() {
-    return this.tapPool.destroy();
-  }
+    return () => {
+      lastR = null;
+      if (!$unsubscribeMethod) {
+        return;
+      }
+      All($emitter, $eventName, $unsubscribeMethod).then(
+        ([emitter2, eventName2, unsubscribe]) => {
+          emitter2?.[unsubscribe]?.(eventName2, handler);
+        }
+      );
+    };
+  });
 }
 
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, key + "" , value);
-function SharedSource($base, stateless = false) {
-  return new SharedSourceImpl($base, stateless);
-}
-class SharedSourceImpl {
-  constructor($base, stateless = false) {
-    this.$base = $base;
-    __publicField$7(this, "$sharedBase");
-    this.$sharedBase = Shared(this.$base, stateless);
-  }
-  pipe(tap) {
-    this.$sharedBase.pipe(tap);
-    return this;
-  }
-  use(value) {
-    this.$sharedBase.touched();
-    this.$base.use(value);
-    return this;
-  }
-}
-
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
 function Primitive($base, theValue = null) {
   return new PrimitiveImpl($base, theValue);
 }
@@ -652,15 +350,13 @@ class PrimitiveImpl {
   constructor($base, theValue = null) {
     this.$base = $base;
     this.theValue = theValue;
-    __publicField$6(this, "touched", false);
+    __publicField$1(this, "touched", false);
   }
   ensureTouched() {
     if (!this.touched) {
-      this.$base.pipe(
-        Tap((v) => {
-          this.theValue = v;
-        })
-      );
+      this.$base.then((v) => {
+        this.theValue = v;
+      });
     }
     this.touched = true;
   }
@@ -681,290 +377,193 @@ class PrimitiveImpl {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
-function LateShared(value) {
-  return new LateSharedImpl(value);
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+function Shared($base, source) {
+  return new SharedImpl($base, source);
 }
-class LateSharedImpl {
-  constructor(value) {
-    __publicField$5(this, "$msg");
-    __publicField$5(this, "primitive");
-    this.$msg = SharedSource(Late(value));
-    this.primitive = Primitive(this, value);
+class SharedImpl {
+  constructor($base, source) {
+    this.$base = $base;
+    this.source = source;
+    __publicField(this, "resolver", (v) => {
+      this.lastV = v;
+      this.resolvers.forEach((r) => {
+        r(v);
+      });
+    });
+    __publicField(this, "lastV");
+    __publicField(this, "resolvers", /* @__PURE__ */ new Set());
   }
-  pipe(tap) {
-    this.$msg.pipe(tap);
+  then(resolved) {
+    this.resolvers.add(resolved);
+    if (this.resolvers.size === 1) {
+      this.$base.then(this.resolver);
+    } else if (isFilled(this.lastV)) {
+      resolved(this.lastV);
+    }
     return this;
   }
   use(value) {
-    this.$msg.use(value);
+    if (this.source) {
+      this.source.use(value);
+    } else {
+      this.resolver(value);
+    }
+    return this;
+  }
+  catch(rejected) {
+    this.$base.catch(rejected);
+    return this;
+  }
+  destroy() {
+    this.resolvers.clear();
     return this;
   }
   value() {
-    return this.primitive;
+    return Primitive(this);
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
-function Map($base, $target) {
-  return new MapImpl(ActualMessage($base), $target);
+function LateShared(value) {
+  const l = Late(value);
+  return Shared(l, l);
 }
-class MapImpl {
-  constructor($base, $target) {
-    this.$base = $base;
-    this.$target = $target;
-    __publicField$4(this, "parent", TapParent(function(v, child) {
-      const infos = [];
+
+function Map$1(base, target) {
+  const $base = ActualMessage(base);
+  return Message((r) => {
+    const infos = [];
+    const dc = DestroyContainer();
+    $base.then((v) => {
+      dc.destroy();
       v.forEach((val) => {
         let $val = val;
         if (!isMessage($val)) {
           $val = Of($val);
         }
-        const info = child.$target.use($val);
+        const info = target($val);
+        dc.add(info);
         infos.push(info);
       });
-      All(...infos).pipe(this);
-    }, this));
-  }
-  pipe(tap) {
-    this.$base.pipe(this.parent.child(tap));
-    return this;
-  }
+      All(...infos).then(r);
+    });
+  });
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !== "symbol" ? key + "" : key, value);
-function RPC($rpc) {
-  return new RPCImpl(ActualMessage($rpc));
-}
-RPC.tap = {};
-class RPCImpl {
-  constructor($rpc) {
-    this.$rpc = $rpc;
-    __publicField$3(this, "$result", LateShared());
-    __publicField$3(this, "$error", LateShared());
-  }
-  result() {
-    this.$rpc.pipe(
-      Tap((rpc) => {
-        const tap = rpc.tap === void 0 ? RPC.tap.default : RPC.tap[rpc.tap] || RPC.tap.default;
-        if (!tap) {
-          throw new Error(`RPCImpl: Tap not found ${rpc.tap}`);
-        }
-        if (!rpc.result) {
-          rpc.result = this.$result;
-        }
-        if (!rpc.error) {
-          rpc.error = this.$error;
-        }
-        tap.use(rpc);
-      })
-    );
-    return this.$result;
-  }
-  error() {
-    return this.$error;
-  }
+function Once($base) {
+  return Message((r) => {
+    let isFilled = false;
+    $base.then((v) => {
+      if (!isFilled) {
+        isFilled = true;
+        r(v);
+      }
+    });
+  });
 }
 
-function RPCChain($base) {
-  return Tap((rpc) => {
-    if (!rpc.result) {
-      throw new Error("RPCChain did not find result in rpc message");
+Context.transport = /* @__PURE__ */ new Map();
+function Context(msg) {
+  const $msg = ActualMessage(msg);
+  return Message((resolve, reject) => {
+    $msg.then((message) => {
+      const transport = Context.transport.get(message.transport);
+      if (transport === void 0) {
+        throw new Error(`Context: unknown transport ${message.transport}`);
+      }
+      if (!message.result) {
+        message.result = resolve;
+      }
+      if (!message.error) {
+        message.error = reject;
+      }
+      try {
+        transport(message);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  });
+}
+
+function ContextChain($base) {
+  return (context) => {
+    if (!context.result) {
+      throw new Error("ContextChain did not find result in rpc message");
     }
-    ActualMessage($base).pipe(rpc.result);
+    ActualMessage($base).then(context.result);
+  };
+}
+
+function ContextOf(transport) {
+  const $msg = LateShared();
+  Context.transport.set(transport, $msg.use.bind($msg));
+  return Message((t) => {
+    $msg.then(t);
   });
 }
 
-function RPCOf(tap) {
-  const $tap = LateShared();
-  RPC.tap[tap] = $tap;
-  return Message((tap2) => {
-    $tap.pipe(tap2);
-  });
-}
-
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Sequence($base) {
-  return new SequenceImpl($base);
-}
-class SequenceImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField$2(this, "result", []);
-    __publicField$2(this, "parent", TapParent(function(v, child) {
-      child.result.push(v);
-      this.use(child.result);
-    }, this));
-  }
-  pipe(tap) {
-    this.$base.pipe(this.parent.child(tap));
-    return this;
-  }
+  return Message((r) => {
+    const result = [];
+    $base.then((v) => {
+      result.push(v);
+      r(result);
+    });
+  });
 }
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, key + "" , value);
-function Stream($base) {
-  return new StreamImpl(ActualMessage($base));
-}
-class StreamImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField$1(this, "parent", TapParent(function(v) {
+function Stream(base) {
+  const $base = ActualMessage(base);
+  return Message((r) => {
+    $base.then((v) => {
       v.forEach((cv) => {
-        this.use(cv);
+        r(cv);
       });
-    }));
-  }
-  pipe(tap) {
-    this.$base.pipe(this.parent.child(tap));
-    return this;
-  }
-}
-
-function TapApplied(baseTap, applier) {
-  return new TapAppliedImpl(baseTap, applier);
-}
-class TapAppliedImpl {
-  constructor(baseTap, applier) {
-    this.baseTap = baseTap;
-    this.applier = applier;
-  }
-  use(args) {
-    return this.applier(this.baseTap.use(args));
-  }
-}
-
-function TapArgs(baseTap, args, startFromArgIndex = 0) {
-  return new TapArgsImpl(baseTap, args, startFromArgIndex);
-}
-class TapArgsImpl {
-  constructor(baseTap, args, startFromArgIndex = 0) {
-    this.baseTap = baseTap;
-    this.args = args;
-    this.startFromArgIndex = startFromArgIndex;
-  }
-  use(runArgs) {
-    return this.baseTap.use(
-      mergeAtIndex(runArgs, this.args, this.startFromArgIndex)
-    );
-  }
-}
-function mergeAtIndex(arr1, arr2, index) {
-  const result = arr1.slice(0, index);
-  while (result.length < index) result.push(void 0);
-  return result.concat(arr2);
-}
-
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
-function TapDestroyable(baseTap) {
-  return new TapDestroyableImpl(baseTap);
-}
-class TapDestroyableImpl {
-  constructor(baseTap) {
-    this.baseTap = baseTap;
-    __publicField(this, "destructors", []);
-  }
-  use(args) {
-    const inst = this.baseTap.use(args);
-    if (isDestroyable(inst)) {
-      this.destructors.push(inst);
-    }
-    return inst;
-  }
-  destroy() {
-    this.destructors.forEach((i) => i.destroy());
-    return this;
-  }
+    });
+  });
 }
 
 exports.ActualMessage = ActualMessage;
 exports.All = All;
-exports.AllImpl = AllImpl;
 exports.Any = Any;
-exports.AnyImpl = AnyImpl;
 exports.Applied = Applied;
 exports.AppliedDestructured = AppliedDestructured;
-exports.AppliedImpl = AppliedImpl;
 exports.Catch = Catch;
-exports.CatchImpl = CatchImpl;
 exports.Chain = Chain;
-exports.ChainImpl = ChainImpl;
+exports.Context = Context;
+exports.ContextChain = ContextChain;
+exports.ContextOf = ContextOf;
 exports.DestroyContainer = DestroyContainer;
 exports.DestroyContainerImpl = DestroyContainerImpl;
 exports.Destroyable = Destroyable;
 exports.DestroyableImpl = DestroyableImpl;
 exports.ExecutorApplied = ExecutorApplied;
-exports.ExecutorAppliedImpl = ExecutorAppliedImpl;
 exports.Filtered = Filtered;
-exports.FilteredImpl = FilteredImpl;
 exports.FromEvent = FromEvent;
-exports.FromEventImpl = FromEventImpl;
-exports.FromPromise = FromPromise;
-exports.FromPromiseImpl = FromPromiseImpl;
 exports.Late = Late;
 exports.LateImpl = LateImpl;
 exports.LateShared = LateShared;
-exports.LateSharedImpl = LateSharedImpl;
 exports.Local = Local;
-exports.LocalImpl = LocalImpl;
-exports.Map = Map;
-exports.MapImpl = MapImpl;
+exports.Map = Map$1;
 exports.Message = Message;
-exports.MessageImpl = MessageImpl;
+exports.MessageRx = MessageRx;
 exports.New = New;
 exports.Of = Of;
-exports.OfImpl = OfImpl;
 exports.Once = Once;
-exports.OnceImpl = OnceImpl;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
-exports.RPC = RPC;
-exports.RPCChain = RPCChain;
-exports.RPCImpl = RPCImpl;
-exports.RPCOf = RPCOf;
 exports.Sequence = Sequence;
-exports.SequenceImpl = SequenceImpl;
 exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;
-exports.SharedSource = SharedSource;
-exports.SharedSourceImpl = SharedSourceImpl;
 exports.Stream = Stream;
-exports.StreamImpl = StreamImpl;
-exports.Tap = Tap;
-exports.TapApplied = TapApplied;
-exports.TapAppliedImpl = TapAppliedImpl;
-exports.TapArgs = TapArgs;
-exports.TapArgsImpl = TapArgsImpl;
-exports.TapDestroyable = TapDestroyable;
-exports.TapDestroyableImpl = TapDestroyableImpl;
-exports.TapImpl = TapImpl;
-exports.TapMessage = TapMessage;
-exports.TapMessageImpl = TapMessageImpl;
-exports.TapOptional = TapOptional;
-exports.TapOptionalImpl = TapOptionalImpl;
-exports.TapParent = TapParent;
-exports.TapParentImpl = TapParentImpl;
-exports.TapPool = TapPool;
 exports.Void = Void;
-exports.VoidImpl = VoidImpl;
 exports.ensureFunction = ensureFunction;
 exports.ensureMessage = ensureMessage;
-exports.ensureTap = ensureTap;
 exports.isDestroyable = isDestroyable;
 exports.isDestroyed = isDestroyed;
 exports.isFilled = isFilled;
 exports.isMessage = isMessage;
-exports.isTap = isTap;
 //# sourceMappingURL=silentium.cjs.map

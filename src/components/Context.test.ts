@@ -3,41 +3,45 @@ import { ContextType } from "types/ContextType";
 import { describe, expect, test, vi } from "vitest";
 
 describe("Context.test", () => {
-  test("result() calls tap and returns result message", () => {
-    Context.transport.default = (ctx: ContextType) => {
+  test("context behavior", () => {
+    const transport = Symbol("test");
+    Context.transport.set(transport, (ctx: ContextType) => {
       ctx.result?.("hello");
-    };
+    });
 
-    const rpcImpl = Context({
-      transport: "testMethod",
+    const $v = Context({
+      transport,
       params: { key: "value" },
     });
 
     const g = vi.fn();
-    rpcImpl.then(g);
+    $v.then(g);
     const err = vi.fn();
-    rpcImpl.catch(err);
+    $v.catch(err);
 
     expect(g).toHaveBeenCalledWith("hello");
     expect(err).not.toHaveBeenCalled();
+    Context.transport.delete(transport);
   });
 
   test("error from context", () => {
-    Context.transport.default = (ctx: ContextType) => {
-      ctx.error?.("hello");
-    };
+    const transport = Symbol();
+    Context.transport.set(transport, () => {
+      throw "hello";
+    });
 
-    const rpcImpl = Context({
-      transport: "testMethod",
+    const $v = Context({
+      transport,
       params: { key: "value" },
     });
 
     const g = vi.fn();
-    rpcImpl.then(g);
+    $v.then(g);
     const err = vi.fn();
-    rpcImpl.catch(err);
+    $v.catch(err);
 
     expect(g).not.toHaveBeenCalled();
     expect(err).toHaveBeenCalledWith("hello");
+    Context.transport.delete(transport);
   });
 });

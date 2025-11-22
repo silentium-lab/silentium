@@ -10,10 +10,10 @@ describe("Shared.test", () => {
     const s = Shared(l);
 
     s.then((v) => {
-      d.tap(`g1_${v}`);
+      d.resolver(`g1_${v}`);
     });
     s.then((v) => {
-      d.tap(`g2_${v}`);
+      d.resolver(`g2_${v}`);
     });
 
     expect(d.toString()).toBe("g1_1|g2_1");

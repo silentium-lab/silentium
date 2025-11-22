@@ -9,29 +9,28 @@ describe("New.test.ts", () => {
   describe("New", () => {
     test("returns an msg that creates new instances", () => {
       const msg = New(createTestObject);
-      const tapExecutor = vi.fn();
+      const g = vi.fn();
+      msg.then(g);
 
-      msg.then(tapExecutor);
-
-      expect(tapExecutor).toHaveBeenCalledTimes(1);
-      const instance = tapExecutor.mock.calls[0][0];
+      expect(g).toHaveBeenCalledTimes(1);
+      const instance = g.mock.calls[0][0];
       expect(instance).toHaveProperty("value");
       expect(typeof instance.value).toBe("number");
     });
 
     test("creates new instance on each call", () => {
       const msg = New(createTestObject);
-      const tapExecutor1 = vi.fn();
-      const tapExecutor2 = vi.fn();
+      const g1 = vi.fn();
+      const g2 = vi.fn();
 
-      msg.then(tapExecutor1);
-      msg.then(tapExecutor2);
+      msg.then(g1);
+      msg.then(g2);
 
-      expect(tapExecutor1).toHaveBeenCalledTimes(1);
-      expect(tapExecutor2).toHaveBeenCalledTimes(1);
+      expect(g1).toHaveBeenCalledTimes(1);
+      expect(g2).toHaveBeenCalledTimes(1);
 
-      const instance1 = tapExecutor1.mock.calls[0][0];
-      const instance2 = tapExecutor2.mock.calls[0][0];
+      const instance1 = g1.mock.calls[0][0];
+      const instance2 = g2.mock.calls[0][0];
 
       expect(instance1).toHaveProperty("value");
       expect(instance2).toHaveProperty("value");

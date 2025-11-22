@@ -5,7 +5,7 @@ import { ConstructorType } from "types/ConstructorType";
  * to an external system
  */
 export interface ContextType extends Record<string, any> {
-  transport: string;
+  transport: any;
   params?: Record<string, any>;
   result?: ConstructorType<[any]>;
   error?: ConstructorType<[any]>;

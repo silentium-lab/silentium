@@ -1,43 +1,36 @@
 import { ActualMessage } from "base/ActualMessage";
 import { Message } from "base/Message";
-import { LateShared } from "components/LateShared";
 import { ConstructorType } from "types/ConstructorType";
 import { ContextType } from "types/ContextType";
 import { MaybeMessage } from "types/MessageType";
 
-Context.transport = {} as { default: ConstructorType<[ContextType]> } & Record<
-  string,
-  ConstructorType<[ContextType]>
->;
+Context.transport = new Map<any, ConstructorType<[ContextType]>>();
 
 /**
  * The ability to call an external system through
  * sending a message in a standardized format
- * RPCType, the list of taps should be defined via
- * the RPC.tap object
+ * ContextType, the list of transport should be defined via
+ * the Context.transport map object
  */
-export function Context<T>(rpc: MaybeMessage<ContextType>) {
-  const $rpc = ActualMessage(rpc);
+export function Context<T>(msg: MaybeMessage<ContextType>) {
+  const $msg = ActualMessage(msg);
   return Message<T>((resolve, reject) => {
-    const $result = LateShared<T>();
-    const $error = LateShared();
-    $rpc.then((rpc) => {
-      const tap =
-        rpc.tap === undefined
-          ? Context.transport.default
-          : Context.transport[rpc.tap] || Context.transport.default;
-      if (!tap) {
-        throw new Error(`RPCImpl: Tap not found ${rpc.tap}`);
+    $msg.then((message) => {
+      const transport = Context.transport.get(message.transport);
+      if (transport === undefined) {
+        throw new Error(`Context: unknown transport ${message.transport}`);
       }
-      if (!rpc.result) {
-        rpc.result = $result.use.bind($result);
+      if (!message.result) {
+        message.result = resolve;
       }
-      if (!rpc.error) {
-        rpc.error = $error.use.bind($error);
+      if (!message.error) {
+        message.error = reject;
       }
-      tap(rpc);
+      try {
+        transport(message);
+      } catch (error) {
+        reject(error);
+      }
     });
-    $result.then(resolve);
-    $error.then(reject);
   });
 }

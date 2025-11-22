@@ -6,19 +6,19 @@ describe("Of.test.ts", () => {
     const numberValue = 42;
     const msg = Of(numberValue);
 
-    const mockTap = vi.fn();
-    msg.then(mockTap);
+    const m = vi.fn();
+    msg.then(m);
 
-    expect(mockTap).toHaveBeenCalledWith(numberValue);
+    expect(m).toHaveBeenCalledWith(numberValue);
   });
 
   test("Of works with objects", () => {
     const objectValue = { key: "value" };
     const msg = Of(objectValue);
 
-    const mockTap = vi.fn();
-    msg.then(mockTap);
+    const m = vi.fn();
+    msg.then(m);
 
-    expect(mockTap).toHaveBeenCalledWith(objectValue);
+    expect(m).toHaveBeenCalledWith(objectValue);
   });
 });

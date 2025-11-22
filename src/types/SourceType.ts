@@ -1,8 +1,7 @@
 import { MessageType } from "types/MessageType";
 
 /**
- * A type that serves as both
- * an message and a tap
+ * A type that can accept value
  */
 export interface SourceType<T = unknown> {
   use(value: T): this;

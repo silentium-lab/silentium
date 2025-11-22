@@ -4,7 +4,7 @@
  */
 export const Diagram = (joinSymbol = "|") => {
   const responses: unknown[] = [];
-  const tap = (v: any) => {
+  const resolver = (v: any) => {
     responses.push(v);
   };
 
@@ -12,6 +12,6 @@ export const Diagram = (joinSymbol = "|") => {
     toString() {
       return responses.join(joinSymbol);
     },
-    tap,
+    resolver,
   };
 };

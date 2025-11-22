@@ -21,15 +21,15 @@ export function FromEvent<T>(
   const $subscribeMethod = ActualMessage(subscribeMethod);
   const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
   return Message((r) => {
-    let lastTap: ConstructorType<[T]> | null = null;
+    let lastR: ConstructorType<[T]> | null = null;
     const handler = (v: T) => {
-      if (lastTap) {
-        lastTap(v);
+      if (lastR) {
+        lastR(v);
       }
     };
     All($emitter, $eventName, $subscribeMethod).then(
       ([emitter, eventName, subscribe]) => {
-        lastTap = r;
+        lastR = r;
         if (!emitter?.[subscribe]) {
           return;
         }
@@ -37,7 +37,7 @@ export function FromEvent<T>(
       },
     );
     return () => {
-      lastTap = null;
+      lastR = null;
       if (!$unsubscribeMethod) {
         return;
       }

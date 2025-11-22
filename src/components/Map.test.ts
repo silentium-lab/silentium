@@ -49,7 +49,7 @@ describe("Map.test", () => {
     const d = Diagram();
     const infoMapped = Map(Of([1, 2, 3, 9]), x2);
 
-    Applied(infoMapped, String).then(d.tap);
+    Applied(infoMapped, String).then(d.resolver);
 
     expect(d.toString()).toBe("2,4,6,18");
   });
@@ -58,7 +58,7 @@ describe("Map.test", () => {
     const d = Diagram();
     const infoMapped = Map([1, 2, 3, 9], x2);
 
-    Applied(infoMapped, String).then(d.tap);
+    Applied(infoMapped, String).then(d.resolver);
 
     expect(d.toString()).toBe("2,4,6,18");
   });

@@ -5,7 +5,7 @@ import { ContextOf } from "components/ContextOf";
 import { describe, expect, test, vi } from "vitest";
 
 describe("ContextChain.test", () => {
-  test("forwards RPC result to base message", () => {
+  test("forwards context result to base message", () => {
     ContextOf("config").then(
       ContextChain(
         Of({
@@ -25,7 +25,7 @@ describe("ContextChain.test", () => {
     });
   });
 
-  test("forwards RPC result to base value", () => {
+  test("forwards context result to base value", () => {
     ContextOf("config").then(
       ContextChain({
         name: "TestApp",
