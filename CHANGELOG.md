@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.142](https://github.com/silentium-lab/silentium/compare/v0.0.141...v0.0.142) (2025-11-22)
+
+
+### Features
+
+* **main:** message Source component ([ef8f42d](https://github.com/silentium-lab/silentium/commit/ef8f42dd47c6dfe925b75d546540f61a7c406a94))
+
 ### [0.0.141](https://github.com/silentium-lab/silentium/compare/v0.0.140...v0.0.141) (2025-11-22)
 
 
