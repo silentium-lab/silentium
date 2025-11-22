@@ -310,58 +310,37 @@ function Chain(...messages) {
   });
 }
 
-function ExecutorApplied($base, applier) {
-  return Message(function ExecutorAppliedImpl(r) {
-    $base.then(applier(r));
-  });
-}
-
-function Filtered(base, predicate, defaultValue) {
-  const $base = ActualMessage(base);
-  return Message(function FilteredImpl(r) {
-    $base.then((v) => {
-      if (predicate(v)) {
-        r(v);
-      } else if (defaultValue !== void 0) {
-        r(defaultValue);
+Context.transport = /* @__PURE__ */ new Map();
+function Context(msg) {
+  const $msg = ActualMessage(msg);
+  return Message((resolve, reject) => {
+    $msg.then((message) => {
+      const transport = Context.transport.get(message.transport);
+      if (transport === void 0) {
+        throw new Error(`Context: unknown transport ${message.transport}`);
+      }
+      if (!message.result) {
+        message.result = resolve;
+      }
+      if (!message.error) {
+        message.error = reject;
+      }
+      try {
+        transport(message);
+      } catch (error) {
+        reject(error);
       }
     });
   });
 }
 
-function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
-  const $emitter = ActualMessage(emitter);
-  const $eventName = ActualMessage(eventName);
-  const $subscribeMethod = ActualMessage(subscribeMethod);
-  const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
-  return Message((r) => {
-    let lastR = null;
-    const handler = (v) => {
-      if (lastR) {
-        lastR(v);
-      }
-    };
-    All($emitter, $eventName, $subscribeMethod).then(
-      ([emitter2, eventName2, subscribe]) => {
-        lastR = r;
-        if (!emitter2?.[subscribe]) {
-          return;
-        }
-        emitter2[subscribe](eventName2, handler);
-      }
-    );
-    return () => {
-      lastR = null;
-      if (!$unsubscribeMethod) {
-        return;
-      }
-      All($emitter, $eventName, $unsubscribeMethod).then(
-        ([emitter2, eventName2, unsubscribe]) => {
-          emitter2?.[unsubscribe]?.(eventName2, handler);
-        }
-      );
-    };
-  });
+function ContextChain($base) {
+  return (context) => {
+    if (!context.result) {
+      throw new Error("ContextChain did not find result in rpc message");
+    }
+    ActualMessage($base).then(context.result);
+  };
 }
 
 var __defProp$1 = Object.defineProperty;
@@ -455,6 +434,68 @@ function LateShared(value) {
   return Shared(l, l);
 }
 
+function ContextOf(transport) {
+  const $msg = LateShared();
+  Context.transport.set(transport, $msg.use.bind($msg));
+  return Message((t) => {
+    $msg.then(t);
+  });
+}
+
+function ExecutorApplied($base, applier) {
+  return Message(function ExecutorAppliedImpl(r) {
+    $base.then(applier(r));
+  });
+}
+
+function Filtered(base, predicate, defaultValue) {
+  const $base = ActualMessage(base);
+  return Message(function FilteredImpl(r) {
+    $base.then((v) => {
+      if (predicate(v)) {
+        r(v);
+      } else if (defaultValue !== void 0) {
+        r(defaultValue);
+      }
+    });
+  });
+}
+
+function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
+  const $emitter = ActualMessage(emitter);
+  const $eventName = ActualMessage(eventName);
+  const $subscribeMethod = ActualMessage(subscribeMethod);
+  const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
+  return Message((r) => {
+    let lastR = null;
+    const handler = (v) => {
+      if (lastR) {
+        lastR(v);
+      }
+    };
+    All($emitter, $eventName, $subscribeMethod).then(
+      ([emitter2, eventName2, subscribe]) => {
+        lastR = r;
+        if (!emitter2?.[subscribe]) {
+          return;
+        }
+        emitter2[subscribe](eventName2, handler);
+      }
+    );
+    return () => {
+      lastR = null;
+      if (!$unsubscribeMethod) {
+        return;
+      }
+      All($emitter, $eventName, $unsubscribeMethod).then(
+        ([emitter2, eventName2, unsubscribe]) => {
+          emitter2?.[unsubscribe]?.(eventName2, handler);
+        }
+      );
+    };
+  });
+}
+
 function Map$1(base, target) {
   const $base = ActualMessage(base);
   return Message((r) => {
@@ -488,47 +529,6 @@ function Once($base) {
   });
 }
 
-Context.transport = /* @__PURE__ */ new Map();
-function Context(msg) {
-  const $msg = ActualMessage(msg);
-  return Message((resolve, reject) => {
-    $msg.then((message) => {
-      const transport = Context.transport.get(message.transport);
-      if (transport === void 0) {
-        throw new Error(`Context: unknown transport ${message.transport}`);
-      }
-      if (!message.result) {
-        message.result = resolve;
-      }
-      if (!message.error) {
-        message.error = reject;
-      }
-      try {
-        transport(message);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
-}
-
-function ContextChain($base) {
-  return (context) => {
-    if (!context.result) {
-      throw new Error("ContextChain did not find result in rpc message");
-    }
-    ActualMessage($base).then(context.result);
-  };
-}
-
-function ContextOf(transport) {
-  const $msg = LateShared();
-  Context.transport.set(transport, $msg.use.bind($msg));
-  return Message((t) => {
-    $msg.then(t);
-  });
-}
-
 function Sequence($base) {
   return Message((r) => {
     const result = [];
@@ -550,5 +550,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
 //# sourceMappingURL=silentium.mjs.map

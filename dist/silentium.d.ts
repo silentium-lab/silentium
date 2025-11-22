@@ -125,6 +125,17 @@ declare function New<T>(construct: ConstructorType<[], T>): MessageRx<T>;
 declare function Of<T>(value: T): MessageRx<T>;
 
 /**
+ * Handles rejections collection
+ */
+declare class Rejections {
+    private catchers;
+    private lastRejectReason;
+    reject: (reason: unknown) => void;
+    catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
+}
+
+/**
  * Resolver that does nothing with the passed value,
  * needed for silent message triggering
  */
@@ -197,6 +208,39 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ?
  * then Chain emits again with the value of the last message.
  */
 declare function Chain<T extends readonly MessageType[]>(...messages: T): MessageRx<MessageTypeValue<Last<T>>>;
+
+/**
+ * Type for passing action requirements
+ * to an external system
+ */
+interface ContextType extends Record<string, any> {
+    transport: any;
+    params?: Record<string, any>;
+    result?: ConstructorType<[any]>;
+    error?: ConstructorType<[any]>;
+}
+
+/**
+ * The ability to call an external system through
+ * sending a message in a standardized format
+ * ContextType, the list of transport should be defined via
+ * the Context.transport map object
+ */
+declare function Context<T>(msg: MaybeMessage<ContextType>): MessageRx<T>;
+declare namespace Context {
+    var transport: Map<any, ConstructorType<[ContextType]>>;
+}
+
+/**
+ * Connects an external message to an RPC message chain
+ */
+declare function ContextChain($base: MaybeMessage): (context: ContextType) => void;
+
+/**
+ * Message for the arrival of a specific RPC message
+ * for specific transport
+ */
+declare function ContextOf(transport: string): MessageRx<ContextType>;
 
 type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 /**
@@ -278,39 +322,6 @@ declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[
 declare function Once<T>($base: MessageType<T>): MessageRx<T>;
 
 /**
- * Type for passing action requirements
- * to an external system
- */
-interface ContextType extends Record<string, any> {
-    transport: any;
-    params?: Record<string, any>;
-    result?: ConstructorType<[any]>;
-    error?: ConstructorType<[any]>;
-}
-
-/**
- * The ability to call an external system through
- * sending a message in a standardized format
- * ContextType, the list of transport should be defined via
- * the Context.transport map object
- */
-declare function Context<T>(msg: MaybeMessage<ContextType>): MessageRx<T>;
-declare namespace Context {
-    var transport: Map<any, ConstructorType<[ContextType]>>;
-}
-
-/**
- * Connects an external message to an RPC message chain
- */
-declare function ContextChain($base: MaybeMessage): (context: ContextType) => void;
-
-/**
- * Message for the arrival of a specific RPC message
- * for specific transport
- */
-declare function ContextOf(transport: string): MessageRx<ContextType>;
-
-/**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
  */
@@ -341,4 +352,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
