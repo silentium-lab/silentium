@@ -90,6 +90,30 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
 declare function Local<T>(_base: MaybeMessage<T>): MessageRx<T>;
 
 /**
+ * A type that can accept value
+ */
+interface SourceType<T = unknown> {
+    use(value: T): this;
+}
+/**
+ * Message and source at same time
+ */
+type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
+
+/**
+ * Base message source object
+ */
+declare function MessageSource<T>(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>): MessageSourceImpl<T>;
+declare class MessageSourceImpl<T> implements MessageSourceType<T> {
+    private sourceExecutor;
+    private message;
+    constructor(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>);
+    use(value: T): this;
+    then(resolved: ConstructorType<[T]>): this;
+    catch(rejected: ConstructorType<[unknown]>): this;
+}
+
+/**
  * A component that, on each access, returns a new instance
  * of a reference type based on the constructor function
  */
@@ -138,17 +162,6 @@ declare function Applied<const T, R>(base: MaybeMessage<T>, applier: Constructor
  * where each element of the array will be passed as a separate argument
  */
 declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<T[number][], R>): MessageRx<R>;
-
-/**
- * A type that can accept value
- */
-interface SourceType<T = unknown> {
-    use(value: T): this;
-}
-/**
- * Message and source at same time
- */
-type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -328,4 +341,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, MessageRx, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };

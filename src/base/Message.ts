@@ -4,7 +4,7 @@ import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
 
-type MessageExecutorType<T> = (
+export type MessageExecutorType<T> = (
   resolve: ConstructorType<[T]>,
   reject: ConstructorType<[unknown]>,
 ) => unknown | (() => void);

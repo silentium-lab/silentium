@@ -1,11 +1,11 @@
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Rejections {
   constructor() {
-    __publicField$5(this, "catchers", []);
-    __publicField$5(this, "lastRejectReason", null);
-    __publicField$5(this, "reject", (reason) => {
+    __publicField$6(this, "catchers", []);
+    __publicField$6(this, "lastRejectReason", null);
+    __publicField$6(this, "reject", (reason) => {
       this.lastRejectReason = reason;
       this.catchers.forEach((catcher) => {
         catcher(reason);
@@ -49,17 +49,17 @@ function ensureMessage(v, label) {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Message(executor) {
   return new MessageRx(executor);
 }
 class MessageRx {
   constructor(executor) {
     this.executor = executor;
-    __publicField$4(this, "mbDestructor");
-    __publicField$4(this, "rejections", new Rejections());
+    __publicField$5(this, "mbDestructor");
+    __publicField$5(this, "rejections", new Rejections());
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
@@ -108,15 +108,15 @@ class DestroyableImpl {
   }
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
-    __publicField$3(this, "destructors", []);
+    __publicField$4(this, "destructors", []);
   }
   add(e) {
     if (isDestroyable(e)) {
@@ -144,6 +144,32 @@ function Local(_base) {
       destroyed = true;
     };
   });
+}
+
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+function MessageSource(messageExecutor, sourceExecutor) {
+  return new MessageSourceImpl(messageExecutor, sourceExecutor);
+}
+class MessageSourceImpl {
+  constructor(messageExecutor, sourceExecutor) {
+    this.sourceExecutor = sourceExecutor;
+    __publicField$3(this, "message");
+    this.message = Message(messageExecutor);
+  }
+  use(value) {
+    this.sourceExecutor(value);
+    return this;
+  }
+  then(resolved) {
+    this.message.then(resolved);
+    return this;
+  }
+  catch(rejected) {
+    this.message.catch(rejected);
+    return this;
+  }
 }
 
 function New(construct) {
@@ -524,5 +550,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
 //# sourceMappingURL=silentium.js.map
