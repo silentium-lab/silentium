@@ -31,13 +31,13 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
   }
 
   public then(resolve: ConstructorType<[T]>) {
-    let thenResult: MessageType = this as MessageType;
+    let thenResult: MessageType<T> = this as MessageType<T>;
     try {
       const proxyResolve = (v: T) => {
         const result = resolve(v);
         this.dc.add(result);
         if (isMessage(result)) {
-          thenResult = result;
+          thenResult = result as MessageType<T>;
         }
       };
       this.dc.add(this.executor(proxyResolve, this.rejections.reject));

@@ -9,7 +9,7 @@ type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P
  * values should be received
  */
 interface MessageType<T = unknown> {
-    then(resolved: ConstructorType<[T]>): MessageType;
+    then(resolved: ConstructorType<[T]>): MessageType<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
 }
 /**
@@ -105,7 +105,7 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private rejections;
     private dc;
     constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): MessageType<unknown>;
+    then(resolve: ConstructorType<[T]>): MessageType<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }
