@@ -140,7 +140,10 @@ function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
 }
 
-class Chainable {
+function Chainable(src) {
+  return new ChainableImpl(src);
+}
+class ChainableImpl {
   constructor(src) {
     this.src = src;
   }
@@ -581,6 +584,7 @@ exports.AppliedDestructured = AppliedDestructured;
 exports.Catch = Catch;
 exports.Chain = Chain;
 exports.Chainable = Chainable;
+exports.ChainableImpl = ChainableImpl;
 exports.Context = Context;
 exports.ContextChain = ContextChain;
 exports.ContextOf = ContextOf;
