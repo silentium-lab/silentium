@@ -16,6 +16,11 @@ export class DestroyableImpl<T> implements DestroyableType {
     if (isDestroyable(this.base)) {
       this.base.destroy();
     }
+
+    if (typeof this.base === "function") {
+      this.base();
+    }
+
     return this;
   }
 }

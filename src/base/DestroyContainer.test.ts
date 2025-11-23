@@ -21,6 +21,6 @@ describe("DestroyContainer.test", () => {
 
     c.destroy();
 
-    expect(destroyed).toStrictEqual([1, 1]);
+    expect(destroyed).toStrictEqual([1]);
   });
 });

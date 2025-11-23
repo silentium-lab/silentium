@@ -1,11 +1,63 @@
+const isFilled = (value) => {
+  return value !== void 0 && value !== null;
+};
+function isMessage(o) {
+  return o !== null && typeof o === "object" && "then" in o && typeof o.then === "function";
+}
+function isDestroyable(o) {
+  return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
+}
+function isDestroyed(o) {
+  return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroyed === "function";
+}
+
+function Destroyable(base) {
+  return new DestroyableImpl(base);
+}
+class DestroyableImpl {
+  constructor(base) {
+    this.base = base;
+  }
+  destroy() {
+    if (isDestroyable(this.base)) {
+      this.base.destroy();
+    }
+    if (typeof this.base === "function") {
+      this.base();
+    }
+    return this;
+  }
+}
+
 var __defProp$6 = Object.defineProperty;
 var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, key + "" , value);
+function DestroyContainer() {
+  return new DestroyContainerImpl();
+}
+class DestroyContainerImpl {
+  constructor() {
+    __publicField$6(this, "destructors", []);
+  }
+  add(e) {
+    this.destructors.push(Destroyable(e));
+    return e;
+  }
+  destroy() {
+    this.destructors.forEach((d) => d.destroy());
+    this.destructors.length = 0;
+    return this;
+  }
+}
+
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Rejections {
   constructor() {
-    __publicField$6(this, "catchers", []);
-    __publicField$6(this, "lastRejectReason", null);
-    __publicField$6(this, "reject", (reason) => {
+    __publicField$5(this, "catchers", []);
+    __publicField$5(this, "lastRejectReason", null);
+    __publicField$5(this, "reject", (reason) => {
       this.lastRejectReason = reason;
       this.catchers.forEach((catcher) => {
         catcher(reason);
@@ -25,19 +77,6 @@ class Rejections {
   }
 }
 
-const isFilled = (value) => {
-  return value !== void 0 && value !== null;
-};
-function isMessage(o) {
-  return o !== null && typeof o === "object" && "then" in o && typeof o.then === "function";
-}
-function isDestroyable(o) {
-  return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
-}
-function isDestroyed(o) {
-  return o !== null && typeof o === "object" && "destroyed" in o && typeof o.destroyed === "function";
-}
-
 function ensureFunction(v, label) {
   if (typeof v !== "function") {
     throw new Error(`${label}: is not function`);
@@ -49,35 +88,41 @@ function ensureMessage(v, label) {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Message(executor) {
   return new MessageRx(executor);
 }
 class MessageRx {
   constructor(executor) {
     this.executor = executor;
-    __publicField$5(this, "mbDestructor");
-    __publicField$5(this, "rejections", new Rejections());
+    __publicField$4(this, "rejections", new Rejections());
+    __publicField$4(this, "dc", DestroyContainer());
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
+    let thenResult = this;
     try {
-      this.mbDestructor = this.executor(resolve, this.rejections.reject);
+      const proxyResolve = (v) => {
+        const result = resolve(v);
+        this.dc.add(result);
+        if (isMessage(result)) {
+          thenResult = result;
+        }
+      };
+      this.dc.add(this.executor(proxyResolve, this.rejections.reject));
     } catch (e) {
       this.rejections.reject(e);
     }
-    return this;
+    return thenResult;
   }
   catch(rejected) {
     this.rejections.catch(rejected);
     return this;
   }
   destroy() {
-    if (typeof this.mbDestructor === "function") {
-      this.mbDestructor?.();
-    }
+    this.dc.destroy();
     this.rejections.destroy();
     return this;
   }
@@ -91,44 +136,6 @@ function Of(value) {
 
 function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
-}
-
-function Destroyable(base) {
-  return new DestroyableImpl(base);
-}
-class DestroyableImpl {
-  constructor(base) {
-    this.base = base;
-  }
-  destroy() {
-    if (isDestroyable(this.base)) {
-      this.base.destroy();
-    }
-    return this;
-  }
-}
-
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
-function DestroyContainer() {
-  return new DestroyContainerImpl();
-}
-class DestroyContainerImpl {
-  constructor() {
-    __publicField$4(this, "destructors", []);
-  }
-  add(e) {
-    if (isDestroyable(e)) {
-      this.destructors.push(e);
-    }
-    return e;
-  }
-  destroy() {
-    this.destructors.forEach((d) => d.destroy());
-    this.destructors.length = 0;
-    return this;
-  }
 }
 
 function Local(_base) {

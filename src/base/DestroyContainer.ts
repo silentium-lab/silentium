@@ -1,4 +1,4 @@
-import { isDestroyable } from "helpers/guards";
+import { Destroyable } from "base/Destroyable";
 import { DestroyableType } from "types/DestroyableType";
 
 /**
@@ -13,9 +13,7 @@ export class DestroyContainerImpl implements DestroyableType {
   private destructors: DestroyableType[] = [];
 
   public add<R>(e: R): R {
-    if (isDestroyable(e)) {
-      this.destructors.push(e);
-    }
+    this.destructors.push(Destroyable(e));
     return e;
   }
 

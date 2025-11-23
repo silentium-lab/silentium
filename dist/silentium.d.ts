@@ -9,7 +9,7 @@ type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P
  * values should be received
  */
 interface MessageType<T = unknown> {
-    then(resolved: ConstructorType<[T]>): this;
+    then(resolved: ConstructorType<[T]>): MessageType;
     catch(rejected: ConstructorType<[unknown]>): this;
 }
 /**
@@ -65,7 +65,7 @@ declare class DestroyContainerImpl implements DestroyableType {
     destroy(): this;
 }
 
-type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => unknown | (() => void);
+type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
 /**
  * A message created from an executor function.
  * The executor function can return a message destruction function.
@@ -76,10 +76,10 @@ declare function Message<T>(executor: MessageExecutorType<T>): MessageRx<T>;
  */
 declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private executor;
-    private mbDestructor;
     private rejections;
+    private dc;
     constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): this;
+    then(resolve: ConstructorType<[T]>): MessageType<unknown>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }
