@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.147](https://github.com/silentium-lab/silentium/compare/v0.0.146...v0.0.147) (2025-11-23)
+
+
+### Bug Fixes
+
+* **main:** chainable as function ([e12d18d](https://github.com/silentium-lab/silentium/commit/e12d18d83eabd65d9284c940799d6fc00cfd2795))
+
 ### [0.0.146](https://github.com/silentium-lab/silentium/compare/v0.0.145...v0.0.146) (2025-11-23)
 
 
