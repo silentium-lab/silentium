@@ -15,7 +15,9 @@ describe("ActualMessage.test.ts", () => {
 
   test("ActualMessage returns message objects unchanged", () => {
     const messageValue = "test";
-    const existingMessage = Message((r) => r(messageValue));
+    const existingMessage = Message((r) => {
+      r(messageValue);
+    });
 
     const msg = ActualMessage(existingMessage);
 

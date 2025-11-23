@@ -175,7 +175,7 @@ declare function All<const T extends MaybeMessage[]>(...messages: T): MessageRx<
  * A message that emits values received from
  * any of its bound messages
  */
-declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageRx<unknown>;
+declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageRx<T>;
 
 /**
  * An message that applies a function
@@ -277,7 +277,7 @@ declare function Filtered<T>(base: MaybeMessage<T>, predicate: ConstructorType<[
  * Allows attaching a custom handler to an existing event source
  * and presenting it as a silentium message
  */
-declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessage<string>, subscribeMethod: MaybeMessage<string>, unsubscribeMethod?: MaybeMessage<string>): MessageRx<unknown>;
+declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessage<string>, subscribeMethod: MaybeMessage<string>, unsubscribeMethod?: MaybeMessage<string>): MessageRx<T>;
 
 /**
  * Helps represent an message as a primitive type, which can be useful
