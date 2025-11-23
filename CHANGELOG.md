@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.148](https://github.com/silentium-lab/silentium/compare/v0.0.147...v0.0.148) (2025-11-23)
+
+
+### Bug Fixes
+
+* **main:** message component typing ([48c292b](https://github.com/silentium-lab/silentium/commit/48c292b77aba6eac3f708a330e8ae5d009127985))
+
 ### [0.0.147](https://github.com/silentium-lab/silentium/compare/v0.0.146...v0.0.147) (2025-11-23)
 
 
