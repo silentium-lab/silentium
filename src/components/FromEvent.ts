@@ -20,7 +20,7 @@ export function FromEvent<T>(
   const $eventName = ActualMessage(eventName);
   const $subscribeMethod = ActualMessage(subscribeMethod);
   const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
-  return Message((r) => {
+  return Message<T>((r) => {
     let lastR: ConstructorType<[T]> | null = null;
     const handler = (v: T) => {
       if (lastR) {
