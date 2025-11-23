@@ -283,12 +283,16 @@ declare class PrimitiveImpl<T> {
     primitiveWithException(): T & ({} | undefined);
 }
 
+interface ChainableType<T> {
+    chain(m: MessageType<T>): this;
+}
+
 /**
  * An information object that helps multiple owners access
  * a single another information object
  */
 declare function Shared<T>($base: MessageType<T>, source?: SourceType<T>): SharedImpl<T>;
-declare class SharedImpl<T> implements MessageSourceType<T> {
+declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
     private $base;
     private source?;
     private resolver;
@@ -300,6 +304,7 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
     value(): PrimitiveImpl<T>;
+    chain(m: MessageType<T>): this;
 }
 
 /**

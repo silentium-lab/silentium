@@ -3,6 +3,7 @@ import { MessageSourceType, SourceType } from "types/SourceType";
 import { ConstructorType } from "types/ConstructorType";
 import { isFilled } from "helpers/guards";
 import { Primitive } from "components/Primitive";
+import { ChainableType } from "types/ChainableType";
 
 /**
  * An information object that helps multiple owners access
@@ -12,7 +13,7 @@ export function Shared<T>($base: MessageType<T>, source?: SourceType<T>) {
   return new SharedImpl<T>($base, source);
 }
 
-export class SharedImpl<T> implements MessageSourceType<T> {
+export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
   private resolver = (v: T) => {
     this.lastV = v;
     this.resolvers.forEach((r) => {
@@ -58,5 +59,10 @@ export class SharedImpl<T> implements MessageSourceType<T> {
 
   public value() {
     return Primitive(this);
+  }
+
+  public chain(m: MessageType<T>) {
+    m.then(this.use.bind(this));
+    return this;
   }
 }

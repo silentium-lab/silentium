@@ -26,4 +26,23 @@ describe("Shared.test", () => {
 
     s.destroy();
   });
+
+  test("chain method forwards messages to shared", () => {
+    const d = Diagram();
+    const s = Shared(Late<number>());
+    const m = Late<number>();
+
+    s.then((v) => {
+      d.resolver(`shared_${v}`);
+    });
+
+    s.chain(m);
+
+    m.use(42);
+    m.use(99);
+
+    expect(d.toString()).toBe("shared_42|shared_99");
+
+    s.destroy();
+  });
 });

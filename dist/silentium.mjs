@@ -427,6 +427,10 @@ class SharedImpl {
   value() {
     return Primitive(this);
   }
+  chain(m) {
+    m.then(this.use.bind(this));
+    return this;
+  }
 }
 
 function LateShared(value) {
