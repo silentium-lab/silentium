@@ -28,6 +28,31 @@ type MaybeMessage<T = unknown> = MessageType<T> | T;
  */
 declare function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T>;
 
+interface ChainableType<T> {
+    chain(m: MessageType<T>): this;
+}
+
+/**
+ * A type that can accept value
+ */
+interface SourceType<T = unknown> {
+    use(value: T): this;
+}
+/**
+ * Message and source at same time
+ */
+type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
+
+/**
+ * Helps to connect Different
+ * message and source
+ */
+declare class Chainable<T> implements ChainableType<T> {
+    private src;
+    constructor(src: SourceType<T>);
+    chain($m: MessageType<T>): this;
+}
+
 /**
  * Type of an object that can
  * be destroyed
@@ -88,17 +113,6 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
  * Create local copy of source what can be destroyed
  */
 declare function Local<T>(_base: MaybeMessage<T>): MessageRx<T>;
-
-/**
- * A type that can accept value
- */
-interface SourceType<T = unknown> {
-    use(value: T): this;
-}
-/**
- * Message and source at same time
- */
-type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
 
 /**
  * Base message source object
@@ -283,10 +297,6 @@ declare class PrimitiveImpl<T> {
     primitiveWithException(): T & ({} | undefined);
 }
 
-interface ChainableType<T> {
-    chain(m: MessageType<T>): this;
-}
-
 /**
  * An information object that helps multiple owners access
  * a single another information object
@@ -357,4 +367,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };

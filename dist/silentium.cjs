@@ -140,6 +140,16 @@ function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
 }
 
+class Chainable {
+  constructor(src) {
+    this.src = src;
+  }
+  chain($m) {
+    $m.then(this.src.use.bind(this.src));
+    return this;
+  }
+}
+
 function Local(_base) {
   const $base = ActualMessage(_base);
   return Message(function LocalImpl(r) {
@@ -570,6 +580,7 @@ exports.Applied = Applied;
 exports.AppliedDestructured = AppliedDestructured;
 exports.Catch = Catch;
 exports.Chain = Chain;
+exports.Chainable = Chainable;
 exports.Context = Context;
 exports.ContextChain = ContextChain;
 exports.ContextOf = ContextOf;

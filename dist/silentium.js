@@ -138,6 +138,16 @@ function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
 }
 
+class Chainable {
+  constructor(src) {
+    this.src = src;
+  }
+  chain($m) {
+    $m.then(this.src.use.bind(this.src));
+    return this;
+  }
+}
+
 function Local(_base) {
   const $base = ActualMessage(_base);
   return Message(function LocalImpl(r) {
@@ -561,5 +571,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
 //# sourceMappingURL=silentium.js.map
