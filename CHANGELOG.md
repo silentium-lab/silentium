@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.146](https://github.com/silentium-lab/silentium/compare/v0.0.145...v0.0.146) (2025-11-23)
+
+
+### Bug Fixes
+
+* **main:** chainable component ([252367c](https://github.com/silentium-lab/silentium/commit/252367c053a2612a697155475e568f5dda3f2c93))
+
 ### [0.0.145](https://github.com/silentium-lab/silentium/compare/v0.0.144...v0.0.145) (2025-11-23)
 
 
