@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.149](https://github.com/silentium-lab/silentium/compare/v0.0.148...v0.0.149) (2025-11-23)
+
+
+### Bug Fixes
+
+* **main:** any component type fix ([18d001e](https://github.com/silentium-lab/silentium/commit/18d001ef9328472ffd0bdd003fc22177a60c9f13))
+* **main:** fromEvent component type fix ([7ea875f](https://github.com/silentium-lab/silentium/commit/7ea875f76a770b5dde8f14b334ca18c6d9b6481a))
+
 ### [0.0.148](https://github.com/silentium-lab/silentium/compare/v0.0.147...v0.0.148) (2025-11-23)
 
 
