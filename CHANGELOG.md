@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.151](https://github.com/silentium-lab/silentium/compare/v0.0.150...v0.0.151) (2025-11-24)
+
+
+### Bug Fixes
+
+* **main:** message chain fix ([220b44b](https://github.com/silentium-lab/silentium/commit/220b44b4a25437b508f9179feae34d7408eb964d))
+
 ### [0.0.150](https://github.com/silentium-lab/silentium/compare/v0.0.149...v0.0.150) (2025-11-24)
 
 
