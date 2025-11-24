@@ -562,6 +562,24 @@ function Once($base) {
   });
 }
 
+function Process($base, builder) {
+  return Message((resolve, reject) => {
+    const $res = LateShared();
+    const dc = DestroyContainer();
+    $base.then((v) => {
+      const $msg = builder(v);
+      dc.add($msg);
+      $res.chain($msg);
+      $msg.catch(reject);
+    });
+    $base.catch(reject);
+    $res.then(resolve);
+    return () => {
+      dc.destroy();
+    };
+  });
+}
+
 function Sequence($base) {
   return Message((r) => {
     const result = [];
@@ -583,5 +601,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

@@ -337,6 +337,8 @@ declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[
  */
 declare function Once<T>($base: MessageType<T>): MessageRx<T>;
 
+declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageRx<R>;
+
 /**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
@@ -372,5 +374,5 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };

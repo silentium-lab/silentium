@@ -564,6 +564,24 @@ function Once($base) {
   });
 }
 
+function Process($base, builder) {
+  return Message((resolve, reject) => {
+    const $res = LateShared();
+    const dc = DestroyContainer();
+    $base.then((v) => {
+      const $msg = builder(v);
+      dc.add($msg);
+      $res.chain($msg);
+      $msg.catch(reject);
+    });
+    $base.catch(reject);
+    $res.then(resolve);
+    return () => {
+      dc.destroy();
+    };
+  });
+}
+
 function Sequence($base) {
   return Message((r) => {
     const result = [];
@@ -618,6 +636,7 @@ exports.Of = Of;
 exports.Once = Once;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
+exports.Process = Process;
 exports.Rejections = Rejections;
 exports.Sequence = Sequence;
 exports.Shared = Shared;
