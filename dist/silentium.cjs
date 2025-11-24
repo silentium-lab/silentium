@@ -247,7 +247,7 @@ class MessageRx {
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
-    let thenResult = LateShared();
+    const thenResult = LateShared();
     try {
       const proxyResolve = (v) => {
         const result = resolve(v);

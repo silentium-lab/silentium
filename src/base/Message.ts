@@ -32,7 +32,7 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
   }
 
   public then(resolve: ConstructorType<[T]>) {
-    let thenResult = LateShared<T>();
+    const thenResult = LateShared<T>();
     try {
       const proxyResolve = (v: T) => {
         const result = resolve(v);
