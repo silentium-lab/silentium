@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.153](https://github.com/silentium-lab/silentium/compare/v0.0.152...v0.0.153) (2025-11-24)
+
+
+### Bug Fixes
+
+* **main:** process component added ([c2db805](https://github.com/silentium-lab/silentium/commit/c2db8051db80c248bc0c7be10f15fe843c85478b))
+
 ### [0.0.152](https://github.com/silentium-lab/silentium/compare/v0.0.151...v0.0.152) (2025-11-24)
 
 
