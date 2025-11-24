@@ -4,6 +4,9 @@ const isFilled = (value) => {
 function isMessage(o) {
   return o !== null && typeof o === "object" && "then" in o && typeof o.then === "function";
 }
+function isSource(o) {
+  return o !== null && typeof o === "object" && "use" in o && typeof o.use === "function";
+}
 function isDestroyable(o) {
   return o !== null && typeof o === "object" && "destroy" in o && typeof o.destroy === "function";
 }
@@ -418,6 +421,9 @@ class SharedImpl {
     });
     __publicField(this, "lastV");
     __publicField(this, "resolvers", /* @__PURE__ */ new Set());
+    if (isSource($base)) {
+      this.source = $base;
+    }
   }
   then(resolved) {
     this.resolvers.add(resolved);
@@ -574,5 +580,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Of, Once, Primitive, PrimitiveImpl, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.js.map
