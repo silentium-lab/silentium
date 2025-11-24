@@ -1,7 +1,7 @@
 import { MessageType } from "types/MessageType";
 import { MessageSourceType, SourceType } from "types/SourceType";
 import { ConstructorType } from "types/ConstructorType";
-import { isFilled } from "helpers/guards";
+import { isFilled, isSource } from "helpers/guards";
 import { Primitive } from "components/Primitive";
 import { ChainableType } from "types/ChainableType";
 
@@ -26,7 +26,11 @@ export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
   public constructor(
     private $base: MessageType<T>,
     private source?: SourceType<T>,
-  ) {}
+  ) {
+    if (isSource($base)) {
+      this.source = $base;
+    }
+  }
 
   public then(resolved: ConstructorType<[T]>) {
     this.resolvers.add(resolved);

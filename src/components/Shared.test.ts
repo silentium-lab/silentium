@@ -45,4 +45,14 @@ describe("Shared.test", () => {
 
     s.destroy();
   });
+
+  test("check what shared can accept one MessageSource argument", async () => {
+    const $l = Late(1);
+    const $sl = Shared($l);
+
+    $sl.use(2);
+
+    const v = await $l;
+    expect(v).toBe(2);
+  });
 });
