@@ -1,5 +1,6 @@
 import { DestroyableType, DestroyedType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
+import { SourceType } from "types/SourceType";
 
 /**
  * Checks that the value is neither undefined nor null
@@ -19,6 +20,18 @@ export function isMessage(o: unknown): o is MessageType {
     typeof o === "object" &&
     "then" in o &&
     typeof (o as any).then === "function"
+  );
+}
+
+/**
+ * Checks that the object is an message
+ */
+export function isSource(o: unknown): o is SourceType {
+  return (
+    o !== null &&
+    typeof o === "object" &&
+    "use" in o &&
+    typeof (o as any).use === "function"
   );
 }
 
