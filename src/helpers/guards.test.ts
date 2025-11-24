@@ -51,7 +51,7 @@ describe("guards", () => {
       const o: unknown = { then: () => {} };
       if (isMessage(o)) {
         expectTypeOf(o).not.toBeNever();
-        expect(typeof o.then).toBe('function');
+        expect(typeof o.then).toBe("function");
       }
     });
   });
@@ -75,7 +75,7 @@ describe("guards", () => {
       const o: unknown = { use: () => {} };
       if (isSource(o)) {
         expectTypeOf(o).not.toBeNever();
-        expect(typeof o.use).toBe('function');
+        expect(typeof o.use).toBe("function");
       }
     });
   });
@@ -99,7 +99,7 @@ describe("guards", () => {
       const o: unknown = { destroy: () => {} };
       if (isDestroyable(o)) {
         expectTypeOf(o).not.toBeNever();
-        expect(typeof o.destroy).toBe('function');
+        expect(typeof o.destroy).toBe("function");
       }
     });
   });
@@ -123,7 +123,7 @@ describe("guards", () => {
       const o: unknown = { destroyed: () => {} };
       if (isDestroyed(o)) {
         expectTypeOf(o).not.toBeNever();
-        expect(typeof o.destroyed).toBe('function');
+        expect(typeof o.destroyed).toBe("function");
       }
     });
   });

@@ -10,19 +10,19 @@ describe("ensures", () => {
 
     test("throws error for non-function values", () => {
       expect(() => ensureFunction("string", "test")).toThrowError(
-        "test: is not function"
+        "test: is not function",
       );
       expect(() => ensureFunction(123, "test")).toThrowError(
-        "test: is not function"
+        "test: is not function",
       );
       expect(() => ensureFunction({}, "test")).toThrowError(
-        "test: is not function"
+        "test: is not function",
       );
       expect(() => ensureFunction(null, "test")).toThrowError(
-        "test: is not function"
+        "test: is not function",
       );
       expect(() => ensureFunction(undefined, "test")).toThrowError(
-        "test: is not function"
+        "test: is not function",
       );
     });
   });
@@ -35,22 +35,22 @@ describe("ensures", () => {
 
     test("throws error for invalid message values", () => {
       expect(() => ensureMessage(null, "test")).toThrowError(
-        "test: is not message"
+        "test: is not message",
       );
       expect(() => ensureMessage(undefined, "test")).toThrowError(
-        "test: is not message"
+        "test: is not message",
       );
       expect(() => ensureMessage({}, "test")).toThrowError(
-        "test: is not message"
+        "test: is not message",
       );
-      expect(() => ensureMessage({ then: "not function" }, "test")).toThrowError(
-        "test: is not message"
-      );
+      expect(() =>
+        ensureMessage({ then: "not function" }, "test"),
+      ).toThrowError("test: is not message");
       expect(() => ensureMessage("string", "test")).toThrowError(
-        "test: is not message"
+        "test: is not message",
       );
       expect(() => ensureMessage(123, "test")).toThrowError(
-        "test: is not message"
+        "test: is not message",
       );
     });
   });
