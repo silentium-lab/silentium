@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.154](https://github.com/silentium-lab/silentium/compare/v0.0.153...v0.0.154) (2025-11-24)
+
+
+### Bug Fixes
+
+* **main:** export process component ([eae9041](https://github.com/silentium-lab/silentium/commit/eae9041beafafcda0a44776981415a3f36fcde0e))
+
 ### [0.0.153](https://github.com/silentium-lab/silentium/compare/v0.0.152...v0.0.153) (2025-11-24)
 
 
