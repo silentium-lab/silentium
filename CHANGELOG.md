@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.152](https://github.com/silentium-lab/silentium/compare/v0.0.151...v0.0.152) (2025-11-24)
+
+
+### Bug Fixes
+
+* **main:** message component lint fix ([de43262](https://github.com/silentium-lab/silentium/commit/de43262108b65267a029df7ef8423def26bf1cbc))
+
 ### [0.0.151](https://github.com/silentium-lab/silentium/compare/v0.0.150...v0.0.151) (2025-11-24)
 
 
