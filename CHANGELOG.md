@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.150](https://github.com/silentium-lab/silentium/compare/v0.0.149...v0.0.150) (2025-11-24)
+
+
+### Features
+
+* **main:** issource guard added and tests ([974342e](https://github.com/silentium-lab/silentium/commit/974342e6cffec3c8d8a2d5459146fc58f3ecbe48))
+
+
+### Bug Fixes
+
+* **main:** linter fixes ([5fa3750](https://github.com/silentium-lab/silentium/commit/5fa37508651cc248a72c1748baa5fc7f478fd59a))
+* **main:** new lock file ([a75869c](https://github.com/silentium-lab/silentium/commit/a75869c1928d6bd0497db644ddfc31a1fb94f9e4))
+* **main:** shared can accept one messagesource ([50bf8cc](https://github.com/silentium-lab/silentium/commit/50bf8cc7f862f42c94a87977f99f3792263ec6df))
+
 ### [0.0.149](https://github.com/silentium-lab/silentium/compare/v0.0.148...v0.0.149) (2025-11-23)
 
 
