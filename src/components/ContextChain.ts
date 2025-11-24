@@ -5,11 +5,12 @@ import { ContextType } from "types/ContextType";
 /**
  * Connects an external message to an RPC message chain
  */
-export function ContextChain($base: MaybeMessage) {
+export function ContextChain(base: MaybeMessage) {
+  const $base = ActualMessage(base);
   return (context: ContextType) => {
     if (!context.result) {
       throw new Error("ContextChain did not find result in rpc message");
     }
-    ActualMessage($base).then(context.result);
+    $base.then(context.result);
   };
 }

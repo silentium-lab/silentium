@@ -105,7 +105,7 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private rejections;
     private dc;
     constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): MessageType<T>;
+    then(resolve: ConstructorType<[T]>): SharedImpl<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }
@@ -249,7 +249,7 @@ declare namespace Context {
 /**
  * Connects an external message to an RPC message chain
  */
-declare function ContextChain($base: MaybeMessage): (context: ContextType) => void;
+declare function ContextChain(base: MaybeMessage): (context: ContextType) => void;
 
 /**
  * Message for the arrival of a specific RPC message

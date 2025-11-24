@@ -1,5 +1,6 @@
 import { DestroyContainer } from "base/DestroyContainer";
 import { Rejections } from "base/Rejections";
+import { LateShared } from "components/LateShared";
 import { ensureFunction } from "helpers/ensures";
 import { isMessage } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
@@ -31,13 +32,15 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
   }
 
   public then(resolve: ConstructorType<[T]>) {
-    let thenResult: MessageType<T> = this as MessageType<T>;
+    let thenResult = LateShared<T>();
     try {
       const proxyResolve = (v: T) => {
         const result = resolve(v);
         this.dc.add(result);
         if (isMessage(result)) {
-          thenResult = result as MessageType<T>;
+          thenResult.chain(result as MessageType<T>);
+        } else {
+          thenResult.use(v);
         }
       };
       this.dc.add(this.executor(proxyResolve, this.rejections.reject));
