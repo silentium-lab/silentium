@@ -28,8 +28,6 @@ export function Message<T>(
 export class MessageRx<T> implements MessageType<T>, DestroyableType {
   private rejections = new Rejections();
   private dc = DestroyContainer();
-  private executed = false;
-  private late = LateShared<T>();
 
   public constructor(
     private executor: MessageExecutorType<T>,
@@ -40,19 +38,7 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
 
   public then(resolve: ConstructorType<[T]>) {
     try {
-      if (this.everyThenCallsExecutor) {
-        this.dc.add(this.executor(resolve, this.rejections.reject));
-      } else if (!this.executed) {
-        this.executed = true;
-        this.late.then(resolve);
-        this.dc.add(
-          this.executor((v) => {
-            this.late.use(v);
-          }, this.rejections.reject),
-        );
-      } else {
-        this.late.then(resolve);
-      }
+      this.dc.add(this.executor(resolve, this.rejections.reject));
     } catch (e: any) {
       this.rejections.reject(e);
     }

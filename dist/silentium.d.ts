@@ -105,8 +105,6 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private everyThenCallsExecutor;
     private rejections;
     private dc;
-    private executed;
-    private late;
     constructor(executor: MessageExecutorType<T>, everyThenCallsExecutor?: boolean);
     then(resolve: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;

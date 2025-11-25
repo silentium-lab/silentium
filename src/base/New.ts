@@ -8,5 +8,5 @@ import { ConstructorType } from "types/ConstructorType";
 export function New<T>(construct: ConstructorType<[], T>) {
   return Message<T>(function NewImpl(resolve) {
     resolve(construct());
-  }, true);
+  });
 }
