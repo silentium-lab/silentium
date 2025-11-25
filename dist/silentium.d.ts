@@ -96,15 +96,18 @@ type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: Constructo
  * A message created from an executor function.
  * The executor function can return a message destruction function.
  */
-declare function Message<T>(executor: MessageExecutorType<T>): MessageRx<T>;
+declare function Message<T>(executor: MessageExecutorType<T>, everyThenCallsExecutor?: boolean): MessageRx<T>;
 /**
  * Reactive message implementation
  */
 declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private executor;
+    private everyThenCallsExecutor;
     private rejections;
     private dc;
-    constructor(executor: MessageExecutorType<T>);
+    private executed;
+    private late;
+    constructor(executor: MessageExecutorType<T>, everyThenCallsExecutor?: boolean);
     then(resolve: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
