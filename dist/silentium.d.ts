@@ -257,6 +257,24 @@ declare function ContextChain(base: MaybeMessage): (context: ContextType) => voi
  */
 declare function ContextOf(transport: string): MessageRx<ContextType>;
 
+interface EmptyType {
+    empty(): MessageType<boolean>;
+}
+
+declare const Nothing: unique symbol;
+/**
+ * Helps to split message and empty
+ * response
+ */
+declare function Empty<T>($base: MessageType<T>): EmptyImpl<T>;
+declare class EmptyImpl<T> implements EmptyType {
+    private $base;
+    private $empty;
+    constructor($base: MessageType<T>);
+    message(): MessageType<T>;
+    empty(): MessageType<boolean>;
+}
+
 type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 /**
  * Applies a value transfer function to the resolver
@@ -374,4 +392,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Empty, EmptyImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
