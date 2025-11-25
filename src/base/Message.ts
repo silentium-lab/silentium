@@ -1,6 +1,5 @@
 import { DestroyContainer } from "base/DestroyContainer";
 import { Rejections } from "base/Rejections";
-import { LateShared } from "components/LateShared";
 import { ensureFunction } from "helpers/ensures";
 import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
