@@ -55,4 +55,17 @@ describe("Shared.test", () => {
     const v = await $l;
     expect(v).toBe(2);
   });
+
+  test("checks if shared can't emit two messages from one base when using and resolving base", () => {
+    const $l = Late();
+    const $sl = Shared($l);
+
+    $l.use(2);
+    let count = 0;
+    $sl.then(() => {
+      count += 1;
+    });
+
+    expect(count).toBe(1);
+  });
 });

@@ -4,6 +4,7 @@ import { Process } from "components/Process";
 import { Late } from "components/Late";
 import { Diagram } from "testing/Diagram";
 import { Of } from "base/Of";
+import { Shared } from "components/Shared";
 
 describe("Process.test", () => {
   test("basic process", async () => {
@@ -110,5 +111,24 @@ describe("Process.test", () => {
 
     $proc.destroy();
     expect(isDestroyed).toBe(true);
+  });
+
+  test("ensure response not doubled", () => {
+    const $l = Late<number>();
+    const $sl = Shared($l);
+    const $proc = Process<number>($sl, (v) => {
+      return Of(v + 2);
+    });
+
+    let count = 0;
+    $proc.then(() => {
+      count += 1;
+    });
+
+    expect(count).toBe(0);
+
+    $l.use(2);
+
+    expect(count).toBe(1);
   });
 });

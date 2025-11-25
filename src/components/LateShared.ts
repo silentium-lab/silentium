@@ -7,5 +7,5 @@ import { Shared } from "components/Shared";
  */
 export function LateShared<T>(value?: T) {
   const l = Late(value);
-  return Shared(l, l);
+  return Shared(l);
 }

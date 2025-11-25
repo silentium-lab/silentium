@@ -9,8 +9,8 @@ import { ChainableType } from "types/ChainableType";
  * An information object that helps multiple owners access
  * a single another information object
  */
-export function Shared<T>($base: MessageType<T>, source?: SourceType<T>) {
-  return new SharedImpl<T>($base, source);
+export function Shared<T>($base: MessageType<T> | MessageSourceType<T>) {
+  return new SharedImpl<T>($base);
 }
 
 export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
@@ -22,11 +22,9 @@ export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
   };
   private lastV: T | undefined;
   private resolvers = new Set<ConstructorType<[T]>>();
+  private source?: SourceType<T>;
 
-  public constructor(
-    private $base: MessageType<T>,
-    private source?: SourceType<T>,
-  ) {
+  public constructor(private $base: MessageType<T> | MessageSourceType<T>) {
     if (isSource($base)) {
       this.source = $base;
     }
