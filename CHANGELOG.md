@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.160](https://github.com/silentium-lab/silentium/compare/v0.0.159...v0.0.160) (2025-11-25)
+
+
+### Bug Fixes
+
+* **main:** fix lint ([550d1df](https://github.com/silentium-lab/silentium/commit/550d1dfe3fc1902fe2633c5ae35ce754d7ef993a))
+
 ### [0.0.159](https://github.com/silentium-lab/silentium/compare/v0.0.158...v0.0.159) (2025-11-25)
 
 
