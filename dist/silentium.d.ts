@@ -105,7 +105,7 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private rejections;
     private dc;
     constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): SharedImpl<T>;
+    then(resolve: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }
@@ -302,14 +302,14 @@ declare class PrimitiveImpl<T> {
  * An information object that helps multiple owners access
  * a single another information object
  */
-declare function Shared<T>($base: MessageType<T>, source?: SourceType<T>): SharedImpl<T>;
+declare function Shared<T>($base: MessageType<T> | MessageSourceType<T>): SharedImpl<T>;
 declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
     private $base;
-    private source?;
     private resolver;
     private lastV;
     private resolvers;
-    constructor($base: MessageType<T>, source?: SourceType<T> | undefined);
+    private source?;
+    constructor($base: MessageType<T> | MessageSourceType<T>);
     then(resolved: ConstructorType<[T]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
