@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.159](https://github.com/silentium-lab/silentium/compare/v0.0.158...v0.0.159) (2025-11-25)
+
+
+### Bug Fixes
+
+* **main:** revert back msg ([308aae8](https://github.com/silentium-lab/silentium/commit/308aae8ec0e520ae2ccb8a258a8997d4bd387556))
+
 ### [0.0.158](https://github.com/silentium-lab/silentium/compare/v0.0.157...v0.0.158) (2025-11-25)
 
 
