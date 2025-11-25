@@ -13,6 +13,7 @@ export function Process<T, R = unknown>(
     const dc = DestroyContainer();
 
     $base.then((v) => {
+      dc.destroy();
       const $msg = builder(v);
       dc.add($msg);
       $res.chain($msg);
