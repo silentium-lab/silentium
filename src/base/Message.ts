@@ -1,5 +1,6 @@
 import { DestroyContainer } from "base/DestroyContainer";
 import { Rejections } from "base/Rejections";
+import { LateShared } from "components/LateShared";
 import { ensureFunction } from "helpers/ensures";
 import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
@@ -14,8 +15,11 @@ export type MessageExecutorType<T> = (
  * A message created from an executor function.
  * The executor function can return a message destruction function.
  */
-export function Message<T>(executor: MessageExecutorType<T>) {
-  return new MessageRx<T>(executor);
+export function Message<T>(
+  executor: MessageExecutorType<T>,
+  everyThenCallsExecutor: boolean = false,
+) {
+  return new MessageRx<T>(executor, everyThenCallsExecutor);
 }
 
 /**
@@ -24,14 +28,31 @@ export function Message<T>(executor: MessageExecutorType<T>) {
 export class MessageRx<T> implements MessageType<T>, DestroyableType {
   private rejections = new Rejections();
   private dc = DestroyContainer();
+  private executed = false;
+  private late = LateShared<T>();
 
-  public constructor(private executor: MessageExecutorType<T>) {
+  public constructor(
+    private executor: MessageExecutorType<T>,
+    private everyThenCallsExecutor: boolean = false,
+  ) {
     ensureFunction(executor, "Message: executor");
   }
 
   public then(resolve: ConstructorType<[T]>) {
     try {
-      this.dc.add(this.executor(resolve, this.rejections.reject));
+      if (this.everyThenCallsExecutor) {
+        this.dc.add(this.executor(resolve, this.rejections.reject));
+      } else if (!this.executed) {
+        this.executed = true;
+        this.late.then(resolve);
+        this.dc.add(
+          this.executor((v) => {
+            this.late.use(v);
+          }, this.rejections.reject),
+        );
+      } else {
+        this.late.then(resolve);
+      }
     } catch (e: any) {
       this.rejections.reject(e);
     }
