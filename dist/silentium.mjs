@@ -94,13 +94,12 @@ function ensureMessage(v, label) {
 var __defProp$5 = Object.defineProperty;
 var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Message(executor, everyThenCallsExecutor = false) {
-  return new MessageRx(executor, everyThenCallsExecutor);
+function Message(executor) {
+  return new MessageRx(executor);
 }
 class MessageRx {
-  constructor(executor, everyThenCallsExecutor = false) {
+  constructor(executor) {
     this.executor = executor;
-    this.everyThenCallsExecutor = everyThenCallsExecutor;
     __publicField$5(this, "rejections", new Rejections());
     __publicField$5(this, "dc", DestroyContainer());
     ensureFunction(executor, "Message: executor");
@@ -204,20 +203,21 @@ const isAllFilled = (keysFilled, keysKnown) => {
 };
 function All(...messages) {
   const $messages = messages.map(ActualMessage);
-  return Message(function AllImpl(r) {
+  return Message(function AllImpl(resolve, reject) {
     const known = new Set(Object.keys(messages));
     const filled = /* @__PURE__ */ new Set();
     const result = [];
     if (known.size === 0) {
-      r([]);
+      resolve([]);
       return;
     }
     $messages.map((m, key) => {
+      m.catch(reject);
       m.then((v) => {
         filled.add(key.toString());
         result[key] = v;
         if (isAllFilled(filled, known)) {
-          r(result);
+          resolve(result);
         }
       });
     });
@@ -226,18 +226,20 @@ function All(...messages) {
 
 function Any(...messages) {
   const $messages = messages.map(ActualMessage);
-  return Message(function AnyImpl(r) {
+  return Message(function AnyImpl(resolve, reject) {
     $messages.forEach((message) => {
-      message.then(r);
+      message.catch(reject);
+      message.then(resolve);
     });
   });
 }
 
 function Applied(base, applier) {
   const $base = ActualMessage(base);
-  return Message(function AppliedImpl(r) {
+  return Message(function AppliedImpl(resolve, reject) {
+    $base.catch(reject);
     $base.then((v) => {
-      r(applier(v));
+      resolve(applier(v));
     });
   });
 }
@@ -302,28 +304,31 @@ function Catch($base) {
 
 function Chain(...messages) {
   const $messages = messages.map(ActualMessage);
-  return Message(function ChainImpl(r) {
-    let $latest;
-    const handleMessage = (index) => {
-      const message = $messages[index];
-      const next = $messages[index + 1];
-      message.then((v) => {
-        oneMessage(v, next, index);
-      });
-    };
-    function oneMessage(v, next, index) {
-      if (!next) {
-        $latest = v;
+  return Message(
+    function ChainImpl(resolve, reject) {
+      let $latest;
+      const handleMessage = (index) => {
+        const message = $messages[index];
+        message.catch(reject);
+        const next = $messages[index + 1];
+        message.then((v) => {
+          oneMessage(v, next, index);
+        });
+      };
+      function oneMessage(v, next, index) {
+        if (!next) {
+          $latest = v;
+        }
+        if ($latest) {
+          resolve($latest);
+        }
+        if (next && !$latest) {
+          handleMessage(index + 1);
+        }
       }
-      if ($latest) {
-        r($latest);
-      }
-      if (next && !$latest) {
-        handleMessage(index + 1);
-      }
+      handleMessage(0);
     }
-    handleMessage(0);
-  });
+  );
 }
 
 Context.transport = /* @__PURE__ */ new Map();
@@ -461,19 +466,21 @@ function LateShared(value) {
 function ContextOf(transport) {
   const $msg = LateShared();
   Context.transport.set(transport, $msg.use.bind($msg));
-  return Message((t) => {
-    $msg.then(t);
+  return Message((resolve, reject) => {
+    $msg.catch(reject);
+    $msg.then(resolve);
   });
 }
 
 function Filtered(base, predicate, defaultValue) {
   const $base = ActualMessage(base);
-  return Message(function FilteredImpl(r) {
+  return Message(function FilteredImpl(resolve, reject) {
+    $base.catch(reject);
     $base.then((v) => {
       if (predicate(v)) {
-        r(v);
+        resolve(v);
       } else if (defaultValue !== void 0) {
-        r(defaultValue);
+        resolve(defaultValue);
       }
     });
   });
@@ -505,8 +512,9 @@ class EmptyImpl {
 }
 
 function ExecutorApplied($base, applier) {
-  return Message(function ExecutorAppliedImpl(r) {
-    $base.then(applier(r));
+  return Message(function ExecutorAppliedImpl(resolve, reject) {
+    $base.catch(reject);
+    $base.then(applier(resolve));
   });
 }
 
@@ -515,7 +523,11 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
   const $eventName = ActualMessage(eventName);
   const $subscribeMethod = ActualMessage(subscribeMethod);
   const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
-  return Message((r) => {
+  return Message((resolve, reject) => {
+    $emitter.catch(reject);
+    $eventName.catch(reject);
+    $subscribeMethod.catch(reject);
+    $unsubscribeMethod.catch(reject);
     let lastR = null;
     const handler = (v) => {
       if (lastR) {
@@ -524,7 +536,7 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
     };
     All($emitter, $eventName, $subscribeMethod).then(
       ([emitter2, eventName2, subscribe]) => {
-        lastR = r;
+        lastR = resolve;
         if (!emitter2?.[subscribe]) {
           return;
         }
@@ -547,7 +559,8 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
 
 function Map$1(base, target) {
   const $base = ActualMessage(base);
-  return Message((r) => {
+  return Message((resolve, reject) => {
+    $base.catch(reject);
     const infos = [];
     const dc = DestroyContainer();
     $base.then((v) => {
@@ -561,18 +574,19 @@ function Map$1(base, target) {
         dc.add(info);
         infos.push(info);
       });
-      All(...infos).then(r);
+      All(...infos).then(resolve);
     });
   });
 }
 
 function Once($base) {
-  return Message((r) => {
+  return Message((resolve, reject) => {
     let isFilled = false;
+    $base.catch(reject);
     $base.then((v) => {
       if (!isFilled) {
         isFilled = true;
-        r(v);
+        resolve(v);
       }
     });
   });
@@ -598,21 +612,23 @@ function Process($base, builder) {
 }
 
 function Sequence($base) {
-  return Message((r) => {
+  return Message((resolve, reject) => {
     const result = [];
+    $base.catch(reject);
     $base.then((v) => {
       result.push(v);
-      r(result);
+      resolve(result);
     });
   });
 }
 
 function Stream(base) {
   const $base = ActualMessage(base);
-  return Message((r) => {
+  return Message((resolve, reject) => {
+    $base.catch(reject);
     $base.then((v) => {
       v.forEach((cv) => {
-        r(cv);
+        resolve(cv);
       });
     });
   });

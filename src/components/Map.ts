@@ -16,7 +16,8 @@ export function Map<T, TG>(
   target: ConstructorType<[any], MessageType<TG>>,
 ) {
   const $base = ActualMessage(base);
-  return Message<TG[]>((r) => {
+  return Message<TG[]>((resolve, reject) => {
+    $base.catch(reject);
     const infos: MessageType<TG>[] = [];
     const dc = DestroyContainer();
     $base.then((v) => {
@@ -30,7 +31,7 @@ export function Map<T, TG>(
         dc.add(info);
         infos.push(info);
       });
-      All(...infos).then(r);
+      All(...infos).then(resolve);
     });
   });
 }

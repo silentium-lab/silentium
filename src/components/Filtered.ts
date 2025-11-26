@@ -13,12 +13,13 @@ export function Filtered<T>(
   defaultValue?: T,
 ): MessageType<T> {
   const $base = ActualMessage(base);
-  return Message<T>(function FilteredImpl(r) {
+  return Message<T>(function FilteredImpl(resolve, reject) {
+    $base.catch(reject);
     $base.then((v) => {
       if (predicate(v)) {
-        r(v);
+        resolve(v);
       } else if (defaultValue !== undefined) {
-        r(defaultValue);
+        resolve(defaultValue);
       }
     });
   });

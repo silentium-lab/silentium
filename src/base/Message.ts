@@ -14,11 +14,8 @@ export type MessageExecutorType<T> = (
  * A message created from an executor function.
  * The executor function can return a message destruction function.
  */
-export function Message<T>(
-  executor: MessageExecutorType<T>,
-  everyThenCallsExecutor: boolean = false,
-) {
-  return new MessageRx<T>(executor, everyThenCallsExecutor);
+export function Message<T>(executor: MessageExecutorType<T>) {
+  return new MessageRx<T>(executor);
 }
 
 /**
@@ -28,10 +25,7 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
   private rejections = new Rejections();
   private dc = DestroyContainer();
 
-  public constructor(
-    private executor: MessageExecutorType<T>,
-    private everyThenCallsExecutor: boolean = false,
-  ) {
+  public constructor(private executor: MessageExecutorType<T>) {
     ensureFunction(executor, "Message: executor");
   }
 

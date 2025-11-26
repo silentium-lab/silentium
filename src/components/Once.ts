@@ -7,12 +7,13 @@ import { MessageType } from "types/MessageType";
  * values are delivered from the source
  */
 export function Once<T>($base: MessageType<T>) {
-  return Message<T>((r) => {
+  return Message<T>((resolve, reject) => {
     let isFilled = false;
+    $base.catch(reject);
     $base.then((v) => {
       if (!isFilled) {
         isFilled = true;
-        r(v);
+        resolve(v);
       }
     });
   });

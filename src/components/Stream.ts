@@ -7,10 +7,11 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function Stream<T>(base: MaybeMessage<T[]>) {
   const $base = ActualMessage(base);
-  return Message<T>((r) => {
+  return Message<T>((resolve, reject) => {
+    $base.catch(reject);
     $base.then((v) => {
       v.forEach((cv) => {
-        r(cv);
+        resolve(cv);
       });
     });
   });

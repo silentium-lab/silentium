@@ -10,7 +10,8 @@ import { ContextType } from "types/ContextType";
 export function ContextOf(transport: string) {
   const $msg = LateShared<ContextType>();
   Context.transport.set(transport, $msg.use.bind($msg));
-  return Message<ContextType>((t) => {
-    $msg.then(t);
+  return Message<ContextType>((resolve, reject) => {
+    $msg.catch(reject);
+    $msg.then(resolve);
   });
 }
