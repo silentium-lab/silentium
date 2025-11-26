@@ -518,6 +518,22 @@ function ExecutorApplied($base, applier) {
   });
 }
 
+function Freeze($base, $invalidate) {
+  let freezedValue = null;
+  return Message(function FreezeImpl(resolve, reject) {
+    $base.catch(reject);
+    $base.then((v) => {
+      if (freezedValue === null) {
+        freezedValue = v;
+      }
+      resolve(freezedValue);
+    });
+    $invalidate?.then(() => {
+      freezedValue = null;
+    });
+  });
+}
+
 function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
   const $emitter = ActualMessage(emitter);
   const $eventName = ActualMessage(eventName);
@@ -634,5 +650,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.js.map

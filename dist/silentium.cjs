@@ -520,6 +520,22 @@ function ExecutorApplied($base, applier) {
   });
 }
 
+function Freeze($base, $invalidate) {
+  let freezedValue = null;
+  return Message(function FreezeImpl(resolve, reject) {
+    $base.catch(reject);
+    $base.then((v) => {
+      if (freezedValue === null) {
+        freezedValue = v;
+      }
+      resolve(freezedValue);
+    });
+    $invalidate?.then(() => {
+      freezedValue = null;
+    });
+  });
+}
+
 function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
   const $emitter = ActualMessage(emitter);
   const $eventName = ActualMessage(eventName);
@@ -656,6 +672,7 @@ exports.Empty = Empty;
 exports.EmptyImpl = EmptyImpl;
 exports.ExecutorApplied = ExecutorApplied;
 exports.Filtered = Filtered;
+exports.Freeze = Freeze;
 exports.FromEvent = FromEvent;
 exports.Late = Late;
 exports.LateImpl = LateImpl;
