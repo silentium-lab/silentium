@@ -17,30 +17,33 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
  */
 export function Chain<T extends readonly MessageType[]>(...messages: T) {
   const $messages = messages.map(ActualMessage);
-  return Message<MessageTypeValue<Last<T>>>(function ChainImpl(r) {
-    let $latest: MessageTypeValue<Last<T>> | undefined;
-    const handleMessage = (index: number) => {
-      const message = $messages[index] as Last<T>;
-      const next = $messages[index + 1] as Last<T> | undefined;
-      message.then((v) => {
-        oneMessage(v as MessageTypeValue<Last<T>>, next, index);
-      });
-    };
-    function oneMessage(
-      v: MessageTypeValue<Last<T>>,
-      next: Last<T> | undefined,
-      index: number,
-    ) {
-      if (!next) {
-        $latest = v as MessageTypeValue<Last<T>>;
+  return Message<MessageTypeValue<Last<T>>>(
+    function ChainImpl(resolve, reject) {
+      let $latest: MessageTypeValue<Last<T>> | undefined;
+      const handleMessage = (index: number) => {
+        const message = $messages[index] as Last<T>;
+        message.catch(reject);
+        const next = $messages[index + 1] as Last<T> | undefined;
+        message.then((v) => {
+          oneMessage(v as MessageTypeValue<Last<T>>, next, index);
+        });
+      };
+      function oneMessage(
+        v: MessageTypeValue<Last<T>>,
+        next: Last<T> | undefined,
+        index: number,
+      ) {
+        if (!next) {
+          $latest = v as MessageTypeValue<Last<T>>;
+        }
+        if ($latest) {
+          resolve($latest);
+        }
+        if (next && !$latest) {
+          handleMessage(index + 1);
+        }
       }
-      if ($latest) {
-        r($latest);
-      }
-      if (next && !$latest) {
-        handleMessage(index + 1);
-      }
-    }
-    handleMessage(0);
-  });
+      handleMessage(0);
+    },
+  );
 }

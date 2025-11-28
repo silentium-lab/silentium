@@ -12,9 +12,10 @@ export function Applied<const T, R>(
   applier: ConstructorType<[T], R>,
 ) {
   const $base = ActualMessage(base);
-  return Message<R>(function AppliedImpl(r) {
+  return Message<R>(function AppliedImpl(resolve, reject) {
+    $base.catch(reject);
     $base.then((v) => {
-      r(applier(v));
+      resolve(applier(v));
     });
   });
 }

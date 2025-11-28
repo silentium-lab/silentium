@@ -96,16 +96,15 @@ type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: Constructo
  * A message created from an executor function.
  * The executor function can return a message destruction function.
  */
-declare function Message<T>(executor: MessageExecutorType<T>, everyThenCallsExecutor?: boolean): MessageRx<T>;
+declare function Message<T>(executor: MessageExecutorType<T>): MessageRx<T>;
 /**
  * Reactive message implementation
  */
 declare class MessageRx<T> implements MessageType<T>, DestroyableType {
     private executor;
-    private everyThenCallsExecutor;
     private rejections;
     private dc;
-    constructor(executor: MessageExecutorType<T>, everyThenCallsExecutor?: boolean);
+    constructor(executor: MessageExecutorType<T>);
     then(resolve: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
@@ -291,6 +290,11 @@ declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorAppl
 declare function Filtered<T>(base: MaybeMessage<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): MessageType<T>;
 
 /**
+ * Message what freezes first known value
+ */
+declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>): MessageRx<T>;
+
+/**
  * A message derived from event with a different
  * method call interface, based on callbacks.
  * Allows attaching a custom handler to an existing event source
@@ -393,4 +397,5 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Empty, EmptyImpl, ExecutorApplied, Filtered, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };

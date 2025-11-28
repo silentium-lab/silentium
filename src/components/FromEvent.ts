@@ -20,7 +20,11 @@ export function FromEvent<T>(
   const $eventName = ActualMessage(eventName);
   const $subscribeMethod = ActualMessage(subscribeMethod);
   const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
-  return Message<T>((r) => {
+  return Message<T>((resolve, reject) => {
+    $emitter.catch(reject);
+    $eventName.catch(reject);
+    $subscribeMethod.catch(reject);
+    $unsubscribeMethod.catch(reject);
     let lastR: ConstructorType<[T]> | null = null;
     const handler = (v: T) => {
       if (lastR) {
@@ -29,7 +33,7 @@ export function FromEvent<T>(
     };
     All($emitter, $eventName, $subscribeMethod).then(
       ([emitter, eventName, subscribe]) => {
-        lastR = r;
+        lastR = resolve;
         if (!emitter?.[subscribe]) {
           return;
         }

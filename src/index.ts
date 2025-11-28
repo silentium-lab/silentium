@@ -21,6 +21,7 @@ export * from "./components/ContextOf";
 export * from "./components/Empty";
 export * from "./components/ExecutorApplied";
 export * from "./components/Filtered";
+export * from "./components/Freeze";
 export * from "./components/FromEvent";
 export * from "./components/Late";
 export * from "./components/LateShared";

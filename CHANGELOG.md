@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.162](https://github.com/silentium-lab/silentium/compare/v0.0.161...v0.0.162) (2025-11-26)
+
+
+### Bug Fixes
+
+* **main:** freeze component export ([d6f61b8](https://github.com/silentium-lab/silentium/commit/d6f61b8893e03dcf25b0c31bb519ea0432f52c29))
+
+### [0.0.161](https://github.com/silentium-lab/silentium/compare/v0.0.160...v0.0.161) (2025-11-26)
+
+
+### Bug Fixes
+
+* **main:** rejections and freeze component ([e43952f](https://github.com/silentium-lab/silentium/commit/e43952fc051a0fec1bfa24cb76d4c043c67f2de8))
+
 ### [0.0.160](https://github.com/silentium-lab/silentium/compare/v0.0.159...v0.0.160) (2025-11-25)
 
 
