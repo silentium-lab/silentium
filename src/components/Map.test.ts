@@ -1,6 +1,7 @@
 import { Message } from "base/Message";
 import { Of } from "base/Of";
 import { Applied } from "components/Applied";
+import { LateShared } from "components/LateShared";
 import { Map } from "components/Map";
 import { Diagram } from "testing/Diagram";
 import { wait } from "testing/wait";
@@ -61,5 +62,17 @@ describe("Map.test", () => {
     Applied(infoMapped, String).then(d.resolver);
 
     expect(d.toString()).toBe("2,4,6,18");
+  });
+
+  test("map preserves array length", () => {
+    const d = Diagram();
+    const input = LateShared([1, 2, 3, 4, 5]);
+    const infoMapped = Map(input, x2);
+
+    Applied(infoMapped, (arr) => arr.length).then(d.resolver);
+    expect(d.toString()).toBe("5");
+
+    input.use([6, 7, 9]);
+    expect(d.toString()).toBe("5|3");
   });
 });

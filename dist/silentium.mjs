@@ -551,6 +551,7 @@ function Map$1(base, target) {
     const infos = [];
     const dc = DestroyContainer();
     $base.then((v) => {
+      infos.length = 0;
       dc.destroy();
       v.forEach((val) => {
         let $val = val;

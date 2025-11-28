@@ -20,6 +20,7 @@ export function Map<T, TG>(
     const infos: MessageType<TG>[] = [];
     const dc = DestroyContainer();
     $base.then((v) => {
+      infos.length = 0;
       dc.destroy();
       v.forEach((val) => {
         let $val: MessageType<T> | T = val;
