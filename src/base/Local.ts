@@ -7,13 +7,14 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function Local<T>(_base: MaybeMessage<T>) {
   const $base = ActualMessage(_base);
-  return Message<T>(function LocalImpl(r) {
+  return Message<T>(function LocalImpl(resolve, reject) {
     let destroyed = false;
     $base.then((v) => {
       if (!destroyed) {
-        r(v);
+        resolve(v);
       }
     });
+    $base.catch(reject);
     return () => {
       destroyed = true;
     };

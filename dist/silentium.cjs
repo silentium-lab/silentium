@@ -150,13 +150,14 @@ class ChainableImpl {
 
 function Local(_base) {
   const $base = ActualMessage(_base);
-  return Message(function LocalImpl(r) {
+  return Message(function LocalImpl(resolve, reject) {
     let destroyed = false;
     $base.then((v) => {
       if (!destroyed) {
-        r(v);
+        resolve(v);
       }
     });
+    $base.catch(reject);
     return () => {
       destroyed = true;
     };
