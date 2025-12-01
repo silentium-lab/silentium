@@ -21,4 +21,13 @@ describe("Applied.test", () => {
 
     expect(g).toBeCalledWith(4);
   });
+
+  test("value with applied function", () => {
+    const doubled = Applied(2, String);
+
+    const g = vi.fn();
+    doubled.then(g);
+
+    expect(g).toBeCalledWith("2");
+  });
 });
