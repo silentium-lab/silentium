@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.164](https://github.com/silentium-lab/silentium/compare/v0.0.163...v0.0.164) (2025-12-01)
+
+
+### Bug Fixes
+
+* **main:** applied destructured arg types ([6550902](https://github.com/silentium-lab/silentium/commit/6550902dc73e8ed8622298d0d850f468b422df03))
+* **main:** missed rejection ([9dd1ab2](https://github.com/silentium-lab/silentium/commit/9dd1ab2206b9fc601098b38013529dd36523bc22))
+
 ### [0.0.163](https://github.com/silentium-lab/silentium/compare/v0.0.162...v0.0.163) (2025-11-28)
 
 
