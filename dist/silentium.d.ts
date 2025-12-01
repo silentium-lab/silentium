@@ -187,7 +187,7 @@ declare function Applied<const T, R>(base: MaybeMessage<T>, applier: Constructor
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
  */
-declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<T[number][], R>): MessageRx<R>;
+declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageRx<R>;
 
 /**
  * A component that allows creating linked objects of information and its owner

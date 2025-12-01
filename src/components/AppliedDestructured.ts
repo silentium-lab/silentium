@@ -8,7 +8,7 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function AppliedDestructured<const T extends any[], R>(
   $base: MaybeMessage<T>,
-  applier: ConstructorType<T[number][], R>,
+  applier: ConstructorType<any[], R>,
 ) {
   return Applied($base, function AppliedDestructuredImpl(args) {
     return applier(...args);
