@@ -334,6 +334,10 @@ function Chain(...messages) {
   );
 }
 
+function Computed(applier, ...messages) {
+  return AppliedDestructured(All(...messages), applier);
+}
+
 Context.transport = /* @__PURE__ */ new Map();
 function Context(msg) {
   const $msg = ActualMessage(msg);
@@ -663,6 +667,7 @@ exports.Catch = Catch;
 exports.Chain = Chain;
 exports.Chainable = Chainable;
 exports.ChainableImpl = ChainableImpl;
+exports.Computed = Computed;
 exports.Context = Context;
 exports.ContextChain = ContextChain;
 exports.ContextOf = ContextOf;

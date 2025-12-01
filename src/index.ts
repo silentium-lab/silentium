@@ -15,6 +15,7 @@ export * from "./components/Applied";
 export * from "./components/AppliedDestructured";
 export * from "./components/Catch";
 export * from "./components/Chain";
+export * from "./components/Computed";
 export * from "./components/Context";
 export * from "./components/ContextChain";
 export * from "./components/ContextOf";
