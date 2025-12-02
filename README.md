@@ -27,3 +27,7 @@ Applied(Stream([1, 2, 3, 4, 5]), String).then((result) => console.log(result)); 
 // Map values in a stream
 Applied(Map([1, 2, 3], (x) => x * 2), String).then((result) => console.log(result)); // '2','4','6'
 ```
+
+## License
+
+MIT
