@@ -28,6 +28,14 @@ Applied(Stream([1, 2, 3, 4, 5]), String).then((result) => console.log(result)); 
 Applied(Map([1, 2, 3], (x) => x * 2), String).then((result) => console.log(result)); // '2','4','6'
 ```
 
+## Packages
+
+List of packages based on silentium library:
+- [Silentium Components](https://github.com/silentium-lab/silentium-components)
+- [Silentium Validation](https://github.com/silentium-lab/silentium-validation)
+- [Silentium Web API](https://github.com/silentium-lab/silentium-web-api)
+- [Silentium Education](https://github.com/silentium-lab/silentium-education)
+
 ## License
 
 MIT
