@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.166](https://github.com/silentium-lab/silentium/compare/v0.0.165...v0.0.166) (2025-12-03)
+
+
+### Features
+
+* **main:** added package json description ([30c8e4b](https://github.com/silentium-lab/silentium/commit/30c8e4baa81326ba303183d29668d5f341b18761))
+* **main:** values are determined ([c11edc7](https://github.com/silentium-lab/silentium/commit/c11edc7cbd7d5d2456e0efde082ec622f23892e9))
+
+
+### Bug Fixes
+
+* **main:** export silence function ([6cffe30](https://github.com/silentium-lab/silentium/commit/6cffe30411c182ee6826f19717d8456f5d9ce1f3))
+* **main:** list of packages in readme ([440ac58](https://github.com/silentium-lab/silentium/commit/440ac5801c7e2812bb5cc39ff6150eaa02170d39))
+* **main:** simplified readme ([ab838d8](https://github.com/silentium-lab/silentium/commit/ab838d8301cb48c9b751a15efaecb24edd5c0d1d))
+
 ### [0.0.165](https://github.com/silentium-lab/silentium/compare/v0.0.164...v0.0.165) (2025-12-01)
 
 
