@@ -1,4 +1,5 @@
 import { Rejections } from "base/Rejections";
+import { Silence } from "base/Silence";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { MessageSourceType } from "types/SourceType";
@@ -34,7 +35,7 @@ export class LateImpl<T> implements MessageSourceType<T> {
         "Late component gets new resolver, when another was already connected!",
       );
     }
-    this.lateR = r;
+    this.lateR = Silence(r);
     this.notify();
     return this;
   }

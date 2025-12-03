@@ -11,7 +11,7 @@ export function Sequence<T>($base: MessageType<T>) {
     $base.catch(reject);
     $base.then((v) => {
       result.push(v);
-      resolve(result);
+      resolve(result.slice());
     });
   });
 }

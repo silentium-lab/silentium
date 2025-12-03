@@ -1,5 +1,6 @@
 import { DestroyContainer } from "base/DestroyContainer";
 import { Rejections } from "base/Rejections";
+import { Silence } from "base/Silence";
 import { ensureFunction } from "helpers/ensures";
 import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
@@ -31,7 +32,7 @@ export class MessageRx<T> implements MessageType<T>, DestroyableType {
 
   public then(resolve: ConstructorType<[T]>) {
     try {
-      this.dc.add(this.executor(resolve, this.rejections.reject));
+      this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
     } catch (e: any) {
       this.rejections.reject(e);
     }
