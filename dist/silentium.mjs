@@ -80,6 +80,16 @@ class Rejections {
   }
 }
 
+function Silence(resolve) {
+  let lastValue;
+  return (v) => {
+    if (isFilled(v) && v !== lastValue) {
+      lastValue = v;
+      resolve(v);
+    }
+  };
+}
+
 function ensureFunction(v, label) {
   if (typeof v !== "function") {
     throw new Error(`${label}: is not function`);
@@ -106,7 +116,7 @@ class MessageRx {
   }
   then(resolve) {
     try {
-      this.dc.add(this.executor(resolve, this.rejections.reject));
+      this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
     } catch (e) {
       this.rejections.reject(e);
     }
@@ -278,7 +288,7 @@ class LateImpl {
         "Late component gets new resolver, when another was already connected!"
       );
     }
-    this.lateR = r;
+    this.lateR = Silence(r);
     this.notify();
     return this;
   }
@@ -639,7 +649,7 @@ function Sequence($base) {
     $base.catch(reject);
     $base.then((v) => {
       result.push(v);
-      resolve(result);
+      resolve(result.slice());
     });
   });
 }
@@ -656,5 +666,5 @@ function Stream(base) {
   });
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

@@ -82,6 +82,16 @@ class Rejections {
   }
 }
 
+function Silence(resolve) {
+  let lastValue;
+  return (v) => {
+    if (isFilled(v) && v !== lastValue) {
+      lastValue = v;
+      resolve(v);
+    }
+  };
+}
+
 function ensureFunction(v, label) {
   if (typeof v !== "function") {
     throw new Error(`${label}: is not function`);
@@ -108,7 +118,7 @@ class MessageRx {
   }
   then(resolve) {
     try {
-      this.dc.add(this.executor(resolve, this.rejections.reject));
+      this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
     } catch (e) {
       this.rejections.reject(e);
     }
@@ -280,7 +290,7 @@ class LateImpl {
         "Late component gets new resolver, when another was already connected!"
       );
     }
-    this.lateR = r;
+    this.lateR = Silence(r);
     this.notify();
     return this;
   }
@@ -641,7 +651,7 @@ function Sequence($base) {
     $base.catch(reject);
     $base.then((v) => {
       result.push(v);
-      resolve(result);
+      resolve(result.slice());
     });
   });
 }
@@ -701,6 +711,7 @@ exports.Rejections = Rejections;
 exports.Sequence = Sequence;
 exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;
+exports.Silence = Silence;
 exports.Stream = Stream;
 exports.Void = Void;
 exports.ensureFunction = ensureFunction;

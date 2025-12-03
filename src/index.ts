@@ -8,6 +8,7 @@ export * from "./base/MessageSource";
 export * from "./base/New";
 export * from "./base/Of";
 export * from "./base/Rejections";
+export * from "./base/Silence";
 export * from "./base/Void";
 export * from "./components/All";
 export * from "./components/Any";
