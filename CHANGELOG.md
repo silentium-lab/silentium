@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.167](https://github.com/silentium-lab/silentium/compare/v0.0.166...v0.0.167) (2025-12-04)
+
+
+### Bug Fixes
+
+* **main:** late is now shared by default ([4901e8a](https://github.com/silentium-lab/silentium/commit/4901e8ac2d8f0788652edb3df02d9d90cfcc922c))
+
 ### [0.0.166](https://github.com/silentium-lab/silentium/compare/v0.0.165...v0.0.166) (2025-12-03)
 
 
