@@ -1,7 +1,7 @@
 import { Message } from "base/Message";
 import { Of } from "base/Of";
 import { Applied } from "components/Applied";
-import { LateShared } from "components/LateShared";
+import { Late } from "components/Late";
 import { Map } from "components/Map";
 import { Diagram } from "testing/Diagram";
 import { wait } from "testing/wait";
@@ -66,7 +66,7 @@ describe("Map.test", () => {
 
   test("map preserves array length", () => {
     const d = Diagram();
-    const input = LateShared([1, 2, 3, 4, 5]);
+    const input = Late([1, 2, 3, 4, 5]);
     const infoMapped = Map(input, x2);
 
     Applied(infoMapped, (arr) => arr.length).then(d.resolver);

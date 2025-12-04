@@ -26,7 +26,6 @@ export * from "./components/Filtered";
 export * from "./components/Freeze";
 export * from "./components/FromEvent";
 export * from "./components/Late";
-export * from "./components/LateShared";
 export * from "./components/Map";
 export * from "./components/Once";
 export * from "./components/Primitive";

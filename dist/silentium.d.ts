@@ -196,28 +196,49 @@ declare function Applied<const T, R>(base: MaybeMessage<T>, applier: Constructor
 declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageRx<R>;
 
 /**
- * A component that allows creating linked objects of information and its owner
- * in such a way that if a new value is assigned to the owner, this value
- * will become the value of the linked information source
- * https://silentium-lab.github.io/silentium/#/en/information/of
+ * Helps represent an message as a primitive type, which can be useful
+ * for cases when you need to always have a reference to the current value
+ * without updating the shared value when the current one changes.
+ * For example, this could be used when passing an authorization token.
+ * It can also be useful for testing or logging purposes.
  */
-declare function Late<T>(v?: T): LateImpl<T>;
-declare class LateImpl<T> implements MessageSourceType<T> {
-    private v?;
-    private rejections;
-    private lateR;
-    private notify;
-    constructor(v?: T | undefined);
-    then(r: ConstructorType<[T]>): this;
+declare function Primitive<T>($base: MessageType<T>, theValue?: T | null): PrimitiveImpl<T>;
+declare class PrimitiveImpl<T> {
+    private $base;
+    private theValue;
+    private touched;
+    constructor($base: MessageType<T>, theValue?: T | null);
+    private ensureTouched;
+    [Symbol.toPrimitive](): T | null;
+    primitive(): T | null;
+    primitiveWithException(): T & ({} | undefined);
+}
+
+/**
+ * An information object that helps multiple owners access
+ * a single another information object
+ */
+declare function Shared<T>($base: MessageType<T> | MessageSourceType<T>): SharedImpl<T>;
+declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
+    private $base;
+    private resolver;
+    private lastV;
+    private resolvers;
+    private source?;
+    constructor($base: MessageType<T> | MessageSourceType<T>);
+    then(resolved: ConstructorType<[T]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
+    value(): PrimitiveImpl<T>;
+    chain(m: MessageType<T>): this;
 }
 
 /**
  * Message with error catched
  * inside another message
  */
-declare function Catch<T>($base: MessageType): LateImpl<T>;
+declare function Catch<T>($base: MessageType): SharedImpl<T>;
 
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
 /**
@@ -316,49 +337,22 @@ declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>):
 declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessage<string>, subscribeMethod: MaybeMessage<string>, unsubscribeMethod?: MaybeMessage<string>): MessageRx<T>;
 
 /**
- * Helps represent an message as a primitive type, which can be useful
- * for cases when you need to always have a reference to the current value
- * without updating the shared value when the current one changes.
- * For example, this could be used when passing an authorization token.
- * It can also be useful for testing or logging purposes.
+ * A component that allows creating linked objects of information and its owner
+ * in such a way that if a new value is assigned to the owner, this value
+ * will become the value of the linked information source
+ * https://silentium-lab.github.io/silentium/#/en/information/of
  */
-declare function Primitive<T>($base: MessageType<T>, theValue?: T | null): PrimitiveImpl<T>;
-declare class PrimitiveImpl<T> {
-    private $base;
-    private theValue;
-    private touched;
-    constructor($base: MessageType<T>, theValue?: T | null);
-    private ensureTouched;
-    [Symbol.toPrimitive](): T | null;
-    primitive(): T | null;
-    primitiveWithException(): T & ({} | undefined);
-}
-
-/**
- * An information object that helps multiple owners access
- * a single another information object
- */
-declare function Shared<T>($base: MessageType<T> | MessageSourceType<T>): SharedImpl<T>;
-declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
-    private $base;
-    private resolver;
-    private lastV;
-    private resolvers;
-    private source?;
-    constructor($base: MessageType<T> | MessageSourceType<T>);
-    then(resolved: ConstructorType<[T]>): this;
+declare function Late<T>(v?: T): SharedImpl<T>;
+declare class LateImpl<T> implements MessageSourceType<T> {
+    private v?;
+    private rejections;
+    private lateR;
+    private notify;
+    constructor(v?: T | undefined);
+    then(r: ConstructorType<[T]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
-    destroy(): this;
-    value(): PrimitiveImpl<T>;
-    chain(m: MessageType<T>): this;
 }
-
-/**
- * An message with a value that will be set later,
- * capable of responding to many resolvers
- */
-declare function LateShared<T>(value?: T): SharedImpl<T>;
 
 /**
  * Component that applies an info object constructor to each data item,
@@ -410,5 +404,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, LateShared, Local, Map$1 as Map, Message, MessageRx, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
-export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

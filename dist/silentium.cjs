@@ -265,16 +265,109 @@ function AppliedDestructured($base, applier) {
 
 var __defProp$3 = Object.defineProperty;
 var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+function Primitive($base, theValue = null) {
+  return new PrimitiveImpl($base, theValue);
+}
+class PrimitiveImpl {
+  constructor($base, theValue = null) {
+    this.$base = $base;
+    this.theValue = theValue;
+    __publicField$3(this, "touched", false);
+  }
+  ensureTouched() {
+    if (!this.touched) {
+      this.$base.then((v) => {
+        this.theValue = v;
+      });
+    }
+    this.touched = true;
+  }
+  [Symbol.toPrimitive]() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitive() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitiveWithException() {
+    this.ensureTouched();
+    if (this.theValue === null) {
+      throw new Error("Primitive value is null");
+    }
+    return this.theValue;
+  }
+}
+
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+function Shared($base) {
+  return new SharedImpl($base);
+}
+class SharedImpl {
+  constructor($base) {
+    this.$base = $base;
+    __publicField$2(this, "resolver", (v) => {
+      this.lastV = v;
+      this.resolvers.forEach((r) => {
+        r(v);
+      });
+    });
+    __publicField$2(this, "lastV");
+    __publicField$2(this, "resolvers", /* @__PURE__ */ new Set());
+    __publicField$2(this, "source");
+    if (isSource($base)) {
+      this.source = $base;
+    }
+  }
+  then(resolved) {
+    this.resolvers.add(resolved);
+    if (this.resolvers.size === 1) {
+      this.$base.then(this.resolver);
+    } else if (isFilled(this.lastV)) {
+      resolved(this.lastV);
+    }
+    return this;
+  }
+  use(value) {
+    if (this.source) {
+      this.source.use(value);
+    } else {
+      this.resolver(value);
+    }
+    return this;
+  }
+  catch(rejected) {
+    this.$base.catch(rejected);
+    return this;
+  }
+  destroy() {
+    this.resolvers.clear();
+    return this;
+  }
+  value() {
+    return Primitive(this);
+  }
+  chain(m) {
+    m.then(this.use.bind(this));
+    return this;
+  }
+}
+
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Late(v) {
-  return new LateImpl(v);
+  return Shared(new LateImpl(v));
 }
 class LateImpl {
   constructor(v) {
     this.v = v;
-    __publicField$3(this, "rejections", new Rejections());
-    __publicField$3(this, "lateR", null);
-    __publicField$3(this, "notify", () => {
+    __publicField$1(this, "rejections", new Rejections());
+    __publicField$1(this, "lateR", null);
+    __publicField$1(this, "notify", () => {
       if (isFilled(this.v) && this.lateR) {
         try {
           this.lateR(this.v);
@@ -382,106 +475,8 @@ function ContextChain(base) {
   };
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
-function Primitive($base, theValue = null) {
-  return new PrimitiveImpl($base, theValue);
-}
-class PrimitiveImpl {
-  constructor($base, theValue = null) {
-    this.$base = $base;
-    this.theValue = theValue;
-    __publicField$2(this, "touched", false);
-  }
-  ensureTouched() {
-    if (!this.touched) {
-      this.$base.then((v) => {
-        this.theValue = v;
-      });
-    }
-    this.touched = true;
-  }
-  [Symbol.toPrimitive]() {
-    this.ensureTouched();
-    return this.theValue;
-  }
-  primitive() {
-    this.ensureTouched();
-    return this.theValue;
-  }
-  primitiveWithException() {
-    this.ensureTouched();
-    if (this.theValue === null) {
-      throw new Error("Primitive value is null");
-    }
-    return this.theValue;
-  }
-}
-
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
-function Shared($base) {
-  return new SharedImpl($base);
-}
-class SharedImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField$1(this, "resolver", (v) => {
-      this.lastV = v;
-      this.resolvers.forEach((r) => {
-        r(v);
-      });
-    });
-    __publicField$1(this, "lastV");
-    __publicField$1(this, "resolvers", /* @__PURE__ */ new Set());
-    __publicField$1(this, "source");
-    if (isSource($base)) {
-      this.source = $base;
-    }
-  }
-  then(resolved) {
-    this.resolvers.add(resolved);
-    if (this.resolvers.size === 1) {
-      this.$base.then(this.resolver);
-    } else if (isFilled(this.lastV)) {
-      resolved(this.lastV);
-    }
-    return this;
-  }
-  use(value) {
-    if (this.source) {
-      this.source.use(value);
-    } else {
-      this.resolver(value);
-    }
-    return this;
-  }
-  catch(rejected) {
-    this.$base.catch(rejected);
-    return this;
-  }
-  destroy() {
-    this.resolvers.clear();
-    return this;
-  }
-  value() {
-    return Primitive(this);
-  }
-  chain(m) {
-    m.then(this.use.bind(this));
-    return this;
-  }
-}
-
-function LateShared(value) {
-  const l = Late(value);
-  return Shared(l);
-}
-
 function ContextOf(transport) {
-  const $msg = LateShared();
+  const $msg = Late();
   Context.transport.set(transport, $msg.use.bind($msg));
   return Message((resolve, reject) => {
     $msg.catch(reject);
@@ -513,7 +508,7 @@ function Empty($base) {
 class EmptyImpl {
   constructor($base) {
     this.$base = $base;
-    __publicField(this, "$empty", LateShared());
+    __publicField(this, "$empty", Late());
   }
   message() {
     Shared(this.$base).then((v) => {
@@ -628,7 +623,7 @@ function Once($base) {
 
 function Process($base, builder) {
   return Message((resolve, reject) => {
-    const $res = LateShared();
+    const $res = Late();
     const dc = DestroyContainer();
     $base.then((v) => {
       dc.destroy();
@@ -693,7 +688,6 @@ exports.Freeze = Freeze;
 exports.FromEvent = FromEvent;
 exports.Late = Late;
 exports.LateImpl = LateImpl;
-exports.LateShared = LateShared;
 exports.Local = Local;
 exports.Map = Map$1;
 exports.Message = Message;

@@ -1,10 +1,10 @@
 import { MessageSource } from "base/MessageSource";
-import { LateShared } from "components/LateShared";
+import { Late } from "components/Late";
 import { describe, expect, test } from "vitest";
 
 describe("MessageSource.test", () => {
   test("message source as proxy", async () => {
-    const $l = LateShared(1);
+    const $l = Late(1);
     const $proxy = MessageSource<number>(
       (r) => {
         $l.then(r);

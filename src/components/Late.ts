@@ -1,5 +1,6 @@
 import { Rejections } from "base/Rejections";
 import { Silence } from "base/Silence";
+import { Shared } from "components/Shared";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { MessageSourceType } from "types/SourceType";
@@ -11,7 +12,7 @@ import { MessageSourceType } from "types/SourceType";
  * https://silentium-lab.github.io/silentium/#/en/information/of
  */
 export function Late<T>(v?: T) {
-  return new LateImpl<T>(v);
+  return Shared(new LateImpl<T>(v));
 }
 
 export class LateImpl<T> implements MessageSourceType<T> {

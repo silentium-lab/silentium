@@ -1,6 +1,6 @@
 import { Of } from "base/Of";
 import { Computed } from "components/Computed";
-import { LateShared } from "components/LateShared";
+import { Late } from "components/Late";
 import { describe, expect, test } from "vitest";
 
 describe("Computed.test", () => {
@@ -12,8 +12,8 @@ describe("Computed.test", () => {
   });
 
   test("reactive usage", async () => {
-    const $a = LateShared(1);
-    const $b = LateShared(2);
+    const $a = Late(1);
+    const $b = Late(2);
     const $sum = Computed(sum, $a, $b);
     expect(await $sum).toBe(3);
 

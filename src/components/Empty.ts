@@ -1,5 +1,5 @@
 import { Filtered } from "components/Filtered";
-import { LateShared } from "components/LateShared";
+import { Late } from "components/Late";
 import { Shared } from "components/Shared";
 import { EmptyType } from "types/EmptyType";
 import { MessageType } from "types/MessageType";
@@ -15,7 +15,7 @@ export function Empty<T>($base: MessageType<T>) {
 }
 
 export class EmptyImpl<T> implements EmptyType {
-  private $empty = LateShared<boolean>();
+  private $empty = Late<boolean>();
 
   public constructor(private $base: MessageType<T>) {}
 
