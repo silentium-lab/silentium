@@ -230,7 +230,7 @@ function All(...messages) {
         filled.add(key.toString());
         result[key] = v;
         if (isAllFilled(filled, known)) {
-          resolve(result);
+          resolve(result.slice());
         }
       });
     });

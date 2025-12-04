@@ -37,7 +37,7 @@ export function All<const T extends MaybeMessage[]>(...messages: T) {
         filled.add(key.toString());
         result[key] = v;
         if (isAllFilled(filled, known)) {
-          resolve(result as ExtractTypesFromArrayS<T>);
+          resolve(result.slice() as ExtractTypesFromArrayS<T>);
         }
       });
     });
