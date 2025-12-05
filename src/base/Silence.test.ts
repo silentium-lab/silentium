@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { Silence } from "base/Silence";
+import { ResetSilenceCache, Silence } from "base/Silence";
 
 describe("Silence.test", () => {
   test("should call resolve with first filled value", () => {
@@ -105,5 +105,17 @@ describe("Silence.test", () => {
     expect(resolve).toHaveBeenCalledTimes(2);
     expect(resolve).toHaveBeenCalledWith(false);
     expect(resolve).toHaveBeenCalledWith(true);
+  });
+
+  test("reset cache", () => {
+    const resolve = vi.fn();
+    const silence = Silence(resolve);
+
+    silence(false);
+    silence(ResetSilenceCache);
+    silence(false); // duplicate
+    silence(true);
+
+    expect(resolve).toHaveBeenCalledTimes(3);
   });
 });

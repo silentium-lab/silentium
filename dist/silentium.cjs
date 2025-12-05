@@ -82,9 +82,14 @@ class Rejections {
   }
 }
 
+const ResetSilenceCache = Symbol("reset-silence-cache");
 function Silence(resolve) {
   let lastValue;
   return (v) => {
+    if (v === ResetSilenceCache) {
+      lastValue = void 0;
+      v = void 0;
+    }
     if (isFilled(v) && v !== lastValue) {
       lastValue = v;
       resolve(v);
@@ -702,6 +707,7 @@ exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.Process = Process;
 exports.Rejections = Rejections;
+exports.ResetSilenceCache = ResetSilenceCache;
 exports.Sequence = Sequence;
 exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;

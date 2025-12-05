@@ -30,4 +30,13 @@ describe("Applied.test", () => {
 
     expect(g).toBeCalledWith("2");
   });
+
+  test("value with undefined", () => {
+    const doubled = Applied(2, () => undefined);
+
+    const g = vi.fn();
+    doubled.then(g);
+
+    expect(g).not.toHaveBeenCalled();
+  });
 });
