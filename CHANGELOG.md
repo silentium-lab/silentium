@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.169](https://github.com/silentium-lab/silentium/compare/v0.0.168...v0.0.169) (2025-12-05)
+
+
+### Bug Fixes
+
+* **main:** ability to reset cache inside silence ([0de79ac](https://github.com/silentium-lab/silentium/commit/0de79ac9a99ddddacde791fef19042ea9f0b4939))
+
 ### [0.0.168](https://github.com/silentium-lab/silentium/compare/v0.0.167...v0.0.168) (2025-12-04)
 
 
