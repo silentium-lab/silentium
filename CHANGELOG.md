@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.170](https://github.com/silentium-lab/silentium/compare/v0.0.169...v0.0.170) (2025-12-08)
+
+
+### Bug Fixes
+
+* **main:** builded ([7e7399e](https://github.com/silentium-lab/silentium/commit/7e7399e2a077c65a2d90b051aac5538118af817f))
+* **main:** race component ([aa0e52e](https://github.com/silentium-lab/silentium/commit/aa0e52e7c2abac263e65d60008fb28d157507af4))
+
 ### [0.0.169](https://github.com/silentium-lab/silentium/compare/v0.0.168...v0.0.169) (2025-12-05)
 
 
