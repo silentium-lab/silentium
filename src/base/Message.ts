@@ -16,13 +16,13 @@ export type MessageExecutorType<T> = (
  * The executor function can return a message destruction function.
  */
 export function Message<T>(executor: MessageExecutorType<T>) {
-  return new MessageRx<T>(executor);
+  return new MessageImpl<T>(executor);
 }
 
 /**
  * Reactive message implementation
  */
-export class MessageRx<T> implements MessageType<T>, DestroyableType {
+export class MessageImpl<T> implements MessageType<T>, DestroyableType {
   private rejections = new Rejections();
   private dc = DestroyContainer();
 

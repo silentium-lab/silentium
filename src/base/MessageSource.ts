@@ -1,4 +1,4 @@
-import { Message, MessageExecutorType, MessageRx } from "base/Message";
+import { Message, MessageExecutorType, MessageImpl } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
 import { MessageSourceType } from "types/SourceType";
 
@@ -13,7 +13,7 @@ export function MessageSource<T>(
 }
 
 export class MessageSourceImpl<T> implements MessageSourceType<T> {
-  private message: MessageRx<T>;
+  private message: MessageImpl<T>;
 
   public constructor(
     messageExecutor: MessageExecutorType<T>,
