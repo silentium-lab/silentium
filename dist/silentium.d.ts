@@ -96,11 +96,11 @@ type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: Constructo
  * A message created from an executor function.
  * The executor function can return a message destruction function.
  */
-declare function Message<T>(executor: MessageExecutorType<T>): MessageRx<T>;
+declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
 /**
  * Reactive message implementation
  */
-declare class MessageRx<T> implements MessageType<T>, DestroyableType {
+declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private executor;
     private rejections;
     private dc;
@@ -113,7 +113,7 @@ declare class MessageRx<T> implements MessageType<T>, DestroyableType {
 /**
  * Create local copy of source what can be destroyed
  */
-declare function Local<T>(_base: MaybeMessage<T>): MessageRx<T>;
+declare function Local<T>(_base: MaybeMessage<T>): MessageImpl<T>;
 
 /**
  * Base message source object
@@ -132,12 +132,12 @@ declare class MessageSourceImpl<T> implements MessageSourceType<T> {
  * A component that, on each access, returns a new instance
  * of a reference type based on the constructor function
  */
-declare function New<T>(construct: ConstructorType<[], T>): MessageRx<T>;
+declare function New<T>(construct: ConstructorType<[], T>): MessageImpl<T>;
 
 /**
  * Helps convert a value into a message
  */
-declare function Of<T>(value: T): MessageRx<T>;
+declare function Of<T>(value: T): MessageImpl<T>;
 
 /**
  * Handles rejections collection
@@ -176,25 +176,25 @@ type ExtractTypesFromArrayS<T extends MaybeMessage<any>[]> = {
  * value, the updated array with the new value
  * will be emitted by All.
  */
-declare function All<const T extends MaybeMessage[]>(...messages: T): MessageRx<ExtractTypesFromArrayS<T>>;
+declare function All<const T extends MaybeMessage[]>(...messages: T): MessageImpl<ExtractTypesFromArrayS<T>>;
 
 /**
  * A message that emits values received from
  * any of its bound messages
  */
-declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageRx<T>;
+declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageImpl<T>;
 
 /**
  * An message that applies a function
  * to the value of the base message
  */
-declare function Applied<const T, R>(base: MaybeMessage<T>, applier: ConstructorType<[T], R>): MessageRx<R>;
+declare function Applied<const T, R>(base: MaybeMessage<T>, applier: ConstructorType<[T], R>): MessageImpl<R>;
 
 /**
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
  */
-declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageRx<R>;
+declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageImpl<R>;
 
 /**
  * Helps represent an message as a primitive type, which can be useful
@@ -250,14 +250,14 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ?
  * emit a value again after the overall Chain response was already returned,
  * then Chain emits again with the value of the last message.
  */
-declare function Chain<T extends readonly MessageType[]>(...messages: T): MessageRx<MessageTypeValue<Last<T>>>;
+declare function Chain<T extends readonly MessageType[]>(...messages: T): MessageImpl<MessageTypeValue<Last<T>>>;
 
 /**
  * Component what helps to compute
  * poor functions, and represent result
  * as message
  */
-declare function Computed<const T extends MaybeMessage<any>[], R>(applier: ConstructorType<any[], R>, ...messages: T): MessageRx<R>;
+declare function Computed<const T extends MaybeMessage<any>[], R>(applier: ConstructorType<any[], R>, ...messages: T): MessageImpl<R>;
 
 /**
  * Type for passing action requirements
@@ -276,7 +276,7 @@ interface ContextType extends Record<string, any> {
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
  */
-declare function Context<T>(msg: MaybeMessage<ContextType>): MessageRx<T>;
+declare function Context<T>(msg: MaybeMessage<ContextType>): MessageImpl<T>;
 declare namespace Context {
     var transport: Map<any, ConstructorType<[ContextType]>>;
 }
@@ -290,7 +290,7 @@ declare function ContextChain(base: MaybeMessage): (context: ContextType) => voi
  * Message for the arrival of a specific RPC message
  * for specific transport
  */
-declare function ContextOf(transport: string): MessageRx<ContextType>;
+declare function ContextOf(transport: string): MessageImpl<ContextType>;
 
 interface EmptyType {
     empty(): MessageType<boolean>;
@@ -316,7 +316,7 @@ type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
  * and returns the same value transfer function for the resolver
  * Useful for applying functions like debounced or throttle
  */
-declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorApplier<T>): MessageRx<T>;
+declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorApplier<T>): MessageImpl<T>;
 
 /**
  * Filters values from the source message based on a predicate function,
@@ -327,7 +327,7 @@ declare function Filtered<T>(base: MaybeMessage<T>, predicate: ConstructorType<[
 /**
  * Message what freezes first known value
  */
-declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>): MessageRx<T>;
+declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>): MessageImpl<T>;
 
 /**
  * A message derived from event with a different
@@ -335,7 +335,7 @@ declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>):
  * Allows attaching a custom handler to an existing event source
  * and presenting it as a silentium message
  */
-declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessage<string>, subscribeMethod: MaybeMessage<string>, unsubscribeMethod?: MaybeMessage<string>): MessageRx<T>;
+declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessage<string>, subscribeMethod: MaybeMessage<string>, unsubscribeMethod?: MaybeMessage<string>): MessageImpl<T>;
 
 /**
  * A component that allows creating linked objects of information and its owner
@@ -359,27 +359,27 @@ declare class LateImpl<T> implements MessageSourceType<T> {
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
  */
-declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[any], MessageType<TG>>): MessageRx<TG[]>;
+declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[any], MessageType<TG>>): MessageImpl<TG[]>;
 
 /**
  * Limits the number of values from the information source
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
  */
-declare function Once<T>($base: MessageType<T>): MessageRx<T>;
+declare function Once<T>($base: MessageType<T>): MessageImpl<T>;
 
-declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageRx<R>;
+declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageImpl<R>;
 
 /**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
  */
-declare function Sequence<T>($base: MessageType<T>): MessageRx<T[]>;
+declare function Sequence<T>($base: MessageType<T>): MessageImpl<T[]>;
 
 /**
  * Component that receives a data array and yields values one by one
  */
-declare function Stream<T>(base: MaybeMessage<T[]>): MessageRx<T>;
+declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
 
 declare function ensureFunction(v: unknown, label: string): void;
 declare function ensureMessage(v: unknown, label: string): void;
@@ -405,4 +405,5 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageRx, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };
