@@ -30,6 +30,7 @@ export * from "./components/Map";
 export * from "./components/Once";
 export * from "./components/Primitive";
 export * from "./components/Process";
+export * from "./components/Race";
 export * from "./components/Sequence";
 export * from "./components/Shared";
 export * from "./components/Stream";

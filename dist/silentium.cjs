@@ -645,6 +645,21 @@ function Process($base, builder) {
   });
 }
 
+function Race(...messages) {
+  const $messages = messages.map(ActualMessage);
+  return Message((resolve, reject) => {
+    let responded = false;
+    $messages.forEach(($message) => {
+      $message.catch(reject).then((v) => {
+        if (responded === false) {
+          responded = true;
+          resolve(v);
+        }
+      });
+    });
+  });
+}
+
 function Sequence($base) {
   return Message((resolve, reject) => {
     const result = [];
@@ -706,6 +721,7 @@ exports.Once = Once;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.Process = Process;
+exports.Race = Race;
 exports.Rejections = Rejections;
 exports.ResetSilenceCache = ResetSilenceCache;
 exports.Sequence = Sequence;
