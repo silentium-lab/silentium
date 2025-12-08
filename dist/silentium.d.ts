@@ -371,6 +371,11 @@ declare function Once<T>($base: MessageType<T>): MessageImpl<T>;
 declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageImpl<R>;
 
 /**
+ * First responded message
+ */
+declare function Race<const T extends MaybeMessage[]>(...messages: T): MessageImpl<unknown>;
+
+/**
  * Creates a sequence that accumulates all values from the source into an array,
  * emitting the growing array with each new value.
  */
@@ -405,5 +410,5 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };
