@@ -112,9 +112,9 @@ var __defProp$5 = Object.defineProperty;
 var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Message(executor) {
-  return new MessageRx(executor);
+  return new MessageImpl(executor);
 }
-class MessageRx {
+class MessageImpl {
   constructor(executor) {
     this.executor = executor;
     __publicField$5(this, "rejections", new Rejections());
@@ -696,7 +696,7 @@ exports.LateImpl = LateImpl;
 exports.Local = Local;
 exports.Map = Map$1;
 exports.Message = Message;
-exports.MessageRx = MessageRx;
+exports.MessageImpl = MessageImpl;
 exports.MessageSource = MessageSource;
 exports.MessageSourceImpl = MessageSourceImpl;
 exports.New = New;
