@@ -683,6 +683,20 @@ function Stream(base) {
   });
 }
 
+const silentiumPrint = (...messages) => {
+  Applied(All(...messages.map((e) => Shared(e))), (r) => ({
+    name,
+    ...r
+  })).then(console.table);
+};
+const silentiumValue = ($message) => Primitive($message).primitive();
+function DevTools() {
+  if (typeof globalThis !== "undefined") {
+    globalThis.silentiumValue = silentiumValue;
+    globalThis.silentiumPrint = silentiumPrint;
+  }
+}
+
 exports.ActualMessage = ActualMessage;
 exports.All = All;
 exports.Any = Any;
@@ -700,6 +714,7 @@ exports.DestroyContainer = DestroyContainer;
 exports.DestroyContainerImpl = DestroyContainerImpl;
 exports.Destroyable = Destroyable;
 exports.DestroyableImpl = DestroyableImpl;
+exports.DevTools = DevTools;
 exports.Empty = Empty;
 exports.EmptyImpl = EmptyImpl;
 exports.ExecutorApplied = ExecutorApplied;
