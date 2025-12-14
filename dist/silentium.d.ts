@@ -241,7 +241,7 @@ declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
  */
 declare function Catch<T>($base: MessageType): SharedImpl<T>;
 
-type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
+type Last$1<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L : never;
 /**
  * Chains messages together and triggers
  * the last message only when all previous messages
@@ -250,7 +250,7 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ?
  * emit a value again after the overall Chain response was already returned,
  * then Chain emits again with the value of the last message.
  */
-declare function Chain<T extends readonly MessageType[]>(...messages: T): MessageImpl<MessageTypeValue<Last<T>>>;
+declare function Chain<T extends readonly MessageType[]>(...messages: T): MessageImpl<MessageTypeValue<Last$1<T>>>;
 
 /**
  * Component what helps to compute
@@ -368,6 +368,9 @@ declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[
  */
 declare function Once<T>($base: MessageType<T>): MessageImpl<T>;
 
+type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L extends (...args: any) => any ? L : never : never;
+declare function Piped<T extends ((...vars: any) => MaybeMessage)[]>($m: MaybeMessage, ...c: T): ReturnType<Last<T>>;
+
 declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageImpl<R>;
 
 /**
@@ -388,8 +391,8 @@ declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
 
 declare global {
     interface GlobalThis {
-        silentiumPrint: (...messages: MessageType[]) => MessageType;
         silentiumValue: ($message: MessageType) => unknown;
+        silentiumPrint: (...messages: MessageType[]) => void;
     }
 }
 /**
@@ -422,4 +425,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

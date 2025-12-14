@@ -626,6 +626,12 @@ function Once($base) {
   });
 }
 
+function Piped($m, ...c) {
+  return c.reduce((msg, Constructor) => {
+    return ActualMessage(Constructor(msg));
+  }, ActualMessage($m));
+}
+
 function Process($base, builder) {
   return Message((resolve, reject) => {
     const $res = Late();
@@ -684,10 +690,9 @@ function Stream(base) {
 }
 
 const silentiumPrint = (...messages) => {
-  Applied(All(...messages.map((e) => Shared(e))), (r) => ({
-    name,
-    ...r
-  })).then(console.table);
+  Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
+    console.log
+  );
 };
 const silentiumValue = ($message) => Primitive($message).primitive();
 function DevTools() {
@@ -733,6 +738,7 @@ exports.New = New;
 exports.Nothing = Nothing;
 exports.Of = Of;
 exports.Once = Once;
+exports.Piped = Piped;
 exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.Process = Process;

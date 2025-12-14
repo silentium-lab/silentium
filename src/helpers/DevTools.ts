@@ -6,16 +6,15 @@ import { MessageType } from "types/MessageType";
 
 declare global {
   interface GlobalThis {
-    silentiumPrint: (...messages: MessageType[]) => MessageType;
     silentiumValue: ($message: MessageType) => unknown;
+    silentiumPrint: (...messages: MessageType[]) => void;
   }
 }
 
 const silentiumPrint = (...messages: MessageType[]) => {
-  Applied(All(...messages.map((e) => Shared(e))), (r) => ({
-    name,
-    ...r,
-  })).then(console.table);
+  Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
+    console.log,
+  );
 };
 const silentiumValue = ($message: MessageType) =>
   Primitive($message).primitive();

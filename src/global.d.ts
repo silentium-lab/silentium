@@ -1,9 +1,13 @@
+import { MessageType } from "types/MessageType";
+
 export {};
 
 declare global {
   interface GlobalThis {
-    silentiumValue: (value: any) => any;
+    silentiumValue: ($message: MessageType) => unknown;
+    silentiumPrint: (...messages: MessageType[]) => void;
   }
 
-  function silentiumValue(value: any): any;
+  function silentiumValue($message: MessageType): unknown;
+  function silentiumPrint(...messages: MessageType[]): void;
 }

@@ -28,6 +28,7 @@ export * from "./components/FromEvent";
 export * from "./components/Late";
 export * from "./components/Map";
 export * from "./components/Once";
+export * from "./components/Piped";
 export * from "./components/Primitive";
 export * from "./components/Process";
 export * from "./components/Race";
