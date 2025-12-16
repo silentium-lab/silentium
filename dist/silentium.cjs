@@ -44,14 +44,33 @@ class DestroyContainerImpl {
   constructor() {
     __publicField$7(this, "destructors", []);
   }
+  /**
+   * Add one destroyable
+   * @param e
+   * @returns
+   */
   add(e) {
     this.destructors.push(Destroyable(e));
     return e;
+  }
+  /**
+   * Add many destroyable objects
+   * @param destroyableList
+   * @returns
+   */
+  many(destroyableList) {
+    destroyableList.forEach((d) => {
+      this.add(d);
+    });
+    return this;
   }
   destroy() {
     this.destructors.forEach((d) => d.destroy());
     this.destructors.length = 0;
     return this;
+  }
+  destructor() {
+    return this.destroy.bind(this);
   }
 }
 
@@ -161,6 +180,18 @@ class ChainableImpl {
     $m.then(this.src.use.bind(this.src));
     return this;
   }
+}
+
+function Connected(...m) {
+  return Message((resolve, reject) => {
+    m[0].catch(reject).then(resolve);
+    m.slice(1).forEach((other) => {
+      other.catch(reject);
+    });
+    const dc = DestroyContainer();
+    dc.many(m);
+    return dc.destructor();
+  });
 }
 
 function Local(_base) {
@@ -712,6 +743,7 @@ exports.Chain = Chain;
 exports.Chainable = Chainable;
 exports.ChainableImpl = ChainableImpl;
 exports.Computed = Computed;
+exports.Connected = Connected;
 exports.Context = Context;
 exports.ContextChain = ContextChain;
 exports.ContextOf = ContextOf;

@@ -69,6 +69,32 @@ interface DestroyedType {
     destroyed(): boolean;
 }
 
+type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
+/**
+ * A message created from an executor function.
+ * The executor function can return a message destruction function.
+ */
+declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
+/**
+ * Reactive message implementation
+ */
+declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
+    private executor;
+    private rejections;
+    private dc;
+    constructor(executor: MessageExecutorType<T>);
+    then(resolve: ConstructorType<[T]>): this;
+    catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
+}
+
+/**
+ * First message - is main
+ * others will be destroyed when first
+ * will be destroyed
+ */
+declare function Connected(...m: MessageType[]): MessageImpl<unknown>;
+
 /**
  * Allows creating an object that definitely has a destructor,
  * useful to avoid creating unnecessary conditions
@@ -87,27 +113,20 @@ declare class DestroyableImpl<T> implements DestroyableType {
 declare function DestroyContainer(): DestroyContainerImpl;
 declare class DestroyContainerImpl implements DestroyableType {
     private destructors;
+    /**
+     * Add one destroyable
+     * @param e
+     * @returns
+     */
     add<R>(e: R): R;
+    /**
+     * Add many destroyable objects
+     * @param destroyableList
+     * @returns
+     */
+    many(destroyableList: unknown[]): this;
     destroy(): this;
-}
-
-type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
-/**
- * A message created from an executor function.
- * The executor function can return a message destruction function.
- */
-declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
-/**
- * Reactive message implementation
- */
-declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
-    private executor;
-    private rejections;
-    private dc;
-    constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): this;
-    catch(rejected: ConstructorType<[unknown]>): this;
-    destroy(): this;
+    destructor(): () => this;
 }
 
 /**
@@ -425,4 +444,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

@@ -42,14 +42,33 @@ class DestroyContainerImpl {
   constructor() {
     __publicField$7(this, "destructors", []);
   }
+  /**
+   * Add one destroyable
+   * @param e
+   * @returns
+   */
   add(e) {
     this.destructors.push(Destroyable(e));
     return e;
+  }
+  /**
+   * Add many destroyable objects
+   * @param destroyableList
+   * @returns
+   */
+  many(destroyableList) {
+    destroyableList.forEach((d) => {
+      this.add(d);
+    });
+    return this;
   }
   destroy() {
     this.destructors.forEach((d) => d.destroy());
     this.destructors.length = 0;
     return this;
+  }
+  destructor() {
+    return this.destroy.bind(this);
   }
 }
 
@@ -159,6 +178,18 @@ class ChainableImpl {
     $m.then(this.src.use.bind(this.src));
     return this;
   }
+}
+
+function Connected(...m) {
+  return Message((resolve, reject) => {
+    m[0].catch(reject).then(resolve);
+    m.slice(1).forEach((other) => {
+      other.catch(reject);
+    });
+    const dc = DestroyContainer();
+    dc.many(m);
+    return dc.destructor();
+  });
 }
 
 function Local(_base) {
@@ -700,5 +731,5 @@ function DevTools() {
   }
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

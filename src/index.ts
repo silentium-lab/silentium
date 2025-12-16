@@ -1,5 +1,6 @@
 export * from "./base/ActualMessage";
 export * from "./base/Chainable";
+export * from "./base/Connected";
 export * from "./base/Destroyable";
 export * from "./base/DestroyContainer";
 export * from "./base/Local";
