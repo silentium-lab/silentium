@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.174](https://github.com/silentium-lab/silentium/compare/v0.0.173...v0.0.174) (2025-12-16)
+
+
+### Features
+
+* **main:** conneced component ([3ccd1e5](https://github.com/silentium-lab/silentium/commit/3ccd1e5107e37e61ae32b392287e8dbf962a10f4))
+
 ### [0.0.173](https://github.com/silentium-lab/silentium/compare/v0.0.172...v0.0.173) (2025-12-14)
 
 
