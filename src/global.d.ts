@@ -1,3 +1,4 @@
+import { DestroyableType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
 
 export {};
