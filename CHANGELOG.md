@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.178](https://github.com/silentium-lab/silentium/compare/v0.0.177...v0.0.178) (2025-12-17)
+
+
+### Bug Fixes
+
+* **main:** message destroyable export and types improovements ([b20441d](https://github.com/silentium-lab/silentium/commit/b20441d982b2a54ed880b08be013f5fe81d5ffef))
+
 ### [0.0.177](https://github.com/silentium-lab/silentium/compare/v0.0.176...v0.0.177) (2025-12-17)
 
 
