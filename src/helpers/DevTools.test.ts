@@ -17,7 +17,7 @@ describe("DevTools.test", () => {
     expect(destroyed).toBeCalledTimes(1);
   });
 
-  test("destroyable without reading value", async () => {
+  test("destroyable without reading value", () => {
     const destroyed = vi.fn();
     const $m = silentiumDebug.destroyable(destroyed);
     $m.destroy();
