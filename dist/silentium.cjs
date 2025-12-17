@@ -183,13 +183,13 @@ class ChainableImpl {
 }
 
 function Connected(...m) {
+  const dc = DestroyContainer();
+  dc.many(m);
   return Message((resolve, reject) => {
     m[0].catch(reject).then(resolve);
     m.slice(1).forEach((other) => {
       other.catch(reject);
     });
-    const dc = DestroyContainer();
-    dc.many(m);
     return dc.destructor();
   });
 }

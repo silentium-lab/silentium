@@ -93,7 +93,7 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
  * others will be destroyed when first
  * will be destroyed
  */
-declare function Connected(...m: MessageType[]): MessageImpl<unknown>;
+declare function Connected<T>(...m: MessageType[]): MessageImpl<T>;
 
 /**
  * Allows creating an object that definitely has a destructor,

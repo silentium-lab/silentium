@@ -7,14 +7,14 @@ import { MessageType } from "types/MessageType";
  * others will be destroyed when first
  * will be destroyed
  */
-export function Connected(...m: MessageType[]) {
-  return Message((resolve, reject) => {
-    m[0].catch(reject).then(resolve);
+export function Connected<T>(...m: MessageType[]) {
+  const dc = DestroyContainer();
+  dc.many(m);
+  return Message<T>((resolve, reject) => {
+    (m[0] as MessageType<T>).catch(reject).then(resolve);
     m.slice(1).forEach((other) => {
       other.catch(reject);
     });
-    const dc = DestroyContainer();
-    dc.many(m);
 
     return dc.destructor();
   });
