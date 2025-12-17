@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.180](https://github.com/silentium-lab/silentium/compare/v0.0.179...v0.0.180) (2025-12-17)
+
+
+### Bug Fixes
+
+* **main:** shared component bug with destroying ([2d2def4](https://github.com/silentium-lab/silentium/commit/2d2def44ce83d90e4a3a418f2d1be053dc2824bb))
+
 ### [0.0.179](https://github.com/silentium-lab/silentium/compare/v0.0.178...v0.0.179) (2025-12-17)
 
 ### [0.0.178](https://github.com/silentium-lab/silentium/compare/v0.0.177...v0.0.178) (2025-12-17)
