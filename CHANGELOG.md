@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.177](https://github.com/silentium-lab/silentium/compare/v0.0.176...v0.0.177) (2025-12-17)
+
+
+### Bug Fixes
+
+* **main:** types in global.d.ts ([9ca1d53](https://github.com/silentium-lab/silentium/commit/9ca1d5395f651e55e7ff9db96a3e93f6633b0906))
+
 ### [0.0.176](https://github.com/silentium-lab/silentium/compare/v0.0.175...v0.0.176) (2025-12-17)
 
 
