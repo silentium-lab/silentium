@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.176](https://github.com/silentium-lab/silentium/compare/v0.0.175...v0.0.176) (2025-12-17)
+
+
+### Features
+
+* **main:** silentiumDebug global component ([0844b08](https://github.com/silentium-lab/silentium/commit/0844b0804049897ea4607a3a3c3e54cad5c10da8))
+
 ### [0.0.175](https://github.com/silentium-lab/silentium/compare/v0.0.174...v0.0.175) (2025-12-17)
 
 
