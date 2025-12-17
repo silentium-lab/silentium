@@ -730,7 +730,8 @@ class MessageDestroyable {
   constructor(onDestroy) {
     this.onDestroy = onDestroy;
   }
-  then() {
+  then(resolve) {
+    resolve(`Wait destroy ${Date.now()}`);
     return this;
   }
   catch() {
@@ -782,6 +783,7 @@ exports.LateImpl = LateImpl;
 exports.Local = Local;
 exports.Map = Map$1;
 exports.Message = Message;
+exports.MessageDestroyable = MessageDestroyable;
 exports.MessageImpl = MessageImpl;
 exports.MessageSource = MessageSource;
 exports.MessageSourceImpl = MessageSourceImpl;

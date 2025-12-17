@@ -409,13 +409,22 @@ declare function Sequence<T>($base: MessageType<T>): MessageImpl<T[]>;
 declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
 
 declare global {
-    interface GlobalThis {
-        silentiumDebug: {
-            value: ($message: MessageType) => unknown;
-            print: (...messages: MessageType[]) => void;
-            destroyable: (onDestroy: () => void) => MessageType<any> & DestroyableType;
-        };
+    interface SilentiumDebug {
+        value: ($message: MessageType) => unknown;
+        print: (...messages: MessageType[]) => void;
+        destroyable: (onDestroy: () => void) => MessageType<any> & DestroyableType;
     }
+    interface GlobalThis {
+        silentiumDebug: SilentiumDebug;
+    }
+    const silentiumDebug: SilentiumDebug;
+}
+declare class MessageDestroyable implements MessageType<any>, DestroyableType {
+    private onDestroy;
+    constructor(onDestroy: () => void);
+    then(resolve: ConstructorType<[string]>): this;
+    catch(): this;
+    destroy(): this;
 }
 /**
  * global functions for debuging
@@ -447,4 +456,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

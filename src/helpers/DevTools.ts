@@ -2,19 +2,23 @@ import { All } from "components/All";
 import { Applied } from "components/Applied";
 import { Primitive } from "components/Primitive";
 import { Shared } from "components/Shared";
+import { ConstructorType } from "types/ConstructorType";
 import { DestroyableType } from "types/DestroyableType";
 import { MessageType } from "types/MessageType";
 
 declare global {
-  interface GlobalThis {
-    silentiumDebug: {
-      value: ($message: MessageType) => unknown;
-      print: (...messages: MessageType[]) => void;
-      destroyable: (
-        onDestroy: () => void,
-      ) => MessageType<any> & DestroyableType;
-    };
+  interface SilentiumDebug {
+    value: ($message: MessageType) => unknown;
+    print: (...messages: MessageType[]) => void;
+    destroyable: (onDestroy: () => void) => MessageType<any> & DestroyableType;
   }
+
+  interface GlobalThis {
+    silentiumDebug: SilentiumDebug;
+  }
+
+  // @ts-expect-error global variable
+  const silentiumDebug: SilentiumDebug;
 }
 
 /**
@@ -32,10 +36,11 @@ const silentiumPrint = (...messages: MessageType[]) => {
 const silentiumValue = ($message: MessageType) =>
   Primitive($message).primitive();
 
-class MessageDestroyable implements MessageType<any>, DestroyableType {
+export class MessageDestroyable implements MessageType<any>, DestroyableType {
   public constructor(private onDestroy: () => void) {}
 
-  public then() {
+  public then(resolve: ConstructorType<[string]>) {
+    resolve(`Wait destroy ${Date.now()}`);
     return this;
   }
 
