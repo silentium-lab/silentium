@@ -5,6 +5,6 @@ import { describe, expect, test } from "vitest";
 describe("DevTools.test", () => {
   DevTools();
   test("raw value of silentium message", () => {
-    expect(silentiumValue(Of(123))).toBe(123);
+    expect(silentiumDebug.value(Of(123))).toBe(123);
   });
 });

@@ -726,10 +726,29 @@ const silentiumPrint = (...messages) => {
   );
 };
 const silentiumValue = ($message) => Primitive($message).primitive();
+class MessageDestroyable {
+  constructor(onDestroy) {
+    this.onDestroy = onDestroy;
+  }
+  then() {
+    return this;
+  }
+  catch() {
+    return this;
+  }
+  destroy() {
+    this.onDestroy();
+    return this;
+  }
+}
+const silentiumDestroyable = (onDestroy) => new MessageDestroyable(onDestroy);
 function DevTools() {
   if (typeof globalThis !== "undefined") {
-    globalThis.silentiumValue = silentiumValue;
-    globalThis.silentiumPrint = silentiumPrint;
+    globalThis.silentiumDebug = {
+      value: silentiumValue,
+      print: silentiumPrint,
+      destroyable: silentiumDestroyable
+    };
   }
 }
 

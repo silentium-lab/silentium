@@ -410,8 +410,11 @@ declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
 
 declare global {
     interface GlobalThis {
-        silentiumValue: ($message: MessageType) => unknown;
-        silentiumPrint: (...messages: MessageType[]) => void;
+        silentiumDebug: {
+            value: ($message: MessageType) => unknown;
+            print: (...messages: MessageType[]) => void;
+            destroyable: (onDestroy: () => void) => MessageType<any> & DestroyableType;
+        };
     }
 }
 /**

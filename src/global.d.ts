@@ -4,10 +4,18 @@ export {};
 
 declare global {
   interface GlobalThis {
-    silentiumValue: ($message: MessageType) => unknown;
-    silentiumPrint: (...messages: MessageType[]) => void;
+    silentiumDebug: {
+      value: ($message: MessageType) => unknown;
+      print: (...messages: MessageType[]) => void;
+      destroyable: (
+        onDestroy: () => void,
+      ) => MessageType<any> & DestroyableType;
+    };
   }
 
-  function silentiumValue($message: MessageType): unknown;
-  function silentiumPrint(...messages: MessageType[]): void;
+  declare const silentiumDebug: {
+    value: ($message: MessageType) => unknown;
+    print: (...messages: MessageType[]) => void;
+    destroyable: (onDestroy: () => void) => MessageType<any> & DestroyableType;
+  };
 }
