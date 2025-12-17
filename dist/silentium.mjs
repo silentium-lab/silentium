@@ -379,6 +379,9 @@ class SharedImpl {
   }
   destroy() {
     this.resolvers.clear();
+    if (isDestroyable(this.$base)) {
+      this.$base.destroy();
+    }
     return this;
   }
   value() {

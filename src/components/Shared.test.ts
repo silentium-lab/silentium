@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { Late } from "components/Late";
 import { Shared } from "components/Shared";
 import { Diagram } from "testing/Diagram";
@@ -67,5 +67,32 @@ describe("Shared.test", () => {
     });
 
     expect(count).toBe(1);
+  });
+
+  test("destroy calls destroy on base message if base is destroyable", () => {
+    const destroyMock = vi.fn();
+    const baseMock = {
+      then: vi.fn(),
+      catch: vi.fn(),
+      destroy: destroyMock,
+    };
+    const s = Shared(baseMock);
+
+    s.destroy();
+
+    expect(destroyMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("destroy does not call destroy on base message if base is not destroyable", () => {
+    const baseMock = {
+      then: vi.fn(),
+      catch: vi.fn(),
+      // no destroy method
+    };
+    const s = Shared(baseMock);
+
+    s.destroy();
+
+    // No assertion needed, just ensure no error and destroy not called
   });
 });

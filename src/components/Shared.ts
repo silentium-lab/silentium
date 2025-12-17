@@ -1,7 +1,7 @@
 import { MessageType } from "types/MessageType";
 import { MessageSourceType, SourceType } from "types/SourceType";
 import { ConstructorType } from "types/ConstructorType";
-import { isFilled, isSource } from "helpers/guards";
+import { isDestroyable, isFilled, isSource } from "helpers/guards";
 import { Primitive } from "components/Primitive";
 import { ChainableType } from "types/ChainableType";
 
@@ -56,6 +56,9 @@ export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
 
   public destroy() {
     this.resolvers.clear();
+    if (isDestroyable(this.$base)) {
+      this.$base.destroy();
+    }
     return this;
   }
 
