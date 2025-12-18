@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.182](https://github.com/silentium-lab/silentium/compare/v0.0.181...v0.0.182) (2025-12-18)
+
+
+### Features
+
+* **main:** context transport as separate argument ([9c05b7e](https://github.com/silentium-lab/silentium/commit/9c05b7ef17d554f0a3c845a9e4856b7bcb36c68a))
+
 ### [0.0.181](https://github.com/silentium-lab/silentium/compare/v0.0.180...v0.0.181) (2025-12-18)
 
 
