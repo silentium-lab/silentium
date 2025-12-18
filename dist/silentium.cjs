@@ -723,6 +723,32 @@ function Stream(base) {
   });
 }
 
+function Trackable(name, target) {
+  Context({
+    transport: "trackable",
+    params: {
+      name,
+      action: "created"
+    }
+  }).then(() => {
+  });
+  return new Proxy(target, {
+    get(target2, prop, receiver) {
+      if (prop === "destroy") {
+        Context({
+          transport: "trackable",
+          params: {
+            name,
+            action: "destroyed"
+          }
+        }).then(() => {
+        });
+      }
+      return Reflect.get(target2, prop, receiver);
+    }
+  });
+}
+
 const silentiumPrint = (...messages) => {
   Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
     console.log
@@ -806,6 +832,7 @@ exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;
 exports.Silence = Silence;
 exports.Stream = Stream;
+exports.Trackable = Trackable;
 exports.Void = Void;
 exports.ensureFunction = ensureFunction;
 exports.ensureMessage = ensureMessage;
