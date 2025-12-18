@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.181](https://github.com/silentium-lab/silentium/compare/v0.0.180...v0.0.181) (2025-12-18)
+
+
+### Features
+
+* **main:** trackable component ([6cd2966](https://github.com/silentium-lab/silentium/commit/6cd2966dad9ef7501d6ce7e2d8711a1853a881bb))
+
 ### [0.0.180](https://github.com/silentium-lab/silentium/compare/v0.0.179...v0.0.180) (2025-12-17)
 
 
