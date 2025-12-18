@@ -295,7 +295,7 @@ interface ContextType extends Record<string, any> {
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
  */
-declare function Context<T>(msg: MaybeMessage<ContextType>): MessageImpl<T>;
+declare function Context<T>(name: MaybeMessage<string | symbol>, params: MaybeMessage<Omit<ContextType, "transport">>): MessageImpl<T>;
 declare namespace Context {
     var transport: Map<any, ConstructorType<[ContextType]>>;
 }

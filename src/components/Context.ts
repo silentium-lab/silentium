@@ -1,5 +1,7 @@
 import { ActualMessage } from "base/ActualMessage";
 import { Message } from "base/Message";
+import { All } from "components/All";
+import { AppliedDestructured } from "components/AppliedDestructured";
 import { ConstructorType } from "types/ConstructorType";
 import { ContextType } from "types/ContextType";
 import { MaybeMessage } from "types/MessageType";
@@ -12,8 +14,17 @@ Context.transport = new Map<any, ConstructorType<[ContextType]>>();
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
  */
-export function Context<T>(msg: MaybeMessage<ContextType>) {
-  const $msg = ActualMessage(msg);
+export function Context<T>(
+  name: MaybeMessage<string | symbol>,
+  params: MaybeMessage<Omit<ContextType, "transport">>,
+) {
+  const $msg = AppliedDestructured(
+    All(ActualMessage(name), ActualMessage(params)),
+    (name, params) => ({
+      transport: name,
+      ...params,
+    }),
+  );
   return Message<T>((resolve, reject) => {
     $msg.then((message) => {
       const transport = Context.transport.get(message.transport);

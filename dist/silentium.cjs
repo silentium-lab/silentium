@@ -481,8 +481,14 @@ function Computed(applier, ...messages) {
 }
 
 Context.transport = /* @__PURE__ */ new Map();
-function Context(msg) {
-  const $msg = ActualMessage(msg);
+function Context(name, params) {
+  const $msg = AppliedDestructured(
+    All(ActualMessage(name), ActualMessage(params)),
+    (name2, params2) => ({
+      transport: name2,
+      ...params2
+    })
+  );
   return Message((resolve, reject) => {
     $msg.then((message) => {
       const transport = Context.transport.get(message.transport);
@@ -724,8 +730,7 @@ function Stream(base) {
 }
 
 function Trackable(name, target) {
-  Context({
-    transport: "trackable",
+  Context("trackable", {
     params: {
       name,
       action: "created"
@@ -735,8 +740,7 @@ function Trackable(name, target) {
   return new Proxy(target, {
     get(target2, prop, receiver) {
       if (prop === "destroy") {
-        Context({
-          transport: "trackable",
+        Context("trackable", {
           params: {
             name,
             action: "destroyed"

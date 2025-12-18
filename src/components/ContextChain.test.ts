@@ -15,8 +15,7 @@ describe("ContextChain.test", () => {
     );
 
     const g = vi.fn();
-    Context({
-      transport: "config",
+    Context("config", {
       method: "get",
     }).then(g);
 
@@ -33,8 +32,7 @@ describe("ContextChain.test", () => {
     );
 
     const g = vi.fn();
-    Context({
-      transport: "config",
+    Context("config", {
       method: "get",
     }).then(g);
 

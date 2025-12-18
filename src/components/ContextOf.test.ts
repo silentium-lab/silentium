@@ -7,8 +7,7 @@ describe("ContextOf.test", () => {
     const callback = vi.fn();
     ContextOf("test").then(callback);
 
-    Context({
-      transport: "test",
+    Context("test", {
       method: "get",
     }).then(() => {});
 

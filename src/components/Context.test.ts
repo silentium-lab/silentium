@@ -9,8 +9,7 @@ describe("Context.test", () => {
       ctx.result?.("hello");
     });
 
-    const $v = Context({
-      transport,
+    const $v = Context(transport, {
       params: { key: "value" },
     });
 
@@ -30,8 +29,7 @@ describe("Context.test", () => {
       throw "hello";
     });
 
-    const $v = Context({
-      transport,
+    const $v = Context(transport, {
       params: { key: "value" },
     });
 

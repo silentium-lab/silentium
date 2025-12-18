@@ -7,8 +7,7 @@ import { Context } from "components/Context";
  * when destroyed sends action=destroyed
  */
 export function Trackable(name: string, target: object) {
-  Context({
-    transport: "trackable",
+  Context("trackable", {
     params: {
       name,
       action: "created",
@@ -17,8 +16,7 @@ export function Trackable(name: string, target: object) {
   return new Proxy(target, {
     get(target, prop, receiver) {
       if (prop === "destroy") {
-        Context({
-          transport: "trackable",
+        Context("trackable", {
           params: {
             name,
             action: "destroyed",
