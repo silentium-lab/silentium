@@ -481,12 +481,14 @@ function Computed(applier, ...messages) {
 }
 
 Context.transport = /* @__PURE__ */ new Map();
-function Context(name, params) {
+function Context(name, params = {}) {
   const $msg = AppliedDestructured(
     All(ActualMessage(name), ActualMessage(params)),
     (name2, params2) => ({
       transport: name2,
-      ...params2
+      params: params2,
+      result: void 0,
+      error: void 0
     })
   );
   return Message((resolve, reject) => {
@@ -514,7 +516,7 @@ function ContextChain(base) {
   const $base = ActualMessage(base);
   return (context) => {
     if (!context.result) {
-      throw new Error("ContextChain did not find result in rpc message");
+      throw new Error("ContextChain did not find result field in message");
     }
     $base.then(context.result);
   };
@@ -730,23 +732,11 @@ function Stream(base) {
 }
 
 function Trackable(name, target) {
-  Context("trackable", {
-    params: {
-      name,
-      action: "created"
-    }
-  }).then(() => {
-  });
+  Context("trackable", { name, action: "created" }).then(Void());
   return new Proxy(target, {
     get(target2, prop, receiver) {
       if (prop === "destroy") {
-        Context("trackable", {
-          params: {
-            name,
-            action: "destroyed"
-          }
-        }).then(() => {
-        });
+        Context("trackable", { name, action: "destroyed" }).then(Void());
       }
       return Reflect.get(target2, prop, receiver);
     }

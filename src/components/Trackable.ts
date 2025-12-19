@@ -1,3 +1,4 @@
+import { Void } from "base/Void";
 import { Context } from "components/Context";
 
 /**
@@ -7,23 +8,12 @@ import { Context } from "components/Context";
  * when destroyed sends action=destroyed
  */
 export function Trackable(name: string, target: object) {
-  Context("trackable", {
-    params: {
-      name,
-      action: "created",
-    },
-  }).then(() => {});
+  Context("trackable", { name, action: "created" }).then(Void());
   return new Proxy(target, {
     get(target, prop, receiver) {
       if (prop === "destroy") {
-        Context("trackable", {
-          params: {
-            name,
-            action: "destroyed",
-          },
-        }).then(() => {});
+        Context("trackable", { name, action: "destroyed" }).then(Void());
       }
-
       return Reflect.get(target, prop, receiver);
     },
   });

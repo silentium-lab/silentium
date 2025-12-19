@@ -15,9 +15,7 @@ describe("ContextChain.test", () => {
     );
 
     const g = vi.fn();
-    Context("config", {
-      method: "get",
-    }).then(g);
+    Context("config").then(g);
 
     expect(g).toHaveBeenCalledWith({
       name: "TestApp",
@@ -32,9 +30,7 @@ describe("ContextChain.test", () => {
     );
 
     const g = vi.fn();
-    Context("config", {
-      method: "get",
-    }).then(g);
+    Context("config").then(g);
 
     expect(g).toHaveBeenCalledWith({
       name: "TestApp",

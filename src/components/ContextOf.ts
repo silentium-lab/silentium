@@ -4,7 +4,7 @@ import { Late } from "components/Late";
 import { ContextType } from "types/ContextType";
 
 /**
- * Message for the arrival of a specific RPC message
+ * Message for the arrival of a specific Context message
  * for specific transport
  */
 export function ContextOf(transport: string) {

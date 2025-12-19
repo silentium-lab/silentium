@@ -10,7 +10,7 @@ describe("Context.test", () => {
     });
 
     const $v = Context(transport, {
-      params: { key: "value" },
+      key: "value",
     });
 
     const g = vi.fn();
@@ -30,7 +30,7 @@ describe("Context.test", () => {
     });
 
     const $v = Context(transport, {
-      params: { key: "value" },
+      key: "value",
     });
 
     const g = vi.fn();

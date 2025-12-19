@@ -16,14 +16,17 @@ Context.transport = new Map<any, ConstructorType<[ContextType]>>();
  */
 export function Context<T>(
   name: MaybeMessage<string | symbol>,
-  params: MaybeMessage<Omit<ContextType, "transport">>,
+  params: MaybeMessage<ContextType["params"]> = {},
 ) {
   const $msg = AppliedDestructured(
     All(ActualMessage(name), ActualMessage(params)),
-    (name, params) => ({
-      transport: name,
-      ...params,
-    }),
+    (name, params) =>
+      ({
+        transport: name,
+        params,
+        result: undefined,
+        error: undefined,
+      }) as ContextType,
   );
   return Message<T>((resolve, reject) => {
     $msg.then((message) => {
