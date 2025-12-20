@@ -39,4 +39,14 @@ describe("Applied.test", () => {
 
     expect(g).not.toHaveBeenCalled();
   });
+
+  test("applier returns a message", () => {
+    const base = Of(2);
+    const applied = Applied(base, (x) => Of(x * 3));
+
+    const g = vi.fn();
+    applied.then(g);
+
+    expect(g).toBeCalledWith(6);
+  });
 });

@@ -1,5 +1,7 @@
 import { ActualMessage } from "base/ActualMessage";
+import { DestroyContainer } from "base/DestroyContainer";
 import { Message } from "base/Message";
+import { isMessage } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { MaybeMessage } from "types/MessageType";
 
@@ -9,13 +11,20 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function Applied<const T, R>(
   base: MaybeMessage<T>,
-  applier: ConstructorType<[T], R>,
+  applier: ConstructorType<[T], MaybeMessage<R>>,
 ) {
   const $base = ActualMessage(base);
   return Message<R>(function AppliedImpl(resolve, reject) {
+    const dc = DestroyContainer();
     $base.catch(reject);
     $base.then((v) => {
-      resolve(applier(v));
+      const result = applier(v);
+      if (isMessage(result)) {
+        dc.destroy();
+        result.catch(reject).then(resolve);
+      } else {
+        resolve(result);
+      }
     });
   });
 }

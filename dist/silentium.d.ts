@@ -207,7 +207,7 @@ declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageImpl<T>;
  * An message that applies a function
  * to the value of the base message
  */
-declare function Applied<const T, R>(base: MaybeMessage<T>, applier: ConstructorType<[T], R>): MessageImpl<R>;
+declare function Applied<const T, R>(base: MaybeMessage<T>, applier: ConstructorType<[T], MaybeMessage<R>>): MessageImpl<R>;
 
 /**
  * Allows applying variables from an message that passes an array to a function,

@@ -284,9 +284,16 @@ function Any(...messages) {
 function Applied(base, applier) {
   const $base = ActualMessage(base);
   return Message(function AppliedImpl(resolve, reject) {
+    const dc = DestroyContainer();
     $base.catch(reject);
     $base.then((v) => {
-      resolve(applier(v));
+      const result = applier(v);
+      if (isMessage(result)) {
+        dc.destroy();
+        result.catch(reject).then(resolve);
+      } else {
+        resolve(result);
+      }
     });
   });
 }
