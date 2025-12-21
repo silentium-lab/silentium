@@ -1,7 +1,8 @@
 import { ActualMessage } from "base/ActualMessage";
-import { Message } from "base/Message";
+import { MessageSource } from "base/MessageSource";
 import { All } from "components/All";
 import { AppliedDestructured } from "components/AppliedDestructured";
+import { Primitive } from "components/Primitive";
 import { ConstructorType } from "types/ConstructorType";
 import { ContextType } from "types/ContextType";
 import { MaybeMessage } from "types/MessageType";
@@ -28,23 +29,39 @@ export function Context<T>(
         error: undefined,
       }) as ContextType,
   );
-  return Message<T>((resolve, reject) => {
-    $msg.then((message) => {
-      const transport = Context.transport.get(message.transport);
+  return MessageSource<T>(
+    (resolve, reject) => {
+      $msg.then((message) => {
+        const transport = Context.transport.get(message.transport);
+        if (transport === undefined) {
+          throw new Error(`Context: unknown transport ${message.transport}`);
+        }
+        if (!message.result) {
+          message.result = resolve;
+        }
+        if (!message.error) {
+          message.error = reject;
+        }
+        try {
+          transport(message);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+    (value) => {
+      const msg = Primitive($msg).primitive();
+      if (msg === null) {
+        throw new Error("Context: sourcing impossible message not existed");
+      }
+      const transport = Context.transport.get(msg.transport);
       if (transport === undefined) {
-        throw new Error(`Context: unknown transport ${message.transport}`);
+        throw new Error(`Context: sourcing unknown transport ${msg.transport}`);
       }
-      if (!message.result) {
-        message.result = resolve;
-      }
-      if (!message.error) {
-        message.error = reject;
-      }
-      try {
-        transport(message);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
+      transport({
+        ...msg,
+        value,
+      });
+    },
+  );
 }

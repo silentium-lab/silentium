@@ -1,5 +1,6 @@
 import { Message, MessageExecutorType, MessageImpl } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
+import { MessageType } from "types/MessageType";
 import { MessageSourceType } from "types/SourceType";
 
 /**
@@ -34,6 +35,11 @@ export class MessageSourceImpl<T> implements MessageSourceType<T> {
 
   public catch(rejected: ConstructorType<[unknown]>): this {
     this.message.catch(rejected);
+    return this;
+  }
+
+  public chain(m: MessageType<T>) {
+    m.then(this.use.bind(this));
     return this;
   }
 }

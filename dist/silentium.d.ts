@@ -145,6 +145,7 @@ declare class MessageSourceImpl<T> implements MessageSourceType<T> {
     use(value: T): this;
     then(resolved: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
+    chain(m: MessageType<T>): this;
 }
 
 /**
@@ -287,6 +288,7 @@ interface ContextType extends Record<string, any> {
     params?: Record<string, any>;
     result?: ConstructorType<[any]>;
     error?: ConstructorType<[any]>;
+    value?: any;
 }
 
 /**
@@ -295,7 +297,7 @@ interface ContextType extends Record<string, any> {
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
  */
-declare function Context<T>(name: MaybeMessage<string | symbol>, params?: MaybeMessage<ContextType["params"]>): MessageImpl<T>;
+declare function Context<T>(name: MaybeMessage<string | symbol>, params?: MaybeMessage<ContextType["params"]>): MessageSourceImpl<T>;
 declare namespace Context {
     var transport: Map<any, ConstructorType<[ContextType]>>;
 }

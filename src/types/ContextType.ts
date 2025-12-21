@@ -9,4 +9,5 @@ export interface ContextType extends Record<string, any> {
   params?: Record<string, any>;
   result?: ConstructorType<[any]>;
   error?: ConstructorType<[any]>;
+  value?: any;
 }

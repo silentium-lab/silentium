@@ -232,6 +232,10 @@ class MessageSourceImpl {
     this.message.catch(rejected);
     return this;
   }
+  chain(m) {
+    m.then(this.use.bind(this));
+    return this;
+  }
 }
 
 function New(construct) {
@@ -496,30 +500,50 @@ function Context(name, params = {}) {
       error: void 0
     })
   );
-  return Message((resolve, reject) => {
-    $msg.then((message) => {
-      const transport = Context.transport.get(message.transport);
+  return MessageSource(
+    (resolve, reject) => {
+      $msg.then((message) => {
+        const transport = Context.transport.get(message.transport);
+        if (transport === void 0) {
+          throw new Error(`Context: unknown transport ${message.transport}`);
+        }
+        if (!message.result) {
+          message.result = resolve;
+        }
+        if (!message.error) {
+          message.error = reject;
+        }
+        try {
+          transport(message);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+    (value) => {
+      const msg = Primitive($msg).primitive();
+      if (msg === null) {
+        throw new Error("Context: sourcing impossible message not existed");
+      }
+      const transport = Context.transport.get(msg.transport);
       if (transport === void 0) {
-        throw new Error(`Context: unknown transport ${message.transport}`);
+        throw new Error(`Context: sourcing unknown transport ${msg.transport}`);
       }
-      if (!message.result) {
-        message.result = resolve;
-      }
-      if (!message.error) {
-        message.error = reject;
-      }
-      try {
-        transport(message);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
+      transport({
+        ...msg,
+        value
+      });
+    }
+  );
 }
 
 function ContextChain(base) {
   const $base = ActualMessage(base);
   return (context) => {
+    if (context.value && isSource(base)) {
+      base.use(context.value);
+      return;
+    }
     if (!context.result) {
       throw new Error("ContextChain did not find result field in message");
     }
