@@ -15,8 +15,8 @@ export function Default<T>(
   const $default = ActualMessage(_default);
   const $defaultAfterError = Applied(Catch($base), () => $default);
 
-  return Message((resolve) => {
+  return Message<T>((resolve) => {
     $base.then(resolve);
-    $defaultAfterError.then(resolve);
+    $defaultAfterError.then(resolve as any);
   });
 }

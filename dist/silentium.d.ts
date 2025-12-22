@@ -317,7 +317,7 @@ declare function ContextOf(transport: string): MessageImpl<ContextType>;
  * If base returns error then
  * default will return default value
  */
-declare function Default<T>($base: MessageType<T>, _default: MaybeMessage<unknown>): MessageImpl<unknown>;
+declare function Default<T>($base: MessageType<T>, _default: MaybeMessage<unknown>): MessageImpl<T>;
 
 interface EmptyType {
     empty(): MessageType<boolean>;
