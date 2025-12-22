@@ -21,6 +21,7 @@ export * from "./components/Computed";
 export * from "./components/Context";
 export * from "./components/ContextChain";
 export * from "./components/ContextOf";
+export * from "./components/Default";
 export * from "./components/Empty";
 export * from "./components/ExecutorApplied";
 export * from "./components/Filtered";

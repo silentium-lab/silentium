@@ -562,6 +562,15 @@ function ContextOf(transport) {
   });
 }
 
+function Default($base, _default) {
+  const $default = ActualMessage(_default);
+  const $defaultAfterError = Applied(Catch($base), () => $default);
+  return Message((resolve) => {
+    $base.then(resolve);
+    $defaultAfterError.then(resolve);
+  });
+}
+
 function Filtered(base, predicate, defaultValue) {
   const $base = ActualMessage(base);
   return Message(function FilteredImpl(resolve, reject) {
@@ -821,6 +830,7 @@ exports.Connected = Connected;
 exports.Context = Context;
 exports.ContextChain = ContextChain;
 exports.ContextOf = ContextOf;
+exports.Default = Default;
 exports.DestroyContainer = DestroyContainer;
 exports.DestroyContainerImpl = DestroyContainerImpl;
 exports.Destroyable = Destroyable;

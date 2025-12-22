@@ -560,6 +560,15 @@ function ContextOf(transport) {
   });
 }
 
+function Default($base, _default) {
+  const $default = ActualMessage(_default);
+  const $defaultAfterError = Applied(Catch($base), () => $default);
+  return Message((resolve) => {
+    $base.then(resolve);
+    $defaultAfterError.then(resolve);
+  });
+}
+
 function Filtered(base, predicate, defaultValue) {
   const $base = ActualMessage(base);
   return Message(function FilteredImpl(resolve, reject) {
@@ -805,5 +814,5 @@ function DevTools() {
   }
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, Context, ContextChain, ContextOf, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.js.map
