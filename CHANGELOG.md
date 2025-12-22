@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.188](https://github.com/silentium-lab/silentium/compare/v0.0.187...v0.0.188) (2025-12-22)
+
+
+### Bug Fixes
+
+* **main:** typing of default component ([41e2183](https://github.com/silentium-lab/silentium/commit/41e218317bad44167a06c1af0069c27f41f8bca7))
+
 ### [0.0.187](https://github.com/silentium-lab/silentium/compare/v0.0.186...v0.0.187) (2025-12-22)
 
 
