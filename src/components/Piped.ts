@@ -8,6 +8,9 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
     : never
   : never;
 
+/**
+ * Helps to pipe actors or functions to one common actor
+ */
 export function Piped<T extends ((...vars: any) => MaybeMessage)[]>(
   $m: MaybeMessage,
   ...c: T
