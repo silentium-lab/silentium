@@ -14,6 +14,8 @@ export type MessageExecutorType<T> = (
 /**
  * A message created from an executor function.
  * The executor function can return a message destruction function.
+ *
+ * @url https://silentium.pw/article/message/view
  */
 export function Message<T>(executor: MessageExecutorType<T>) {
   return new MessageImpl<T>(executor);
@@ -21,6 +23,8 @@ export function Message<T>(executor: MessageExecutorType<T>) {
 
 /**
  * Reactive message implementation
+ *
+ * @url https://silentium.pw/article/message/view
  */
 export class MessageImpl<T> implements MessageType<T>, DestroyableType {
   private rejections = new Rejections();
