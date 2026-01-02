@@ -11,6 +11,7 @@ export function DestroyContainer() {
 
 export class DestroyContainerImpl implements DestroyableType {
   private destructors: DestroyableType[] = [];
+  private _destroyed = false;
 
   /**
    * Add one destroyable
@@ -35,9 +36,14 @@ export class DestroyContainerImpl implements DestroyableType {
   }
 
   public destroy() {
+    this._destroyed = true;
     this.destructors.forEach((d) => d.destroy());
     this.destructors.length = 0;
     return this;
+  }
+
+  public destroyed() {
+    return this._destroyed;
   }
 
   public destructor() {

@@ -35,6 +35,9 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
   }
 
   public then(resolve: ConstructorType<[T]>) {
+    if (this.dc.destroyed()) {
+      return this;
+    }
     try {
       this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
     } catch (e: any) {
@@ -44,6 +47,9 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
   }
 
   public catch(rejected: ConstructorType<[unknown]>) {
+    if (this.dc.destroyed()) {
+      return this;
+    }
     this.rejections.catch(rejected);
     return this;
   }
