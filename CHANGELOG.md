@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.189](https://github.com/silentium-lab/silentium/compare/v0.0.188...v0.0.189) (2026-01-03)
+
+
+### Features
+
+* **main:** destroyed flag in desctory container ([18b86ae](https://github.com/silentium-lab/silentium/commit/18b86ae6a88bfb45a5da9f3b1531f55ccaadad40))
+* **main:** message executor url ([a84f725](https://github.com/silentium-lab/silentium/commit/a84f725845c3a7ee7f9945df9e3f0a7848f09e93))
+
+
+### Bug Fixes
+
+* **main:** comments silence and pipe ([b237ca9](https://github.com/silentium-lab/silentium/commit/b237ca9449554e49c12c83caef63182a7ea47f84))
+* **main:** message source destroy ([87b10dc](https://github.com/silentium-lab/silentium/commit/87b10dc1df59ea626f443d84ce254d8384a27e6b))
+* **main:** shared many calls with same resolver ([a079c20](https://github.com/silentium-lab/silentium/commit/a079c208141cfa3623b42fc45bfad1e805a664d2))
+
 ### [0.0.188](https://github.com/silentium-lab/silentium/compare/v0.0.187...v0.0.188) (2025-12-22)
 
 
