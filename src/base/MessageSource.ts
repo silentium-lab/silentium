@@ -5,6 +5,7 @@ import { MessageSourceType } from "types/SourceType";
 
 /**
  * Base message source object
+ * https://silentium.pw/article/message-source/view
  */
 export function MessageSource<T>(
   messageExecutor: MessageExecutorType<T>,
@@ -35,6 +36,11 @@ export class MessageSourceImpl<T> implements MessageSourceType<T> {
 
   public catch(rejected: ConstructorType<[unknown]>): this {
     this.message.catch(rejected);
+    return this;
+  }
+
+  public destroy() {
+    this.message.destroy();
     return this;
   }
 
