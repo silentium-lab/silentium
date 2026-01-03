@@ -3,6 +3,7 @@ import { Silence } from "base/Silence";
 import { Shared } from "components/Shared";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
+import { MessageType } from "types/MessageType";
 import { MessageSourceType } from "types/SourceType";
 
 /**
@@ -49,6 +50,11 @@ export class LateImpl<T> implements MessageSourceType<T> {
 
   public catch(rejected: ConstructorType<[unknown]>) {
     this.rejections.catch(rejected);
+    return this;
+  }
+
+  public chain(m: MessageType<T>) {
+    m.then(this.use.bind(this));
     return this;
   }
 }

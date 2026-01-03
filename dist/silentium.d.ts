@@ -28,32 +28,6 @@ type MaybeMessage<T = unknown> = MessageType<T> | T;
  */
 declare function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T>;
 
-interface ChainableType<T> {
-    chain(m: MessageType<T>): this;
-}
-
-/**
- * A type that can accept value
- */
-interface SourceType<T = unknown> {
-    use(value: T): this;
-}
-/**
- * Message and source at same time
- */
-type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
-
-/**
- * Helps to connect Different
- * message and source
- */
-declare function Chainable<T>(src: SourceType<T>): ChainableImpl<T>;
-declare class ChainableImpl<T> implements ChainableType<T> {
-    private src;
-    constructor(src: SourceType<T>);
-    chain($m: MessageType<T>): this;
-}
-
 /**
  * Type of an object that can
  * be destroyed
@@ -139,6 +113,18 @@ declare class DestroyContainerImpl implements DestroyableType {
  * Create local copy of source what can be destroyed
  */
 declare function Local<T>(_base: MaybeMessage<T>): MessageImpl<T>;
+
+/**
+ * A type that can accept value
+ */
+interface SourceType<T = unknown> {
+    use(value: T): this;
+    chain($m: MessageType<T>): this;
+}
+/**
+ * Message and source at same time
+ */
+type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
 
 /**
  * Base message source object
@@ -252,7 +238,7 @@ declare class PrimitiveImpl<T> {
  * @url https://silentium.pw/article/shared/view
  */
 declare function Shared<T>($base: MessageType<T> | MessageSourceType<T>): SharedImpl<T>;
-declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
+declare class SharedImpl<T> implements MessageSourceType<T> {
     private $base;
     private resolver;
     private lastV;
@@ -392,6 +378,7 @@ declare class LateImpl<T> implements MessageSourceType<T> {
     then(r: ConstructorType<[T]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
+    chain(m: MessageType<T>): this;
 }
 
 /**
@@ -487,4 +474,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

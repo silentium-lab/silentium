@@ -5,6 +5,7 @@ import { MessageType } from "types/MessageType";
  */
 export interface SourceType<T = unknown> {
   use(value: T): this;
+  chain($m: MessageType<T>): this;
 }
 
 /**

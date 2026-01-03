@@ -178,19 +178,6 @@ function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
 }
 
-function Chainable(src) {
-  return new ChainableImpl(src);
-}
-class ChainableImpl {
-  constructor(src) {
-    this.src = src;
-  }
-  chain($m) {
-    $m.then(this.src.use.bind(this.src));
-    return this;
-  }
-}
-
 function Connected(...m) {
   const dc = DestroyContainer();
   dc.many(m);
@@ -457,6 +444,10 @@ class LateImpl {
   }
   catch(rejected) {
     this.rejections.catch(rejected);
+    return this;
+  }
+  chain(m) {
+    m.then(this.use.bind(this));
     return this;
   }
 }
@@ -829,5 +820,5 @@ function DevTools() {
   }
 }
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Chainable, ChainableImpl, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, MessageSource, MessageSourceImpl, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

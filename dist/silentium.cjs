@@ -180,19 +180,6 @@ function ActualMessage(message) {
   return isMessage(message) ? message : Of(message);
 }
 
-function Chainable(src) {
-  return new ChainableImpl(src);
-}
-class ChainableImpl {
-  constructor(src) {
-    this.src = src;
-  }
-  chain($m) {
-    $m.then(this.src.use.bind(this.src));
-    return this;
-  }
-}
-
 function Connected(...m) {
   const dc = DestroyContainer();
   dc.many(m);
@@ -459,6 +446,10 @@ class LateImpl {
   }
   catch(rejected) {
     this.rejections.catch(rejected);
+    return this;
+  }
+  chain(m) {
+    m.then(this.use.bind(this));
     return this;
   }
 }
@@ -838,8 +829,6 @@ exports.Applied = Applied;
 exports.AppliedDestructured = AppliedDestructured;
 exports.Catch = Catch;
 exports.Chain = Chain;
-exports.Chainable = Chainable;
-exports.ChainableImpl = ChainableImpl;
 exports.Computed = Computed;
 exports.Connected = Connected;
 exports.Context = Context;
