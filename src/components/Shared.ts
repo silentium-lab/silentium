@@ -8,6 +8,8 @@ import { ChainableType } from "types/ChainableType";
 /**
  * An information object that helps multiple owners access
  * a single another information object
+ *
+ * @url https://silentium.pw/article/shared/view
  */
 export function Shared<T>($base: MessageType<T> | MessageSourceType<T>) {
   return new SharedImpl<T>($base);
@@ -31,7 +33,7 @@ export class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
   }
 
   public then(resolved: ConstructorType<[T]>) {
-    this.resolvers.add(resolved);
+    this.resolvers.add((v) => resolved(v));
     if (this.resolvers.size === 1) {
       this.$base.then(this.resolver);
     } else if (isFilled(this.lastV)) {

@@ -36,13 +36,14 @@ class DestroyableImpl {
 
 var __defProp$7 = Object.defineProperty;
 var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, key + "" , value);
+var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
     __publicField$7(this, "destructors", []);
+    __publicField$7(this, "_destroyed", false);
   }
   /**
    * Add one destroyable
@@ -65,9 +66,13 @@ class DestroyContainerImpl {
     return this;
   }
   destroy() {
+    this._destroyed = true;
     this.destructors.forEach((d) => d.destroy());
     this.destructors.length = 0;
     return this;
+  }
+  destroyed() {
+    return this._destroyed;
   }
   destructor() {
     return this.destroy.bind(this);
@@ -141,6 +146,9 @@ class MessageImpl {
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
+    if (this.dc.destroyed()) {
+      return this;
+    }
     try {
       this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
     } catch (e) {
@@ -149,6 +157,9 @@ class MessageImpl {
     return this;
   }
   catch(rejected) {
+    if (this.dc.destroyed()) {
+      return this;
+    }
     this.rejections.catch(rejected);
     return this;
   }
@@ -232,6 +243,10 @@ class MessageSourceImpl {
   }
   catch(rejected) {
     this.message.catch(rejected);
+    return this;
+  }
+  destroy() {
+    this.message.destroy();
     return this;
   }
   chain(m) {
@@ -370,7 +385,7 @@ class SharedImpl {
     }
   }
   then(resolved) {
-    this.resolvers.add(resolved);
+    this.resolvers.add((v) => resolved(v));
     if (this.resolvers.size === 1) {
       this.$base.then(this.resolver);
     } else if (isFilled(this.lastV)) {

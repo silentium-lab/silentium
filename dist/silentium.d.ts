@@ -73,10 +73,14 @@ type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: Constructo
 /**
  * A message created from an executor function.
  * The executor function can return a message destruction function.
+ *
+ * @url https://silentium.pw/article/message/view
  */
 declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
 /**
  * Reactive message implementation
+ *
+ * @url https://silentium.pw/article/message/view
  */
 declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private executor;
@@ -113,6 +117,7 @@ declare class DestroyableImpl<T> implements DestroyableType {
 declare function DestroyContainer(): DestroyContainerImpl;
 declare class DestroyContainerImpl implements DestroyableType {
     private destructors;
+    private _destroyed;
     /**
      * Add one destroyable
      * @param e
@@ -126,6 +131,7 @@ declare class DestroyContainerImpl implements DestroyableType {
      */
     many(destroyableList: unknown[]): this;
     destroy(): this;
+    destroyed(): boolean;
     destructor(): () => this;
 }
 
@@ -136,6 +142,7 @@ declare function Local<T>(_base: MaybeMessage<T>): MessageImpl<T>;
 
 /**
  * Base message source object
+ * https://silentium.pw/article/message-source/view
  */
 declare function MessageSource<T>(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>): MessageSourceImpl<T>;
 declare class MessageSourceImpl<T> implements MessageSourceType<T> {
@@ -145,6 +152,7 @@ declare class MessageSourceImpl<T> implements MessageSourceType<T> {
     use(value: T): this;
     then(resolved: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
     chain(m: MessageType<T>): this;
 }
 
@@ -174,6 +182,8 @@ declare const ResetSilenceCache: unique symbol;
 /**
  * Silence is null or undefined or duplicated values
  * Everything else is not silence
+ *
+ * @url https://silentium.pw/article/silence/view
  */
 declare function Silence<T>(resolve: ConstructorType<[T]>): (v: T | undefined) => void;
 
@@ -238,6 +248,8 @@ declare class PrimitiveImpl<T> {
 /**
  * An information object that helps multiple owners access
  * a single another information object
+ *
+ * @url https://silentium.pw/article/shared/view
  */
 declare function Shared<T>($base: MessageType<T> | MessageSourceType<T>): SharedImpl<T>;
 declare class SharedImpl<T> implements MessageSourceType<T>, ChainableType<T> {
@@ -396,6 +408,9 @@ declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[
 declare function Once<T>($base: MessageType<T>): MessageImpl<T>;
 
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L extends (...args: any) => any ? L : never : never;
+/**
+ * Helps to pipe actors or functions to one common actor
+ */
 declare function Piped<T extends ((...vars: any) => MaybeMessage)[]>($m: MaybeMessage, ...c: T): ReturnType<Last<T>>;
 
 declare function Process<T, R = unknown>($base: MessageType<T>, builder: ConstructorType<[T], MessageType<R>>): MessageImpl<R>;

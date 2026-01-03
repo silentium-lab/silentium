@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { Late } from "components/Late";
 import { Shared } from "components/Shared";
 import { Diagram } from "testing/Diagram";
+import { Message } from "base/Message";
 
 describe("Shared.test", () => {
   test("many users for one message", () => {
@@ -94,5 +95,22 @@ describe("Shared.test", () => {
     s.destroy();
 
     // No assertion needed, just ensure no error and destroy not called
+  });
+
+  test("many resolvers of shared don't touch executor", () => {
+    let invokers = 0;
+    const $m = Message((r) => {
+      invokers += 1;
+      r(123);
+    });
+    const id = () => {};
+
+    $m.then(id).then(id).then(id);
+
+    const shared = Shared($m);
+    shared.then(id).then(id).then(id);
+    shared.then((v) => console.log("Shared result = ", v));
+
+    expect(invokers).toBe(4);
   });
 });
