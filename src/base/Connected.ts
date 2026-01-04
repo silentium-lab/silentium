@@ -6,6 +6,8 @@ import { MessageType } from "types/MessageType";
  * First message - is main
  * others will be destroyed when first
  * will be destroyed
+ *
+ * @url https://silentium.pw/article/connected/view
  */
 export function Connected<T>(...m: MessageType[]) {
   const dc = DestroyContainer();
