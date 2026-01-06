@@ -5,6 +5,8 @@ import { isSource } from "helpers/guards";
 
 /**
  * Connects an external message to an Context message chain
+ *
+ * @url https://silentium.pw/article/context/view
  */
 export function ContextChain(base: MaybeMessage) {
   const $base = ActualMessage(base);

@@ -11,6 +11,9 @@ export function Trackable(name: string, target: object) {
   Context("trackable", { name, action: "created" }).then(Void());
   return new Proxy(target, {
     get(target, prop, receiver) {
+      if (prop === "then") {
+        Context("trackable", { name, action: "executed" }).then(Void());
+      }
       if (prop === "destroy") {
         Context("trackable", { name, action: "destroyed" }).then(Void());
       }
