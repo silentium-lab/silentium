@@ -20,6 +20,8 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * If at least one message later emits a new
  * value, the updated array with the new value
  * will be emitted by All.
+ *
+ * @url https://silentium.pw/article/all-component/view
  */
 export function All<const T extends MaybeMessage[]>(...messages: T) {
   const $messages = messages.map(ActualMessage);
