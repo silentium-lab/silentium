@@ -5,6 +5,8 @@ import { MessageType } from "types/MessageType";
 /**
  * Message with error catched
  * inside another message
+ *
+ * @url https://silentium.pw/article/catch/view
  */
 export function Catch<T>($base: MessageType) {
   const rejections = new Rejections();
