@@ -296,6 +296,7 @@ function Applied(base, applier) {
       const result = applier(v);
       if (isMessage(result)) {
         dc.destroy();
+        dc.add(result);
         result.catch(reject).then(resolve);
       } else {
         resolve(result);

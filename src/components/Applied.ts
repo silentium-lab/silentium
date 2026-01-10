@@ -21,6 +21,7 @@ export function Applied<const T, R>(
       const result = applier(v);
       if (isMessage(result)) {
         dc.destroy();
+        dc.add(result);
         result.catch(reject).then(resolve);
       } else {
         resolve(result);
