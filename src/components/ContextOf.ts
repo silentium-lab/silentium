@@ -6,6 +6,8 @@ import { ContextType } from "types/ContextType";
 /**
  * Message for the arrival of a specific Context message
  * for specific transport
+ *
+ * @url https://silentium.pw/article/context/view
  */
 export function ContextOf(transport: string) {
   const $msg = Late<ContextType>();

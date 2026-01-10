@@ -14,6 +14,8 @@ Context.transport = new Map<any, ConstructorType<[ContextType]>>();
  * sending a message in a standardized format
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
+ *
+ * @url https://silentium.pw/article/context/view
  */
 export function Context<T>(
   name: MaybeMessage<string | symbol>,

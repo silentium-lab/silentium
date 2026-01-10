@@ -8,6 +8,8 @@ import { MaybeMessage } from "types/MessageType";
 /**
  * An message that applies a function
  * to the value of the base message
+ *
+ * @url https://silentium.pw/article/applied/view
  */
 export function Applied<const T, R>(
   base: MaybeMessage<T>,

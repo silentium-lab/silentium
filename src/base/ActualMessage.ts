@@ -6,6 +6,8 @@ import { MaybeMessage, MessageType } from "types/MessageType";
  * A function that helps to ensure that
  * the message is indeed a message object
  * and not just a value
+ *
+ * @url https://silentium.pw/article/actual-message/view
  */
 export function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T> {
   return isMessage(message) ? message : Of(message);

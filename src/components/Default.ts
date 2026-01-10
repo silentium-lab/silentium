@@ -7,6 +7,8 @@ import { MaybeMessage, MessageType } from "types/MessageType";
 /**
  * If base returns error then
  * default will return default value
+ *
+ * @url https://silentium.pw/article/default/view
  */
 export function Default<T>(
   $base: MessageType<T>,

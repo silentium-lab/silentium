@@ -5,6 +5,8 @@ import { MaybeMessage } from "types/MessageType";
 /**
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
+ *
+ * @url https://silentium.pw/article/applied-destructured/view
  */
 export function AppliedDestructured<const T extends any[], R>(
   $base: MaybeMessage<T>,
