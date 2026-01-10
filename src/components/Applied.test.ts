@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { Applied } from "components/Applied";
 import { Of } from "base/Of";
+import { Late } from "components/Late";
 
 describe("Applied.test", () => {
   test("message with applied function", () => {
@@ -48,5 +49,19 @@ describe("Applied.test", () => {
     applied.then(g);
 
     expect(g).toBeCalledWith(6);
+  });
+
+  test("applier returns a different messages", () => {
+    const base = Late(2);
+    const applied = Applied(base, (x) => Of(x * 3));
+
+    const g = vi.fn();
+    applied.then(g);
+
+    expect(g).toHaveBeenLastCalledWith(6);
+
+    base.use(4);
+
+    expect(g).toHaveBeenLastCalledWith(12);
   });
 });
