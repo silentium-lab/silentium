@@ -25,6 +25,8 @@ type MaybeMessage<T = unknown> = MessageType<T> | T;
  * A function that helps to ensure that
  * the message is indeed a message object
  * and not just a value
+ *
+ * @url https://silentium.pw/article/actual-message/view
  */
 declare function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T>;
 
@@ -70,6 +72,8 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
  * First message - is main
  * others will be destroyed when first
  * will be destroyed
+ *
+ * @url https://silentium.pw/article/connected/view
  */
 declare function Connected<T>(...m: MessageType[]): MessageImpl<T>;
 
@@ -145,6 +149,8 @@ declare class MessageSourceImpl<T> implements MessageSourceType<T> {
 /**
  * A component that, on each access, returns a new instance
  * of a reference type based on the constructor function
+ *
+ * @url https://silentium.pw/article/new-component/view
  */
 declare function New<T>(construct: ConstructorType<[], T>): MessageImpl<T>;
 
@@ -191,24 +197,32 @@ type ExtractTypesFromArrayS<T extends MaybeMessage<any>[]> = {
  * If at least one message later emits a new
  * value, the updated array with the new value
  * will be emitted by All.
+ *
+ * @url https://silentium.pw/article/all-component/view
  */
 declare function All<const T extends MaybeMessage[]>(...messages: T): MessageImpl<ExtractTypesFromArrayS<T>>;
 
 /**
  * A message that emits values received from
  * any of its bound messages
+ *
+ * @url https://silentium.pw/article/any-component/view
  */
 declare function Any<const T>(...messages: MaybeMessage<T>[]): MessageImpl<T>;
 
 /**
  * An message that applies a function
  * to the value of the base message
+ *
+ * @url https://silentium.pw/article/applied/view
  */
 declare function Applied<const T, R>(base: MaybeMessage<T>, applier: ConstructorType<[T], MaybeMessage<R>>): MessageImpl<R>;
 
 /**
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
+ *
+ * @url https://silentium.pw/article/applied-destructured/view
  */
 declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageImpl<R>;
 
@@ -256,6 +270,8 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
 /**
  * Message with error catched
  * inside another message
+ *
+ * @url https://silentium.pw/article/catch/view
  */
 declare function Catch<T>($base: MessageType): SharedImpl<T>;
 
@@ -274,6 +290,8 @@ declare function Chain<T extends readonly MessageType[]>(...messages: T): Messag
  * Component what helps to compute
  * poor functions, and represent result
  * as message
+ *
+ * @url https://silentium.pw/article/computed/view
  */
 declare function Computed<const T extends MaybeMessage<any>[], R>(applier: ConstructorType<any[], R>, ...messages: T): MessageImpl<R>;
 
@@ -294,6 +312,8 @@ interface ContextType extends Record<string, any> {
  * sending a message in a standardized format
  * ContextType, the list of transport should be defined via
  * the Context.transport map object
+ *
+ * @url https://silentium.pw/article/context/view
  */
 declare function Context<T>(name: MaybeMessage<string | symbol>, params?: MaybeMessage<ContextType["params"]>): MessageSourceImpl<T>;
 declare namespace Context {
@@ -302,18 +322,24 @@ declare namespace Context {
 
 /**
  * Connects an external message to an Context message chain
+ *
+ * @url https://silentium.pw/article/context/view
  */
 declare function ContextChain(base: MaybeMessage): (context: ContextType) => void;
 
 /**
  * Message for the arrival of a specific Context message
  * for specific transport
+ *
+ * @url https://silentium.pw/article/context/view
  */
 declare function ContextOf(transport: string): MessageImpl<ContextType>;
 
 /**
  * If base returns error then
  * default will return default value
+ *
+ * @url https://silentium.pw/article/default/view
  */
 declare function Default<T>($base: MessageType<T>, _default: MaybeMessage<unknown>): MessageImpl<T>;
 
