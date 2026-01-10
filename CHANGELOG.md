@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.191](https://github.com/silentium-lab/silentium/compare/v0.0.190...v0.0.191) (2026-01-10)
+
+
+### Features
+
+* **main:** all component docs url ([a79e93e](https://github.com/silentium-lab/silentium/commit/a79e93e4fe49ea30b4d1f36313fff5ff27381250))
+* **main:** any component docs link ([8ee4e8c](https://github.com/silentium-lab/silentium/commit/8ee4e8c9f9a144e53d659ab5bf98a022cb6f8bc0))
+* **main:** doc links ([8e1a2e1](https://github.com/silentium-lab/silentium/commit/8e1a2e10e2b90436016d2e3fca2c576998918b77))
+* **main:** documentation urls ([b0f0998](https://github.com/silentium-lab/silentium/commit/b0f09983b1b094398f501730e7cbb35ef2d2383e))
+
+
+### Bug Fixes
+
+* **main:** applied message destruction ([842055b](https://github.com/silentium-lab/silentium/commit/842055b259e56d071e87c12d9c313e77f9380702))
+* **main:** components doc urls ([75c5b13](https://github.com/silentium-lab/silentium/commit/75c5b134af4c3252c0495c82c59355114cea1a1f))
+* **main:** links to documentation ([7cc410e](https://github.com/silentium-lab/silentium/commit/7cc410e18d3522ae2b3b42ee2deb6c77ebb24da3))
+
 ### [0.0.190](https://github.com/silentium-lab/silentium/compare/v0.0.189...v0.0.190) (2026-01-03)
 
 
