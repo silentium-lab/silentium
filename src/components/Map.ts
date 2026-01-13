@@ -10,6 +10,8 @@ import { DestroyContainer } from "base/DestroyContainer";
 /**
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
+ *
+ * @url https://silentium.pw/article/map/view
  */
 export function Map<T, TG>(
   base: MaybeMessage<T[]>,

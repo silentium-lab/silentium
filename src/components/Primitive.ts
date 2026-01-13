@@ -6,6 +6,8 @@ import { MessageType } from "types/MessageType";
  * without updating the shared value when the current one changes.
  * For example, this could be used when passing an authorization token.
  * It can also be useful for testing or logging purposes.
+ *
+ * @url https://silentium.pw/article/primitive/view
  */
 export function Primitive<T>($base: MessageType<T>, theValue: T | null = null) {
   return new PrimitiveImpl<T>($base, theValue);

@@ -5,6 +5,8 @@ import { MessageType } from "types/MessageType";
  * Limits the number of values from the information source
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
+ *
+ * @url https://silentium.pw/article/once/view
  */
 export function Once<T>($base: MessageType<T>) {
   return Message<T>((resolve, reject) => {

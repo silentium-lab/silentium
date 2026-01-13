@@ -6,6 +6,8 @@ import { Context } from "components/Context";
  * uses Context component to send messages
  * when created sends action=created
  * when destroyed sends action=destroyed
+ *
+ * @url https://silentium.pw/article/trackable/view
  */
 export function Trackable(name: string, target: object) {
   Context("trackable", { name, action: "created" }).then(Void());

@@ -9,6 +9,8 @@ export const Nothing = Symbol("nothing");
 /**
  * Helps to split message and empty
  * response
+ *
+ * @url https://silentium.pw/article/empty/view
  */
 export function Empty<T>($base: MessageType<T>) {
   return new EmptyImpl<T>($base);
