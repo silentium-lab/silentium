@@ -345,25 +345,14 @@ declare function ContextOf(transport: string): MessageImpl<ContextType>;
  */
 declare function Default<T>($base: MessageType<T>, _default: MaybeMessage<unknown>): MessageImpl<T>;
 
-interface EmptyType {
-    empty(): MessageType<boolean>;
-}
-
-declare const Nothing: unique symbol;
 /**
- * Helps to split message and empty
- * response
+ * When someone asks message for value
+ * if there is no value in message return Error
+ * if message exists return value
  *
  * @url https://silentium.pw/article/empty/view
  */
-declare function Empty<T>($base: MessageType<T>): EmptyImpl<T>;
-declare class EmptyImpl<T> implements EmptyType {
-    private $base;
-    private $empty;
-    constructor($base: MessageType<T>);
-    message(): MessageType<T>;
-    empty(): MessageType<boolean>;
-}
+declare function Empty<T>($base: MessageType<T>): MessageImpl<T>;
 
 type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 /**
@@ -514,4 +503,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

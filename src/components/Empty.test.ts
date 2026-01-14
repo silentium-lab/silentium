@@ -1,33 +1,27 @@
-import { describe, expect, test, vi } from "vitest";
-import { Empty, Nothing } from "components/Empty";
 import { Of } from "base/Of";
+import { Void } from "base/Void";
+import { Catch } from "components/Catch";
+import { Default } from "components/Default";
+import { Empty } from "components/Empty";
+import { Late } from "components/Late";
+import { describe, expect, test } from "vitest";
 
 describe("Empty.test", () => {
-  test("empty emits true when Nothing is passed", () => {
-    const emp = Empty(Of(Nothing));
+  test("With late", async () => {
+    const l = Late();
+    const d = Default(Empty(l), "none");
 
-    const spyMessage = vi.fn();
-    emp.message().then(spyMessage);
+    expect(await d).toBe("none");
 
-    expect(spyMessage).not.toHaveBeenCalled();
+    l.use("valued");
 
-    const spyEmpty = vi.fn();
-    emp.empty().then(spyEmpty);
-
-    expect(spyEmpty).toHaveBeenCalledWith(true);
+    expect(await d).toBe("valued");
   });
 
-  test("empty does not emit when value is passed", () => {
-    const emp = Empty(Of(42));
-
-    const spyMessage = vi.fn();
-    emp.message().then(spyMessage);
-
-    expect(spyMessage).toHaveBeenCalledWith(42);
-
-    const spyEmpty = vi.fn();
-    emp.empty().then(spyEmpty);
-
-    expect(spyEmpty).not.toHaveBeenCalled();
+  test("With catch", async () => {
+    const m = Empty(Of(undefined));
+    const c = Catch(m);
+    m.then(Void());
+    expect(await c).toBe("Empty: no value in base message!");
   });
 });

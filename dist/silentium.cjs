@@ -34,16 +34,16 @@ class DestroyableImpl {
   }
 }
 
-var __defProp$7 = Object.defineProperty;
-var __defNormalProp$7 = (obj, key, value) => key in obj ? __defProp$7(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$7 = (obj, key, value) => __defNormalProp$7(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$6 = Object.defineProperty;
+var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
-    __publicField$7(this, "destructors", []);
-    __publicField$7(this, "_destroyed", false);
+    __publicField$6(this, "destructors", []);
+    __publicField$6(this, "_destroyed", false);
   }
   /**
    * Add one destroyable
@@ -79,14 +79,14 @@ class DestroyContainerImpl {
   }
 }
 
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 class Rejections {
   constructor() {
-    __publicField$6(this, "catchers", []);
-    __publicField$6(this, "lastRejectReason", null);
-    __publicField$6(this, "reject", (reason) => {
+    __publicField$5(this, "catchers", []);
+    __publicField$5(this, "lastRejectReason", null);
+    __publicField$5(this, "reject", (reason) => {
       this.lastRejectReason = reason;
       this.catchers.forEach((catcher) => {
         catcher(reason);
@@ -132,17 +132,17 @@ function ensureMessage(v, label) {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Message(executor) {
   return new MessageImpl(executor);
 }
 class MessageImpl {
   constructor(executor) {
     this.executor = executor;
-    __publicField$5(this, "rejections", new Rejections());
-    __publicField$5(this, "dc", DestroyContainer());
+    __publicField$4(this, "rejections", new Rejections());
+    __publicField$4(this, "dc", DestroyContainer());
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
@@ -208,16 +208,16 @@ function Local(_base) {
   });
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
 function Source(messageExecutor, sourceExecutor) {
   return new SourceImpl(messageExecutor, sourceExecutor);
 }
 class SourceImpl {
   constructor(messageExecutor, sourceExecutor) {
     this.sourceExecutor = sourceExecutor;
-    __publicField$4(this, "message");
+    __publicField$3(this, "message");
     this.message = Message(messageExecutor);
   }
   use(value) {
@@ -313,9 +313,9 @@ function Destructured($base, applier) {
   });
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
 function Primitive($base, theValue = null) {
   return new PrimitiveImpl($base, theValue);
 }
@@ -323,7 +323,7 @@ class PrimitiveImpl {
   constructor($base, theValue = null) {
     this.$base = $base;
     this.theValue = theValue;
-    __publicField$3(this, "touched", false);
+    __publicField$2(this, "touched", false);
   }
   ensureTouched() {
     if (!this.touched) {
@@ -350,24 +350,24 @@ class PrimitiveImpl {
   }
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$1 = Object.defineProperty;
+var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Shared($base) {
   return new SharedImpl($base);
 }
 class SharedImpl {
   constructor($base) {
     this.$base = $base;
-    __publicField$2(this, "resolver", (v) => {
+    __publicField$1(this, "resolver", (v) => {
       this.lastV = v;
       this.resolvers.forEach((r) => {
         r(v);
       });
     });
-    __publicField$2(this, "lastV");
-    __publicField$2(this, "resolvers", /* @__PURE__ */ new Set());
-    __publicField$2(this, "source");
+    __publicField$1(this, "lastV");
+    __publicField$1(this, "resolvers", /* @__PURE__ */ new Set());
+    __publicField$1(this, "source");
     if (isSource($base)) {
       this.source = $base;
     }
@@ -409,18 +409,18 @@ class SharedImpl {
   }
 }
 
-var __defProp$1 = Object.defineProperty;
-var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Late(v) {
   return Shared(new LateImpl(v));
 }
 class LateImpl {
   constructor(v) {
     this.v = v;
-    __publicField$1(this, "rejections", new Rejections());
-    __publicField$1(this, "lateR", null);
-    __publicField$1(this, "notify", () => {
+    __publicField(this, "rejections", new Rejections());
+    __publicField(this, "lateR", null);
+    __publicField(this, "notify", () => {
       if (isFilled(this.v) && this.lateR) {
         try {
           this.lateR(this.v);
@@ -578,6 +578,25 @@ function Default($base, _default) {
   });
 }
 
+function Empty($base) {
+  const p = Primitive($base);
+  return Message((resolve, reject) => {
+    try {
+      p.primitiveWithException();
+      $base.then(resolve).catch(reject);
+    } catch {
+      reject("Empty: no value in base message!");
+    }
+  });
+}
+
+function ExecutorApplied($base, applier) {
+  return Message(function ExecutorAppliedImpl(resolve, reject) {
+    $base.catch(reject);
+    $base.then(applier(resolve));
+  });
+}
+
 function Filtered(base, predicate, defaultValue) {
   const $base = Actual(base);
   return Message(function FilteredImpl(resolve, reject) {
@@ -589,38 +608,6 @@ function Filtered(base, predicate, defaultValue) {
         resolve(defaultValue);
       }
     });
-  });
-}
-
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
-const Nothing = Symbol("nothing");
-function Empty($base) {
-  return new EmptyImpl($base);
-}
-class EmptyImpl {
-  constructor($base) {
-    this.$base = $base;
-    __publicField(this, "$empty", Late());
-  }
-  message() {
-    Shared(this.$base).then((v) => {
-      if (v === Nothing) {
-        this.$empty.use(true);
-      }
-    });
-    return Filtered(this.$base, (v) => v !== Nothing);
-  }
-  empty() {
-    return this.$empty;
-  }
-}
-
-function ExecutorApplied($base, applier) {
-  return Message(function ExecutorAppliedImpl(resolve, reject) {
-    $base.catch(reject);
-    $base.then(applier(resolve));
   });
 }
 
@@ -845,7 +832,6 @@ exports.DestroyableImpl = DestroyableImpl;
 exports.Destructured = Destructured;
 exports.DevTools = DevTools;
 exports.Empty = Empty;
-exports.EmptyImpl = EmptyImpl;
 exports.ExecutorApplied = ExecutorApplied;
 exports.Filtered = Filtered;
 exports.Freeze = Freeze;
@@ -858,7 +844,6 @@ exports.Message = Message;
 exports.MessageDestroyable = MessageDestroyable;
 exports.MessageImpl = MessageImpl;
 exports.New = New;
-exports.Nothing = Nothing;
 exports.Of = Of;
 exports.Once = Once;
 exports.Piped = Piped;

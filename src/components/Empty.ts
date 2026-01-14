@@ -1,36 +1,22 @@
-import { Filtered } from "components/Filtered";
-import { Late } from "components/Late";
-import { Shared } from "components/Shared";
-import { EmptyType } from "types/EmptyType";
+import { Message } from "base/Message";
+import { Primitive } from "components/Primitive";
 import { MessageType } from "types/MessageType";
 
-export const Nothing = Symbol("nothing");
-
 /**
- * Helps to split message and empty
- * response
+ * When someone asks message for value
+ * if there is no value in message return Error
+ * if message exists return value
  *
  * @url https://silentium.pw/article/empty/view
  */
 export function Empty<T>($base: MessageType<T>) {
-  return new EmptyImpl<T>($base);
-}
-
-export class EmptyImpl<T> implements EmptyType {
-  private $empty = Late<boolean>();
-
-  public constructor(private $base: MessageType<T>) {}
-
-  public message() {
-    Shared(this.$base).then((v) => {
-      if (v === Nothing) {
-        this.$empty.use(true);
-      }
-    });
-    return Filtered(this.$base, (v) => v !== Nothing);
-  }
-
-  public empty(): MessageType<boolean> {
-    return this.$empty;
-  }
+  const p = Primitive($base);
+  return Message<T>((resolve, reject) => {
+    try {
+      p.primitiveWithException();
+      $base.then(resolve).catch(reject);
+    } catch {
+      reject("Empty: no value in base message!");
+    }
+  });
 }
