@@ -1,11 +1,11 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { describe, expect, test, vi } from "vitest";
 
 describe("ActualMessage.test.ts", () => {
   test("ActualMessage wraps raw values into messages", () => {
     const rawValue = 42;
-    const msg = ActualMessage(rawValue);
+    const msg = Actual(rawValue);
 
     const m = vi.fn();
     msg.then(m);
@@ -19,7 +19,7 @@ describe("ActualMessage.test.ts", () => {
       r(messageValue);
     });
 
-    const msg = ActualMessage(existingMessage);
+    const msg = Actual(existingMessage);
 
     // Ensure it's the same instance
     expect(msg).toBe(existingMessage);

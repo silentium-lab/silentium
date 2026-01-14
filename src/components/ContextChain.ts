@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { MaybeMessage } from "types/MessageType";
 import { ContextType } from "types/ContextType";
 import { isSource } from "helpers/guards";
@@ -9,7 +9,7 @@ import { isSource } from "helpers/guards";
  * @url https://silentium.pw/article/context/view
  */
 export function ContextChain(base: MaybeMessage) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return (context: ContextType) => {
     if (context.value && isSource(base)) {
       base.use(context.value);

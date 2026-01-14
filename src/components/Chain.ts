@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { MessageType, MessageTypeValue } from "types/MessageType";
 
@@ -16,7 +16,7 @@ type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L]
  * then Chain emits again with the value of the last message.
  */
 export function Chain<T extends readonly MessageType[]>(...messages: T) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message<MessageTypeValue<Last<T>>>(
     function ChainImpl(resolve, reject) {
       let $latest: MessageTypeValue<Last<T>> | undefined;

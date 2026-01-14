@@ -7,14 +7,14 @@ import { MessageSourceType } from "types/SourceType";
  * Base message source object
  * https://silentium.pw/article/message-source/view
  */
-export function MessageSource<T>(
+export function Source<T>(
   messageExecutor: MessageExecutorType<T>,
   sourceExecutor: ConstructorType<[T]>,
 ) {
-  return new MessageSourceImpl(messageExecutor, sourceExecutor);
+  return new SourceImpl(messageExecutor, sourceExecutor);
 }
 
-export class MessageSourceImpl<T> implements MessageSourceType<T> {
+export class SourceImpl<T> implements MessageSourceType<T> {
   private message: MessageImpl<T>;
 
   public constructor(

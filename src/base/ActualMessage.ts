@@ -7,8 +7,8 @@ import { MaybeMessage, MessageType } from "types/MessageType";
  * the message is indeed a message object
  * and not just a value
  *
- * @url https://silentium.pw/article/actual-message/view
+ * @url https://silentium.pw/article/actual/view
  */
-export function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T> {
+export function Actual<T>(message: MaybeMessage<T>): MessageType<T> {
   return isMessage(message) ? message : Of(message);
 }

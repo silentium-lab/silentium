@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { MaybeMessage } from "types/MessageType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,6 +18,6 @@ export function Piped<T extends ((...vars: any) => MaybeMessage)[]>(
   ...c: T
 ) {
   return c.reduce((msg, Constructor) => {
-    return ActualMessage(Constructor(msg));
-  }, ActualMessage($m)) as ReturnType<Last<T>>;
+    return Actual(Constructor(msg));
+  }, Actual($m)) as ReturnType<Last<T>>;
 }

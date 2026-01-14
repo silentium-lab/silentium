@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { DestroyContainer } from "base/DestroyContainer";
 import { Message } from "base/Message";
 import { isMessage } from "helpers/guards";
@@ -15,7 +15,7 @@ export function Applied<const T, R>(
   base: MaybeMessage<T>,
   applier: ConstructorType<[T], MaybeMessage<R>>,
 ) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message<R>(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);

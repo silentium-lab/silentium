@@ -8,11 +8,11 @@ import { MaybeMessage } from "types/MessageType";
  *
  * @url https://silentium.pw/article/applied-destructured/view
  */
-export function AppliedDestructured<const T extends any[], R>(
+export function Destructured<const T extends any[], R>(
   $base: MaybeMessage<T>,
   applier: ConstructorType<any[], R>,
 ) {
-  return Applied($base, function AppliedDestructuredImpl(args) {
+  return Applied($base, function DestructuredImpl(args) {
     return applier(...args);
   });
 }

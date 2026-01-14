@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { MaybeMessage } from "types/MessageType";
 
@@ -9,7 +9,7 @@ import { MaybeMessage } from "types/MessageType";
  * @url https://silentium.pw/article/any-component/view
  */
 export function Any<const T>(...messages: MaybeMessage<T>[]) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message<T>(function AnyImpl(resolve, reject) {
     $messages.forEach((message) => {
       message.catch(reject);

@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
 import { MaybeMessage, MessageType } from "types/MessageType";
@@ -12,7 +12,7 @@ export function Filtered<T>(
   predicate: ConstructorType<[T], boolean>,
   defaultValue?: T,
 ): MessageType<T> {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message<T>(function FilteredImpl(resolve, reject) {
     $base.catch(reject);
     $base.then((v) => {

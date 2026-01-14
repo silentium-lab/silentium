@@ -4,7 +4,7 @@ import { isMessage } from "helpers/guards";
 import { Of } from "base/Of";
 import { ConstructorType } from "types/ConstructorType";
 import { Message } from "base/Message";
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { DestroyContainer } from "base/DestroyContainer";
 
 /**
@@ -17,7 +17,7 @@ export function Map<T, TG>(
   base: MaybeMessage<T[]>,
   target: ConstructorType<[any], MessageType<TG>>,
 ) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message<TG[]>((resolve, reject) => {
     $base.catch(reject);
     const infos: MessageType<TG>[] = [];

@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { MaybeMessage } from "types/MessageType";
 
@@ -8,7 +8,7 @@ import { MaybeMessage } from "types/MessageType";
  * @url https://silentium.pw/article/race/view
  */
 export function Race<const T extends MaybeMessage[]>(...messages: T) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message((resolve, reject) => {
     let responded = false;
     $messages.forEach(($message) => {

@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { MaybeMessage } from "types/MessageType";
 
@@ -24,7 +24,7 @@ const isAllFilled = (keysFilled: Set<string>, keysKnown: Set<string>) => {
  * @url https://silentium.pw/article/all-component/view
  */
 export function All<const T extends MaybeMessage[]>(...messages: T) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message<ExtractTypesFromArrayS<T>>(function AllImpl(resolve, reject) {
     const known = new Set<string>(Object.keys(messages));
     const filled = new Set<string>();

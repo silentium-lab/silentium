@@ -176,7 +176,7 @@ function Of(value) {
   });
 }
 
-function ActualMessage(message) {
+function Actual(message) {
   return isMessage(message) ? message : Of(message);
 }
 
@@ -193,7 +193,7 @@ function Connected(...m) {
 }
 
 function Local(_base) {
-  const $base = ActualMessage(_base);
+  const $base = Actual(_base);
   return Message(function LocalImpl(resolve, reject) {
     let destroyed = false;
     $base.then((v) => {
@@ -211,10 +211,10 @@ function Local(_base) {
 var __defProp$4 = Object.defineProperty;
 var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
-function MessageSource(messageExecutor, sourceExecutor) {
-  return new MessageSourceImpl(messageExecutor, sourceExecutor);
+function Source(messageExecutor, sourceExecutor) {
+  return new SourceImpl(messageExecutor, sourceExecutor);
 }
-class MessageSourceImpl {
+class SourceImpl {
   constructor(messageExecutor, sourceExecutor) {
     this.sourceExecutor = sourceExecutor;
     __publicField$4(this, "message");
@@ -257,7 +257,7 @@ const isAllFilled = (keysFilled, keysKnown) => {
   return keysFilled.size > 0 && keysFilled.size === keysKnown.size;
 };
 function All(...messages) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message(function AllImpl(resolve, reject) {
     const known = new Set(Object.keys(messages));
     const filled = /* @__PURE__ */ new Set();
@@ -280,7 +280,7 @@ function All(...messages) {
 }
 
 function Any(...messages) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message(function AnyImpl(resolve, reject) {
     $messages.forEach((message) => {
       message.catch(reject);
@@ -290,7 +290,7 @@ function Any(...messages) {
 }
 
 function Applied(base, applier) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);
@@ -307,8 +307,8 @@ function Applied(base, applier) {
   });
 }
 
-function AppliedDestructured($base, applier) {
-  return Applied($base, function AppliedDestructuredImpl(args) {
+function Destructured($base, applier) {
+  return Applied($base, function DestructuredImpl(args) {
     return applier(...args);
   });
 }
@@ -466,7 +466,7 @@ function Catch($base) {
 }
 
 function Chain(...messages) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message(
     function ChainImpl(resolve, reject) {
       let $latest;
@@ -495,13 +495,13 @@ function Chain(...messages) {
 }
 
 function Computed(applier, ...messages) {
-  return AppliedDestructured(All(...messages), applier);
+  return Destructured(All(...messages), applier);
 }
 
 Context.transport = /* @__PURE__ */ new Map();
 function Context(name, params = {}) {
-  const $msg = AppliedDestructured(
-    All(ActualMessage(name), ActualMessage(params)),
+  const $msg = Destructured(
+    All(Actual(name), Actual(params)),
     (name2, params2) => ({
       transport: name2,
       params: params2,
@@ -509,7 +509,7 @@ function Context(name, params = {}) {
       error: void 0
     })
   );
-  return MessageSource(
+  return Source(
     (resolve, reject) => {
       $msg.then((message) => {
         const transport = Context.transport.get(message.transport);
@@ -547,7 +547,7 @@ function Context(name, params = {}) {
 }
 
 function ContextChain(base) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return (context) => {
     if (context.value && isSource(base)) {
       base.use(context.value);
@@ -570,7 +570,7 @@ function ContextOf(transport) {
 }
 
 function Default($base, _default) {
-  const $default = ActualMessage(_default);
+  const $default = Actual(_default);
   const $defaultAfterError = Applied(Catch($base), () => $default);
   return Message((resolve) => {
     $base.then(resolve);
@@ -579,7 +579,7 @@ function Default($base, _default) {
 }
 
 function Filtered(base, predicate, defaultValue) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message(function FilteredImpl(resolve, reject) {
     $base.catch(reject);
     $base.then((v) => {
@@ -641,10 +641,10 @@ function Freeze($base, $invalidate) {
 }
 
 function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
-  const $emitter = ActualMessage(emitter);
-  const $eventName = ActualMessage(eventName);
-  const $subscribeMethod = ActualMessage(subscribeMethod);
-  const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
+  const $emitter = Actual(emitter);
+  const $eventName = Actual(eventName);
+  const $subscribeMethod = Actual(subscribeMethod);
+  const $unsubscribeMethod = Actual(unsubscribeMethod);
   return Message((resolve, reject) => {
     $emitter.catch(reject);
     $eventName.catch(reject);
@@ -680,7 +680,7 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
 }
 
 function Map$1(base, target) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message((resolve, reject) => {
     $base.catch(reject);
     const infos = [];
@@ -717,8 +717,8 @@ function Once($base) {
 
 function Piped($m, ...c) {
   return c.reduce((msg, Constructor) => {
-    return ActualMessage(Constructor(msg));
-  }, ActualMessage($m));
+    return Actual(Constructor(msg));
+  }, Actual($m));
 }
 
 function Process($base, builder) {
@@ -741,7 +741,7 @@ function Process($base, builder) {
 }
 
 function Race(...messages) {
-  const $messages = messages.map(ActualMessage);
+  const $messages = messages.map(Actual);
   return Message((resolve, reject) => {
     let responded = false;
     $messages.forEach(($message) => {
@@ -767,7 +767,7 @@ function Sequence($base) {
 }
 
 function Stream(base) {
-  const $base = ActualMessage(base);
+  const $base = Actual(base);
   return Message((resolve, reject) => {
     $base.catch(reject);
     $base.then((v) => {
@@ -826,11 +826,10 @@ function DevTools() {
   }
 }
 
-exports.ActualMessage = ActualMessage;
+exports.Actual = Actual;
 exports.All = All;
 exports.Any = Any;
 exports.Applied = Applied;
-exports.AppliedDestructured = AppliedDestructured;
 exports.Catch = Catch;
 exports.Chain = Chain;
 exports.Computed = Computed;
@@ -843,6 +842,7 @@ exports.DestroyContainer = DestroyContainer;
 exports.DestroyContainerImpl = DestroyContainerImpl;
 exports.Destroyable = Destroyable;
 exports.DestroyableImpl = DestroyableImpl;
+exports.Destructured = Destructured;
 exports.DevTools = DevTools;
 exports.Empty = Empty;
 exports.EmptyImpl = EmptyImpl;
@@ -857,8 +857,6 @@ exports.Map = Map$1;
 exports.Message = Message;
 exports.MessageDestroyable = MessageDestroyable;
 exports.MessageImpl = MessageImpl;
-exports.MessageSource = MessageSource;
-exports.MessageSourceImpl = MessageSourceImpl;
 exports.New = New;
 exports.Nothing = Nothing;
 exports.Of = Of;
@@ -874,6 +872,8 @@ exports.Sequence = Sequence;
 exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;
 exports.Silence = Silence;
+exports.Source = Source;
+exports.SourceImpl = SourceImpl;
 exports.Stream = Stream;
 exports.Trackable = Trackable;
 exports.Void = Void;

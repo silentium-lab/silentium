@@ -1,4 +1,4 @@
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { MaybeMessage } from "types/MessageType";
 
@@ -6,7 +6,7 @@ import { MaybeMessage } from "types/MessageType";
  * Create local copy of source what can be destroyed
  */
 export function Local<T>(_base: MaybeMessage<T>) {
-  const $base = ActualMessage(_base);
+  const $base = Actual(_base);
   return Message<T>(function LocalImpl(resolve, reject) {
     let destroyed = false;
     $base.then((v) => {

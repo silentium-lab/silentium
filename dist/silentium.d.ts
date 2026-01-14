@@ -26,9 +26,9 @@ type MaybeMessage<T = unknown> = MessageType<T> | T;
  * the message is indeed a message object
  * and not just a value
  *
- * @url https://silentium.pw/article/actual-message/view
+ * @url https://silentium.pw/article/actual/view
  */
-declare function ActualMessage<T>(message: MaybeMessage<T>): MessageType<T>;
+declare function Actual<T>(message: MaybeMessage<T>): MessageType<T>;
 
 /**
  * Type of an object that can
@@ -134,8 +134,8 @@ type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
  * Base message source object
  * https://silentium.pw/article/message-source/view
  */
-declare function MessageSource<T>(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>): MessageSourceImpl<T>;
-declare class MessageSourceImpl<T> implements MessageSourceType<T> {
+declare function Source<T>(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>): SourceImpl<T>;
+declare class SourceImpl<T> implements MessageSourceType<T> {
     private sourceExecutor;
     private message;
     constructor(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>);
@@ -224,7 +224,7 @@ declare function Applied<const T, R>(base: MaybeMessage<T>, applier: Constructor
  *
  * @url https://silentium.pw/article/applied-destructured/view
  */
-declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageImpl<R>;
+declare function Destructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageImpl<R>;
 
 /**
  * Helps represent an message as a primitive type, which can be useful
@@ -232,6 +232,8 @@ declare function AppliedDestructured<const T extends any[], R>($base: MaybeMessa
  * without updating the shared value when the current one changes.
  * For example, this could be used when passing an authorization token.
  * It can also be useful for testing or logging purposes.
+ *
+ * @url https://silentium.pw/article/primitive/view
  */
 declare function Primitive<T>($base: MessageType<T>, theValue?: T | null): PrimitiveImpl<T>;
 declare class PrimitiveImpl<T> {
@@ -315,7 +317,7 @@ interface ContextType extends Record<string, any> {
  *
  * @url https://silentium.pw/article/context/view
  */
-declare function Context<T>(name: MaybeMessage<string | symbol>, params?: MaybeMessage<ContextType["params"]>): MessageSourceImpl<T>;
+declare function Context<T>(name: MaybeMessage<string | symbol>, params?: MaybeMessage<ContextType["params"]>): SourceImpl<T>;
 declare namespace Context {
     var transport: Map<any, ConstructorType<[ContextType]>>;
 }
@@ -351,6 +353,8 @@ declare const Nothing: unique symbol;
 /**
  * Helps to split message and empty
  * response
+ *
+ * @url https://silentium.pw/article/empty/view
  */
 declare function Empty<T>($base: MessageType<T>): EmptyImpl<T>;
 declare class EmptyImpl<T> implements EmptyType {
@@ -410,6 +414,8 @@ declare class LateImpl<T> implements MessageSourceType<T> {
 /**
  * Component that applies an info object constructor to each data item,
  * producing an information source with new values
+ *
+ * @url https://silentium.pw/article/map/view
  */
 declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[any], MessageType<TG>>): MessageImpl<TG[]>;
 
@@ -417,12 +423,16 @@ declare function Map$1<T, TG>(base: MaybeMessage<T[]>, target: ConstructorType<[
  * Limits the number of values from the information source
  * to a single value - once the first value is emitted, no more
  * values are delivered from the source
+ *
+ * @url https://silentium.pw/article/once/view
  */
 declare function Once<T>($base: MessageType<T>): MessageImpl<T>;
 
 type Last<T extends readonly any[]> = T extends readonly [...infer _, infer L] ? L extends (...args: any) => any ? L : never : never;
 /**
  * Helps to pipe actors or functions to one common actor
+ *
+ * @url https://silentium.pw/article/piped/view
  */
 declare function Piped<T extends ((...vars: any) => MaybeMessage)[]>($m: MaybeMessage, ...c: T): ReturnType<Last<T>>;
 
@@ -430,6 +440,8 @@ declare function Process<T, R = unknown>($base: MessageType<T>, builder: Constru
 
 /**
  * First responded message
+ *
+ * @url https://silentium.pw/article/race/view
  */
 declare function Race<const T extends MaybeMessage[]>(...messages: T): MessageImpl<unknown>;
 
@@ -449,6 +461,8 @@ declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
  * uses Context component to send messages
  * when created sends action=created
  * when destroyed sends action=destroyed
+ *
+ * @url https://silentium.pw/article/trackable/view
  */
 declare function Trackable(name: string, target: object): object;
 
@@ -500,4 +514,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { ActualMessage, All, Any, Applied, AppliedDestructured, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, MessageSource, MessageSourceImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, EmptyImpl, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Nothing, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

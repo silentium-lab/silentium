@@ -1,6 +1,6 @@
 import { MaybeMessage } from "types/MessageType";
 import { All } from "components/All";
-import { ActualMessage } from "base/ActualMessage";
+import { Actual } from "base/ActualMessage";
 import { Message } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
 
@@ -16,10 +16,10 @@ export function FromEvent<T>(
   subscribeMethod: MaybeMessage<string>,
   unsubscribeMethod?: MaybeMessage<string>,
 ) {
-  const $emitter = ActualMessage(emitter);
-  const $eventName = ActualMessage(eventName);
-  const $subscribeMethod = ActualMessage(subscribeMethod);
-  const $unsubscribeMethod = ActualMessage(unsubscribeMethod);
+  const $emitter = Actual(emitter);
+  const $eventName = Actual(eventName);
+  const $subscribeMethod = Actual(subscribeMethod);
+  const $unsubscribeMethod = Actual(unsubscribeMethod);
   return Message<T>((resolve, reject) => {
     $emitter.catch(reject);
     $eventName.catch(reject);

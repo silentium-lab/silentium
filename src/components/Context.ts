@@ -1,7 +1,7 @@
-import { ActualMessage } from "base/ActualMessage";
-import { MessageSource } from "base/MessageSource";
+import { Actual } from "base/ActualMessage";
+import { Source } from "base/MessageSource";
 import { All } from "components/All";
-import { AppliedDestructured } from "components/AppliedDestructured";
+import { Destructured } from "components/AppliedDestructured";
 import { Primitive } from "components/Primitive";
 import { ConstructorType } from "types/ConstructorType";
 import { ContextType } from "types/ContextType";
@@ -21,8 +21,8 @@ export function Context<T>(
   name: MaybeMessage<string | symbol>,
   params: MaybeMessage<ContextType["params"]> = {},
 ) {
-  const $msg = AppliedDestructured(
-    All(ActualMessage(name), ActualMessage(params)),
+  const $msg = Destructured(
+    All(Actual(name), Actual(params)),
     (name, params) =>
       ({
         transport: name,
@@ -31,7 +31,7 @@ export function Context<T>(
         error: undefined,
       }) as ContextType,
   );
-  return MessageSource<T>(
+  return Source<T>(
     (resolve, reject) => {
       $msg.then((message) => {
         const transport = Context.transport.get(message.transport);

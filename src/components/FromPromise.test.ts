@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { wait } from "testing/wait";
-import { AppliedDestructured } from "components/AppliedDestructured";
+import { Destructured } from "components/AppliedDestructured";
 import { All } from "components/All";
 import { Catch } from "components/Catch";
 
@@ -11,10 +11,7 @@ function sum(a: number, b: number) {
 describe("FromPromise.test", () => {
   test("message from promise", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
-    const i = AppliedDestructured(
-      All(Promise.resolve(3), Promise.resolve(5)),
-      sum,
-    );
+    const i = Destructured(All(Promise.resolve(3), Promise.resolve(5)), sum);
     const o = vi.fn();
     i.then(o);
 
