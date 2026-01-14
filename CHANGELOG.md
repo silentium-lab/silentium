@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.193](https://github.com/silentium-lab/silentium/compare/v0.0.192...v0.0.193) (2026-01-14)
+
+
+### Features
+
+* **main:** empty component logic rebuilded ([2273a19](https://github.com/silentium-lab/silentium/commit/2273a19317852a3c5b22c55b82abac8ec1223e9b))
+
 ### [0.0.192](https://github.com/silentium-lab/silentium/compare/v0.0.191...v0.0.192) (2026-01-14)
 
 
