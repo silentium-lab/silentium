@@ -790,6 +790,18 @@ function Trackable(name, target) {
   });
 }
 
+function Value(target) {
+  const p = Primitive(target);
+  return new Proxy(target, {
+    get(target2, prop, receiver) {
+      if (prop === "value") {
+        return p.primitive();
+      }
+      return Reflect.get(target2, prop, receiver);
+    }
+  });
+}
+
 const silentiumPrint = (...messages) => {
   Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
     console.log
@@ -872,6 +884,7 @@ exports.Source = Source;
 exports.SourceImpl = SourceImpl;
 exports.Stream = Stream;
 exports.Trackable = Trackable;
+exports.Value = Value;
 exports.Void = Void;
 exports.ensureFunction = ensureFunction;
 exports.ensureMessage = ensureMessage;

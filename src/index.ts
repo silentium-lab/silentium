@@ -38,6 +38,7 @@ export * from "./components/Sequence";
 export * from "./components/Shared";
 export * from "./components/Stream";
 export * from "./components/Trackable";
+export * from "./components/Value";
 export * from "./helpers/DevTools";
 export * from "./helpers/ensures";
 export * from "./helpers/guards";
