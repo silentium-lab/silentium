@@ -22,6 +22,6 @@ describe("Once.test", () => {
 
     l.use(321);
 
-    expect(g).toBeCalledWith(123);
+    expect(g).toHaveBeenLastCalledWith(123);
   });
 });

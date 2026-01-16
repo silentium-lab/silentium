@@ -24,6 +24,7 @@ export * from "./components/Default";
 export * from "./components/Empty";
 export * from "./components/ExecutorApplied";
 export * from "./components/Filtered";
+export * from "./components/Fold";
 export * from "./components/Freeze";
 export * from "./components/FromEvent";
 export * from "./components/Late";

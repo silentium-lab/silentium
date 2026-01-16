@@ -369,6 +369,11 @@ declare function ExecutorApplied<T>($base: MessageType<T>, applier: ExecutorAppl
 declare function Filtered<T>(base: MaybeMessage<T>, predicate: ConstructorType<[T], boolean>, defaultValue?: T): MessageType<T>;
 
 /**
+ * Reduces values of message data to one common value
+ */
+declare function Fold<T extends any[], TG>(data: MaybeMessage<T>, reducer: (acc: TG, item: T[number], index: number) => TG, initial: MaybeMessage<TG>): MessageImpl<any>;
+
+/**
  * Message what freezes first known value
  */
 declare function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>): MessageImpl<T>;
@@ -503,4 +508,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

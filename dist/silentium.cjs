@@ -611,6 +611,16 @@ function Filtered(base, predicate, defaultValue) {
   });
 }
 
+function Fold(data, reducer, initial) {
+  const $data = Actual(data);
+  const $initial = Actual(initial);
+  return Computed(
+    (data2, initial2) => data2.reduce(reducer, initial2),
+    $data,
+    $initial
+  );
+}
+
 function Freeze($base, $invalidate) {
   let freezedValue = null;
   return Message(function FreezeImpl(resolve, reject) {
@@ -834,6 +844,7 @@ exports.DevTools = DevTools;
 exports.Empty = Empty;
 exports.ExecutorApplied = ExecutorApplied;
 exports.Filtered = Filtered;
+exports.Fold = Fold;
 exports.Freeze = Freeze;
 exports.FromEvent = FromEvent;
 exports.Late = Late;
