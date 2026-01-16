@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.194](https://github.com/silentium-lab/silentium/compare/v0.0.193...v0.0.194) (2026-01-16)
+
+
+### Features
+
+* **main:** fold component ([4377f47](https://github.com/silentium-lab/silentium/commit/4377f47afea0b414bd798c13d6008ecfba4714e8))
+
 ### [0.0.193](https://github.com/silentium-lab/silentium/compare/v0.0.192...v0.0.193) (2026-01-14)
 
 
