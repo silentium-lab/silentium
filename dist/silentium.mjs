@@ -580,10 +580,10 @@ function Empty($base, after) {
   const p = Primitive($base);
   return Message((resolve, reject) => {
     try {
+      $base.then(resolve).catch(reject);
       if (!after) {
         p.primitiveWithException();
       }
-      $base.then(resolve).catch(reject);
       after?.then(() => {
         reject("Empty: no value after message!");
       });
