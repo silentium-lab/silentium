@@ -1,6 +1,8 @@
 import { Trackable } from "components/Trackable";
 import { Context } from "components/Context";
 import { describe, expect, test, vi } from "vitest";
+import { Of } from "base/Of";
+import { Void } from "base/Void";
 
 describe("Trackable.test", () => {
   test("sends created action on trackable creation", () => {
@@ -55,6 +57,29 @@ describe("Trackable.test", () => {
     expect(proxy.value).toBe(42);
     expect(proxy.method()).toBe("hello");
     expect(proxy.nonExistent).toBeUndefined();
+
+    Context.transport.delete("trackable");
+  });
+
+  test("sends value action on message resolution", async () => {
+    const transportSpy = vi.fn();
+    Context.transport.set("trackable", transportSpy);
+
+    const value = 42;
+    const $m = Of(value);
+    const name = "testComponent";
+
+    const proxy = Trackable(name, $m);
+
+    // Resolve the message
+    await proxy;
+
+    expect(transportSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        transport: "trackable",
+        params: { name, action: "value", value },
+      }),
+    );
 
     Context.transport.delete("trackable");
   });

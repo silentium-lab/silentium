@@ -1,5 +1,6 @@
 import { Void } from "base/Void";
 import { Context } from "components/Context";
+import { isMessage } from "helpers/guards";
 
 /**
  * Track creation and destruction of components
@@ -11,6 +12,11 @@ import { Context } from "components/Context";
  */
 export function Trackable<T>(name: string, target: T): T {
   Context("trackable", { name, action: "created" }).then(Void());
+  if (isMessage(target)) {
+    target.then((value) => {
+      Context("trackable", { name, action: "value", value }).then(Void());
+    });
+  }
   return new Proxy(target as object, {
     get(target, prop, receiver) {
       if (prop === "then") {
