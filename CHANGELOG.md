@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.198](https://github.com/silentium-lab/silentium/compare/v0.0.197...v0.0.198) (2026-01-17)
+
+
+### Bug Fixes
+
+* **main:** trackable types ([4302dec](https://github.com/silentium-lab/silentium/commit/4302decbb6c25874c10aa4f79305bfefeff0fe78))
+
 ### [0.0.197](https://github.com/silentium-lab/silentium/compare/v0.0.196...v0.0.197) (2026-01-17)
 
 ### [0.0.196](https://github.com/silentium-lab/silentium/compare/v0.0.195...v0.0.196) (2026-01-17)
