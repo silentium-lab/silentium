@@ -789,6 +789,11 @@ function Stream(base) {
 
 function Trackable(name, target) {
   Context("trackable", { name, action: "created" }).then(Void());
+  if (isMessage(target)) {
+    target.then((value) => {
+      Context("trackable", { name, action: "value", value }).then(Void());
+    });
+  }
   return new Proxy(target, {
     get(target2, prop, receiver) {
       if (prop === "then") {
