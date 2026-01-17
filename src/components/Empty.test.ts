@@ -24,4 +24,13 @@ describe("Empty.test", () => {
     m.then(Void());
     expect(await c).toBe("Empty: no value in base message!");
   });
+
+  test("With after argument", async () => {
+    const base = Late<string>();
+    const after = Of("trigger");
+    const m = Empty(base, after);
+    const c = Catch(m);
+    m.then(Void());
+    expect(await c).toBe("Empty: no value after message!");
+  });
 });

@@ -576,12 +576,17 @@ function Default($base, _default) {
   });
 }
 
-function Empty($base) {
+function Empty($base, after) {
   const p = Primitive($base);
   return Message((resolve, reject) => {
     try {
-      p.primitiveWithException();
+      if (!after) {
+        p.primitiveWithException();
+      }
       $base.then(resolve).catch(reject);
+      after?.then(() => {
+        reject("Empty: no value after message!");
+      });
     } catch {
       reject("Empty: no value in base message!");
     }

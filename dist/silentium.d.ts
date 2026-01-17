@@ -352,7 +352,7 @@ declare function Default<T>($base: MessageType<T>, _default: MaybeMessage<unknow
  *
  * @url https://silentium.pw/article/empty/view
  */
-declare function Empty<T>($base: MessageType<T>): MessageImpl<T>;
+declare function Empty<T>($base: MessageType<T>, after?: MessageType): MessageImpl<T>;
 
 type ExecutorApplier<T> = (executor: (v: T) => void) => (v: T) => void;
 /**
