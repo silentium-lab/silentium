@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.196](https://github.com/silentium-lab/silentium/compare/v0.0.195...v0.0.196) (2026-01-17)
+
+
+### Features
+
+* **main:** component lazy ([6afbb8d](https://github.com/silentium-lab/silentium/commit/6afbb8df34cced4343804bc6967ed877083b62b4))
+
 ### [0.0.195](https://github.com/silentium-lab/silentium/compare/v0.0.194...v0.0.195) (2026-01-16)
 
 
