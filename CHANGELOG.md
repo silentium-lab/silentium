@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.201](https://github.com/silentium-lab/silentium/compare/v0.0.200...v0.0.201) (2026-01-17)
+
+
+### Features
+
+* **main:** empty component improoved ([132287f](https://github.com/silentium-lab/silentium/commit/132287ff9df08db6f8a49fe5180a46dd522568c0))
+
 ### [0.0.200](https://github.com/silentium-lab/silentium/compare/v0.0.199...v0.0.200) (2026-01-17)
 
 
