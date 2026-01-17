@@ -676,6 +676,18 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
   });
 }
 
+function Lazy(constructor) {
+  return Message((resolve, reject) => {
+    const inst = constructor();
+    inst.catch(reject).then(resolve);
+    return () => {
+      if (isDestroyable(inst)) {
+        inst.destroy();
+      }
+    };
+  });
+}
+
 function Map$1(base, target) {
   const $base = Actual(base);
   return Message((resolve, reject) => {
@@ -861,6 +873,7 @@ exports.Freeze = Freeze;
 exports.FromEvent = FromEvent;
 exports.Late = Late;
 exports.LateImpl = LateImpl;
+exports.Lazy = Lazy;
 exports.Local = Local;
 exports.Map = Map$1;
 exports.Message = Message;

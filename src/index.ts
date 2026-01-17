@@ -28,6 +28,7 @@ export * from "./components/Fold";
 export * from "./components/Freeze";
 export * from "./components/FromEvent";
 export * from "./components/Late";
+export * from "./components/Lazy";
 export * from "./components/Map";
 export * from "./components/Once";
 export * from "./components/Piped";
