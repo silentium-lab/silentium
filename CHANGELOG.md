@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.200](https://github.com/silentium-lab/silentium/compare/v0.0.199...v0.0.200) (2026-01-17)
+
+
+### Bug Fixes
+
+* **main:** unneeded void in test ([c87491b](https://github.com/silentium-lab/silentium/commit/c87491b7bcf37dbabcf49ef9dc6deff5adb28bfe))
+
 ### [0.0.199](https://github.com/silentium-lab/silentium/compare/v0.0.198...v0.0.199) (2026-01-17)
 
 
