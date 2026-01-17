@@ -1,8 +1,7 @@
-import { Trackable } from "components/Trackable";
-import { Context } from "components/Context";
-import { describe, expect, test, vi } from "vitest";
 import { Of } from "base/Of";
-import { Void } from "base/Void";
+import { Context } from "components/Context";
+import { Trackable } from "components/Trackable";
+import { describe, expect, test, vi } from "vitest";
 
 describe("Trackable.test", () => {
   test("sends created action on trackable creation", () => {
