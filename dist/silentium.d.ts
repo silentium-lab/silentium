@@ -465,7 +465,7 @@ declare function Stream<T>(base: MaybeMessage<T[]>): MessageImpl<T>;
  *
  * @url https://silentium.pw/article/trackable/view
  */
-declare function Trackable(name: string, target: object): object;
+declare function Trackable<T>(name: string, target: T): T;
 
 /**
  * Component what will return same proxied object

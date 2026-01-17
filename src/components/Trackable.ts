@@ -9,9 +9,9 @@ import { Context } from "components/Context";
  *
  * @url https://silentium.pw/article/trackable/view
  */
-export function Trackable(name: string, target: object) {
+export function Trackable<T>(name: string, target: T): T {
   Context("trackable", { name, action: "created" }).then(Void());
-  return new Proxy(target, {
+  return new Proxy(target as object, {
     get(target, prop, receiver) {
       if (prop === "then") {
         Context("trackable", { name, action: "executed" }).then(Void());
@@ -21,5 +21,5 @@ export function Trackable(name: string, target: object) {
       }
       return Reflect.get(target, prop, receiver);
     },
-  });
+  }) as T;
 }
