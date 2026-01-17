@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.202](https://github.com/silentium-lab/silentium/compare/v0.0.201...v0.0.202) (2026-01-17)
+
+
+### Bug Fixes
+
+* **main:** empty component reactive error ([a3dc90d](https://github.com/silentium-lab/silentium/commit/a3dc90d2106920b2c350fe60bfc6560a3667c19b))
+
 ### [0.0.201](https://github.com/silentium-lab/silentium/compare/v0.0.200...v0.0.201) (2026-01-17)
 
 
