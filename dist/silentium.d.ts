@@ -45,49 +45,6 @@ interface DestroyedType {
     destroyed(): boolean;
 }
 
-type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
-/**
- * A message created from an executor function.
- * The executor function can return a message destruction function.
- *
- * @url https://silentium.pw/article/message/view
- */
-declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
-/**
- * Reactive message implementation
- *
- * @url https://silentium.pw/article/message/view
- */
-declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
-    private executor;
-    private rejections;
-    private dc;
-    constructor(executor: MessageExecutorType<T>);
-    then(resolve: ConstructorType<[T]>): this;
-    catch(rejected: ConstructorType<[unknown]>): this;
-    destroy(): this;
-}
-
-/**
- * First message - is main
- * others will be destroyed when first
- * will be destroyed
- *
- * @url https://silentium.pw/article/connected/view
- */
-declare function Connected<T>(...m: MessageType[]): MessageImpl<T>;
-
-/**
- * Allows creating an object that definitely has a destructor,
- * useful to avoid creating unnecessary conditions
- */
-declare function Destroyable<T>(base: T): DestroyableImpl<T>;
-declare class DestroyableImpl<T> implements DestroyableType {
-    private base;
-    constructor(base: T);
-    destroy(): this;
-}
-
 /**
  * An object that allows collecting all disposable objects and
  * disposing them later all together
@@ -114,6 +71,64 @@ declare class DestroyContainerImpl implements DestroyableType {
 }
 
 /**
+ * Handles rejections collection
+ */
+declare function Rejections(): RejectionsImpl;
+/**
+ * Implementation of rejections collection
+ */
+declare class RejectionsImpl {
+    private catchers;
+    private lastRejectReason;
+    reject: (reason: unknown) => void;
+    catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
+}
+
+type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
+/**
+ * A message created from an executor function.
+ * The executor function can return a message destruction function.
+ *
+ * @url https://silentium.pw/article/message/view
+ */
+declare function Message<T>(executor: MessageExecutorType<T>): MessageImpl<T>;
+/**
+ * Reactive message implementation
+ *
+ * @url https://silentium.pw/article/message/view
+ */
+declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
+    private executor;
+    private rejections;
+    private dc;
+    constructor(executor: MessageExecutorType<T>, rejections?: RejectionsImpl, dc?: DestroyContainerImpl);
+    then(resolve: ConstructorType<[T]>): MessageImpl<T>;
+    catch(rejected: ConstructorType<[unknown]>): this;
+    destroy(): this;
+}
+
+/**
+ * First message - is main
+ * others will be destroyed when first
+ * will be destroyed
+ *
+ * @url https://silentium.pw/article/connected/view
+ */
+declare function Connected<T>(...m: MessageType[]): MessageImpl<T>;
+
+/**
+ * Allows creating an object that definitely has a destructor,
+ * useful to avoid creating unnecessary conditions
+ */
+declare function Destroyable<T>(base: T): DestroyableImpl<T>;
+declare class DestroyableImpl<T> implements DestroyableType {
+    private base;
+    constructor(base: T);
+    destroy(): this;
+}
+
+/**
  * Create local copy of source what can be destroyed
  */
 declare function Local<T>(_base: MaybeMessage<T>): MessageImpl<T>;
@@ -131,8 +146,10 @@ interface SourceType<T = unknown> {
 type MessageSourceType<T = unknown> = MessageType<T> & SourceType<T>;
 
 /**
- * Base message source object
- * https://silentium.pw/article/message-source/view
+ * Base message source object, the message what can
+ * accept new values
+ *
+ * @url https://silentium.pw/article/source/view
  */
 declare function Source<T>(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>): SourceImpl<T>;
 declare class SourceImpl<T> implements MessageSourceType<T> {
@@ -158,17 +175,6 @@ declare function New<T>(construct: ConstructorType<[], T>): MessageImpl<T>;
  * Helps convert a value into a message
  */
 declare function Of<T>(value: T): MessageImpl<T>;
-
-/**
- * Handles rejections collection
- */
-declare class Rejections {
-    private catchers;
-    private lastRejectReason;
-    reject: (reason: unknown) => void;
-    catch(rejected: ConstructorType<[unknown]>): this;
-    destroy(): this;
-}
 
 declare const ResetSilenceCache: unique symbol;
 /**
@@ -222,7 +228,7 @@ declare function Applied<const T, R>(base: MaybeMessage<T>, applier: Constructor
  * Allows applying variables from an message that passes an array to a function,
  * where each element of the array will be passed as a separate argument
  *
- * @url https://silentium.pw/article/applied-destructured/view
+ * @url https://silentium.pw/article/destructured/view
  */
 declare function Destructured<const T extends any[], R>($base: MaybeMessage<T>, applier: ConstructorType<any[], R>): MessageImpl<R>;
 
@@ -270,7 +276,7 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
 }
 
 /**
- * Message with error catched
+ * Message with error caught
  * inside another message
  *
  * @url https://silentium.pw/article/catch/view
@@ -390,7 +396,8 @@ declare function FromEvent<T>(emitter: MaybeMessage<any>, eventName: MaybeMessag
  * A component that allows creating linked objects of information and its owner
  * in such a way that if a new value is assigned to the owner, this value
  * will become the value of the linked information source
- * https://silentium-lab.github.io/silentium/#/en/information/of
+ *
+ * @url https://silentium.pw/article/late/view
  */
 declare function Late<T>(v?: T): SharedImpl<T>;
 declare class LateImpl<T> implements MessageSourceType<T> {
@@ -525,4 +532,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

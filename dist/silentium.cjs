@@ -34,16 +34,16 @@ class DestroyableImpl {
   }
 }
 
-var __defProp$6 = Object.defineProperty;
-var __defNormalProp$6 = (obj, key, value) => key in obj ? __defProp$6(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$6 = (obj, key, value) => __defNormalProp$6(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __defProp$5 = Object.defineProperty;
+var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
 function DestroyContainer() {
   return new DestroyContainerImpl();
 }
 class DestroyContainerImpl {
   constructor() {
-    __publicField$6(this, "destructors", []);
-    __publicField$6(this, "_destroyed", false);
+    __publicField$5(this, "destructors", []);
+    __publicField$5(this, "_destroyed", false);
   }
   /**
    * Add one destroyable
@@ -79,14 +79,17 @@ class DestroyContainerImpl {
   }
 }
 
-var __defProp$5 = Object.defineProperty;
-var __defNormalProp$5 = (obj, key, value) => key in obj ? __defProp$5(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !== "symbol" ? key + "" : key, value);
-class Rejections {
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
+function Rejections() {
+  return new RejectionsImpl();
+}
+class RejectionsImpl {
   constructor() {
-    __publicField$5(this, "catchers", []);
-    __publicField$5(this, "lastRejectReason", null);
-    __publicField$5(this, "reject", (reason) => {
+    __publicField$4(this, "catchers", []);
+    __publicField$4(this, "lastRejectReason", null);
+    __publicField$4(this, "reject", (reason) => {
       this.lastRejectReason = reason;
       this.catchers.forEach((catcher) => {
         catcher(reason);
@@ -132,29 +135,43 @@ function ensureMessage(v, label) {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Message(executor) {
   return new MessageImpl(executor);
 }
 class MessageImpl {
-  constructor(executor) {
+  constructor(executor, rejections = Rejections(), dc = DestroyContainer()) {
     this.executor = executor;
-    __publicField$4(this, "rejections", new Rejections());
-    __publicField$4(this, "dc", DestroyContainer());
+    this.rejections = rejections;
+    this.dc = dc;
     ensureFunction(executor, "Message: executor");
   }
   then(resolve) {
     if (this.dc.destroyed()) {
       return this;
     }
+    const newMessageRejections = Rejections();
+    const newMessageDc = DestroyContainer();
+    const newMessage = new MessageImpl(
+      this.executor,
+      newMessageRejections,
+      newMessageDc
+    );
+    newMessage.catch(this.rejections.reject);
+    this.dc.add(newMessage);
     try {
-      this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
+      const mbDestructor = this.executor(
+        Silence((value) => {
+          if (!newMessageDc.destroyed()) {
+            resolve(value);
+          }
+        }),
+        newMessageRejections.reject
+      );
+      newMessageDc.add(mbDestructor);
     } catch (e) {
-      this.rejections.reject(e);
+      newMessageRejections.reject(e);
     }
-    return this;
+    return newMessage;
   }
   catch(rejected) {
     if (this.dc.destroyed()) {
@@ -418,7 +435,7 @@ function Late(v) {
 class LateImpl {
   constructor(v) {
     this.v = v;
-    __publicField(this, "rejections", new Rejections());
+    __publicField(this, "rejections", Rejections());
     __publicField(this, "lateR", null);
     __publicField(this, "notify", () => {
       if (isFilled(this.v) && this.lateR) {
@@ -456,7 +473,7 @@ class LateImpl {
 }
 
 function Catch($base) {
-  const rejections = new Rejections();
+  const rejections = Rejections();
   $base.catch(rejections.reject);
   const $error = Late();
   rejections.catch((e) => {
@@ -898,6 +915,7 @@ exports.PrimitiveImpl = PrimitiveImpl;
 exports.Process = Process;
 exports.Race = Race;
 exports.Rejections = Rejections;
+exports.RejectionsImpl = RejectionsImpl;
 exports.ResetSilenceCache = ResetSilenceCache;
 exports.Sequence = Sequence;
 exports.Shared = Shared;
