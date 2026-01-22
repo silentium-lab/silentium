@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.203](https://github.com/silentium-lab/silentium/compare/v0.0.202...v0.0.203) (2026-01-22)
+
+
+### Bug Fixes
+
+* **main:** names refactoring ([b8b9453](https://github.com/silentium-lab/silentium/commit/b8b9453c4e8a81d2f30c299869392dee93a8c5db))
+* **main:** separate message subscruptions ([7e58e46](https://github.com/silentium-lab/silentium/commit/7e58e46d4d7ddf310db904429ba5335c62d756ee))
+
 ### [0.0.202](https://github.com/silentium-lab/silentium/compare/v0.0.201...v0.0.202) (2026-01-17)
 
 
