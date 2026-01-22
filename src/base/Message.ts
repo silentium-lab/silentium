@@ -27,10 +27,11 @@ export function Message<T>(executor: MessageExecutorType<T>) {
  * @url https://silentium.pw/article/message/view
  */
 export class MessageImpl<T> implements MessageType<T>, DestroyableType {
-  private rejections = new Rejections();
-  private dc = DestroyContainer();
-
-  public constructor(private executor: MessageExecutorType<T>) {
+  public constructor(
+    private executor: MessageExecutorType<T>,
+    private rejections = Rejections(),
+    private dc = DestroyContainer(),
+  ) {
     ensureFunction(executor, "Message: executor");
   }
 
@@ -38,12 +39,29 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     if (this.dc.destroyed()) {
       return this;
     }
+    const newMessageRejections = Rejections();
+    const newMessageDc = DestroyContainer();
+    const newMessage = new MessageImpl(
+      this.executor,
+      newMessageRejections,
+      newMessageDc,
+    );
+    newMessage.catch(this.rejections.reject);
+    this.dc.add(newMessage);
     try {
-      this.dc.add(this.executor(Silence(resolve), this.rejections.reject));
+      const mbDestructor = this.executor(
+        Silence((value: T) => {
+          if (!newMessageDc.destroyed()) {
+            resolve(value);
+          }
+        }),
+        newMessageRejections.reject,
+      );
+      newMessageDc.add(mbDestructor);
     } catch (e: any) {
-      this.rejections.reject(e);
+      newMessageRejections.reject(e);
     }
-    return this;
+    return newMessage;
   }
 
   public catch(rejected: ConstructorType<[unknown]>) {
