@@ -10,14 +10,15 @@ import { MessageSourceType } from "types/SourceType";
  * A component that allows creating linked objects of information and its owner
  * in such a way that if a new value is assigned to the owner, this value
  * will become the value of the linked information source
- * https://silentium-lab.github.io/silentium/#/en/information/of
+ *
+ * @url https://silentium.pw/article/late/view
  */
 export function Late<T>(v?: T) {
   return Shared(new LateImpl<T>(v));
 }
 
 export class LateImpl<T> implements MessageSourceType<T> {
-  private rejections = new Rejections();
+  private rejections = Rejections();
   private lateR: ConstructorType<[T]> | null = null;
   private notify = () => {
     if (isFilled(this.v) && this.lateR) {

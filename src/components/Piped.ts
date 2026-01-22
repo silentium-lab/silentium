@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { MaybeMessage } from "types/MessageType";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,5 @@
 import { All } from "components/All";
-import { Destructured } from "components/AppliedDestructured";
+import { Destructured } from "components/Destructured";
 import { ConstructorType } from "types/ConstructorType";
 import { MaybeMessage } from "types/MessageType";
 

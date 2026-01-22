@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
-import { Destructured } from "components/AppliedDestructured";
+import { Destructured } from "components/Destructured";
 import { Of } from "base/Of";
 import { All } from "components/All";
 
-describe("AppliedDestructured.test", () => {
+describe("Destructured.test", () => {
   test("message with destructured applied function", () => {
     const info = Of([1, 2, 3]);
     const sum = Destructured(info, (a, b, c) => a + b + c);

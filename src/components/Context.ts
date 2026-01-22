@@ -1,7 +1,7 @@
-import { Actual } from "base/ActualMessage";
-import { Source } from "base/MessageSource";
+import { Actual } from "base/Actual";
+import { Source } from "base/Source";
 import { All } from "components/All";
-import { Destructured } from "components/AppliedDestructured";
+import { Destructured } from "components/Destructured";
 import { Primitive } from "components/Primitive";
 import { ConstructorType } from "types/ConstructorType";
 import { ContextType } from "types/ContextType";

@@ -1,8 +1,8 @@
-import { Source } from "base/MessageSource";
+import { Source } from "base/Source";
 import { Late } from "components/Late";
 import { describe, expect, test } from "vitest";
 
-describe("MessageSource.test", () => {
+describe("Source.test", () => {
   test("message source as proxy", async () => {
     const $l = Late(1);
     const $proxy = Source<number>(

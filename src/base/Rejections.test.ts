@@ -3,7 +3,7 @@ import { Rejections } from "base/Rejections";
 
 describe("Rejections.test", () => {
   test("reject calls all catch handlers with the reason", () => {
-    const rejections = new Rejections();
+    const rejections = Rejections();
     const catcher1 = vi.fn();
     const catcher2 = vi.fn();
     const reason = new Error("test error");
@@ -19,7 +19,7 @@ describe("Rejections.test", () => {
   });
 
   test("destroy clears all handlers and reject does not call them", () => {
-    const rejections = new Rejections();
+    const rejections = Rejections();
     const catcher1 = vi.fn();
     const catcher2 = vi.fn();
     const reason = new Error("test error");

@@ -17,7 +17,6 @@ export function Connected<T>(...m: MessageType[]) {
     m.slice(1).forEach((other) => {
       other.catch(reject);
     });
-
     return dc.destructor();
   });
 }

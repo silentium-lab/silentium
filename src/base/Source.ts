@@ -4,8 +4,10 @@ import { MessageType } from "types/MessageType";
 import { MessageSourceType } from "types/SourceType";
 
 /**
- * Base message source object
- * https://silentium.pw/article/message-source/view
+ * Base message source object, the message what can
+ * accept new values
+ *
+ * @url https://silentium.pw/article/source/view
  */
 export function Source<T>(
   messageExecutor: MessageExecutorType<T>,

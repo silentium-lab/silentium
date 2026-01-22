@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { MaybeMessage } from "types/MessageType";
 import { ContextType } from "types/ContextType";
 import { isSource } from "helpers/guards";

@@ -29,8 +29,9 @@ describe("Connected.test", () => {
       reject(new Error("first error"));
     });
 
-    const second = Message<string>(() => {
+    const second = Message<string>((resolve) => {
       // Second message is not resolved in this test
+      resolve("1");
     });
 
     const connected = Connected(first, second);

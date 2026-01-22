@@ -4,7 +4,7 @@ import { isMessage } from "helpers/guards";
 import { Of } from "base/Of";
 import { ConstructorType } from "types/ConstructorType";
 import { Message } from "base/Message";
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { DestroyContainer } from "base/DestroyContainer";
 
 /**

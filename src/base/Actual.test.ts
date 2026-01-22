@@ -1,9 +1,9 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { Message } from "base/Message";
 import { describe, expect, test, vi } from "vitest";
 
-describe("ActualMessage.test.ts", () => {
-  test("ActualMessage wraps raw values into messages", () => {
+describe("Actual.test.ts", () => {
+  test("Actual wraps raw values into messages", () => {
     const rawValue = 42;
     const msg = Actual(rawValue);
 
@@ -13,7 +13,7 @@ describe("ActualMessage.test.ts", () => {
     expect(m).toHaveBeenCalledWith(rawValue);
   });
 
-  test("ActualMessage returns message objects unchanged", () => {
+  test("Actual returns message objects unchanged", () => {
     const messageValue = "test";
     const existingMessage = Message((r) => {
       r(messageValue);

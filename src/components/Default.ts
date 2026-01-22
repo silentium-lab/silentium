@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { Message } from "base/Message";
 import { Applied } from "components/Applied";
 import { Catch } from "components/Catch";
@@ -16,7 +16,6 @@ export function Default<T>(
 ) {
   const $default = Actual(_default);
   const $defaultAfterError = Applied(Catch($base), () => $default);
-
   return Message<T>((resolve) => {
     $base.then(resolve);
     $defaultAfterError.then(resolve as any);

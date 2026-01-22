@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { wait } from "testing/wait";
-import { Destructured } from "components/AppliedDestructured";
+import { Destructured } from "components/Destructured";
 import { All } from "components/All";
 import { Catch } from "components/Catch";
 

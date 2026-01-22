@@ -3,7 +3,14 @@ import { ConstructorType } from "types/ConstructorType";
 /**
  * Handles rejections collection
  */
-export class Rejections {
+export function Rejections() {
+  return new RejectionsImpl();
+}
+
+/**
+ * Implementation of rejections collection
+ */
+export class RejectionsImpl {
   private catchers: ConstructorType<[unknown]>[] = [];
   private lastRejectReason: unknown = null;
 

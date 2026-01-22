@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { Message } from "base/Message";
 import { MessageType, MessageTypeValue } from "types/MessageType";
 

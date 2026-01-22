@@ -1,6 +1,6 @@
 import { MaybeMessage } from "types/MessageType";
 import { All } from "components/All";
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { Message } from "base/Message";
 import { ConstructorType } from "types/ConstructorType";
 

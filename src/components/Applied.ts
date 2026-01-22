@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { DestroyContainer } from "base/DestroyContainer";
 import { Message } from "base/Message";
 import { isMessage } from "helpers/guards";

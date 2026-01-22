@@ -11,7 +11,6 @@ export function Process<T, R = unknown>(
   return Message<R>((resolve, reject) => {
     const $res = Late<R>();
     const dc = DestroyContainer();
-
     $base.then((v) => {
       dc.destroy();
       const $msg = builder(v);
@@ -21,7 +20,6 @@ export function Process<T, R = unknown>(
     });
     $base.catch(reject);
     $res.then(resolve);
-
     return () => {
       dc.destroy();
     };

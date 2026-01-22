@@ -14,7 +14,6 @@ export function Freeze<T>($base: MessageType<T>, $invalidate?: MessageType<T>) {
       }
       resolve(freezedValue as T);
     });
-
     $invalidate?.then(() => {
       freezedValue = null;
     });

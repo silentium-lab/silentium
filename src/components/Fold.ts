@@ -1,4 +1,4 @@
-import { Actual } from "base/ActualMessage";
+import { Actual } from "base/Actual";
 import { Computed } from "components/Computed";
 import { MaybeMessage } from "types/MessageType";
 
