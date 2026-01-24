@@ -10,15 +10,19 @@ import { MessageType } from "types/MessageType";
  * @url https://silentium.pw/article/empty/view
  */
 export function Empty<T>($base: MessageType<T>, after?: MessageType) {
-  const p = Primitive($base);
   return Message<T>((resolve, reject) => {
+    const p = Primitive($base);
     try {
       $base.then(resolve).catch(reject);
       if (!after) {
         p.primitiveWithException();
       }
       after?.then(() => {
-        reject("Empty: no value after message!");
+        try {
+          p.primitiveWithException();
+        } catch {
+          reject("Empty: no value after message!");
+        }
       });
     } catch {
       reject("Empty: no value in base message!");
