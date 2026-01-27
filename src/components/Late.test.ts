@@ -28,4 +28,19 @@ describe("Late.test", () => {
 
     expect(o).toHaveBeenLastCalledWith(2);
   });
+
+  test("Many thens and destroy", () => {
+    const l = Late<number>(1);
+
+    const sub1 = l.then((v) => {
+      expect(v).toBe(1);
+    });
+
+    l.use(2);
+    sub1.destroy();
+
+    l.then((v) => {
+      expect(v).toBe(2);
+    });
+  });
 });

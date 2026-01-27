@@ -72,4 +72,51 @@ describe("Message.test.ts", () => {
     // The main event's catch should be called
     expect(catchMock).toHaveBeenCalledWith(expect.any(Error));
   });
+
+  test("destructor returned from executor in then does not destroy base message", async () => {
+    const cleanup = vi.fn();
+    const mock1 = vi.fn();
+    const mock2 = vi.fn();
+    const mock3 = vi.fn();
+
+    let counter = 0;
+    const base = Message<number>((resolve) => {
+      const id = setTimeout(() => resolve(++counter), 5);
+      // return destructor for this subscription only
+      return () => {
+        cleanup();
+        clearTimeout(id);
+      };
+    });
+
+    // Subscribe and immediately destroy the subscription
+    const sub1 = base.then(mock1);
+    sub1.destroy();
+
+    // Create another subscription - base must still work
+    const sub2 = base.then(mock2);
+
+    await new Promise((r) => setTimeout(r, 20));
+
+    // First subscription was destroyed before resolution
+    expect(mock1).not.toHaveBeenCalled();
+    // Second subscription received the value (counter === 1)
+    expect(mock2).toHaveBeenCalledWith(1);
+
+    // Destroying first subscription should execute its destructor only
+    expect(cleanup).toHaveBeenCalledTimes(1);
+
+    // New subscription after previous destruction should still work and get next value
+    const sub3 = base.then(mock3);
+    await new Promise((r) => setTimeout(r, 20));
+    expect(mock3).toHaveBeenCalledWith(2);
+
+    // Cleanup others triggers their own destructors but not the base
+    sub2.destroy();
+    sub3.destroy();
+    expect(cleanup).toHaveBeenCalledTimes(3);
+
+    // Finally, base can be destroyed without errors
+    base.destroy();
+  });
 });

@@ -468,6 +468,10 @@ class LateImpl {
     m.then(this.use.bind(this));
     return this;
   }
+  destroy() {
+    this.lateR = null;
+    return this;
+  }
 }
 
 function Catch($base) {

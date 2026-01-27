@@ -58,4 +58,9 @@ export class LateImpl<T> implements MessageSourceType<T> {
     m.then(this.use.bind(this));
     return this;
   }
+
+  public destroy() {
+    this.lateR = null;
+    return this;
+  }
 }

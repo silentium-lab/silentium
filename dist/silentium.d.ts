@@ -410,6 +410,7 @@ declare class LateImpl<T> implements MessageSourceType<T> {
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     chain(m: MessageType<T>): this;
+    destroy(): this;
 }
 
 /**
