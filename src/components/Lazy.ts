@@ -8,7 +8,7 @@ import { MessageType } from "types/MessageType";
  * @url https://silentium.pw/article/lazy/view
  */
 export function Lazy<T>(constructor: () => MessageType<T>) {
-  return Message((resolve, reject) => {
+  return Message<T>((resolve, reject) => {
     const inst = constructor();
     inst.catch(reject).then(resolve);
     return () => {

@@ -418,7 +418,7 @@ declare class LateImpl<T> implements MessageSourceType<T> {
  *
  * @url https://silentium.pw/article/lazy/view
  */
-declare function Lazy<T>(constructor: () => MessageType<T>): MessageImpl<unknown>;
+declare function Lazy<T>(constructor: () => MessageType<T>): MessageImpl<T>;
 
 /**
  * Component that applies an info object constructor to each data item,
