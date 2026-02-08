@@ -35,11 +35,17 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     ensureFunction(executor, "Message: executor");
   }
 
-  public then(resolve: ConstructorType<[T]>) {
+  public then(
+    resolve: ConstructorType<[T]>,
+    rejected?: ConstructorType<[unknown]>,
+  ) {
     if (this.dc.destroyed()) {
       return this;
     }
     const newMessageRejections = Rejections();
+    if (rejected) {
+      newMessageRejections.catch(rejected);
+    }
     const newMessageDc = DestroyContainer();
     const newMessage = new MessageImpl(
       this.executor,

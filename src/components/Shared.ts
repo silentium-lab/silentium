@@ -31,10 +31,13 @@ export class SharedImpl<T> implements MessageSourceType<T> {
     }
   }
 
-  public then(resolved: ConstructorType<[T]>) {
+  public then(
+    resolved: ConstructorType<[T]>,
+    rejected?: ConstructorType<[unknown]>,
+  ) {
     this.resolvers.add((v) => resolved(v));
     if (this.resolvers.size === 1) {
-      this.$base.then(this.resolver);
+      this.$base.then(this.resolver, rejected);
     } else if (isFilled(this.lastV)) {
       resolved(this.lastV);
     }

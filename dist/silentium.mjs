@@ -143,11 +143,14 @@ class MessageImpl {
     this.dc = dc;
     ensureFunction(executor, "Message: executor");
   }
-  then(resolve) {
+  then(resolve, rejected) {
     if (this.dc.destroyed()) {
       return this;
     }
     const newMessageRejections = Rejections();
+    if (rejected) {
+      newMessageRejections.catch(rejected);
+    }
     const newMessageDc = DestroyContainer();
     const newMessage = new MessageImpl(
       this.executor,
@@ -387,10 +390,10 @@ class SharedImpl {
       this.source = $base;
     }
   }
-  then(resolved) {
+  then(resolved, rejected) {
     this.resolvers.add((v) => resolved(v));
     if (this.resolvers.size === 1) {
-      this.$base.then(this.resolver);
+      this.$base.then(this.resolver, rejected);
     } else if (isFilled(this.lastV)) {
       resolved(this.lastV);
     }

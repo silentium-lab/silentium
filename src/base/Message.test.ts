@@ -1,4 +1,7 @@
 import { Message } from "base/Message";
+import { Void } from "base/Void";
+import { Promisify } from "components/Promisify";
+import { Shared } from "components/Shared";
 import { describe, expect, test, vi } from "vitest";
 
 describe("Message.test.ts", () => {
@@ -118,5 +121,27 @@ describe("Message.test.ts", () => {
 
     // Finally, base can be destroyed without errors
     base.destroy();
+  });
+
+  test("rejection on second argument of message", async () => {
+    const catchMock = vi.fn();
+    const event = Message<string>((r, reject) => {
+      setTimeout(() => reject(new Error("test error")), 10);
+    });
+
+    event.then(Void(), catchMock);
+
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(catchMock).toHaveBeenCalledWith(expect.any(Error));
+  });
+
+  test("rejection throw expect", async () => {
+    const event = Shared(
+      Message((_, reject) => {
+        reject(new Error("test error"));
+      }),
+    );
+    await expect(Promisify(event)).rejects.toThrow("test error");
   });
 });

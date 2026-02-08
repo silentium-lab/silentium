@@ -9,7 +9,7 @@ type ConstructorType<P extends unknown[] = unknown[], T = unknown> = (...args: P
  * values should be received
  */
 interface MessageType<T = unknown> {
-    then(resolved: ConstructorType<[T]>): MessageType<T>;
+    then(resolved: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): MessageType<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
 }
 /**
@@ -103,7 +103,7 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private rejections;
     private dc;
     constructor(executor: MessageExecutorType<T>, rejections?: RejectionsImpl, dc?: DestroyContainerImpl);
-    then(resolve: ConstructorType<[T]>): MessageImpl<T>;
+    then(resolve: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): MessageImpl<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }
@@ -267,7 +267,7 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
     private resolvers;
     private source?;
     constructor($base: MessageType<T> | MessageSourceType<T>);
-    then(resolved: ConstructorType<[T]>): this;
+    then(resolved: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
