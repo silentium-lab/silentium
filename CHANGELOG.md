@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.208](https://github.com/silentium-lab/silentium/compare/v0.0.207...v0.0.208) (2026-02-08)
+
+
+### Bug Fixes
+
+* **main:** export promisify ([4c2089c](https://github.com/silentium-lab/silentium/commit/4c2089cc89d1be2368420bf8611deca59014d896))
+
 ### [0.0.207](https://github.com/silentium-lab/silentium/compare/v0.0.206...v0.0.207) (2026-02-08)
 
 
