@@ -226,6 +226,12 @@ function Local(_base) {
   });
 }
 
+function New(construct) {
+  return Message(function NewImpl(resolve) {
+    resolve(construct());
+  });
+}
+
 var __defProp$3 = Object.defineProperty;
 var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
@@ -258,12 +264,6 @@ class SourceImpl {
     m.then(this.use.bind(this));
     return this;
   }
-}
-
-function New(construct) {
-  return Message(function NewImpl(resolve) {
-    resolve(construct());
-  });
 }
 
 function Void() {
@@ -322,12 +322,6 @@ function Applied(base, applier) {
         resolve(result);
       }
     });
-  });
-}
-
-function Destructured($base, applier) {
-  return Applied($base, function DestructuredImpl(args) {
-    return applier(...args);
   });
 }
 
@@ -514,6 +508,12 @@ function Chain(...messages) {
       handleMessage(0);
     }
   );
+}
+
+function Destructured($base, applier) {
+  return Applied($base, function DestructuredImpl(args) {
+    return applier(...args);
+  });
 }
 
 function Computed(applier, ...messages) {
@@ -780,6 +780,12 @@ function Process($base, builder) {
   });
 }
 
+function Promisify($message) {
+  return new Promise((resolve, reject) => {
+    $message.then(resolve, reject);
+  });
+}
+
 function Race(...messages) {
   const $messages = messages.map(Actual);
   return Message((resolve, reject) => {
@@ -883,5 +889,5 @@ function DevTools() {
   }
 }
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.js.map
