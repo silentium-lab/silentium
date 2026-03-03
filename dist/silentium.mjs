@@ -198,13 +198,16 @@ function Actual(message) {
   return isMessage(message) ? message : Of(message);
 }
 
-function Connected(...m) {
+function Connected(main, ...m) {
   const dc = DestroyContainer();
+  dc.add(main);
   dc.many(m);
   return Message((resolve, reject) => {
-    m[0].catch(reject).then(resolve);
-    m.slice(1).forEach((other) => {
-      other.catch(reject);
+    main.catch(reject).then(resolve);
+    m.forEach((other) => {
+      if (isMessage(other)) {
+        other.catch(reject);
+      }
     });
     return dc.destructor();
   });

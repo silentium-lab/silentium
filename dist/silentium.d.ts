@@ -115,7 +115,7 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
  *
  * @url https://silentium.pw/article/connected/view
  */
-declare function Connected<T>(...m: MessageType[]): MessageImpl<T>;
+declare function Connected<T>(main: MessageType, ...m: MaybeMessage[]): MessageImpl<T>;
 
 /**
  * Allows creating an object that definitely has a destructor,

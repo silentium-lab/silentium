@@ -2,6 +2,8 @@ import { Message } from "base/Message";
 import { Connected } from "base/Connected";
 import { Void } from "base/Void";
 import { describe, expect, test, vi } from "vitest";
+import { Of } from "base/Of";
+import { Destroyable } from "base/Destroyable";
 
 describe("Connected.test", () => {
   test("resolves when first message resolves", () => {
@@ -115,5 +117,13 @@ describe("Connected.test", () => {
     // Should resolve with the value
     expect(resolveSpy).toHaveBeenCalledWith("single");
     expect(rejectSpy).not.toHaveBeenCalled();
+  });
+
+  test("with destructor as function", () => {
+    const destroyed = vi.fn();
+    const s$ = Connected(Of(123), Destroyable(destroyed));
+    s$.then(Void()).destroy();
+
+    expect(destroyed).toBeCalledTimes(1);
   });
 });
