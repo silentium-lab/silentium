@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.209](https://github.com/silentium-lab/silentium/compare/v0.0.208...v0.0.209) (2026-03-03)
+
+
+### Bug Fixes
+
+* **main:** connected not only messages ([7f865e2](https://github.com/silentium-lab/silentium/commit/7f865e2bd7e1acc893d46e772e2f28b5da1f62e0))
+
 ### [0.0.208](https://github.com/silentium-lab/silentium/compare/v0.0.207...v0.0.208) (2026-02-08)
 
 
