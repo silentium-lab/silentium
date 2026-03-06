@@ -144,4 +144,25 @@ describe("Message.test.ts", () => {
     );
     await expect(Promisify(event)).rejects.toThrow("test error");
   });
+
+  test("rejection throw expect", async () => {
+    const event = Shared(
+      Message((_, reject) => {
+        reject(new Error("test error"));
+      }),
+    );
+    await expect(Promisify(event)).rejects.toThrow("test error");
+  });
+
+  test("named message", () => {
+    const $msg = Message((res, _, name) => {
+      res(name);
+    });
+    $msg.name("TeStInG");
+
+    const name = vi.fn();
+    $msg.then(name);
+
+    expect(name).toBeCalledWith("TeStInG");
+  });
 });

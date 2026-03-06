@@ -85,7 +85,7 @@ declare class RejectionsImpl {
     destroy(): this;
 }
 
-type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>) => MessageType | (() => void) | void;
+type MessageExecutorType<T> = (resolve: ConstructorType<[T]>, reject: ConstructorType<[unknown]>, name?: string) => MessageType | (() => void) | void;
 /**
  * A message created from an executor function.
  * The executor function can return a message destruction function.
@@ -102,10 +102,12 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     private executor;
     private rejections;
     private dc;
+    private myName;
     constructor(executor: MessageExecutorType<T>, rejections?: RejectionsImpl, dc?: DestroyContainerImpl);
     then(resolve: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): MessageImpl<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
+    name(newName: string): this;
 }
 
 /**

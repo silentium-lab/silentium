@@ -9,6 +9,7 @@ import { MessageType } from "types/MessageType";
 export type MessageExecutorType<T> = (
   resolve: ConstructorType<[T]>,
   reject: ConstructorType<[unknown]>,
+  name?: string,
 ) => MessageType | (() => void) | void;
 
 /**
@@ -27,6 +28,8 @@ export function Message<T>(executor: MessageExecutorType<T>) {
  * @url https://silentium.pw/article/message/view
  */
 export class MessageImpl<T> implements MessageType<T>, DestroyableType {
+  private myName = "unknown";
+
   public constructor(
     private executor: MessageExecutorType<T>,
     private rejections = Rejections(),
@@ -62,6 +65,7 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
           }
         }),
         newMessageRejections.reject,
+        this.myName,
       );
       newMessageDc.add(mbDestructor);
     } catch (e: any) {
@@ -79,8 +83,17 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
   }
 
   public destroy() {
-    this.dc.destroy();
-    this.rejections.destroy();
+    try {
+      this.dc.destroy();
+      this.rejections.destroy();
+    } catch (e) {
+      this.rejections.reject(e);
+    }
+    return this;
+  }
+
+  public name(newName: string) {
+    this.myName = newName;
     return this;
   }
 }
