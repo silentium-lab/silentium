@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.212](https://github.com/silentium-lab/silentium/compare/v0.0.211...v0.0.212) (2026-03-07)
+
+
+### Features
+
+* **main:** locals component ([640b97d](https://github.com/silentium-lab/silentium/commit/640b97d11cb4e6359c03c41ec7ffe80d555d3d83))
+
 ### [0.0.211](https://github.com/silentium-lab/silentium/compare/v0.0.210...v0.0.211) (2026-03-07)
 
 
