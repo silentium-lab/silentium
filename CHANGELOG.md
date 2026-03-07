@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.211](https://github.com/silentium-lab/silentium/compare/v0.0.210...v0.0.211) (2026-03-07)
+
+
+### Bug Fixes
+
+* **main:** is message destroyed then source dont transfer data ([ea6db76](https://github.com/silentium-lab/silentium/commit/ea6db762c428f140c6ff930dbee6615bdb561c5d))
+
 ### [0.0.210](https://github.com/silentium-lab/silentium/compare/v0.0.209...v0.0.210) (2026-03-06)
 
 
