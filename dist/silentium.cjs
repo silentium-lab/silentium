@@ -247,6 +247,10 @@ function Local(_base) {
   });
 }
 
+function Props(...messages) {
+  return messages.map((m) => Local(m));
+}
+
 function New(construct) {
   return Message(function NewImpl(resolve) {
     resolve(construct());
@@ -403,6 +407,7 @@ class SharedImpl {
     __publicField$1(this, "lastV");
     __publicField$1(this, "resolvers", /* @__PURE__ */ new Set());
     __publicField$1(this, "source");
+    __publicField$1(this, "isDestroyed", false);
     if (isSource($base)) {
       this.source = $base;
     }
@@ -429,11 +434,15 @@ class SharedImpl {
     return this;
   }
   destroy() {
+    this.isDestroyed = true;
     this.resolvers.clear();
     if (isDestroyable(this.$base)) {
       this.$base.destroy();
     }
     return this;
+  }
+  destroyed() {
+    return this.isDestroyed;
   }
   value() {
     return Primitive(this);
@@ -952,6 +961,7 @@ exports.Primitive = Primitive;
 exports.PrimitiveImpl = PrimitiveImpl;
 exports.Process = Process;
 exports.Promisify = Promisify;
+exports.Props = Props;
 exports.Race = Race;
 exports.Rejections = Rejections;
 exports.RejectionsImpl = RejectionsImpl;

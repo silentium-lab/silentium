@@ -136,6 +136,8 @@ declare class DestroyableImpl<T> implements DestroyableType {
  */
 declare function Local<T>(_base: MaybeMessage<T>): MessageImpl<T>;
 
+declare function Props(...messages: MaybeMessage[]): MessageImpl<unknown>[];
+
 /**
  * A component that, on each access, returns a new instance
  * of a reference type based on the constructor function
@@ -261,11 +263,13 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
     private lastV;
     private resolvers;
     private source?;
+    private isDestroyed;
     constructor($base: MessageType<T> | MessageSourceType<T>);
     then(resolved: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
+    destroyed(): boolean;
     value(): PrimitiveImpl<T>;
     chain(m: MessageType<T>): this;
 }
@@ -541,4 +545,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

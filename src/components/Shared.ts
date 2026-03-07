@@ -24,6 +24,7 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   private lastV: T | undefined;
   private resolvers = new Set<ConstructorType<[T]>>();
   private source?: SourceType<T>;
+  private isDestroyed = false;
 
   public constructor(private $base: MessageType<T> | MessageSourceType<T>) {
     if (isSource($base)) {
@@ -59,11 +60,16 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   }
 
   public destroy() {
+    this.isDestroyed = true;
     this.resolvers.clear();
     if (isDestroyable(this.$base)) {
       this.$base.destroy();
     }
     return this;
+  }
+
+  public destroyed() {
+    return this.isDestroyed;
   }
 
   public value() {

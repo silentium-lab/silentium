@@ -3,6 +3,7 @@ export * from "./base/Connected";
 export * from "./base/Destroyable";
 export * from "./base/DestroyContainer";
 export * from "./base/Local";
+export * from "./base/Locals";
 export * from "./base/Message";
 export * from "./base/New";
 export * from "./base/Of";
