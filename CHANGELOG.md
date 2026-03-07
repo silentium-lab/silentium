@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.213](https://github.com/silentium-lab/silentium/compare/v0.0.212...v0.0.213) (2026-03-07)
+
+
+### Bug Fixes
+
+* **main:** correct then on late component ([369daa3](https://github.com/silentium-lab/silentium/commit/369daa36247aa05a46e00c6b2bdc9c2c27ee84cc))
+
 ### [0.0.212](https://github.com/silentium-lab/silentium/compare/v0.0.211...v0.0.212) (2026-03-07)
 
 
