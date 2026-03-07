@@ -417,7 +417,7 @@ class SharedImpl {
     } else if (isFilled(this.lastV)) {
       resolved(this.lastV);
     }
-    return this;
+    return Local(this);
   }
   use(value) {
     if (this.source) {

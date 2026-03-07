@@ -1,5 +1,7 @@
 import { Message } from "base/Message";
+import { Of } from "base/Of";
 import { Void } from "base/Void";
+import { Late } from "components/Late";
 import { Promisify } from "components/Promisify";
 import { Shared } from "components/Shared";
 import { describe, expect, test, vi } from "vitest";
@@ -164,5 +166,21 @@ describe("Message.test.ts", () => {
     $msg.then(name);
 
     expect(name).toBeCalledWith("TeStInG");
+  });
+
+  test("subscription destroy does not destroy base message", () => {
+    const $m = Of(1);
+    const sub = $m.then(Void());
+    sub.destroy();
+    expect(sub.destroyed()).toBe(true);
+    expect($m.destroyed()).toBe(false);
+  });
+
+  test("subscription destroy does not destroy base message for Late", () => {
+    const $m = Late(1);
+    const sub = $m.then(Void());
+    sub.destroy();
+    expect(sub.destroyed()).toBe(true);
+    expect($m.destroyed()).toBe(false);
   });
 });
