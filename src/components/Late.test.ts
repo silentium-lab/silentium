@@ -43,4 +43,14 @@ describe("Late.test", () => {
       expect(v).toBe(2);
     });
   });
+
+  test("Destroy subscription", () => {
+    const m$ = Late(1);
+    const g = vi.fn();
+    const sub = m$.then(g);
+    expect(g).toBeCalledTimes(1);
+    sub.destroy();
+    m$.use(2);
+    expect(g).toBeCalledTimes(1);
+  });
 });

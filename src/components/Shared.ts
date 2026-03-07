@@ -37,20 +37,23 @@ export class SharedImpl<T> implements MessageSourceType<T> {
     resolved: ConstructorType<[T]>,
     rejected?: ConstructorType<[unknown]>,
   ): MessageImpl<T> {
-    this.resolvers.add(resolved);
-    if (this.resolvers.size === 1) {
-      this.$base.then(this.resolver, rejected);
-    } else if (isFilled(this.lastV)) {
-      resolved(this.lastV);
-    }
-    return Message((r) => {
-      if (isFilled(this.lastV)) {
-        r(this.lastV);
+    const msg$ = Message<T>((res, rej) => {
+      this.resolvers.add(res);
+      if (this.resolvers.size === 1) {
+        this.$base.then(this.resolver, rej);
+      } else if (isFilled(this.lastV)) {
+        res(this.lastV);
       }
       return () => {
-        this.resolvers.delete(resolved);
+        this.resolvers.delete(res);
       };
-    });
+    }).then(resolved);
+
+    if (rejected) {
+      msg$.catch(rejected);
+    }
+
+    return msg$;
   }
 
   public use(value: T) {
