@@ -413,13 +413,20 @@ class SharedImpl {
     }
   }
   then(resolved, rejected) {
-    this.resolvers.add((v) => resolved(v));
+    this.resolvers.add(resolved);
     if (this.resolvers.size === 1) {
       this.$base.then(this.resolver, rejected);
     } else if (isFilled(this.lastV)) {
       resolved(this.lastV);
     }
-    return Local(this);
+    return Message((r) => {
+      if (isFilled(this.lastV)) {
+        r(this.lastV);
+      }
+      return () => {
+        this.resolvers.delete(resolved);
+      };
+    });
   }
   use(value) {
     if (this.source) {

@@ -1,5 +1,4 @@
-import { Local } from "base/Local";
-import { MessageImpl } from "base/Message";
+import { Message, MessageImpl } from "base/Message";
 import { Primitive } from "components/Primitive";
 import { isDestroyable, isFilled, isSource } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
@@ -38,13 +37,20 @@ export class SharedImpl<T> implements MessageSourceType<T> {
     resolved: ConstructorType<[T]>,
     rejected?: ConstructorType<[unknown]>,
   ): MessageImpl<T> {
-    this.resolvers.add((v) => resolved(v));
+    this.resolvers.add(resolved);
     if (this.resolvers.size === 1) {
       this.$base.then(this.resolver, rejected);
     } else if (isFilled(this.lastV)) {
       resolved(this.lastV);
     }
-    return Local(this);
+    return Message((r) => {
+      if (isFilled(this.lastV)) {
+        r(this.lastV);
+      }
+      return () => {
+        this.resolvers.delete(resolved);
+      };
+    });
   }
 
   public use(value: T) {
