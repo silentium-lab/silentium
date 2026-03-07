@@ -27,7 +27,9 @@ export class SourceImpl<T> implements MessageSourceType<T> {
   }
 
   public use(value: T): this {
-    this.sourceExecutor(value);
+    if (!this.message.destroyed()) {
+      this.sourceExecutor(value);
+    }
     return this;
   }
 

@@ -92,6 +92,10 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     return this;
   }
 
+  public destroyed() {
+    return this.dc.destroyed();
+  }
+
   public name(newName: string) {
     this.myName = newName;
     return this;

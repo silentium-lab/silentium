@@ -107,6 +107,7 @@ declare class MessageImpl<T> implements MessageType<T>, DestroyableType {
     then(resolve: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): MessageImpl<T>;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
+    destroyed(): boolean;
     name(newName: string): this;
 }
 

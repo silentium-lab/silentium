@@ -197,6 +197,9 @@ class MessageImpl {
     }
     return this;
   }
+  destroyed() {
+    return this.dc.destroyed();
+  }
   name(newName) {
     this.myName = newName;
     return this;
@@ -263,7 +266,9 @@ class SourceImpl {
     this.message = Message(messageExecutor);
   }
   use(value) {
-    this.sourceExecutor(value);
+    if (!this.message.destroyed()) {
+      this.sourceExecutor(value);
+    }
     return this;
   }
   then(resolved) {

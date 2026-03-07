@@ -126,4 +126,12 @@ describe("Connected.test", () => {
 
     expect(destroyed).toBeCalledTimes(1);
   });
+
+  test("with destructor as pure function", () => {
+    const destroyed = vi.fn();
+    const s$ = Connected(Of(123), destroyed);
+    s$.then(Void()).destroy();
+
+    expect(destroyed).toBeCalledTimes(1);
+  });
 });
