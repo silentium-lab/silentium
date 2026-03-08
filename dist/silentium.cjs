@@ -664,7 +664,10 @@ function Empty($base, after) {
 function ExecutorApplied($base, applier) {
   return Message(function ExecutorAppliedImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then(applier(resolve));
+    const sub = Destroyable($base.then(applier(resolve)));
+    return () => {
+      sub.destroy();
+    };
   });
 }
 

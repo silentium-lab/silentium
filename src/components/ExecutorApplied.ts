@@ -1,3 +1,4 @@
+import { Destroyable } from "base/Destroyable";
 import { Message } from "base/Message";
 import { MessageType } from "types/MessageType";
 
@@ -14,6 +15,9 @@ export function ExecutorApplied<T>(
 ) {
   return Message<T>(function ExecutorAppliedImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then(applier(resolve));
+    const sub = Destroyable($base.then(applier(resolve)));
+    return () => {
+      sub.destroy();
+    };
   });
 }
