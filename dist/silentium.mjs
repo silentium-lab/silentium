@@ -298,6 +298,13 @@ class SourceImpl {
   }
 }
 
+function SourceComputed(message, source) {
+  return Source(
+    (resolve, reject) => message.then(resolve).catch(reject),
+    (v) => source.use(v)
+  );
+}
+
 function Void() {
   return () => {
   };
@@ -937,5 +944,5 @@ function DevTools() {
   }
 }
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

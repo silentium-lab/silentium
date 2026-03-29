@@ -191,6 +191,8 @@ declare class SourceImpl<T> implements MessageSourceType<T> {
     chain(m: MessageType<T>): this;
 }
 
+declare function SourceComputed<T>(message: MessageType<T>, source: SourceType<T>): SourceImpl<T>;
+
 /**
  * Resolver that does nothing with the passed value,
  * needed for silent message triggering
@@ -546,5 +548,5 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 export type { ConstructorType, ContextType, DestroyableType, DestroyedType, MaybeMessage, MessageExecutorType, MessageSourceType, MessageType, MessageTypeValue, SourceType };

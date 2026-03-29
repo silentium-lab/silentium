@@ -300,6 +300,13 @@ class SourceImpl {
   }
 }
 
+function SourceComputed(message, source) {
+  return Source(
+    (resolve, reject) => message.then(resolve).catch(reject),
+    (v) => source.use(v)
+  );
+}
+
 function Void() {
   return () => {
   };
@@ -989,6 +996,7 @@ exports.Shared = Shared;
 exports.SharedImpl = SharedImpl;
 exports.Silence = Silence;
 exports.Source = Source;
+exports.SourceComputed = SourceComputed;
 exports.SourceImpl = SourceImpl;
 exports.Stream = Stream;
 exports.Trackable = Trackable;
