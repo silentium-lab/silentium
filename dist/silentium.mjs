@@ -83,7 +83,7 @@ var __publicField$5 = (obj, key, value) => __defNormalProp$5(obj, typeof key !==
 function Rejections() {
   return new RejectionsImpl();
 }
-class RejectionsImpl {
+const _RejectionsImpl = class _RejectionsImpl {
   constructor() {
     __publicField$5(this, "catchers", []);
     __publicField$5(this, "lastRejectReason", null);
@@ -92,6 +92,11 @@ class RejectionsImpl {
       this.catchers.forEach((catcher) => {
         catcher(reason);
       });
+      if (_RejectionsImpl.globalCatch) {
+        _RejectionsImpl.globalCatch(reason);
+      } else if (this.catchers.length === 0) {
+        console.error(["Unhandled Message Rejection:", reason].join(" "));
+      }
     });
   }
   catch(rejected) {
@@ -105,7 +110,9 @@ class RejectionsImpl {
     this.catchers.length = 0;
     return this;
   }
-}
+};
+__publicField$5(_RejectionsImpl, "globalCatch");
+let RejectionsImpl = _RejectionsImpl;
 
 const ResetSilenceCache = Symbol("reset-silence-cache");
 function Silence(resolve) {

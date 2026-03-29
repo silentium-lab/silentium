@@ -80,6 +80,7 @@ declare function Rejections(): RejectionsImpl;
 declare class RejectionsImpl {
     private catchers;
     private lastRejectReason;
+    static globalCatch?: ConstructorType<[unknown]>;
     reject: (reason: unknown) => void;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;

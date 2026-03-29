@@ -1,5 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
 import { Rejections } from "base/Rejections";
+import { Message } from "base/Message";
+import { Void } from "base/Void";
+import { Applied } from "components/Applied";
 
 describe("Rejections.test", () => {
   test("reject calls all catch handlers with the reason", () => {
@@ -30,5 +33,38 @@ describe("Rejections.test", () => {
 
     expect(catcher1).not.toHaveBeenCalled();
     expect(catcher2).not.toHaveBeenCalled();
+  });
+
+  test("Message unhandled rejection", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const m = Message((_, reject) => {
+      reject("Error inside message");
+    });
+    m.then(Void());
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Unhandled Message Rejection: Error inside message",
+    );
+
+    consoleSpy.mockRestore();
+  });
+
+  test("Message nested unhandled rejection", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const m = Applied(
+      Message<number>((_, reject) => {
+        reject("Error throw applied");
+      }),
+      (x: number) => x * 2,
+    );
+    m.then(Void());
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Unhandled Message Rejection: Error throw applied",
+    );
+
+    consoleSpy.mockRestore();
   });
 });
