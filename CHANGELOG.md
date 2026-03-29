@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.217](https://github.com/silentium-lab/silentium/compare/v0.0.216...v0.0.217) (2026-03-29)
+
+
+### Bug Fixes
+
+* **main:** unhandled rejection inside message ([2f1788c](https://github.com/silentium-lab/silentium/commit/2f1788c7f73a829373b498afce54edc8db619dce))
+
 ### [0.0.216](https://github.com/silentium-lab/silentium/compare/v0.0.215...v0.0.216) (2026-03-08)
 
 
