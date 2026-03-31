@@ -1,6 +1,10 @@
 import { Primitive } from "components/Primitive";
 import { MessageType } from "types/MessageType";
 
+export interface PassiveType<T> {
+  value: T | null;
+}
+
 /**
  * Component what will return same proxied object
  * but with value property
@@ -9,7 +13,7 @@ import { MessageType } from "types/MessageType";
  */
 export function Value<T>(
   target: MessageType<T>,
-): MessageType<T> & { value: T | null } {
+): MessageType<T> & PassiveType<T> {
   const p = Primitive(target);
   return new Proxy(target, {
     get(target, prop, receiver) {
@@ -18,5 +22,5 @@ export function Value<T>(
       }
       return Reflect.get(target, prop, receiver);
     },
-  }) as MessageType<T> & { value: T | null };
+  }) as MessageType<T> & PassiveType<T>;
 }
