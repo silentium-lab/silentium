@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.221](https://github.com/silentium-lab/silentium/compare/v0.0.220...v0.0.221) (2026-04-01)
+
+
+### Bug Fixes
+
+* **main:** silence no more handle duplicates, sources handle duplicates by silenceuse ([1d48344](https://github.com/silentium-lab/silentium/commit/1d483440718b989cb74bc0476e222467cd8d5c0b))
+
 ### [0.0.220](https://github.com/silentium-lab/silentium/compare/v0.0.219...v0.0.220) (2026-03-31)
 
 ### [0.0.219](https://github.com/silentium-lab/silentium/compare/v0.0.218...v0.0.219) (2026-03-29)
