@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.222](https://github.com/silentium-lab/silentium/compare/v0.0.221...v0.0.222) (2026-04-01)
+
+
+### Bug Fixes
+
+* **main:** late fix with silence use ([e4beefd](https://github.com/silentium-lab/silentium/commit/e4beefd12e4b9cdeb8d2c791ff0d2a0f0901afaa))
+
 ### [0.0.221](https://github.com/silentium-lab/silentium/compare/v0.0.220...v0.0.221) (2026-04-01)
 
 
