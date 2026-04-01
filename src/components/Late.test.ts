@@ -69,4 +69,18 @@ describe("Late.test", () => {
     $l.use(3);
     expect(d.toString()).toBe("1|2|3");
   });
+
+  test("falsy change", () => {
+    const $l = Late(false);
+    const g = vi.fn();
+    $l.then(g);
+
+    expect(g).toHaveBeenLastCalledWith(false);
+
+    $l.use(true);
+    expect(g).toHaveBeenLastCalledWith(true);
+
+    $l.use(false);
+    expect(g).toHaveBeenLastCalledWith(false);
+  });
 });

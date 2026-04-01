@@ -515,7 +515,11 @@ class LateImpl {
       }
     });
     __publicField(this, "silenceUse");
-    this.silenceUse = SilenceUse(v);
+    this.silenceUse = SilenceUse(
+      Message((resolve) => {
+        resolve(this.v);
+      })
+    );
   }
   then(r) {
     if (this.lateR) {

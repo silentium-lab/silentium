@@ -1,3 +1,4 @@
+import { Message } from "base/Message";
 import { Rejections } from "base/Rejections";
 import { Silence, SilenceUse } from "base/Silence";
 import { Shared } from "components/Shared";
@@ -32,7 +33,11 @@ export class LateImpl<T> implements MessageSourceType<T> {
   private silenceUse: ReturnType<typeof SilenceUse>;
 
   public constructor(private v?: T) {
-    this.silenceUse = SilenceUse(v);
+    this.silenceUse = SilenceUse(
+      Message((resolve) => {
+        resolve(this.v);
+      }),
+    );
   }
 
   public then(r: ConstructorType<[T]>): this {
