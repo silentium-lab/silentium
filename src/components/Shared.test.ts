@@ -3,6 +3,7 @@ import { Late } from "components/Late";
 import { Shared } from "components/Shared";
 import { Diagram } from "testing/Diagram";
 import { Message } from "base/Message";
+import { Of } from "base/Of";
 
 describe("Shared.test", () => {
   test("many users for one message", () => {
@@ -112,5 +113,20 @@ describe("Shared.test", () => {
     shared.then((v) => console.log("Shared result = ", v));
 
     expect(invokers).toBe(4);
+  });
+
+  test("duplicate value", () => {
+    const d = Diagram();
+    const $s = Shared(Of(1));
+
+    $s.then(d.resolver);
+    $s.use(2);
+    $s.use(2);
+    $s.use(2);
+
+    expect(d.toString()).toBe("1|2");
+
+    $s.use(3);
+    expect(d.toString()).toBe("1|2|3");
   });
 });

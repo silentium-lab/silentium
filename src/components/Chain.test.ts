@@ -15,7 +15,6 @@ describe("Chain.test", () => {
     expect(d.toString()).toBe("the_value");
 
     $value.use("second_value");
-    $trigger.use("done");
 
     expect(d.toString()).toBe("the_value|second_value");
 
@@ -26,6 +25,8 @@ describe("Chain.test", () => {
     $trigger.use("done3");
     $trigger.use("done4");
 
-    expect(d.toString()).toBe("the_value|second_value|third_value");
+    expect(d.toString()).toBe(
+      "the_value|second_value|third_value|third_value|third_value|third_value",
+    );
   });
 });

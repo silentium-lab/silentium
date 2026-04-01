@@ -152,14 +152,19 @@ declare function New<T>(construct: ConstructorType<[], T>): MessageImpl<T>;
  */
 declare function Of<T>(value: T): MessageImpl<T>;
 
-declare const ResetSilenceCache: unique symbol;
 /**
- * Silence is null or undefined or duplicated values
+ * Silence is null or undefined
  * Everything else is not silence
  *
  * @url https://silentium.pw/article/silence/view
  */
 declare function Silence<T>(resolve: ConstructorType<[T]>): (v: T | undefined) => void;
+/**
+ * Silence rule when new value comes
+ */
+declare function SilenceUse(base: MaybeMessage): {
+    use(value: unknown, cb: (v: unknown) => unknown): void;
+};
 
 /**
  * A type that can accept value
@@ -183,6 +188,7 @@ declare function Source<T>(messageExecutor: MessageExecutorType<T>, sourceExecut
 declare class SourceImpl<T> implements MessageSourceType<T> {
     private sourceExecutor;
     private message;
+    private silenceUse;
     constructor(messageExecutor: MessageExecutorType<T>, sourceExecutor: ConstructorType<[T]>);
     use(value: T): this;
     then(resolved: ConstructorType<[T]>): this;
@@ -267,6 +273,7 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
     private resolvers;
     private source?;
     private isDestroyed;
+    private silenceUse;
     constructor($base: MessageType<T> | MessageSourceType<T>);
     then(resolved: ConstructorType<[T]>, rejected?: ConstructorType<[unknown]>): MessageImpl<T>;
     use(value: T): this;
@@ -415,6 +422,7 @@ declare class LateImpl<T> implements MessageSourceType<T> {
     private rejections;
     private lateR;
     private notify;
+    private silenceUse;
     constructor(v?: T | undefined);
     then(r: ConstructorType<[T]>): this;
     use(value: T): this;
@@ -549,4 +557,4 @@ declare function isDestroyable(o: unknown): o is DestroyableType;
  */
 declare function isDestroyed(o: unknown): o is DestroyedType;
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, type PassiveType, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceComputed, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, type ConstructorType, Context, ContextChain, ContextOf, type ContextType, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, type DestroyableType, type DestroyedType, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, type MaybeMessage, Message, MessageDestroyable, type MessageExecutorType, MessageImpl, type MessageSourceType, type MessageType, type MessageTypeValue, New, Of, Once, type PassiveType, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, Sequence, Shared, SharedImpl, Silence, SilenceUse, Source, SourceComputed, SourceImpl, type SourceType, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };

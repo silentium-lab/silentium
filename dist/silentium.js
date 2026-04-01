@@ -114,17 +114,65 @@ const _RejectionsImpl = class _RejectionsImpl {
 __publicField$5(_RejectionsImpl, "globalCatch");
 let RejectionsImpl = _RejectionsImpl;
 
-const ResetSilenceCache = Symbol("reset-silence-cache");
-function Silence(resolve) {
-  let lastValue;
-  return (v) => {
-    if (v === ResetSilenceCache) {
-      lastValue = void 0;
-      v = void 0;
+var __defProp$4 = Object.defineProperty;
+var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+function Primitive($base, theValue = null) {
+  return new PrimitiveImpl($base, theValue);
+}
+class PrimitiveImpl {
+  constructor($base, theValue = null) {
+    this.$base = $base;
+    this.theValue = theValue;
+    __publicField$4(this, "touched", false);
+  }
+  ensureTouched() {
+    if (!this.touched) {
+      this.$base.then((v) => {
+        this.theValue = v;
+      });
     }
-    if (isFilled(v) && v !== lastValue) {
-      lastValue = v;
+    this.touched = true;
+  }
+  [Symbol.toPrimitive]() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitive() {
+    this.ensureTouched();
+    return this.theValue;
+  }
+  primitiveWithException() {
+    this.ensureTouched();
+    if (this.theValue === null) {
+      throw new Error("Primitive value is null");
+    }
+    return this.theValue;
+  }
+}
+
+function Silence(resolve) {
+  return (v) => {
+    if (isFilled(v)) {
       resolve(v);
+    }
+  };
+}
+function SilenceUse(base) {
+  const $base = Actual(base);
+  return {
+    use(value, cb) {
+      const baseValue = Primitive($base);
+      const lastValue = baseValue.primitive();
+      if (lastValue === null) {
+        cb(value);
+        return;
+      }
+      if (lastValue !== value) {
+        cb(value);
+        return;
+      }
+      return;
     }
   };
 }
@@ -140,9 +188,9 @@ function ensureMessage(v, label) {
   }
 }
 
-var __defProp$4 = Object.defineProperty;
-var __defNormalProp$4 = (obj, key, value) => key in obj ? __defProp$4(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$4 = (obj, key, value) => __defNormalProp$4(obj, key + "" , value);
+var __defProp$3 = Object.defineProperty;
+var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
 function Message(executor) {
   return new MessageImpl(executor);
 }
@@ -151,7 +199,7 @@ class MessageImpl {
     this.executor = executor;
     this.rejections = rejections;
     this.dc = dc;
-    __publicField$4(this, "myName", "unknown");
+    __publicField$3(this, "myName", "unknown");
     ensureFunction(executor, "Message: executor");
   }
   then(resolve, rejected) {
@@ -262,21 +310,25 @@ function New(construct) {
   });
 }
 
-var __defProp$3 = Object.defineProperty;
-var __defNormalProp$3 = (obj, key, value) => key in obj ? __defProp$3(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$3 = (obj, key, value) => __defNormalProp$3(obj, key + "" , value);
+var __defProp$2 = Object.defineProperty;
+var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, typeof key !== "symbol" ? key + "" : key, value);
 function Source(messageExecutor, sourceExecutor) {
   return new SourceImpl(messageExecutor, sourceExecutor);
 }
 class SourceImpl {
   constructor(messageExecutor, sourceExecutor) {
     this.sourceExecutor = sourceExecutor;
-    __publicField$3(this, "message");
+    __publicField$2(this, "message");
+    __publicField$2(this, "silenceUse");
     this.message = Message(messageExecutor);
+    this.silenceUse = SilenceUse(this.message);
   }
   use(value) {
     if (!this.message.destroyed()) {
-      this.sourceExecutor(value);
+      this.silenceUse.use(value, (v) => {
+        this.sourceExecutor(v);
+      });
     }
     return this;
   }
@@ -364,43 +416,6 @@ function Applied(base, applier) {
   });
 }
 
-var __defProp$2 = Object.defineProperty;
-var __defNormalProp$2 = (obj, key, value) => key in obj ? __defProp$2(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField$2 = (obj, key, value) => __defNormalProp$2(obj, key + "" , value);
-function Primitive($base, theValue = null) {
-  return new PrimitiveImpl($base, theValue);
-}
-class PrimitiveImpl {
-  constructor($base, theValue = null) {
-    this.$base = $base;
-    this.theValue = theValue;
-    __publicField$2(this, "touched", false);
-  }
-  ensureTouched() {
-    if (!this.touched) {
-      this.$base.then((v) => {
-        this.theValue = v;
-      });
-    }
-    this.touched = true;
-  }
-  [Symbol.toPrimitive]() {
-    this.ensureTouched();
-    return this.theValue;
-  }
-  primitive() {
-    this.ensureTouched();
-    return this.theValue;
-  }
-  primitiveWithException() {
-    this.ensureTouched();
-    if (this.theValue === null) {
-      throw new Error("Primitive value is null");
-    }
-    return this.theValue;
-  }
-}
-
 var __defProp$1 = Object.defineProperty;
 var __defNormalProp$1 = (obj, key, value) => key in obj ? __defProp$1(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField$1 = (obj, key, value) => __defNormalProp$1(obj, typeof key !== "symbol" ? key + "" : key, value);
@@ -420,9 +435,11 @@ class SharedImpl {
     __publicField$1(this, "resolvers", /* @__PURE__ */ new Set());
     __publicField$1(this, "source");
     __publicField$1(this, "isDestroyed", false);
+    __publicField$1(this, "silenceUse");
     if (isSource($base)) {
       this.source = $base;
     }
+    this.silenceUse = SilenceUse(this);
   }
   then(resolved, rejected) {
     const msg$ = Message((res, rej) => {
@@ -442,11 +459,13 @@ class SharedImpl {
     return msg$;
   }
   use(value) {
-    if (this.source) {
-      this.source.use(value);
-    } else {
-      this.resolver(value);
-    }
+    this.silenceUse.use(value, (v) => {
+      if (this.source) {
+        this.source.use(v);
+      } else {
+        this.resolver(v);
+      }
+    });
     return this;
   }
   catch(rejected) {
@@ -493,6 +512,8 @@ class LateImpl {
         }
       }
     });
+    __publicField(this, "silenceUse");
+    this.silenceUse = SilenceUse(v);
   }
   then(r) {
     if (this.lateR) {
@@ -505,8 +526,10 @@ class LateImpl {
     return this;
   }
   use(value) {
-    this.v = value;
-    this.notify();
+    this.silenceUse.use(value, (v) => {
+      this.v = v;
+      this.notify();
+    });
     return this;
   }
   catch(rejected) {
@@ -944,5 +967,5 @@ function DevTools() {
   }
 }
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, Sequence, Shared, SharedImpl, Silence, SilenceUse, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
 //# sourceMappingURL=silentium.js.map

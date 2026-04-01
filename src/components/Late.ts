@@ -1,5 +1,5 @@
 import { Rejections } from "base/Rejections";
-import { Silence } from "base/Silence";
+import { Silence, SilenceUse } from "base/Silence";
 import { Shared } from "components/Shared";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
@@ -29,8 +29,11 @@ export class LateImpl<T> implements MessageSourceType<T> {
       }
     }
   };
+  private silenceUse: ReturnType<typeof SilenceUse>;
 
-  public constructor(private v?: T) {}
+  public constructor(private v?: T) {
+    this.silenceUse = SilenceUse(v);
+  }
 
   public then(r: ConstructorType<[T]>): this {
     if (this.lateR) {
@@ -44,8 +47,10 @@ export class LateImpl<T> implements MessageSourceType<T> {
   }
 
   public use(value: T): this {
-    this.v = value;
-    this.notify();
+    this.silenceUse.use(value, (v) => {
+      this.v = v as T;
+      this.notify();
+    });
     return this;
   }
 

@@ -1,4 +1,5 @@
 import { Message, MessageImpl } from "base/Message";
+import { SilenceUse } from "base/Silence";
 import { Primitive } from "components/Primitive";
 import { isDestroyable, isFilled, isSource } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
@@ -26,11 +27,13 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   private resolvers = new Set<ConstructorType<[T]>>();
   private source?: SourceType<T>;
   private isDestroyed = false;
+  private silenceUse: ReturnType<typeof SilenceUse>;
 
   public constructor(private $base: MessageType<T> | MessageSourceType<T>) {
     if (isSource($base)) {
       this.source = $base;
     }
+    this.silenceUse = SilenceUse(this);
   }
 
   public then(
@@ -57,11 +60,13 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   }
 
   public use(value: T) {
-    if (this.source) {
-      this.source.use(value);
-    } else {
-      this.resolver(value);
-    }
+    this.silenceUse.use(value, (v) => {
+      if (this.source) {
+        this.source.use(v as T);
+      } else {
+        this.resolver(v as T);
+      }
+    });
     return this;
   }
 

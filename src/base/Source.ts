@@ -1,4 +1,5 @@
 import { Message, MessageExecutorType, MessageImpl } from "base/Message";
+import { SilenceUse } from "base/Silence";
 import { ConstructorType } from "types/ConstructorType";
 import { MessageType } from "types/MessageType";
 import { MessageSourceType } from "types/SourceType";
@@ -18,17 +19,21 @@ export function Source<T>(
 
 export class SourceImpl<T> implements MessageSourceType<T> {
   private message: MessageImpl<T>;
+  private silenceUse: ReturnType<typeof SilenceUse>;
 
   public constructor(
     messageExecutor: MessageExecutorType<T>,
     private sourceExecutor: ConstructorType<[T]>,
   ) {
     this.message = Message(messageExecutor);
+    this.silenceUse = SilenceUse(this.message);
   }
 
   public use(value: T): this {
     if (!this.message.destroyed()) {
-      this.sourceExecutor(value);
+      this.silenceUse.use(value, (v) => {
+        this.sourceExecutor(v as T);
+      });
     }
     return this;
   }

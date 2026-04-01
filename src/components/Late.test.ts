@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { Late } from "components/Late";
+import { Diagram } from "testing/Diagram";
 
 describe("Late.test", () => {
   test("Begins with empty value", () => {
@@ -52,5 +53,20 @@ describe("Late.test", () => {
     sub.destroy();
     m$.use(2);
     expect(g).toBeCalledTimes(1);
+  });
+
+  test("duplicate value", () => {
+    const d = Diagram();
+    const $l = Late(1);
+
+    $l.then(d.resolver);
+    $l.use(2);
+    $l.use(2);
+    $l.use(2);
+
+    expect(d.toString()).toBe("1|2");
+
+    $l.use(3);
+    expect(d.toString()).toBe("1|2|3");
   });
 });
