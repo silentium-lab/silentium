@@ -164,7 +164,7 @@ declare function Silence<T>(resolve: ConstructorType<[T]>): (v: T | undefined) =
 /**
  * Silence rule when new value comes
  */
-declare function SilenceUse(base: MaybeMessage): {
+declare function SilenceUse(): {
     use(value: unknown, cb: (v: unknown) => unknown): void;
 };
 

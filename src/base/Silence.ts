@@ -1,6 +1,5 @@
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
-import { MaybeMessage } from "types/MessageType";
 
 export const ResetSilenceCache = Symbol("reset-silence-cache");
 
@@ -27,7 +26,7 @@ export function Silence<T>(resolve: ConstructorType<[T]>) {
 /**
  * Silence rule when new value comes
  */
-export function SilenceUse(base: MaybeMessage) {
+export function SilenceUse() {
   let lastValue: unknown = null;
   return {
     use(value: unknown, cb: (v: unknown) => unknown) {

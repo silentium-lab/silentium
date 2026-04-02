@@ -133,7 +133,7 @@ function Silence(resolve) {
     }
   };
 }
-function SilenceUse(base) {
+function SilenceUse() {
   let lastValue = null;
   return {
     use(value, cb) {
