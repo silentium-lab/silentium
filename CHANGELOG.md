@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.223](https://github.com/silentium-lab/silentium/compare/v0.0.222...v0.0.223) (2026-04-01)
+
+
+### Bug Fixes
+
+* return back silence logic of values ([f6cbe38](https://github.com/silentium-lab/silentium/commit/f6cbe3872aa06d79b6b327fa2336fa03389b3c73))
+
 ### [0.0.222](https://github.com/silentium-lab/silentium/compare/v0.0.221...v0.0.222) (2026-04-01)
 
 

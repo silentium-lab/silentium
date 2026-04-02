@@ -4,6 +4,8 @@ import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { MaybeMessage } from "types/MessageType";
 
+export const ResetSilenceCache = Symbol("reset-silence-cache");
+
 /**
  * Silence is null or undefined
  * Everything else is not silence
@@ -11,8 +13,14 @@ import { MaybeMessage } from "types/MessageType";
  * @url https://silentium.pw/article/silence/view
  */
 export function Silence<T>(resolve: ConstructorType<[T]>) {
+  let lastValue: T | undefined;
   return (v: T | undefined) => {
-    if (isFilled(v)) {
+    if (v === ResetSilenceCache) {
+      lastValue = undefined;
+      v = undefined;
+    }
+    if (isFilled(v) && v !== lastValue) {
+      lastValue = v;
       resolve(v);
     }
   };
