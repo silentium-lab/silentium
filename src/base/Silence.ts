@@ -1,5 +1,3 @@
-import { Actual } from "base/Actual";
-import { Primitive } from "components/Primitive";
 import { isFilled } from "helpers/guards";
 import { ConstructorType } from "types/ConstructorType";
 import { MaybeMessage } from "types/MessageType";
@@ -30,19 +28,20 @@ export function Silence<T>(resolve: ConstructorType<[T]>) {
  * Silence rule when new value comes
  */
 export function SilenceUse(base: MaybeMessage) {
-  const $base = Actual(base);
+  let lastValue: unknown = null;
   return {
     use(value: unknown, cb: (v: unknown) => unknown) {
-      const baseValue = Primitive($base);
-      const lastValue = baseValue.primitive();
       if (lastValue === null) {
+        lastValue = value;
         cb(value);
         return;
       }
       if (lastValue !== value) {
+        lastValue = value;
         cb(value);
         return;
       }
+      lastValue = value;
       return;
     },
   };
