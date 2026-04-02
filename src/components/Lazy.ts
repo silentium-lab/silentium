@@ -8,10 +8,10 @@ import { MessageType } from "types/MessageType";
  * @url https://silentium.pw/article/lazy/view
  */
 export function Lazy<T>(constructor: () => MessageType<T>) {
-  return Message<T>((resolve, reject) => {
+  return Message<T>(function LazyImpl(resolve, reject) {
     const inst = constructor();
     inst.catch(reject).then(resolve);
-    return () => {
+    return function LazyDestroy() {
       if (isDestroyable(inst)) {
         inst.destroy();
       }

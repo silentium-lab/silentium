@@ -28,7 +28,7 @@ describe("Map.test", () => {
 
   test("map async", async () => {
     const infoDeferred = (val: number) =>
-      Message(function (r) {
+      Message((r) => {
         wait(5).then(() => {
           r(val);
         });

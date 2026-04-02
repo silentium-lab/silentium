@@ -17,7 +17,7 @@ export function Piped<T extends ((...vars: any) => MaybeMessage)[]>(
   $m: MaybeMessage,
   ...c: T
 ) {
-  return c.reduce((msg, Constructor) => {
+  return c.reduce(function pipedReduce(msg, Constructor) {
     return Actual(Constructor(msg));
   }, Actual($m)) as ReturnType<Last<T>>;
 }

@@ -12,7 +12,7 @@ import { ContextType } from "types/ContextType";
 export function ContextOf(transport: string) {
   const $msg = Late<ContextType>();
   Context.transport.set(transport, $msg.use.bind($msg));
-  return Message<ContextType>((resolve, reject) => {
+  return Message<ContextType>(function contextOfImpl(resolve, reject) {
     $msg.catch(reject);
     $msg.then(resolve);
   });

@@ -16,7 +16,7 @@ export function ExecutorApplied<T>(
   return Message<T>(function ExecutorAppliedImpl(resolve, reject) {
     $base.catch(reject);
     const sub = Destroyable($base.then(applier(resolve)));
-    return () => {
+    return function executorAppliedDestroy() {
       sub.destroy();
     };
   });

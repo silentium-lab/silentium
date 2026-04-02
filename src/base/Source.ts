@@ -31,9 +31,10 @@ export class SourceImpl<T> implements MessageSourceType<T> {
 
   public use(value: T): this {
     if (!this.message.destroyed()) {
-      this.silenceUse.use(value, (v) => {
+      const sourceSilenceUse = (v: unknown) => {
         this.sourceExecutor(v as T);
-      });
+      };
+      this.silenceUse.use(value, sourceSilenceUse);
     }
     return this;
   }

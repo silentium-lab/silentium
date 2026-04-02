@@ -25,9 +25,14 @@ declare global {
  * Helps to print message value
  */
 const silentiumPrint = (...messages: MessageType[]) => {
-  Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
-    console.log,
-  );
+  Applied(
+    All(
+      ...messages.map(function silentiumPrintAllMap(e) {
+        return Shared(e);
+      }),
+    ),
+    JSON.stringify,
+  ).then(console.log);
 };
 
 /**

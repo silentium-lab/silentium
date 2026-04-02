@@ -11,7 +11,7 @@ import { MaybeMessage } from "types/MessageType";
 export function Any<const T>(...messages: MaybeMessage<T>[]) {
   const $messages = messages.map(Actual);
   return Message<T>(function AnyImpl(resolve, reject) {
-    $messages.forEach((message) => {
+    $messages.forEach(function anyMessagesSub(message) {
       message.catch(reject);
       message.then(resolve);
     });

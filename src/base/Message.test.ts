@@ -8,7 +8,7 @@ import { describe, expect, test, vi } from "vitest";
 
 describe("Message.test.ts", () => {
   test("value passed from executor is the same as value of event", () => {
-    const event = Message<string>(function (r) {
+    const event = Message<string>((r) => {
       r("123");
     });
 

@@ -14,7 +14,7 @@ export const ResetSilenceCache = Symbol("reset-silence-cache");
  */
 export function Silence<T>(resolve: ConstructorType<[T]>) {
   let lastValue: T | undefined;
-  return (v: T | undefined) => {
+  return function SilenceImpl(v: T | undefined) {
     if (v === ResetSilenceCache) {
       lastValue = undefined;
       v = undefined;

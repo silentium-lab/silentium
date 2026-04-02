@@ -10,7 +10,7 @@ import { isSource } from "helpers/guards";
  */
 export function ContextChain(base: MaybeMessage) {
   const $base = Actual(base);
-  return (context: ContextType) => {
+  return function contextChainHandler(context: ContextType) {
     if (context.value && isSource(base)) {
       base.use(context.value);
       return;

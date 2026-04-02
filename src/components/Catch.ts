@@ -12,7 +12,7 @@ export function Catch<T>($base: MessageType) {
   const rejections = Rejections();
   $base.catch(rejections.reject);
   const $error = Late<T>();
-  rejections.catch((e) => {
+  rejections.catch(function catchErrorSub(e) {
     $error.use(e as T);
   });
   return $error;

@@ -1,4 +1,4 @@
-import { Message, MessageImpl } from "base/Message";
+import { Message, MessageExecutorType, MessageImpl } from "base/Message";
 import { SilenceUse } from "base/Silence";
 import { Primitive } from "components/Primitive";
 import { isDestroyable, isFilled, isSource } from "helpers/guards";
@@ -17,12 +17,12 @@ export function Shared<T>($base: MessageType<T> | MessageSourceType<T>) {
 }
 
 export class SharedImpl<T> implements MessageSourceType<T> {
-  private resolver = (v: T) => {
+  private resolver = function sharedImplResolver(this: SharedImpl<T>, v: T) {
     this.lastV = v;
-    this.resolvers.forEach((r) => {
+    this.resolvers.forEach(function sharedImplResolversForEach(r) {
       r(v);
     });
-  };
+  }.bind(this);
   private lastV: T | undefined;
   private resolvers = new Set<ConstructorType<[T]>>();
   private source?: SourceType<T>;
@@ -40,17 +40,18 @@ export class SharedImpl<T> implements MessageSourceType<T> {
     resolved: ConstructorType<[T]>,
     rejected?: ConstructorType<[unknown]>,
   ): MessageImpl<T> {
-    const msg$ = Message<T>((res, rej) => {
+    const sharedMsgExecutor: MessageExecutorType<T> = (res, rej) => {
       this.resolvers.add(res);
       if (this.resolvers.size === 1) {
         this.$base.then(this.resolver, rej);
       } else if (isFilled(this.lastV)) {
         res(this.lastV);
       }
-      return () => {
+      return function sharedMsgDestructor(this: SharedImpl<T>) {
         this.resolvers.delete(res);
-      };
-    }).then(resolved);
+      }.bind(this);
+    };
+    const msg$ = Message<T>(sharedMsgExecutor).then(resolved);
 
     if (rejected) {
       msg$.catch(rejected);
@@ -60,13 +61,14 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   }
 
   public use(value: T) {
-    this.silenceUse.use(value, (v) => {
+    const sharedUse = (v: unknown) => {
       if (this.source) {
         this.source.use(v as T);
       } else {
         this.resolver(v as T);
       }
-    });
+    };
+    this.silenceUse.use(value, sharedUse);
     return this;
   }
 

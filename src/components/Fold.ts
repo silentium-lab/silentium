@@ -13,7 +13,9 @@ export function Fold<T extends any[], TG>(
   const $data = Actual(data);
   const $initial = Actual(initial);
   return Computed(
-    (data, initial) => data.reduce(reducer, initial),
+    function foldComputed(data, initial) {
+      return data.reduce(reducer, initial);
+    },
     $data,
     $initial,
   );

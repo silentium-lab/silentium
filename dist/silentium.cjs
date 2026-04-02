@@ -60,14 +60,17 @@ class DestroyContainerImpl {
    * @returns
    */
   many(destroyableList) {
-    destroyableList.forEach((d) => {
+    const destroyMany = (d) => {
       this.add(d);
-    });
+    };
+    destroyableList.forEach(destroyMany);
     return this;
   }
   destroy() {
     this._destroyed = true;
-    this.destructors.forEach((d) => d.destroy());
+    this.destructors.forEach(function dcDestroy(d) {
+      d.destroy();
+    });
     this.destructors.length = 0;
     return this;
   }
@@ -89,9 +92,10 @@ const _RejectionsImpl = class _RejectionsImpl {
   constructor() {
     __publicField$5(this, "catchers", []);
     __publicField$5(this, "lastRejectReason", null);
-    __publicField$5(this, "reject", (reason) => {
+    __publicField$5(this, "reject");
+    const rejectionsRejectHandler = (reason) => {
       this.lastRejectReason = reason;
-      this.catchers.forEach((catcher) => {
+      this.catchers.forEach(function rejectionsRejectCatchers(catcher) {
         catcher(reason);
       });
       if (_RejectionsImpl.globalCatch) {
@@ -99,7 +103,8 @@ const _RejectionsImpl = class _RejectionsImpl {
       } else if (this.catchers.length === 0) {
         console.error(["Unhandled Message Rejection:", reason].join(" "));
       }
-    });
+    };
+    this.reject = rejectionsRejectHandler;
   }
   catch(rejected) {
     if (this.lastRejectReason !== null) {
@@ -157,7 +162,7 @@ class PrimitiveImpl {
 const ResetSilenceCache = Symbol("reset-silence-cache");
 function Silence(resolve) {
   let lastValue;
-  return (v) => {
+  return function SilenceImpl(v) {
     if (v === ResetSilenceCache) {
       lastValue = void 0;
       v = void 0;
@@ -283,9 +288,9 @@ function Connected(main, ...m) {
   const dc = DestroyContainer();
   dc.add(main);
   dc.many(m);
-  return Message((resolve, reject) => {
+  return Message(function ConnectedImpl(resolve, reject) {
     main.catch(reject).then(resolve);
-    m.forEach((other) => {
+    m.forEach(function connectedMessagesForEach(other) {
       if (isMessage(other)) {
         other.catch(reject);
       }
@@ -311,7 +316,9 @@ function Local(_base) {
 }
 
 function Props(...messages) {
-  return messages.map((m) => Local(m));
+  return messages.map(function propsMap(m) {
+    return Local(m);
+  });
 }
 
 function New(construct) {
@@ -336,9 +343,10 @@ class SourceImpl {
   }
   use(value) {
     if (!this.message.destroyed()) {
-      this.silenceUse.use(value, (v) => {
+      const sourceSilenceUse = (v) => {
         this.sourceExecutor(v);
-      });
+      };
+      this.silenceUse.use(value, sourceSilenceUse);
     }
     return this;
   }
@@ -362,8 +370,12 @@ class SourceImpl {
 
 function SourceComputed(message, source) {
   return Source(
-    (resolve, reject) => message.then(resolve).catch(reject),
-    (v) => source.use(v)
+    function sourceComputedMsgExecutor(resolve, reject) {
+      return message.then(resolve).catch(reject);
+    },
+    function sourceComputedSrcExecutor(v) {
+      source.use(v);
+    }
   );
 }
 
@@ -401,7 +413,7 @@ function All(...messages) {
 function Any(...messages) {
   const $messages = messages.map(Actual);
   return Message(function AnyImpl(resolve, reject) {
-    $messages.forEach((message) => {
+    $messages.forEach(function anyMessagesSub(message) {
       message.catch(reject);
       message.then(resolve);
     });
@@ -435,12 +447,12 @@ function Shared($base) {
 class SharedImpl {
   constructor($base) {
     this.$base = $base;
-    __publicField$1(this, "resolver", (v) => {
+    __publicField$1(this, "resolver", function sharedImplResolver(v) {
       this.lastV = v;
-      this.resolvers.forEach((r) => {
+      this.resolvers.forEach(function sharedImplResolversForEach(r) {
         r(v);
       });
-    });
+    }.bind(this));
     __publicField$1(this, "lastV");
     __publicField$1(this, "resolvers", /* @__PURE__ */ new Set());
     __publicField$1(this, "source");
@@ -452,30 +464,32 @@ class SharedImpl {
     this.silenceUse = SilenceUse(this);
   }
   then(resolved, rejected) {
-    const msg$ = Message((res, rej) => {
+    const sharedMsgExecutor = (res, rej) => {
       this.resolvers.add(res);
       if (this.resolvers.size === 1) {
         this.$base.then(this.resolver, rej);
       } else if (isFilled(this.lastV)) {
         res(this.lastV);
       }
-      return () => {
+      return function sharedMsgDestructor() {
         this.resolvers.delete(res);
-      };
-    }).then(resolved);
+      }.bind(this);
+    };
+    const msg$ = Message(sharedMsgExecutor).then(resolved);
     if (rejected) {
       msg$.catch(rejected);
     }
     return msg$;
   }
   use(value) {
-    this.silenceUse.use(value, (v) => {
+    const sharedUse = (v) => {
       if (this.source) {
         this.source.use(v);
       } else {
         this.resolver(v);
       }
-    });
+    };
+    this.silenceUse.use(value, sharedUse);
     return this;
   }
   catch(rejected) {
@@ -513,21 +527,22 @@ class LateImpl {
     this.v = v;
     __publicField(this, "rejections", Rejections());
     __publicField(this, "lateR", null);
-    __publicField(this, "notify", () => {
-      if (isFilled(this.v) && this.lateR) {
-        try {
-          this.lateR(this.v);
-        } catch (e) {
-          this.rejections.reject(e);
-        }
-      }
-    });
     __publicField(this, "silenceUse");
-    this.silenceUse = SilenceUse(
-      Message((resolve) => {
+    const silenceUseExecutor = (resolve) => {
+      if (this.v !== void 0) {
         resolve(this.v);
-      })
-    );
+      }
+    };
+    this.silenceUse = SilenceUse(Message(silenceUseExecutor));
+  }
+  notify() {
+    if (isFilled(this.v) && this.lateR) {
+      try {
+        this.lateR(this.v);
+      } catch (e) {
+        this.rejections.reject(e);
+      }
+    }
   }
   then(r) {
     if (this.lateR) {
@@ -540,10 +555,11 @@ class LateImpl {
     return this;
   }
   use(value) {
-    this.silenceUse.use(value, (v) => {
+    const silenceUseLateExecutor = (v) => {
       this.v = v;
       this.notify();
-    });
+    };
+    this.silenceUse.use(value, silenceUseLateExecutor);
     return this;
   }
   catch(rejected) {
@@ -564,7 +580,7 @@ function Catch($base) {
   const rejections = Rejections();
   $base.catch(rejections.reject);
   const $error = Late();
-  rejections.catch((e) => {
+  rejections.catch(function catchErrorSub(e) {
     $error.use(e);
   });
   return $error;
@@ -661,7 +677,7 @@ function Context(name, params = {}) {
 
 function ContextChain(base) {
   const $base = Actual(base);
-  return (context) => {
+  return function contextChainHandler(context) {
     if (context.value && isSource(base)) {
       base.use(context.value);
       return;
@@ -676,7 +692,7 @@ function ContextChain(base) {
 function ContextOf(transport) {
   const $msg = Late();
   Context.transport.set(transport, $msg.use.bind($msg));
-  return Message((resolve, reject) => {
+  return Message(function contextOfImpl(resolve, reject) {
     $msg.catch(reject);
     $msg.then(resolve);
   });
@@ -685,7 +701,7 @@ function ContextOf(transport) {
 function Default($base, _default) {
   const $default = Actual(_default);
   const $defaultAfterError = Applied(Catch($base), () => $default);
-  return Message((resolve) => {
+  return Message(function DefaultImpl(resolve) {
     $base.then(resolve);
     $defaultAfterError.then(resolve);
   });
@@ -716,7 +732,7 @@ function ExecutorApplied($base, applier) {
   return Message(function ExecutorAppliedImpl(resolve, reject) {
     $base.catch(reject);
     const sub = Destroyable($base.then(applier(resolve)));
-    return () => {
+    return function executorAppliedDestroy() {
       sub.destroy();
     };
   });
@@ -740,7 +756,9 @@ function Fold(data, reducer, initial) {
   const $data = Actual(data);
   const $initial = Actual(initial);
   return Computed(
-    (data2, initial2) => data2.reduce(reducer, initial2),
+    function foldComputed(data2, initial2) {
+      return data2.reduce(reducer, initial2);
+    },
     $data,
     $initial
   );
@@ -767,7 +785,7 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
   const $eventName = Actual(eventName);
   const $subscribeMethod = Actual(subscribeMethod);
   const $unsubscribeMethod = Actual(unsubscribeMethod);
-  return Message((resolve, reject) => {
+  return Message(function FromEventImpl(resolve, reject) {
     $emitter.catch(reject);
     $eventName.catch(reject);
     $subscribeMethod.catch(reject);
@@ -778,22 +796,24 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
         lastR(v);
       }
     };
-    All($emitter, $eventName, $subscribeMethod).then(
-      ([emitter2, eventName2, subscribe]) => {
-        lastR = resolve;
-        if (!emitter2?.[subscribe]) {
-          return;
-        }
-        emitter2[subscribe](eventName2, handler);
+    All($emitter, $eventName, $subscribeMethod).then(function fromEventAllSub([
+      emitter2,
+      eventName2,
+      subscribe
+    ]) {
+      lastR = resolve;
+      if (!emitter2?.[subscribe]) {
+        return;
       }
-    );
-    return () => {
+      emitter2[subscribe](eventName2, handler);
+    });
+    return function fromEventDestroy() {
       lastR = null;
       if (!$unsubscribeMethod) {
         return;
       }
       All($emitter, $eventName, $unsubscribeMethod).then(
-        ([emitter2, eventName2, unsubscribe]) => {
+        function fromEventDestroyAllSub([emitter2, eventName2, unsubscribe]) {
           emitter2?.[unsubscribe]?.(eventName2, handler);
         }
       );
@@ -802,10 +822,10 @@ function FromEvent(emitter, eventName, subscribeMethod, unsubscribeMethod) {
 }
 
 function Lazy(constructor) {
-  return Message((resolve, reject) => {
+  return Message(function LazyImpl(resolve, reject) {
     const inst = constructor();
     inst.catch(reject).then(resolve);
-    return () => {
+    return function LazyDestroy() {
       if (isDestroyable(inst)) {
         inst.destroy();
       }
@@ -850,7 +870,7 @@ function Once($base) {
 }
 
 function Piped($m, ...c) {
-  return c.reduce((msg, Constructor) => {
+  return c.reduce(function pipedReduce(msg, Constructor) {
     return Actual(Constructor(msg));
   }, Actual($m));
 }
@@ -875,7 +895,7 @@ function Process($base, builder) {
 }
 
 function Promisify($message) {
-  return new Promise((resolve, reject) => {
+  return new Promise(function promisifyExecutor(resolve, reject) {
     $message.then(resolve, reject);
   });
 }
@@ -951,9 +971,14 @@ function Value(target) {
 }
 
 const silentiumPrint = (...messages) => {
-  Applied(All(...messages.map((e) => Shared(e))), JSON.stringify).then(
-    console.log
-  );
+  Applied(
+    All(
+      ...messages.map(function silentiumPrintAllMap(e) {
+        return Shared(e);
+      })
+    ),
+    JSON.stringify
+  ).then(console.log);
 };
 const silentiumValue = ($message) => Primitive($message).primitive();
 class MessageDestroyable {

@@ -14,9 +14,9 @@ export function Connected<T>(main: MessageType, ...m: MaybeMessage[]) {
   const dc = DestroyContainer();
   dc.add(main);
   dc.many(m);
-  return Message<T>((resolve, reject) => {
+  return Message<T>(function ConnectedImpl(resolve, reject) {
     (main as MessageType<T>).catch(reject).then(resolve);
-    m.forEach((other) => {
+    m.forEach(function connectedMessagesForEach(other) {
       if (isMessage(other)) {
         other.catch(reject);
       }

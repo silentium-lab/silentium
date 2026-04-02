@@ -29,15 +29,18 @@ export class DestroyContainerImpl implements DestroyableType {
    * @returns
    */
   public many(destroyableList: unknown[]) {
-    destroyableList.forEach((d) => {
+    const destroyMany = (d: unknown) => {
       this.add(d);
-    });
+    };
+    destroyableList.forEach(destroyMany);
     return this;
   }
 
   public destroy() {
     this._destroyed = true;
-    this.destructors.forEach((d) => d.destroy());
+    this.destructors.forEach(function dcDestroy(d) {
+      d.destroy();
+    });
     this.destructors.length = 0;
     return this;
   }

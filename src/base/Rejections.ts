@@ -16,17 +16,22 @@ export class RejectionsImpl {
 
   public static globalCatch?: ConstructorType<[unknown]>;
 
-  public reject = (reason: unknown) => {
-    this.lastRejectReason = reason;
-    this.catchers.forEach((catcher) => {
-      catcher(reason);
-    });
-    if (RejectionsImpl.globalCatch) {
-      RejectionsImpl.globalCatch(reason);
-    } else if (this.catchers.length === 0) {
-      console.error(["Unhandled Message Rejection:", reason].join(" "));
-    }
-  };
+  public reject: (reason: unknown) => void;
+
+  public constructor() {
+    const rejectionsRejectHandler = (reason: unknown) => {
+      this.lastRejectReason = reason;
+      this.catchers.forEach(function rejectionsRejectCatchers(catcher) {
+        catcher(reason);
+      });
+      if (RejectionsImpl.globalCatch) {
+        RejectionsImpl.globalCatch(reason);
+      } else if (this.catchers.length === 0) {
+        console.error(["Unhandled Message Rejection:", reason].join(" "));
+      }
+    };
+    this.reject = rejectionsRejectHandler;
+  }
 
   public catch(rejected: ConstructorType<[unknown]>) {
     if (this.lastRejectReason !== null) {

@@ -82,6 +82,7 @@ declare class RejectionsImpl {
     private lastRejectReason;
     static globalCatch?: ConstructorType<[unknown]>;
     reject: (reason: unknown) => void;
+    constructor();
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
 }

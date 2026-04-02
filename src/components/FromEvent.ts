@@ -20,7 +20,7 @@ export function FromEvent<T>(
   const $eventName = Actual(eventName);
   const $subscribeMethod = Actual(subscribeMethod);
   const $unsubscribeMethod = Actual(unsubscribeMethod);
-  return Message<T>((resolve, reject) => {
+  return Message<T>(function FromEventImpl(resolve, reject) {
     $emitter.catch(reject);
     $eventName.catch(reject);
     $subscribeMethod.catch(reject);
@@ -31,22 +31,24 @@ export function FromEvent<T>(
         lastR(v);
       }
     };
-    All($emitter, $eventName, $subscribeMethod).then(
-      ([emitter, eventName, subscribe]) => {
-        lastR = resolve;
-        if (!emitter?.[subscribe]) {
-          return;
-        }
-        emitter[subscribe](eventName, handler);
-      },
-    );
-    return () => {
+    All($emitter, $eventName, $subscribeMethod).then(function fromEventAllSub([
+      emitter,
+      eventName,
+      subscribe,
+    ]) {
+      lastR = resolve;
+      if (!emitter?.[subscribe]) {
+        return;
+      }
+      emitter[subscribe](eventName, handler);
+    });
+    return function fromEventDestroy() {
       lastR = null;
       if (!$unsubscribeMethod) {
         return;
       }
       All($emitter, $eventName, $unsubscribeMethod).then(
-        ([emitter, eventName, unsubscribe]) => {
+        function fromEventDestroyAllSub([emitter, eventName, unsubscribe]) {
           emitter?.[unsubscribe as string]?.(eventName, handler);
         },
       );

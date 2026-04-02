@@ -7,7 +7,11 @@ export function SourceComputed<T>(
   source: SourceType<T>,
 ) {
   return Source<T>(
-    (resolve, reject) => message.then(resolve).catch(reject),
-    (v) => source.use(v),
+    function sourceComputedMsgExecutor(resolve, reject) {
+      return message.then(resolve).catch(reject);
+    },
+    function sourceComputedSrcExecutor(v) {
+      source.use(v);
+    },
   );
 }

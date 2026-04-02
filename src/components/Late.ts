@@ -1,4 +1,4 @@
-import { Message } from "base/Message";
+import { Message, MessageExecutorType } from "base/Message";
 import { Rejections } from "base/Rejections";
 import { Silence, SilenceUse } from "base/Silence";
 import { Shared } from "components/Shared";
@@ -21,7 +21,7 @@ export function Late<T>(v?: T) {
 export class LateImpl<T> implements MessageSourceType<T> {
   private rejections = Rejections();
   private lateR: ConstructorType<[T]> | null = null;
-  private notify = () => {
+  private notify() {
     if (isFilled(this.v) && this.lateR) {
       try {
         this.lateR(this.v);
@@ -29,15 +29,16 @@ export class LateImpl<T> implements MessageSourceType<T> {
         this.rejections.reject(e);
       }
     }
-  };
+  }
   private silenceUse: ReturnType<typeof SilenceUse>;
 
   public constructor(private v?: T) {
-    this.silenceUse = SilenceUse(
-      Message((resolve) => {
+    const silenceUseExecutor: MessageExecutorType<T> = (resolve) => {
+      if (this.v !== undefined) {
         resolve(this.v);
-      }),
-    );
+      }
+    };
+    this.silenceUse = SilenceUse(Message(silenceUseExecutor));
   }
 
   public then(r: ConstructorType<[T]>): this {
@@ -52,10 +53,11 @@ export class LateImpl<T> implements MessageSourceType<T> {
   }
 
   public use(value: T): this {
-    this.silenceUse.use(value, (v) => {
+    const silenceUseLateExecutor = (v: unknown) => {
       this.v = v as T;
       this.notify();
-    });
+    };
+    this.silenceUse.use(value, silenceUseLateExecutor);
     return this;
   }
 
