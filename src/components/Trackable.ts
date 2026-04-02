@@ -13,7 +13,7 @@ import { isMessage } from "helpers/guards";
 export function Trackable<T>(name: string, target: T): T {
   Context("trackable", { name, action: "created" }).then(Void());
   if (isMessage(target)) {
-    target.then((value) => {
+    target.then(function trackableTargetSub(value) {
       Context("trackable", { name, action: "value", value }).then(Void());
     });
   }

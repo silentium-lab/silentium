@@ -33,9 +33,9 @@ export function All<const T extends MaybeMessage[]>(...messages: T) {
       resolve([] as ExtractTypesFromArrayS<T>);
       return;
     }
-    $messages.map((m, key) => {
+    $messages.map(function allMessagesMap(m, key) {
       m.catch(reject);
-      m.then((v) => {
+      m.then(function allMessageSub(v) {
         filled.add(key.toString());
         result[key] = v;
         if (isAllFilled(filled, known)) {

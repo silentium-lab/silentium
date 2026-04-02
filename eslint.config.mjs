@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import getifyPlugin from "@getify/eslint-plugin-proper-arrows";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import unusedImports from "eslint-plugin-unused-imports";
 
@@ -26,6 +27,8 @@ export default [
   ),
   {
     rules: {
+      "func-names": "error",
+      "@getify/proper-arrows/name": "error",
       "require-await": ["error"],
       "@typescript-eslint/no-explicit-any": ["off"],
       "prettier.bracketSpacing": ["off"],
@@ -45,6 +48,7 @@ export default [
     plugins: {
       "@typescript-eslint": typescriptEslint,
       "unused-imports": unusedImports,
+      "@getify/proper-arrows": getifyPlugin,
     },
     languageOptions: {
       parser: tsParser,

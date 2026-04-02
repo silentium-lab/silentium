@@ -19,7 +19,7 @@ export function Applied<const T, R>(
   return Message<R>(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function appliedBaseSub(v) {
       const result = applier(v);
       if (isMessage(result)) {
         dc.destroy();

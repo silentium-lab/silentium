@@ -15,7 +15,7 @@ export function Filtered<T>(
   const $base = Actual(base);
   return Message<T>(function FilteredImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function filteredBaseSub(v) {
       if (predicate(v)) {
         resolve(v);
       } else if (defaultValue !== undefined) {

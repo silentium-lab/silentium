@@ -6,10 +6,10 @@ import { MessageType } from "types/MessageType";
  * emitting the growing array with each new value.
  */
 export function Sequence<T>($base: MessageType<T>) {
-  return Message<T[]>((resolve, reject) => {
+  return Message<T[]>(function SequenceImpl(resolve, reject) {
     const result: T[] = [];
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function sequenceBaseSub(v) {
       result.push(v);
       resolve(result.slice());
     });

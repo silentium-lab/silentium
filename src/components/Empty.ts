@@ -10,14 +10,14 @@ import { MessageType } from "types/MessageType";
  * @url https://silentium.pw/article/empty/view
  */
 export function Empty<T>($base: MessageType<T>, after?: MessageType) {
-  return Message<T>((resolve, reject) => {
+  return Message<T>(function EmptyImpl(resolve, reject) {
     const p = Primitive($base);
     try {
       $base.then(resolve).catch(reject);
       if (!after) {
         p.primitiveWithException();
       }
-      after?.then(() => {
+      after?.then(function emptyAfterSub() {
         try {
           p.primitiveWithException();
         } catch {

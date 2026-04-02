@@ -23,9 +23,10 @@ export class PrimitiveImpl<T> {
 
   private ensureTouched() {
     if (!this.touched) {
-      this.$base.then((v) => {
+      const primitiveBaseSub = (v: T) => {
         this.theValue = v;
-      });
+      };
+      this.$base.then(primitiveBaseSub);
     }
     this.touched = true;
   }

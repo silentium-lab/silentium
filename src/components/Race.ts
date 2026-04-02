@@ -9,10 +9,10 @@ import { MaybeMessage } from "types/MessageType";
  */
 export function Race<const T extends MaybeMessage[]>(...messages: T) {
   const $messages = messages.map(Actual);
-  return Message((resolve, reject) => {
+  return Message(function RaceImpl(resolve, reject) {
     let responded = false;
-    $messages.forEach(($message) => {
-      $message.catch(reject).then((v) => {
+    $messages.forEach(function raceMessagesForEach($message) {
+      $message.catch(reject).then(function raceMessageSub(v) {
         if (responded === false) {
           responded = true;
           resolve(v);

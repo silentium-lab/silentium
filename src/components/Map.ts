@@ -18,14 +18,14 @@ export function Map<T, TG>(
   target: ConstructorType<[any], MessageType<TG>>,
 ) {
   const $base = Actual(base);
-  return Message<TG[]>((resolve, reject) => {
+  return Message<TG[]>(function MapImpl(resolve, reject) {
     $base.catch(reject);
     const infos: MessageType<TG>[] = [];
     const dc = DestroyContainer();
-    $base.then((v) => {
+    $base.then(function mapBaseSub(v) {
       infos.length = 0;
       dc.destroy();
-      v.forEach((val) => {
+      v.forEach(function mapValueForEach(val) {
         let $val: MessageType<T> | T = val;
         if (!isMessage($val as object)) {
           $val = Of($val);

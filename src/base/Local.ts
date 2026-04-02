@@ -9,13 +9,13 @@ export function Local<T>(_base: MaybeMessage<T>) {
   const $base = Actual(_base);
   return Message<T>(function LocalImpl(resolve, reject) {
     let destroyed = false;
-    $base.then((v) => {
+    $base.then(function localBaseSub(v) {
       if (!destroyed) {
         resolve(v);
       }
     });
     $base.catch(reject);
-    return () => {
+    return function localDestructor() {
       destroyed = true;
     };
   });

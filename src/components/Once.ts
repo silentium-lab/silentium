@@ -9,10 +9,10 @@ import { MessageType } from "types/MessageType";
  * @url https://silentium.pw/article/once/view
  */
 export function Once<T>($base: MessageType<T>) {
-  return Message<T>((resolve, reject) => {
+  return Message<T>(function OnceImpl(resolve, reject) {
     let isFilled = false;
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function onceBaseSub(v) {
       if (!isFilled) {
         isFilled = true;
         resolve(v);

@@ -59,7 +59,7 @@ export class MessageImpl<T> implements MessageType<T>, DestroyableType {
     this.dc.add(newMessage);
     try {
       const mbDestructor = this.executor(
-        Silence((value: T) => {
+        Silence(function messageResolver(value: T) {
           if (!newMessageDc.destroyed()) {
             resolve(value);
           }

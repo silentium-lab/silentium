@@ -24,7 +24,7 @@ export function Chain<T extends readonly MessageType[]>(...messages: T) {
         const message = $messages[index] as Last<T>;
         message.catch(reject);
         const next = $messages[index + 1] as Last<T> | undefined;
-        message.then((v) => {
+        message.then(function chainMessageSub(v) {
           oneMessage(v as MessageTypeValue<Last<T>>, next, index);
         });
       };

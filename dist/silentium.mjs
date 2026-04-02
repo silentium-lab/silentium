@@ -128,9 +128,10 @@ class PrimitiveImpl {
   }
   ensureTouched() {
     if (!this.touched) {
-      this.$base.then((v) => {
+      const primitiveBaseSub = (v) => {
         this.theValue = v;
-      });
+      };
+      this.$base.then(primitiveBaseSub);
     }
     this.touched = true;
   }
@@ -220,7 +221,7 @@ class MessageImpl {
     this.dc.add(newMessage);
     try {
       const mbDestructor = this.executor(
-        Silence((value) => {
+        Silence(function messageResolver(value) {
           if (!newMessageDc.destroyed()) {
             resolve(value);
           }
@@ -288,13 +289,13 @@ function Local(_base) {
   const $base = Actual(_base);
   return Message(function LocalImpl(resolve, reject) {
     let destroyed = false;
-    $base.then((v) => {
+    $base.then(function localBaseSub(v) {
       if (!destroyed) {
         resolve(v);
       }
     });
     $base.catch(reject);
-    return () => {
+    return function localDestructor() {
       destroyed = true;
     };
   });
@@ -375,9 +376,9 @@ function All(...messages) {
       resolve([]);
       return;
     }
-    $messages.map((m, key) => {
+    $messages.map(function allMessagesMap(m, key) {
       m.catch(reject);
-      m.then((v) => {
+      m.then(function allMessageSub(v) {
         filled.add(key.toString());
         result[key] = v;
         if (isAllFilled(filled, known)) {
@@ -403,7 +404,7 @@ function Applied(base, applier) {
   return Message(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function appliedBaseSub(v) {
       const result = applier(v);
       if (isMessage(result)) {
         dc.destroy();
@@ -569,7 +570,7 @@ function Chain(...messages) {
         const message = $messages[index];
         message.catch(reject);
         const next = $messages[index + 1];
-        message.then((v) => {
+        message.then(function chainMessageSub(v) {
           oneMessage(v, next, index);
         });
       };
@@ -603,16 +604,18 @@ Context.transport = /* @__PURE__ */ new Map();
 function Context(name, params = {}) {
   const $msg = Destructured(
     All(Actual(name), Actual(params)),
-    (name2, params2) => ({
-      transport: name2,
-      params: params2,
-      result: void 0,
-      error: void 0
-    })
+    function contextMsgNormalize(name2, params2) {
+      return {
+        transport: name2,
+        params: params2,
+        result: void 0,
+        error: void 0
+      };
+    }
   );
   return Source(
-    (resolve, reject) => {
-      $msg.then((message) => {
+    function contextMsgImpl(resolve, reject) {
+      $msg.then(function contextMsgSub(message) {
         const transport = Context.transport.get(message.transport);
         if (transport === void 0) {
           throw new Error(`Context: unknown transport ${message.transport}`);
@@ -630,7 +633,7 @@ function Context(name, params = {}) {
         }
       });
     },
-    (value) => {
+    function contextSrcImpl(value) {
       const msg = Primitive($msg).primitive();
       if (msg === null) {
         throw new Error("Context: sourcing impossible message not existed");
@@ -680,14 +683,14 @@ function Default($base, _default) {
 }
 
 function Empty($base, after) {
-  return Message((resolve, reject) => {
+  return Message(function EmptyImpl(resolve, reject) {
     const p = Primitive($base);
     try {
       $base.then(resolve).catch(reject);
       if (!after) {
         p.primitiveWithException();
       }
-      after?.then(() => {
+      after?.then(function emptyAfterSub() {
         try {
           p.primitiveWithException();
         } catch {
@@ -714,7 +717,7 @@ function Filtered(base, predicate, defaultValue) {
   const $base = Actual(base);
   return Message(function FilteredImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function filteredBaseSub(v) {
       if (predicate(v)) {
         resolve(v);
       } else if (defaultValue !== void 0) {
@@ -738,13 +741,13 @@ function Freeze($base, $invalidate) {
   let freezedValue = null;
   return Message(function FreezeImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function freezeBaseSub(v) {
       if (freezedValue === null) {
         freezedValue = v;
       }
       resolve(freezedValue);
     });
-    $invalidate?.then(() => {
+    $invalidate?.then(function freezeInvalidateSub() {
       freezedValue = null;
     });
   });
@@ -803,14 +806,14 @@ function Lazy(constructor) {
 
 function Map$1(base, target) {
   const $base = Actual(base);
-  return Message((resolve, reject) => {
+  return Message(function MapImpl(resolve, reject) {
     $base.catch(reject);
     const infos = [];
     const dc = DestroyContainer();
-    $base.then((v) => {
+    $base.then(function mapBaseSub(v) {
       infos.length = 0;
       dc.destroy();
-      v.forEach((val) => {
+      v.forEach(function mapValueForEach(val) {
         let $val = val;
         if (!isMessage($val)) {
           $val = Of($val);
@@ -825,10 +828,10 @@ function Map$1(base, target) {
 }
 
 function Once($base) {
-  return Message((resolve, reject) => {
+  return Message(function OnceImpl(resolve, reject) {
     let isFilled = false;
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function onceBaseSub(v) {
       if (!isFilled) {
         isFilled = true;
         resolve(v);
@@ -844,10 +847,10 @@ function Piped($m, ...c) {
 }
 
 function Process($base, builder) {
-  return Message((resolve, reject) => {
+  return Message(function ProcessImpl(resolve, reject) {
     const $res = Late();
     const dc = DestroyContainer();
-    $base.then((v) => {
+    $base.then(function processBaseSub(v) {
       dc.destroy();
       const $msg = builder(v);
       dc.add($msg);
@@ -856,7 +859,7 @@ function Process($base, builder) {
     });
     $base.catch(reject);
     $res.then(resolve);
-    return () => {
+    return function processDestructor() {
       dc.destroy();
     };
   });
@@ -870,10 +873,10 @@ function Promisify($message) {
 
 function Race(...messages) {
   const $messages = messages.map(Actual);
-  return Message((resolve, reject) => {
+  return Message(function RaceImpl(resolve, reject) {
     let responded = false;
-    $messages.forEach(($message) => {
-      $message.catch(reject).then((v) => {
+    $messages.forEach(function raceMessagesForEach($message) {
+      $message.catch(reject).then(function raceMessageSub(v) {
         if (responded === false) {
           responded = true;
           resolve(v);
@@ -884,10 +887,10 @@ function Race(...messages) {
 }
 
 function Sequence($base) {
-  return Message((resolve, reject) => {
+  return Message(function SequenceImpl(resolve, reject) {
     const result = [];
     $base.catch(reject);
-    $base.then((v) => {
+    $base.then(function sequenceBaseSub(v) {
       result.push(v);
       resolve(result.slice());
     });
@@ -896,10 +899,10 @@ function Sequence($base) {
 
 function Stream(base) {
   const $base = Actual(base);
-  return Message((resolve, reject) => {
+  return Message(function StreamImpl(resolve, reject) {
     $base.catch(reject);
-    $base.then((v) => {
-      v.forEach((cv) => {
+    $base.then(function streamBaseSub(v) {
+      v.forEach(function streamBaseForEach(cv) {
         resolve(cv);
       });
     });
@@ -909,7 +912,7 @@ function Stream(base) {
 function Trackable(name, target) {
   Context("trackable", { name, action: "created" }).then(Void());
   if (isMessage(target)) {
-    target.then((value) => {
+    target.then(function trackableTargetSub(value) {
       Context("trackable", { name, action: "value", value }).then(Void());
     });
   }

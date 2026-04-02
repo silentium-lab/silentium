@@ -23,17 +23,18 @@ export function Context<T>(
 ) {
   const $msg = Destructured(
     All(Actual(name), Actual(params)),
-    (name, params) =>
-      ({
+    function contextMsgNormalize(name, params) {
+      return {
         transport: name,
         params,
         result: undefined,
         error: undefined,
-      }) as ContextType,
+      } as ContextType;
+    },
   );
   return Source<T>(
-    (resolve, reject) => {
-      $msg.then((message) => {
+    function contextMsgImpl(resolve, reject) {
+      $msg.then(function contextMsgSub(message) {
         const transport = Context.transport.get(message.transport);
         if (transport === undefined) {
           throw new Error(`Context: unknown transport ${message.transport}`);
@@ -51,7 +52,7 @@ export function Context<T>(
         }
       });
     },
-    (value) => {
+    function contextSrcImpl(value) {
       const msg = Primitive($msg).primitive();
       if (msg === null) {
         throw new Error("Context: sourcing impossible message not existed");

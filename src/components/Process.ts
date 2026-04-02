@@ -8,10 +8,10 @@ export function Process<T, R = unknown>(
   $base: MessageType<T>,
   builder: ConstructorType<[T], MessageType<R>>,
 ) {
-  return Message<R>((resolve, reject) => {
+  return Message<R>(function ProcessImpl(resolve, reject) {
     const $res = Late<R>();
     const dc = DestroyContainer();
-    $base.then((v) => {
+    $base.then(function processBaseSub(v) {
       dc.destroy();
       const $msg = builder(v);
       dc.add($msg);
@@ -20,7 +20,7 @@ export function Process<T, R = unknown>(
     });
     $base.catch(reject);
     $res.then(resolve);
-    return () => {
+    return function processDestructor() {
       dc.destroy();
     };
   });
