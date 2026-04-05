@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.226](https://github.com/silentium-lab/silentium/compare/v0.0.225...v0.0.226) (2026-04-05)
+
+
+### Bug Fixes
+
+* **main:** chain returns new subscription ([da737c3](https://github.com/silentium-lab/silentium/commit/da737c31cb0c6ba388f2214c7743d773bf249181))
+
 ### [0.0.225](https://github.com/silentium-lab/silentium/compare/v0.0.224...v0.0.225) (2026-04-02)
 
 
