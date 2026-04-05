@@ -1,4 +1,3 @@
-import { Message, MessageExecutorType } from "base/Message";
 import { Rejections } from "base/Rejections";
 import { Silence, SilenceUse } from "base/Silence";
 import { Shared } from "components/Shared";
@@ -33,12 +32,7 @@ export class LateImpl<T> implements MessageSourceType<T> {
   private silenceUse: ReturnType<typeof SilenceUse>;
 
   public constructor(private v?: T) {
-    const silenceUseExecutor: MessageExecutorType<T> = (resolve) => {
-      if (this.v !== undefined) {
-        resolve(this.v);
-      }
-    };
-    this.silenceUse = SilenceUse(Message(silenceUseExecutor));
+    this.silenceUse = SilenceUse();
   }
 
   public then(r: ConstructorType<[T]>): this {
@@ -67,8 +61,7 @@ export class LateImpl<T> implements MessageSourceType<T> {
   }
 
   public chain(m: MessageType<T>) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
 
   public destroy() {

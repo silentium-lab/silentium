@@ -173,7 +173,7 @@ declare function SilenceUse(): {
  */
 interface SourceType<T = unknown> {
     use(value: T): this;
-    chain($m: MessageType<T>): this;
+    chain($m: MessageType<T>): MessageType<T>;
 }
 /**
  * Message and source at same time
@@ -196,7 +196,7 @@ declare class SourceImpl<T> implements MessageSourceType<T> {
     then(resolved: ConstructorType<[T]>): this;
     catch(rejected: ConstructorType<[unknown]>): this;
     destroy(): this;
-    chain(m: MessageType<T>): this;
+    chain(m: MessageType<T>): MessageType<T>;
 }
 
 declare function SourceComputed<T>(message: MessageType<T>, source: SourceType<T>): SourceImpl<T>;
@@ -283,7 +283,7 @@ declare class SharedImpl<T> implements MessageSourceType<T> {
     destroy(): this;
     destroyed(): boolean;
     value(): PrimitiveImpl<T>;
-    chain(m: MessageType<T>): this;
+    chain(m: MessageType<T>): MessageType<T>;
 }
 
 /**
@@ -429,7 +429,7 @@ declare class LateImpl<T> implements MessageSourceType<T> {
     then(r: ConstructorType<[T]>): this;
     use(value: T): this;
     catch(rejected: ConstructorType<[unknown]>): this;
-    chain(m: MessageType<T>): this;
+    chain(m: MessageType<T>): MessageType<T>;
     destroy(): this;
 }
 

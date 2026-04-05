@@ -33,7 +33,7 @@ export class SharedImpl<T> implements MessageSourceType<T> {
     if (isSource($base)) {
       this.source = $base;
     }
-    this.silenceUse = SilenceUse(this);
+    this.silenceUse = SilenceUse();
   }
 
   public then(
@@ -95,7 +95,6 @@ export class SharedImpl<T> implements MessageSourceType<T> {
   }
 
   public chain(m: MessageType<T>) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
 }

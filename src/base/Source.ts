@@ -26,7 +26,7 @@ export class SourceImpl<T> implements MessageSourceType<T> {
     private sourceExecutor: ConstructorType<[T]>,
   ) {
     this.message = Message(messageExecutor);
-    this.silenceUse = SilenceUse(this.message);
+    this.silenceUse = SilenceUse();
   }
 
   public use(value: T): this {
@@ -55,7 +55,6 @@ export class SourceImpl<T> implements MessageSourceType<T> {
   }
 
   public chain(m: MessageType<T>) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
 }

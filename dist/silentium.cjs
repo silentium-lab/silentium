@@ -302,7 +302,7 @@ class SourceImpl {
     __publicField$3(this, "message");
     __publicField$3(this, "silenceUse");
     this.message = Message(messageExecutor);
-    this.silenceUse = SilenceUse(this.message);
+    this.silenceUse = SilenceUse();
   }
   use(value) {
     if (!this.message.destroyed()) {
@@ -326,8 +326,7 @@ class SourceImpl {
     return this;
   }
   chain(m) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
 }
 
@@ -512,8 +511,7 @@ class SharedImpl {
     return Primitive(this);
   }
   chain(m) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
 }
 
@@ -529,12 +527,7 @@ class LateImpl {
     __publicField(this, "rejections", Rejections());
     __publicField(this, "lateR", null);
     __publicField(this, "silenceUse");
-    const silenceUseExecutor = (resolve) => {
-      if (this.v !== void 0) {
-        resolve(this.v);
-      }
-    };
-    this.silenceUse = SilenceUse(Message(silenceUseExecutor));
+    this.silenceUse = SilenceUse();
   }
   notify() {
     if (isFilled(this.v) && this.lateR) {
@@ -568,8 +561,7 @@ class LateImpl {
     return this;
   }
   chain(m) {
-    m.then(this.use.bind(this));
-    return this;
+    return m.then(this.use.bind(this));
   }
   destroy() {
     this.lateR = null;
