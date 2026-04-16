@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.227](https://github.com/silentium-lab/silentium/compare/v0.0.226...v0.0.227) (2026-04-16)
+
+
+### Bug Fixes
+
+* **main:** fixed applied destructor ([761d8d9](https://github.com/silentium-lab/silentium/commit/761d8d99e064f81b4520ab9200e10272d7c8a0b3))
+
 ### [0.0.226](https://github.com/silentium-lab/silentium/compare/v0.0.225...v0.0.226) (2026-04-05)
 
 
