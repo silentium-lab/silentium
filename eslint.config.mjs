@@ -60,11 +60,11 @@ export default [
       "unused-imports/no-unused-imports": "error",
     },
   },
-   {
-      files: ["**/*.test.ts"],
-      rules: {
-          "@getify/proper-arrows/name": "off"
-      }
+  {
+    files: ["**/*.test.ts"],
+    rules: {
+      "@getify/proper-arrows/name": "off",
+    },
   },
   eslintPluginPrettierRecommended,
 ];

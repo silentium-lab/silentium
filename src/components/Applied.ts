@@ -16,6 +16,7 @@ export function Applied<const T, R>(
   applier: ConstructorType<[T], MaybeMessage<R>>,
 ) {
   const $base = Actual(base);
+  const dcComponent = DestroyContainer();
   return Message<R>(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);
@@ -24,10 +25,12 @@ export function Applied<const T, R>(
       if (isMessage(result)) {
         dc.destroy();
         dc.add(result);
+        dcComponent.add(result);
         result.catch(reject).then(resolve);
       } else {
         resolve(result);
       }
     });
+    return dc.destructor();
   });
 }

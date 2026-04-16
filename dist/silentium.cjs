@@ -384,6 +384,7 @@ function Any(...messages) {
 
 function Applied(base, applier) {
   const $base = Actual(base);
+  const dcComponent = DestroyContainer();
   return Message(function AppliedImpl(resolve, reject) {
     const dc = DestroyContainer();
     $base.catch(reject);
@@ -392,11 +393,13 @@ function Applied(base, applier) {
       if (isMessage(result)) {
         dc.destroy();
         dc.add(result);
+        dcComponent.add(result);
         result.catch(reject).then(resolve);
       } else {
         resolve(result);
       }
     });
+    return dc.destructor();
   });
 }
 
