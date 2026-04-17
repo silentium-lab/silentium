@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.228](https://github.com/silentium-lab/silentium/compare/v0.0.227...v0.0.228) (2026-04-17)
+
+
+### Features
+
+* **main:** identity key ([212bfc2](https://github.com/silentium-lab/silentium/commit/212bfc251677a6d976cb6b58a217791a1816cef2))
+
 ### [0.0.227](https://github.com/silentium-lab/silentium/compare/v0.0.226...v0.0.227) (2026-04-16)
 
 
