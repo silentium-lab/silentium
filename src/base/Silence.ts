@@ -3,6 +3,10 @@ import { ConstructorType } from "types/ConstructorType";
 
 export const ResetSilenceCache = Symbol("reset-silence-cache");
 
+export interface IdentifiedType {
+  identityKey(): string;
+}
+
 /**
  * Silence is null or undefined
  * Everything else is not silence
@@ -11,14 +15,21 @@ export const ResetSilenceCache = Symbol("reset-silence-cache");
  */
 export function Silence<T>(resolve: ConstructorType<[T]>) {
   let lastValue: T | undefined;
-  return function SilenceImpl(v: T | undefined) {
-    if (v === ResetSilenceCache) {
+  return function SilenceImpl(value: T | undefined) {
+    if (value === ResetSilenceCache) {
       lastValue = undefined;
-      v = undefined;
+      value = undefined;
     }
-    if (isFilled(v) && v !== lastValue) {
-      lastValue = v;
-      resolve(v);
+    if (isFilled(value) && value !== lastValue) {
+      if (
+        isIdentified(lastValue) &&
+        isIdentified(value) &&
+        value.identityKey() === lastValue.identityKey()
+      ) {
+        return;
+      }
+      lastValue = value;
+      resolve(value);
     }
   };
 }
@@ -36,6 +47,13 @@ export function SilenceUse() {
         return;
       }
       if (lastValue !== value) {
+        if (
+          isIdentified(lastValue) &&
+          isIdentified(value) &&
+          value.identityKey() === lastValue.identityKey()
+        ) {
+          return;
+        }
         lastValue = value;
         cb(value);
         return;
@@ -44,4 +62,13 @@ export function SilenceUse() {
       return;
     },
   };
+}
+
+export function isIdentified(obj: unknown): obj is IdentifiedType {
+  return (
+    obj !== null &&
+    typeof obj === "object" &&
+    "identityKey" in obj &&
+    typeof obj.identityKey === "function"
+  );
 }

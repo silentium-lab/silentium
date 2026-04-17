@@ -122,14 +122,17 @@ let RejectionsImpl = _RejectionsImpl;
 const ResetSilenceCache = Symbol("reset-silence-cache");
 function Silence(resolve) {
   let lastValue;
-  return function SilenceImpl(v) {
-    if (v === ResetSilenceCache) {
+  return function SilenceImpl(value) {
+    if (value === ResetSilenceCache) {
       lastValue = void 0;
-      v = void 0;
+      value = void 0;
     }
-    if (isFilled(v) && v !== lastValue) {
-      lastValue = v;
-      resolve(v);
+    if (isFilled(value) && value !== lastValue) {
+      if (isIdentified(lastValue) && isIdentified(value) && value.identityKey() === lastValue.identityKey()) {
+        return;
+      }
+      lastValue = value;
+      resolve(value);
     }
   };
 }
@@ -143,6 +146,9 @@ function SilenceUse() {
         return;
       }
       if (lastValue !== value) {
+        if (isIdentified(lastValue) && isIdentified(value) && value.identityKey() === lastValue.identityKey()) {
+          return;
+        }
         lastValue = value;
         cb(value);
         return;
@@ -151,6 +157,9 @@ function SilenceUse() {
       return;
     }
   };
+}
+function isIdentified(obj) {
+  return obj !== null && typeof obj === "object" && "identityKey" in obj && typeof obj.identityKey === "function";
 }
 
 function ensureFunction(v, label) {
@@ -1002,5 +1011,5 @@ function DevTools() {
   }
 }
 
-export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, SilenceUse, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isMessage, isSource };
+export { Actual, All, Any, Applied, Catch, Chain, Computed, Connected, Context, ContextChain, ContextOf, Default, DestroyContainer, DestroyContainerImpl, Destroyable, DestroyableImpl, Destructured, DevTools, Empty, ExecutorApplied, Filtered, Fold, Freeze, FromEvent, Late, LateImpl, Lazy, Local, Map$1 as Map, Message, MessageDestroyable, MessageImpl, New, Of, Once, Piped, Primitive, PrimitiveImpl, Process, Promisify, Props, Race, Rejections, RejectionsImpl, ResetSilenceCache, Sequence, Shared, SharedImpl, Silence, SilenceUse, Source, SourceComputed, SourceImpl, Stream, Trackable, Value, Void, ensureFunction, ensureMessage, isDestroyable, isDestroyed, isFilled, isIdentified, isMessage, isSource };
 //# sourceMappingURL=silentium.mjs.map

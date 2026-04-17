@@ -124,14 +124,17 @@ let RejectionsImpl = _RejectionsImpl;
 const ResetSilenceCache = Symbol("reset-silence-cache");
 function Silence(resolve) {
   let lastValue;
-  return function SilenceImpl(v) {
-    if (v === ResetSilenceCache) {
+  return function SilenceImpl(value) {
+    if (value === ResetSilenceCache) {
       lastValue = void 0;
-      v = void 0;
+      value = void 0;
     }
-    if (isFilled(v) && v !== lastValue) {
-      lastValue = v;
-      resolve(v);
+    if (isFilled(value) && value !== lastValue) {
+      if (isIdentified(lastValue) && isIdentified(value) && value.identityKey() === lastValue.identityKey()) {
+        return;
+      }
+      lastValue = value;
+      resolve(value);
     }
   };
 }
@@ -145,6 +148,9 @@ function SilenceUse() {
         return;
       }
       if (lastValue !== value) {
+        if (isIdentified(lastValue) && isIdentified(value) && value.identityKey() === lastValue.identityKey()) {
+          return;
+        }
         lastValue = value;
         cb(value);
         return;
@@ -153,6 +159,9 @@ function SilenceUse() {
       return;
     }
   };
+}
+function isIdentified(obj) {
+  return obj !== null && typeof obj === "object" && "identityKey" in obj && typeof obj.identityKey === "function";
 }
 
 function ensureFunction(v, label) {
@@ -1066,6 +1075,7 @@ exports.ensureMessage = ensureMessage;
 exports.isDestroyable = isDestroyable;
 exports.isDestroyed = isDestroyed;
 exports.isFilled = isFilled;
+exports.isIdentified = isIdentified;
 exports.isMessage = isMessage;
 exports.isSource = isSource;
 //# sourceMappingURL=silentium.cjs.map

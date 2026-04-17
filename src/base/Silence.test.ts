@@ -1,5 +1,5 @@
+import { Silence, SilenceUse } from "base/Silence";
 import { describe, expect, test, vi } from "vitest";
-import { Silence } from "base/Silence";
 
 describe("Silence.test", () => {
   test("should call resolve with first filled value", () => {
@@ -89,5 +89,49 @@ describe("Silence.test", () => {
     expect(resolve).toHaveBeenCalledTimes(2);
     expect(resolve).toHaveBeenCalledWith("");
     expect(resolve).toHaveBeenCalledWith("hello");
+  });
+
+  test("identity key silence", () => {
+    const a = {
+      name: "one",
+      identityKey() {
+        return "alice";
+      },
+    };
+    const b = {
+      name: "two",
+      identityKey() {
+        return "alice";
+      },
+    };
+    const resolve = vi.fn();
+    const silence = Silence(resolve);
+
+    silence(a);
+    silence(b);
+
+    expect(resolve).toHaveBeenCalledTimes(1);
+  });
+
+  test("identity key silence use", () => {
+    const a = {
+      name: "one",
+      identityKey() {
+        return "alice";
+      },
+    };
+    const b = {
+      name: "two",
+      identityKey() {
+        return "alice";
+      },
+    };
+    const resolve = vi.fn();
+    const silence = SilenceUse();
+
+    silence.use(a, resolve);
+    silence.use(b, resolve);
+
+    expect(resolve).toHaveBeenCalledTimes(1);
   });
 });
